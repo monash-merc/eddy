@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+          "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+		<mapping class="au.edu.monash.merc.capture.domain.User" />
+		<mapping class="au.edu.monash.merc.capture.domain.Profile" />
+		<mapping class="au.edu.monash.merc.capture.domain.Avatar" />
+		<mapping class="au.edu.monash.merc.capture.domain.Collection" />
+		<mapping class="au.edu.monash.merc.capture.domain.Rights" />
+		<mapping class="au.edu.monash.merc.capture.domain.Activity" />
+		<mapping class="au.edu.monash.merc.capture.domain.Party" />
+		<mapping class="au.edu.monash.merc.capture.domain.Dataset" />
+		<mapping class="au.edu.monash.merc.capture.domain.GlobalMetadata" />
+		<mapping class="au.edu.monash.merc.capture.domain.MetaVariable" />
+		<mapping class="au.edu.monash.merc.capture.domain.MetaAttribute" />
+		<mapping class="au.edu.monash.merc.capture.domain.Permission" />
+		<mapping class="au.edu.monash.merc.capture.domain.PermissionRequest" />
+		<mapping class="au.edu.monash.merc.capture.domain.IPBlock" />
+		<mapping class="au.edu.monash.merc.capture.domain.AuditEvent" />
+		<mapping class="au.edu.monash.merc.capture.domain.AboutUs" />
+		<mapping class="au.edu.monash.merc.capture.domain.Announcement" />
+		<mapping class="au.edu.monash.merc.capture.domain.ReferenceSite" />
+		<mapping class="au.edu.monash.merc.capture.domain.Site" />
+		<mapping class="au.edu.monash.merc.capture.domain.SlideShow" />
+	</session-factory>
+</hibernate-configuration>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+    "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<struts>
+	<constant name="struts.devMode" value="true" />
+	<constant name="struts.configuration.xml.reload" value="false" />
+	<constant name="struts.custom.i18n.resources" value="messageResource" />
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+	<constant name="struts.action.extension" value="action,do,jspa,jspx,," />
+	<constant name="struts.serve.static" value="true" />
+	<constant name="struts.serve.static.browserCache" value="false" />
+	<constant name="struts.ui.theme" value="simple" />
+	<constant name="struts.enable.SlashesInActionNames" value="true" />
+	<constant name="struts.multipart.saveDir" value="temp" />
+
+	<package name="core.merc" extends="struts-default">
+
+		<result-types>
+			<result-type name="freemarker" class="org.apache.struts2.views.freemarker.FreemarkerResult" default="true" />
+			<result-type name="json" class="org.apache.struts2.json.JSONResult" />
+		</result-types>
+
+		<interceptors>
+			<interceptor-stack name="noneAuthStack">
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="noneAuthStack" />
+
+		<global-results>
+			<result name="file_not_found" type="freemarker">/WEB-INF/install/web/404.html</result>
+		</global-results>
+
+		<global-exception-mappings>
+			<exception-mapping result="file_not_found" exception="java.io.FileNotFoundException" />
+		</global-exception-mappings>
+
+	</package>
+
+	<package name="core.install" extends="core.merc" namespace="/install">
+		<default-interceptor-ref name="noneAuthStack" />
+		<action name="*">
+			<result type="freemarker">/WEB-INF/install/web/{1}.ftl</result>
+		</action>
+
+		<action name="setup" class="install.installAction" method="setup">
+			<result name="input">/WEB-INF/install/web/install.ftl</result>
+			<result name="success">/WEB-INF/install/web/install.ftl</result>
+		</action>
+
+		<action name="install" class="install.installAction" method="install">
+			<result name="input">/WEB-INF/install/web/install.ftl</result>
+			<result name="success">/WEB-INF/install/web/install_finished.ftl</result>
+		</action>
+	</package>
+
+</struts>
