@@ -2,5 +2,5 @@
 
 = Introduction =
 
-1. [index.html]Java API Specification
-
+1. [http://www.google.com Google home page].
+Java API Specification
