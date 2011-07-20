@@ -1,6 +1,5 @@
-#summary One-sentence summary of this page.
+#Eddy specifications
 
-= Introduction =
 
 1. Eddy Java API Specification at [http://eddy.googlecode.com/files/eddy_v2_api.zip]
 
