@@ -2,5 +2,4 @@
 
 = Introduction =
 
-1. [http://www.google.com Google home page].
-Java API Specification
+1. Eddy Java API Specification at [http://code.google.com/p/eddy/wiki/api/index.html]
