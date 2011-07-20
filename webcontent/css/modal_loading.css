@@ -1,0 +1,27 @@
+#mask {
+	position: absolute; /* important */
+	top: 0px; /* start from top */
+	left: 0px; /* start from left */
+	height: 100%; /* cover the whole page */
+	width: 100%; /* cover the whole page */
+	display: none; /* don't show it '*/
+	background: url("../images/ui-modal-bg.png") repeat scroll 50% 50% #EEEEEE;
+}
+
+/* style a specific modal window  */
+#modal_window {
+	position: absolute;
+	display: none;
+	padding: 20px;
+	border: 2px solid #C0C7D5;
+	background: #ffffff;
+	color: #003766;
+}
+
+.loading_image {
+	border: 0 none;
+	vertical-align: middle;
+	margin-top: 1px;
+	margin-bottom: 2px;
+	margin-left: 5px;
+}
