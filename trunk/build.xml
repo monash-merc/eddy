@@ -31,7 +31,7 @@
 	<property name="dist.pack.tmp.app.install.dir" value="${dist.pack.tmp.app.web-inf.dir}/install" />
 	<property name="dist.pack.tmp.app.install.conf.dir" value="${dist.pack.tmp.app.install.dir}/conf" />
 	<property name="dist.pack.tmp.app.install.web.dir" value="${dist.pack.tmp.app.install.dir}/web" />
-	<property name="dist.javadoc.dir" location="docs/api" />
+	<property name="dist.javadoc.dir" location="${dist.dir}/docs/api" />
 
 	<!-- =================================================================== -->
 	<!-- developing deploy directory 										 -->

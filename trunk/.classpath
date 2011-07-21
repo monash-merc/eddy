@@ -36,7 +36,6 @@
 	<classpathentry kind="lib" path="lib/core-lib/jdom1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/core-lib/json-lib-2.1.jar"/>
 	<classpathentry kind="lib" path="lib/core-lib/jta.jar"/>
-	<classpathentry kind="lib" path="lib/core-lib/license.txt"/>
 	<classpathentry kind="lib" path="lib/core-lib/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="lib/core-lib/mail.jar"/>
 	<classpathentry kind="lib" path="lib/core-lib/ognl-2.7.3.jar"/>
