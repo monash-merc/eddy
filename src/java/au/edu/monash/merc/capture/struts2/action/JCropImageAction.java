@@ -66,6 +66,7 @@ public class JCropImageAction extends ImageUploadAction {
 		} catch (Exception e) {
 			logger.error(e);
 			addActionError(getText("show.profile.image.upload.page.error"));
+			return ERROR;
 		}
 		return SUCCESS;
 	}
@@ -143,10 +144,10 @@ public class JCropImageAction extends ImageUploadAction {
 			cropImage(cropImage, destFile, scaleW, scaleH);
 			avatar.setFileType("jpg");
 			avatar.setCustomized(true);
-			
+
 			this.dmService.updateAvatar(avatar);
 
-			//saveInSession(ActConstants.SESSION_AVATAR_URL, avatar.getFileName());
+			// saveInSession(ActConstants.SESSION_AVATAR_URL, avatar.getFileName());
 
 		} catch (Exception e) {
 			logger.error(e);
