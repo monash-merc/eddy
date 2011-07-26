@@ -195,17 +195,17 @@ public class InstallAction extends InstallBaseAction {
 		appProp.setGoogleApiKey("ABQIAAAA-mrDIEKQPrjqNppfCE72fRQtlyttTPx5mPekxQelw9V6C-nC5RQ8Sya-FroqqvlqOHnhCAtW38qDpg");
 
 		appProp.setStageEnabled(false);
-		appProp.setStageLocation("/opt/datastore/stage");
+		appProp.setStageLocation("/opt/ands_staging");
 
 		appProp.setMdRegEnabled(true);
-		appProp.setRifcsStoreLocation("/opt/publish/rifcs");
+		appProp.setRifcsStoreLocation("/opt/ands_rifcs");
 		appProp.setAndsRegGroupName("Monash University");
 		appProp.setResearchFieldCode("960501");
 
 		// researcher master web service call
-		appProp.setRmWsName("ESB_AIRMANDSService_RS_Service");
-		appProp.setRmWsEndpointAddress("http://mobs-dev.its.monash.edu.au:7778/event/AI/ResearchMaster/AIRMANDSService_RS");
-		appProp.setRmWsTimeout(30000);
+		appProp.setRmWsName("AIRMANDSService");
+		appProp.setRmWsEndpointAddress("http://mobs.its.monash.edu.au:7778/orabpel/ResearchMaster/AIRMANDSService/1.0");
+		appProp.setRmWsTimeout(60000);
 
 		// handle web service
 		appProp.setHdlWsEnabled(true);

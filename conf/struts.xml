@@ -191,8 +191,8 @@
 		</action>
 
 		<action name="updateProfile" class="admin.userProfileAction" method="updateProfile">
-			<result name="input">/web/common/edit_profile.ftl</result>
-			<result name="error">/web/common/edit_profile.ftl</result>
+			<result name="input">/web/admin/edit_profile.ftl</result>
+			<result name="error">/web/admin/edit_profile.ftl</result>
 			<result name="success">/web/admin/profile_details.ftl</result>
 		</action>
 

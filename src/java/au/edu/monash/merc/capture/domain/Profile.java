@@ -84,10 +84,10 @@ public class Profile extends Domain {
 	private String occupation;
 
 	@Basic
-	@Column(name = "contact_details", length = 2000)
+	@Column(name = "contact_details", length = 1000)
 	private String contactDetails;
 
-	@Column(name = "interests", length = 2000)
+	@Column(name = "interests", length = 1000)
 	private String interests;
 
 	@OneToOne(targetEntity = User.class)

@@ -30,11 +30,11 @@
 				<table width="100%">
 		 			<tr>
 		 				<td width="150">User name: </td>
-		 				<td><span class="grey_line_div"><@s.property value="user.displayName"/></span></td>
+		 				<td><span class="grey_line_div"><@s.property value="user.displayName"/></span>  <@s.hidden name="user.displayName" /></td>
 		 				<td></td>
 		 			</tr>
 		 			<tr>
-		 				<td>Joined: </td><td><span class="grey_line_div"><@s.date name="user.registedDate" format="yyyy-MM-dd" /></span></td>
+		 				<td>Joined: </td><td><span class="grey_line_div"><@s.date name="user.registedDate" format="yyyy-MM-dd" /></span> <@s.hidden name="user.registedDate" /></td>
 		 				<td></td>
 		 			</tr>
 		 			<tr>
@@ -52,7 +52,7 @@
 		 				<td> Email: </td>
 		 			</tr>
 		 			<tr>
-		 				<td><span class="grey_line_div"><@s.property value="user.email" /></span></td>
+		 				<td><span class="grey_line_div"><@s.property value="user.email" /></span> <@s.hidden name="user.email" /></td>
 		 			</tr>
 		 			<tr>
 		 				<td> Contact Details: </td>
