@@ -32,6 +32,8 @@ import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,11 +64,17 @@ public class UserProfileAction extends DMCoreAction {
 
 	protected static Map<String, String> countryMap = new LinkedHashMap<String, String>();
 
-	private Map<String, String> genderMap = new LinkedHashMap<String, String>();
+	protected static Map<String, String> genderMap = new LinkedHashMap<String, String>();
 
 	@Autowired
 	@Qualifier("countryPropertyConfigurer")
 	private SystemPropertiesConfigurer countryPropertyConfigurer;
+
+	@PostConstruct
+	public void initProp() {
+		setGenderMap();
+		setCountries();
+	}
 
 	public String showProfile() {
 		try {
@@ -116,8 +124,6 @@ public class UserProfileAction extends DMCoreAction {
 		if (StringUtils.isBlank(profile.getCountry())) {
 			profile.setCountry("AU");
 		}
-		setGenderMap();
-		setCountries();
 	}
 
 	public String showProfileUpdate() {
@@ -205,6 +211,7 @@ public class UserProfileAction extends DMCoreAction {
 			// post processing for populating the gender and countries
 			setNavForUpdateProfileExc();
 			postProcess();
+			addActionError(getText("failed.to.update.user.profile"));
 			return ERROR;
 		}
 		return SUCCESS;
@@ -227,10 +234,13 @@ public class UserProfileAction extends DMCoreAction {
 	}
 
 	public void validateUpdateProfile() {
-		if (!CaptureUtil.notGTFixedLength(profile.getContactDetails(), 255)) {
+		if (!CaptureUtil.notGTFixedLength(profile.getContactDetails(), 1000)) {
 			addFieldError("contactDetails", getText("profile.contact.details.length.too.long"));
 		}
-
+		if (!CaptureUtil.notGTFixedLength(profile.getInterests(), 1000)) {
+			addFieldError("interests", getText("profile.user.interests.length.too.long"));
+		}
+		postProcess();
 	}
 
 	public String displayUserHome() {
@@ -263,8 +273,10 @@ public class UserProfileAction extends DMCoreAction {
 	}
 
 	private void setGenderMap() {
-		genderMap.put("Male", "Male");
-		genderMap.put("Female", "Female");
+		if (genderMap == null || genderMap.size() == 0) {
+			genderMap.put("Male", "Male");
+			genderMap.put("Female", "Female");
+		}
 	}
 
 	private void setCountries() {
@@ -332,7 +344,7 @@ public class UserProfileAction extends DMCoreAction {
 	}
 
 	public void setGenderMap(Map<String, String> genderMap) {
-		this.genderMap = genderMap;
+		UserProfileAction.genderMap = genderMap;
 	}
 
 }
