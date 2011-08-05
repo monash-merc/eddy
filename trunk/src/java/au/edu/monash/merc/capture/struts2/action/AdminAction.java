@@ -307,7 +307,7 @@ public class AdminAction extends BaseAction {
 
 		} catch (Exception e) {
 			logger.error(e);
-			addActionError("list.all.users.failed");
+			addActionError(getText("list.all.users.failed"));
 			return ERROR;
 		}
 		return SUCCESS;
@@ -319,7 +319,7 @@ public class AdminAction extends BaseAction {
 			regUser = this.userService.getUserById(regUser.getId());
 		} catch (Exception e) {
 			logger.error(e);
-			addActionError("admin.get.user.details.error");
+			addActionError(getText("admin.get.user.details.error"));
 			setNavBarAfterExc();
 			return ERROR;
 		}
@@ -388,7 +388,7 @@ public class AdminAction extends BaseAction {
 
 		} catch (Exception e) {
 			logger.error(e);
-			addActionError("admin.manage.user.account.failed");
+			addActionError(getText("admin.manage.user.account.failed"));
 			setNavBarAfterExc();
 		}
 		return SUCCESS;
