@@ -171,7 +171,7 @@ public class MDRegisterAction extends DMCoreAction {
 		try {
 			Permission perm = this.dmService.getAnonymousPerm(collection.getId());
 			if (perm.isViewAllowed()) {
-				accessRights = getText("This work is publicly available");
+				accessRights = getText("collection.access.type.public");
 			} else {
 				User owner = collection.getOwner();
 				accessRights = getText("collection.access.type.private", new String[] { owner.getFirstName(), owner.getLastName(), owner.getEmail() });
