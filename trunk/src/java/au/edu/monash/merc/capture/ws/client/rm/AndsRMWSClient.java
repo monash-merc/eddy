@@ -61,9 +61,11 @@ import au.edu.monash.merc.capture.exception.WSException;
 public class AndsRMWSClient extends Stub {
 
 	// private static String DEFAULT_TARGET_ENDPOINT =
-	// "http://mobs-qa.its.monash.edu.au:7778/event/AI/ResearchMaster/AIRMANDSService_RS";
-	// pd: http://mobs.its.monash.edu.au:7778/orabpel/ResearchMaster/AIRMANDSService/1.0
-	// qa: http://inverloch.its.monash.edu.au:7778/orabpel/ResearchMaster/AIRMANDSService/1.0
+	// Production: "http://mobs.its.monash.edu.au:7778/orabpel/ResearchMaster/AIRMANDSService/1.0"
+	//
+	// QA "http://inverloch.its.monash.edu.au:7778/orabpel/ResearchMaster/AIRMService/1.0.1446";
+	// private static String DEFAULT_SERVICE_NAME = "AIRMService";
+
 	private static String DEFAULT_TARGET_ENDPOINT = "http://mobs.its.monash.edu.au:7778/orabpel/ResearchMaster/AIRMANDSService/1.0";
 
 	private static String DEFAULT_SERVICE_NAME = "AIRMANDSService";
@@ -342,7 +344,7 @@ public class AndsRMWSClient extends Stub {
 		OMElement partyRegistryObjectsElement = respEnvelope.getBody().getFirstElement();
 		OMElement registryObject = partyRegistryObjectsElement.getFirstElement();
 
-		// System.out.println("====> registryObject: " + registryObject);
+		System.out.println("====> registryObject: " + registryObject);
 		// get the party group
 		OMAttribute groupAtt = registryObject.getAttribute(new QName("group"));
 		pb.setGroupName(groupAtt.getAttributeValue());
@@ -600,7 +602,7 @@ public class AndsRMWSClient extends Stub {
 		ActivityBean ab = new ActivityBean();
 
 		OMElement activityRegistryObjectsElement = respEnvelope.getBody().getFirstElement();
-		// System.out.println("activity: rif-cs: " + activityRegistryObjectsElement);
+		System.out.println("activity: rif-cs: " + activityRegistryObjectsElement);
 		OMElement registryObject = activityRegistryObjectsElement.getFirstElement();
 
 		// get the party group
@@ -779,9 +781,10 @@ public class AndsRMWSClient extends Stub {
 
 		String nlaid = null;
 		try {
-			// nlaid = ws.getNlaId("xiyu");
+			//
 			// nlaid = ws.getNlaId("virginig");
 			// nlaid = ws.getNlaId("pisaac");
+			// nlaid = ws.getNlaId("virginig");
 			nlaid = ws.getNlaId("jberinge");
 			System.out.println("====> getNlaid: " + nlaid);
 		} catch (Exception e) {
