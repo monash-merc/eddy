@@ -182,7 +182,7 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ecosystem.iml" filepath="$PROJECT_DIR$/ecosystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eddy.iml" filepath="$PROJECT_DIR$/eddy.iml" />
     </modules>
   </component>
   <component name="ProjectResources">
