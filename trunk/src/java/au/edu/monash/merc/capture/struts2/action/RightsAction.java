@@ -78,7 +78,7 @@ public class RightsAction extends DMCoreAction {
 	/**
 	 * Show the rights options.
 	 * 
-	 * @return a String represents SUCCESS or ERROR.
+	 * @return a String represents SUCCESS or ERROR.                                        lic
 	 */
 	public String showRightsOptions() {
 		try {
