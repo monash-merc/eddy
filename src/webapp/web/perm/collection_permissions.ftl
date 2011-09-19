@@ -61,12 +61,11 @@
 		 			<ul>
 		 				<li><b>All Anonymous Users Permissions</b> - Permissions which are granted to all users who are not logged in the system</li>
 		 				<li><b>All Registered Users Permissions</b> - Permissions which are granted to all registered users in the system</li>
-		 				<li><b>A Individual User Permissions</b> - Permissions which are granted to a registered user in the system</li>
+		 				<li><b>An Individual User Permissions</b> - Permissions which are granted to a registered user in the system</li>
 		 			</ul>
-		 			<p>Permissions can be granted to <b>All Registered Users</b> or<b> All Anonymous Users</b> or <b>An Individual User</b>. 
+		 			<p>Permissions can be granted to <b>All Registered Users</b> or<b> All Anonymous Users</b> or <b>An Individual User</b>.
 		 			<p>If the collection permissions are neither granted to <b>All Registered Users</b> nor <b>All Anonymous Users</b>, which means this collection is a private collection.</p>
-		 			<p>The <b>View</b> and <b>Export</b> permissions have been set in a public collection by default, any users can view this collection and export the dataset files from this collection.</p>
-		 			<p>You can also grant the specific permissions to an individual user in a collection, and this user permissions would be inherited from the permissions which you have granted to all Anonymous Users in the same collection.</p>
+		 			<p>You can grant the specific permissions to an individual user in a collection, and the allowed permissions for <b>All Anonymous Users</b> in this collection will be inherited.</p>
 		 		</div>
 		 	</div>
 		 	<div class="blank_separator"></div>

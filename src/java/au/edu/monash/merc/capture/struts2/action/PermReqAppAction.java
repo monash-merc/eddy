@@ -30,116 +30,281 @@ package au.edu.monash.merc.capture.struts2.action;
 
 import java.util.List;
 
+import au.edu.monash.merc.capture.domain.*;
+import au.edu.monash.merc.capture.dto.ManagablePerm;
+import au.edu.monash.merc.capture.dto.ManagablePermType;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-
-import au.edu.monash.merc.capture.domain.PermissionRequest;
 
 @Scope("prototype")
 @Controller("perm.permReqAppAction")
 public class PermReqAppAction extends DMCoreAction {
 
-	private Logger logger = Logger.getLogger(this.getClass().getName());
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
-	private PermissionRequest permRequest;
+    private PermissionRequest permRequest;
 
-	private List<PermissionRequest> permRequests;
+    private List<PermissionRequest> permRequests;
 
-	public String listPermRequests() {
-		setNavForPermReq();
-		try {
-			// long uid = getLoginUsrIdFromSession();
-			user = retrieveLoggedInUser();
-			permRequests = this.dmService.getPermissionRequestsByOwner(user.getId());
+    public String listPermRequests() {
+        setNavForPermReq();
+        try {
+            // long uid = getLoginUsrIdFromSession();
+            user = retrieveLoggedInUser();
+            permRequests = this.dmService.getPermissionRequestsByOwner(user.getId());
 
-		} catch (Exception e) {
-			logger.error(e);
-			addActionError(getText("failed.to.get.user.permission.requests"));
-			return ERROR;
-		}
-		return SUCCESS;
-	}
+        } catch (Exception e) {
+            logger.error(e);
+            addActionError(getText("failed.to.get.user.permission.requests"));
+            return ERROR;
+        }
+        return SUCCESS;
+    }
 
-	public String approvePermReq() {
+    public String approvePermReq() {
 
-		setNavForPermReq();
-		try {
-			// long uid = getLoginUsrIdFromSession();
-			user = retrieveLoggedInUser();
-			if (checkPermsReqError()) {
-				postProcess(user.getId());
-				return INPUT;
-			}
-			// save the permission
-			this.dmService.approveUserPermRequest(permRequest);
+        setNavForPermReq();
+        try {
+            user = retrieveLoggedInUser();
+            if (checkPermsReqError()) {
+                postProcess(user.getId());
+                return INPUT;
+            }
 
-			permRequests = this.dmService.getPermissionRequestsByOwner(user.getId());
-			setActionSuccessMsg(getText("grant.user.requested.permissions.successfully", new String[] { permRequest.getCollection().getName() }));
-			// TODO:
-			// send an approval email to request user.
-		} catch (Exception e) {
-			logger.error(e);
-			addActionError(getText("failed.to.grant.user.requested.permissions"));
-			return ERROR;
-		}
-		return SUCCESS;
-	}
+            PermissionRequest pmReq = this.dmService.getPermissionReqById(permRequest.getId());
+            Collection co = pmReq.getCollection();
+            User requestUser = pmReq.getRequestUser();
 
-	private void postProcess(long uid) {
-		permRequests = this.dmService.getPermissionRequestsByOwner(uid);
-	}
+            ManagablePerm<Permission> grantPerm = grantPermissions(pmReq, co, requestUser);
 
-	public String rejectPermReq() {
-		setNavForPermReq();
-		try {
-			// long uid = getLoginUsrIdFromSession();
-			user = retrieveLoggedInUser();
-			this.dmService.deletePermissionRequestById(permRequest.getId());
-			permRequests = this.dmService.getPermissionRequestsByOwner(user.getId());
-			setActionSuccessMsg(getText("reject.user.requested.permissions.successfully", new String[] { permRequest.getCollection().getName() }));
-			// TODO:
-			// send a rejected email to user.
-		} catch (Exception e) {
-			logger.error(e);
-			addActionError(getText("failed.to.reject.user.requested.permissions"));
-			return ERROR;
-		}
-		return SUCCESS;
-	}
+            if (grantPerm != null) {
+                //save the requested permissions
+                this.dmService.saveUserRequestedPerm(grantPerm, pmReq.getId());
+            }
+            //save the successful message
+            setActionSuccessMsg(getText("grant.user.requested.permissions.successfully", new String[]{co.getName()}));
+            // TODO:
+            // send an approval email to request user.
+        } catch (Exception e) {
+            logger.error(e);
+            addActionError(getText("failed.to.grant.user.requested.permissions"));
+            return ERROR;
+        }
+        return SUCCESS;
+    }
 
-	private void setNavForPermReq() {
-		String startNav = getText("user.display.home.action.title");
-		String startNavLink = ActConstants.DISPLAY_USER_HOME_ACTION;
-		String secondNav = getText("view.all.permission.requests.action.title");
-		String secondNavLink = ActConstants.VIEW_PERM_REQUESTS_ACTION;
-		setPageTitle(secondNav);
-		navigationBar = generateNavLabel(startNav, startNavLink, secondNav, secondNavLink, null, null);
-	}
+    private ManagablePerm<Permission> grantPermissions(PermissionRequest pmReq, Collection collection, User requestUser) {
 
-	private boolean checkPermsReqError() {
-		if (!permRequest.isViewAllowed() && !permRequest.isUpdateAllowed() && !permRequest.isImportAllowed() && !permRequest.isExportAllowed()
-				&& !permRequest.isDeleteAllowed() && !permRequest.isChangePermAllowed()) {
-			addFieldError("perms", getText("at.least.selected.permission.required"));
-			return true;
-		}
-		return false;
-	}
+        long permReqId = pmReq.getId();
 
-	public PermissionRequest getPermRequest() {
-		return permRequest;
-	}
+        Permission requestPerm = new Permission();
+        requestPerm.setViewAllowed(pmReq.isViewAllowed());
+        requestPerm.setUpdateAllowed(pmReq.isUpdateAllowed());
+        requestPerm.setImportAllowed(pmReq.isImportAllowed());
+        requestPerm.setExportAllowed(pmReq.isExportAllowed());
+        requestPerm.setDeleteAllowed(pmReq.isDeleteAllowed());
+        requestPerm.setChangePermAllowed(pmReq.isChangePermAllowed());
 
-	public void setPermRequest(PermissionRequest permRequest) {
-		this.permRequest = permRequest;
-	}
+        // get the user permission for this collection, return max three permissions or min two permissions
+        List<Permission> userAllPerms = this.dmService.getUserCoPerms(requestUser.getId(), collection.getId());
 
-	public List<PermissionRequest> getPermRequests() {
-		return permRequests;
-	}
+        //set user permissions as null first.
+        Permission userPerm = null;
+        Permission anonyPerm = new Permission();
+        Permission allRegPerm = new Permission();
 
-	public void setPermRequests(List<PermissionRequest> permRequests) {
-		this.permRequests = permRequests;
-	}
+
+        if (userAllPerms != null) {
+            for (Permission perm : userAllPerms) {
+                String permType = perm.getPermType();
+                if (permType.equals(PermType.REGISTERED.code())) {
+                    userPerm = perm;
+                }
+                if (permType.equals(PermType.ANONYMOUS.code())) {
+                    anonyPerm = perm;
+                }
+                if (permType.equals(PermType.ALLREGUSER.code())) {
+                    allRegPerm = perm;
+                }
+            }
+        } else {
+            return null;
+        }
+
+        //if previous permissions are already existed, just get the id for this requested permissions
+        if (userPerm != null) {
+            requestPerm.setId(userPerm.getId());
+        }
+
+        // inherited the permissions from anonymous user
+        if (anonyPerm.isViewAllowed()) {
+            requestPerm.setViewAllowed(true);
+        }
+        if (anonyPerm.isUpdateAllowed()) {
+            requestPerm.setUpdateAllowed(true);
+        }
+        if (anonyPerm.isImportAllowed()) {
+            requestPerm.setImportAllowed(true);
+        }
+        if (anonyPerm.isExportAllowed()) {
+            requestPerm.setExportAllowed(true);
+        }
+        if (anonyPerm.isDeleteAllowed()) {
+            requestPerm.setDeleteAllowed(true);
+        }
+        if (anonyPerm.isChangePermAllowed()) {
+            requestPerm.setChangePermAllowed(true);
+        }
+        //set the collection for this requested permission
+        requestPerm.setCollection(collection);
+        //set the requested permission user
+        requestPerm.setPermissionForUser(requestUser);
+        //set the permission type
+        requestPerm.setPermType(PermType.REGISTERED.code());
+
+        ManagablePerm<Permission> mgIndividualPerm = new ManagablePerm<Permission>();
+        mgIndividualPerm.setPerm(requestPerm);
+        return sortRequestedUserPerm(mgIndividualPerm, allRegPerm, anonyPerm);
+    }
+
+    private ManagablePerm<Permission> sortRequestedUserPerm(ManagablePerm<Permission> requestedIndividualPerms, Permission allUserPerm, Permission anonyPerm) {
+        Permission indivPerm = requestedIndividualPerms.getPerm();
+
+        // if none permission is assigned for the anonymous user and the all-registered-user, but assigned for the
+        // individual user:
+        // a). If this individual user permission is new, just create it.
+        // b). If this individual user permission already existed, we just update it.
+        if (anonyPerm.isNonePerm() && allUserPerm.isNonePerm() && !indivPerm.isNonePerm()) {
+            if (indivPerm.getId() == 0) {
+                requestedIndividualPerms.setManagablePermType(ManagablePermType.NEW);
+            } else {
+                requestedIndividualPerms.setManagablePermType(ManagablePermType.UPDATE);
+            }
+            return requestedIndividualPerms;
+        }
+
+        // if none permission is assigned for the anonymous user, but assigned to the
+        // all-registered-user and the individual user:
+        // 1. If this individual user permission is new, and the all-registered-user permissions are not the same as the
+        // individual user permissions: we create an new permission, if the permissions are the same, just ignore.
+        // 2). If this individual user permission already existed, and the all-registered-user permissions are not the
+        // same as the individual user permissions: we just update it, if the permissions are the same, we remove it
+        if (anonyPerm.isNonePerm() && !allUserPerm.isNonePerm() && !indivPerm.isNonePerm()) {
+            if (indivPerm.getId() == 0) {
+                if (!isSamePerms(allUserPerm, indivPerm)) {
+                    // create a new permission
+                    requestedIndividualPerms.setManagablePermType(ManagablePermType.NEW);
+                } else {
+                    requestedIndividualPerms.setManagablePermType(ManagablePermType.IGNORE);
+                }
+            } else {
+                if (!isSamePerms(allUserPerm, indivPerm)) {
+                    // create a new permission
+                    requestedIndividualPerms.setManagablePermType(ManagablePermType.UPDATE);
+                } else {
+                    requestedIndividualPerms.setManagablePermType(ManagablePermType.DELETE);
+                }
+            }
+            return requestedIndividualPerms;
+        }
+
+        // if the permission is assigned for the anonymous user, the all-registered-user and the individual user:
+        // 1. If this individual user permission is new:
+        // a): if the individual permissions are the same as the all-registered-user permissions or the individual
+        // permissions are the same as the anonymous permissions, just ignore
+        // b): otherwise we create a new permission for the individual user.
+        //
+        // 2). If this individual user permission already existed:
+        // a): if the individual permissions are the same as the all-registered-user permissions or the individual
+        // permissions are the same as the anonymous permissions, just remove it.
+        // b): otherwise we update permission for the individual user.
+        if (!anonyPerm.isNonePerm() && !allUserPerm.isNonePerm() && !indivPerm.isNonePerm()) {
+            if (indivPerm.getId() == 0) {
+                if ((isSamePerms(allUserPerm, indivPerm)) || (isSamePerms(anonyPerm, indivPerm))) {
+                    requestedIndividualPerms.setManagablePermType(ManagablePermType.IGNORE);
+                } else {
+                    // create a new permission
+                    requestedIndividualPerms.setManagablePermType(ManagablePermType.NEW);
+                }
+            } else {
+                if ((isSamePerms(allUserPerm, indivPerm)) || (isSamePerms(anonyPerm, indivPerm))) {
+                    requestedIndividualPerms.setManagablePermType(ManagablePermType.DELETE);
+                } else {
+                    requestedIndividualPerms.setManagablePermType(ManagablePermType.UPDATE);
+                }
+            }
+            return requestedIndividualPerms;
+        }
+        return null;
+    }
+
+
+    private boolean isSamePerms(Permission aPerm, Permission bPerm) {
+        if ((aPerm.isViewAllowed() != bPerm.isViewAllowed()) || (aPerm.isUpdateAllowed() != bPerm.isUpdateAllowed())
+                || (aPerm.isImportAllowed() != bPerm.isImportAllowed()) || (aPerm.isExportAllowed() != bPerm.isExportAllowed())
+                || (aPerm.isDeleteAllowed() != bPerm.isDeleteAllowed()) || (aPerm.isChangePermAllowed() != bPerm.isChangePermAllowed())) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+    private void postProcess(long uid) {
+        permRequests = this.dmService.getPermissionRequestsByOwner(uid);
+    }
+
+    public String rejectPermReq() {
+        setNavForPermReq();
+        try {
+            // long uid = getLoginUsrIdFromSession();
+            user = retrieveLoggedInUser();
+            this.dmService.deletePermissionRequestById(permRequest.getId());
+            permRequests = this.dmService.getPermissionRequestsByOwner(user.getId());
+            setActionSuccessMsg(getText("reject.user.requested.permissions.successfully", new String[]{permRequest.getCollection().getName()}));
+            // TODO:
+            // send a rejected email to user.
+        } catch (Exception e) {
+            logger.error(e);
+            addActionError(getText("failed.to.reject.user.requested.permissions"));
+            return ERROR;
+        }
+        return SUCCESS;
+    }
+
+    private void setNavForPermReq() {
+        String startNav = getText("user.display.home.action.title");
+        String startNavLink = ActConstants.DISPLAY_USER_HOME_ACTION;
+        String secondNav = getText("view.all.permission.requests.action.title");
+        String secondNavLink = ActConstants.VIEW_PERM_REQUESTS_ACTION;
+        setPageTitle(secondNav);
+        navigationBar = generateNavLabel(startNav, startNavLink, secondNav, secondNavLink, null, null);
+    }
+
+    private boolean checkPermsReqError() {
+        if (!permRequest.isViewAllowed() && !permRequest.isUpdateAllowed() && !permRequest.isImportAllowed() && !permRequest.isExportAllowed()
+                && !permRequest.isDeleteAllowed() && !permRequest.isChangePermAllowed()) {
+            addFieldError("perms", getText("at.least.selected.permission.required"));
+            return true;
+        }
+        return false;
+    }
+
+    public PermissionRequest getPermRequest() {
+        return permRequest;
+    }
+
+    public void setPermRequest(PermissionRequest permRequest) {
+        this.permRequest = permRequest;
+    }
+
+    public List<PermissionRequest> getPermRequests() {
+        return permRequests;
+    }
+
+    public void setPermRequests(List<PermissionRequest> permRequests) {
+        this.permRequests = permRequests;
+    }
 
 }

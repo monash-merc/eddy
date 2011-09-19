@@ -39,15 +39,6 @@
 			 			</tr>
 			 			<tr>
 			 				<td align="left">
-			 					<@s.text name="collection.private.field"/> <@s.checkbox name="privateCo" />
-			 					<div class="name_comment">* (<@s.text name="collection.private.hint" />)</div>
-			 					<br/>
-			 				</td>
-			 				<td></td>
-			 			</tr>
-			 			
-			 			<tr>
-			 				<td align="left">
 			 					<@s.text name="collection.temporal.from" />:
 			 					<div class="name_comment">* (<@s.text name="collection.start.date.hint" />)</div>
 			 				</td>

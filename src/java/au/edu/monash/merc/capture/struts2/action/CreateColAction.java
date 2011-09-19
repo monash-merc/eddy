@@ -47,291 +47,273 @@ import au.edu.monash.merc.capture.domain.UserType;
 import au.edu.monash.merc.capture.util.CaptureUtil;
 
 /**
- * 
  * @author simonyu
  * @version 1.0
  * @since v1.0
- * 
  */
 @Scope("prototype")
 @Controller("data.createColAction")
 public class CreateColAction extends DMCoreAction {
 
-	private boolean privateCo;
+    private boolean stageTransferEnabled;
 
-	private boolean stageTransferEnabled;
+    private boolean mdRegEnabled;
 
-	private boolean mdRegEnabled;
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
-	private Logger logger = Logger.getLogger(this.getClass().getName());
+    /**
+     * Show create collection action
+     *
+     * @return a String represents SUCCESS or ERROR.
+     */
+    public String showCreateCollection() {
+        try {
+            user = retrieveLoggedInUser();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            addActionError(getText("failed.to.show.create.collection.page"));
+            setNavForShowExc();
+            return INPUT;
+        }
+        return SUCCESS;
+    }
 
-	/**
-	 * Show create collection action
-	 * 
-	 * @return a String represents SUCCESS or ERROR.
-	 */
-	public String showCreateCollection() {
-		try {
-			user = retrieveLoggedInUser();
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			addActionError(getText("failed.to.show.create.collection.page"));
-			setNavForShowExc();
-			return INPUT;
-		}
-		return SUCCESS;
-	}
+    private void setNavForShowExc() {
+        // set the new page title after successful creating a new collection.
+        String startNav = getText("mycollection.nav.label.name");
+        String startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
+        String secondNav = getText("create.new.collection");
+        String secondNavLink = null;
+        setPageTitle(startNav, secondNav + " Error");
+        navigationBar = generateNavLabel(startNav, startNavLink, secondNav, secondNavLink, null, null);
+    }
 
-	private void setNavForShowExc() {
-		// set the new page title after successful creating a new collection.
-		String startNav = getText("mycollection.nav.label.name");
-		String startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
-		String secondNav = getText("create.new.collection");
-		String secondNavLink = null;
-		setPageTitle(startNav, secondNav + " Error");
-		navigationBar = generateNavLabel(startNav, startNavLink, secondNav, secondNavLink, null, null);
-	}
+    /**
+     * Create a new collection
+     *
+     * @return a String represents SUCCESS or ERROR.
+     */
+    public String createCollection() {
+        // any root path error. directly return the error to front input page.
+        if (!checkDataStorePath()) {
+            return INPUT;
+        }
 
-	/**
-	 * Create a new collection
-	 * 
-	 * @return a String represents SUCCESS or ERROR.
-	 */
-	public String createCollection() {
-		// any root path error. directly return the error to front input page.
-		if (!checkDataStorePath()) {
-			return INPUT;
-		}
+        try {
+            // retrieve logged in user from database
+            user = retrieveLoggedInUser();
+            // check the collection name
+            String colName = collection.getName();
+            if (this.dmService.checkCollectionNameExisted(colName)) {
+                addActionError(getText("collection.name.already.existed"));
+                return INPUT;
+            }
+            String dataStorePath = configSetting.getPropValue(ConfigSettings.DATA_STORE_LOCATION);
 
-		try {
-			// retrieve logged in user from database
-			user = retrieveLoggedInUser();
-			// check the collection name
-			String colName = collection.getName();
-			if (this.dmService.checkCollectionNameExisted(colName)) {
-				addActionError(getText("collection.name.already.existed"));
-				return INPUT;
-			}
-			String dataStorePath = configSetting.getPropValue(ConfigSettings.DATA_STORE_LOCATION);
+            String userPath = ActConstants.DATA_STORE_USER_ROOT_PREFIX + user.getId();
+            // generate the collection file identifier for file system
+            String coFileId = CaptureUtil.generateIdBasedOnTimeStamp();
+            // generate the uuid for this collection
+            String uuidKey = pidService.genUUIDWithPrefix();
+            collection.setUniqueKey(uuidKey);
 
-			String userPath = ActConstants.DATA_STORE_USER_ROOT_PREFIX + user.getId();
-			// generate the collection file identifier for file system
-			String coFileId = CaptureUtil.generateIdBasedOnTimeStamp();
-			// generate the uuid for this collection
-			String uuidKey = pidService.genUUIDWithPrefix();
-			collection.setUniqueKey(uuidKey);
+            // construct the file store location
+            String colRelPath = File.separator + userPath + File.separator + coFileId;
+            collection.setDirPathName(colRelPath);
+            Date date = GregorianCalendar.getInstance().getTime();
+            collection.setCreatedTime(date);
+            collection.setModifiedTime(date);
+            String briefDesc = genShortDesc(collection.getDescription());
+            collection.setBriefDesc(briefDesc);
 
-			// construct the file store location
-			String colRelPath = File.separator + userPath + File.separator + coFileId;
-			collection.setDirPathName(colRelPath);
-			Date date = GregorianCalendar.getInstance().getTime();
-			collection.setCreatedTime(date);
-			collection.setModifiedTime(date);
-			String briefDesc = genShortDesc(collection.getDescription());
-			collection.setBriefDesc(briefDesc);
+            // set the todate into 23:59:59;
+            Date todate = collection.getDateTo();
+            if (todate != null) {
+                collection.setDateTo(normalizeDate(todate));
+            }
 
-			// set the todate into 23:59:59;
-			Date todate = collection.getDateTo();
-			if (todate != null) {
-				collection.setDateTo(normalizeDate(todate));
-			}
+            // set the collection owner
+            collection.setOwner(user);
+            // set collection modified by some user, in this case is an owner user
+            collection.setModifiedByUser(user);
 
-			// set the collection owner
-			collection.setOwner(user);
-			// set collection modified by some user, in this case is an owner user
-			collection.setModifiedByUser(user);
+            // check the spatial coverage and type
+            String spatialTmp = collection.getSpatialCoverage();
+            if (StringUtils.isBlank(spatialTmp)) {
+                collection.setSpatialCoverage(null);
+            } else {
+                collection.setSpatialType(ActConstants.ANDS_SPATIAL_TYPE);
+            }
 
-			// check the spatial coverage and type
-			String spatialTmp = collection.getSpatialCoverage();
-			if (StringUtils.isBlank(spatialTmp)) {
-				collection.setSpatialCoverage(null);
-			} else {
-				collection.setSpatialType(ActConstants.ANDS_SPATIAL_TYPE);
-			}
+            // setup a default permissions.
+            List<Permission> defaultPermissions = setDefaultPermissions();
+            collection.setPermissions(defaultPermissions);
 
-			// setup a default permissions.
-			List<Permission> defaultPermissions = setUpPermissions();
-			collection.setPermissions(defaultPermissions);
+            this.dmService.createCollection(collection, dataStorePath);
+            // record down the event
+            recordAuditEvent();
 
-			this.dmService.createCollection(collection, dataStorePath);
-			// record down the event
-			recordAuditEvent();
+            // convert any newline in the description into a br html tag
+            String textAreaDesc = collection.getDescription();
+            String htmlDesc = nlToBr(textAreaDesc);
+            collection.setDescription(htmlDesc);
 
-			// convert any newline in the description into a br html tag
-			String textAreaDesc = collection.getDescription();
-			String htmlDesc = nlToBr(textAreaDesc);
-			collection.setDescription(htmlDesc);
+            // populate the stage transfer if enabled;
+            String stageEnabledStr = configSetting.getPropValue(ConfigSettings.STAGE_TRANSFER_ENABLED);
+            stageTransferEnabled = Boolean.valueOf(stageEnabledStr).booleanValue();
 
-			// populate the stage transfer if enabled;
-			String stageEnabledStr = configSetting.getPropValue(ConfigSettings.STAGE_TRANSFER_ENABLED);
-			stageTransferEnabled = Boolean.valueOf(stageEnabledStr).booleanValue();
+            // populate the rifcs registration if enabled
+            String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
+            mdRegEnabled = Boolean.valueOf(mdRegEnabledStr).booleanValue();
+            // set user type is the owner of collection
+            viewType = ActConstants.UserViewType.USER.toString();
 
-			// populate the rifcs registration if enabled
-			String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
-			mdRegEnabled = Boolean.valueOf(mdRegEnabledStr).booleanValue();
-			// set user type is the owner of collection
-			viewType = ActConstants.UserViewType.USER.toString();
+            // set the full permissions
+            setupFullPermissions();
 
-			// set the full permissions
-			setupFullPermissions();
+            // populate the collection links
+            populateLinksInUsrCollection();
 
-			// populate the collection links
-			populateLinksInUsrCollection();
+            // set action successful message
+            setActionSuccessMsg(getText("create.collection.success"));
+            // set page title and navigation label
+            setNavAfterSuccess();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            addActionError(getText("failed.to.create.collection"));
+            return INPUT;
+        }
 
-			// set action successful message
-			setActionSuccessMsg(getText("create.collection.success"));
-			// set page title and navigation label
-			setNavAfterSuccess();
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			addActionError(getText("failed.to.create.collection"));
-			return INPUT;
-		}
+        return SUCCESS;
+    }
 
-		return SUCCESS;
-	}
+    public void validateCreateCollection() {
 
-	public void validateCreateCollection() {
+        if (StringUtils.isBlank(collection.getName())) {
+            addFieldError("collection.name", getText("collection.name.required"));
+        }
 
-		if (StringUtils.isBlank(collection.getName())) {
-			addFieldError("collection.name", getText("collection.name.required"));
-		}
+        Date fromDate = collection.getDateFrom();
+        Date toDate = collection.getDateTo();
 
-		Date fromDate = collection.getDateFrom();
-		Date toDate = collection.getDateTo();
+        if ((fromDate != null && toDate == null) || (fromDate == null && toDate != null)) {
+            addFieldError("fromToDate", getText("collection.fromDate.and.toDate.must.be.provided"));
+        }
 
-		if ((fromDate != null && toDate == null) || (fromDate == null && toDate != null)) {
-			addFieldError("fromToDate", getText("collection.fromDate.and.toDate.must.be.provided"));
-		}
+        if (fromDate != null && toDate != null) {
+            if (fromDate.compareTo(toDate) > 0) {
+                addFieldError("invalidFromToDate", getText("collection.start.date.must.be.earlier.than.to.datetime"));
+            }
+        }
 
-		if (fromDate != null && toDate != null) {
-			if (fromDate.compareTo(toDate) > 0) {
-				addFieldError("invalidFromToDate", getText("collection.start.date.must.be.earlier.than.to.datetime"));
-			}
-		}
+        if (StringUtils.isBlank(collection.getDescription())) {
+            addFieldError("collection.description", getText("collection.description.required"));
+        }
 
-		if (StringUtils.isBlank(collection.getDescription())) {
-			addFieldError("collection.description", getText("collection.description.required"));
-		}
+        if (StringUtils.isNotBlank(collection.getName())) {
+            if (!CaptureUtil.notGTFixedLength(collection.getName(), 80)) {
+                addFieldError("collection.name.length", getText("collection.name.max.length"));
+            }
+        }
 
-		if (StringUtils.isNotBlank(collection.getName())) {
-			if (!CaptureUtil.notGTFixedLength(collection.getName(), 80)) {
-				addFieldError("collection.name.length", getText("collection.name.max.length"));
-			}
-		}
+        if (StringUtils.isNotBlank(collection.getDescription())) {
+            if (!CaptureUtil.notGTFixedLength(collection.getDescription(), 4000)) {
+                addFieldError("collection.desc.length", getText("collection.desc.max.length"));
+            }
+        }
 
-		if (StringUtils.isNotBlank(collection.getDescription())) {
-			if (!CaptureUtil.notGTFixedLength(collection.getDescription(), 4000)) {
-				addFieldError("collection.desc.length", getText("collection.desc.max.length"));
-			}
-		}
+        if (StringUtils.isNotBlank(collection.getSpatialCoverage())) {
+            if (!CaptureUtil.notGTFixedLength(collection.getSpatialCoverage(), 255)) {
+                addFieldError("collection.coverage.length", getText("collection.coverage.max.length"));
+            }
+        }
 
-		if (StringUtils.isNotBlank(collection.getSpatialCoverage())) {
-			if (!CaptureUtil.notGTFixedLength(collection.getSpatialCoverage(), 255)) {
-				addFieldError("collection.coverage.length", getText("collection.coverage.max.length"));
-			}
-		}
+    }
 
-	}
+    private List<Permission> setDefaultPermissions() {
+        // all-registered user
+        Permission allUserPerm = new Permission();
+        // set the permission type;
+        allUserPerm.setPermType(PermType.ALLREGUSER.code());
 
-	private List<Permission> setUpPermissions() {
-		// all-registered user
-		Permission allUserPerm = new Permission();
-		// set the permission type;
-		allUserPerm.setPermType(PermType.ALLREGUSER.code());
-		if (!privateCo) {
-			allUserPerm.setViewAllowed(true);
-			allUserPerm.setExportAllowed(true);
-		}
-		if (allRegUser == null) {
-			allRegUser = this.userService.getVirtualUser(UserType.ALLREGUSER.code());
-		}
-		allUserPerm.setCollection(collection);
-		allUserPerm.setPermissionForUser(allRegUser);
+        if (allRegUser == null) {
+            allRegUser = this.userService.getVirtualUser(UserType.ALLREGUSER.code());
+        }
+        allUserPerm.setCollection(collection);
+        allUserPerm.setPermissionForUser(allRegUser);
 
-		// anonymous user
-		Permission anonyPerm = new Permission();
-		// set the permission type.
-		anonyPerm.setPermType(PermType.ANONYMOUS.code());
-		if (!privateCo) {
-			anonyPerm.setViewAllowed(true);
-			anonyPerm.setExportAllowed(true);
-		}
-		if (anonymous == null) {
-			anonymous = this.userService.getVirtualUser(UserType.ANONYMOUS.code());
-		}
-		anonyPerm.setCollection(collection);
-		anonyPerm.setPermissionForUser(anonymous);
+        // anonymous user
+        Permission anonyPerm = new Permission();
+        // set the permission type.
+        anonyPerm.setPermType(PermType.ANONYMOUS.code());
 
-		List<Permission> defaultPerms = new ArrayList<Permission>();
-		defaultPerms.add(allUserPerm);
-		defaultPerms.add(anonyPerm);
-		return defaultPerms;
-	}
+        if (anonymous == null) {
+            anonymous = this.userService.getVirtualUser(UserType.ANONYMOUS.code());
+        }
+        anonyPerm.setCollection(collection);
+        anonyPerm.setPermissionForUser(anonymous);
 
-	private void recordAuditEvent() {
-		AuditEvent ev = new AuditEvent();
-		ev.setCreatedTime(GregorianCalendar.getInstance().getTime());
-		ev.setEvent(collection.getName() + " has been created");
-		ev.setEventOwner(collection.getOwner());
-		ev.setOperator(user);
-		recordActionAuditEvent(ev);
-	}
+        List<Permission> defaultPerms = new ArrayList<Permission>();
+        defaultPerms.add(allUserPerm);
+        defaultPerms.add(anonyPerm);
+        return defaultPerms;
+    }
 
-	// set the page title and navigation label
-	private void setNavAfterSuccess() {
-		// set the new page title after successful creating a new collection.
-		String startNav = getText("mycollection.nav.label.name");
-		String secondNav = collection.getName();
-		String startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
+    private void recordAuditEvent() {
+        AuditEvent ev = new AuditEvent();
+        ev.setCreatedTime(GregorianCalendar.getInstance().getTime());
+        ev.setEvent(collection.getName() + " has been created");
+        ev.setEventOwner(collection.getOwner());
+        ev.setOperator(user);
+        recordActionAuditEvent(ev);
+    }
 
-		String secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="
-				+ collection.getOwner().getId() + "&viewType=" + viewType;
-		setPageTitle(startNav, secondNav);
-		navigationBar = generateNavLabel(startNav, startNavLink, secondNav, secondNavLink, null, null);
-	}
+    // set the page title and navigation label
+    private void setNavAfterSuccess() {
+        // set the new page title after successful creating a new collection.
+        String startNav = getText("mycollection.nav.label.name");
+        String secondNav = collection.getName();
+        String startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
 
-	// check the dataset path
-	private boolean checkDataStorePath() {
-		String dataStorePath = configSetting.getPropValue(ConfigSettings.DATA_STORE_LOCATION);
-		if (StringUtils.isBlank(dataStorePath)) {
-			addActionError(getText("datastore.path.undefined.error"));
-			return false;
-		}
-		try {
-			if (!this.dmService.checkWritePermission(dataStorePath)) {
-				addActionError(getText("datastore.path.permission.error"));
-				return false;
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			addActionError(getText("datastore.path.check.permission.failed"));
-			return false;
-		}
-		return true;
-	}
+        String secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="
+                + collection.getOwner().getId() + "&viewType=" + viewType;
+        setPageTitle(startNav, secondNav);
+        navigationBar = generateNavLabel(startNav, startNavLink, secondNav, secondNavLink, null, null);
+    }
 
-	public boolean isPrivateCo() {
-		return privateCo;
-	}
+    // check the dataset path
+    private boolean checkDataStorePath() {
+        String dataStorePath = configSetting.getPropValue(ConfigSettings.DATA_STORE_LOCATION);
+        if (StringUtils.isBlank(dataStorePath)) {
+            addActionError(getText("datastore.path.undefined.error"));
+            return false;
+        }
+        try {
+            if (!this.dmService.checkWritePermission(dataStorePath)) {
+                addActionError(getText("datastore.path.permission.error"));
+                return false;
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            addActionError(getText("datastore.path.check.permission.failed"));
+            return false;
+        }
+        return true;
+    }
 
-	public void setPrivateCo(boolean privateCo) {
-		this.privateCo = privateCo;
-	}
+    public boolean isStageTransferEnabled() {
+        return stageTransferEnabled;
+    }
 
-	public boolean isStageTransferEnabled() {
-		return stageTransferEnabled;
-	}
+    public void setStageTransferEnabled(boolean stageTransferEnabled) {
+        this.stageTransferEnabled = stageTransferEnabled;
+    }
 
-	public void setStageTransferEnabled(boolean stageTransferEnabled) {
-		this.stageTransferEnabled = stageTransferEnabled;
-	}
+    public boolean isMdRegEnabled() {
+        return mdRegEnabled;
+    }
 
-	public boolean isMdRegEnabled() {
-		return mdRegEnabled;
-	}
-
-	public void setMdRegEnabled(boolean mdRegEnabled) {
-		this.mdRegEnabled = mdRegEnabled;
-	}
+    public void setMdRegEnabled(boolean mdRegEnabled) {
+        this.mdRegEnabled = mdRegEnabled;
+    }
 }

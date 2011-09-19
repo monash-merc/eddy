@@ -76,7 +76,7 @@ $(document).ready(function(){
         if(value_index != '-1'){
 	       $('#user_permissions > tbody:last').append("<tr>"+
 				 	 		"<td><center>" + selectedText + "</center>" +
-				 	 		"<input type='hidden' name='permissionBeans[" + rowIndex +"].id' value='-1' id='permissionBeans_" + rowIndex +"__id'/>"+
+				 	 		"<input type='hidden' name='permissionBeans[" + rowIndex +"].id' value='0' id='permissionBeans_" + rowIndex +"__id'/>"+
 				 	 		"<input type='hidden' name='permissionBeans[" + rowIndex +"].uid' value='" + value_index +"' id='user_id'/></td>" +
 				 	 		"<input type='hidden' name='permissionBeans[" + rowIndex +"].userName' value='" + selectedText + "' id='permissionBeans_" + rowIndex +"__userName'/></td>" +
 				 	 		"<td><center><input type='checkbox' name='permissionBeans[" + rowIndex +"].viewAllowed' value='true' id='permissionBeans_" + rowIndex +"__viewAllowed'/></center></td>" +
