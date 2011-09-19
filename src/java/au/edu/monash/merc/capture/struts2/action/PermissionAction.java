@@ -411,51 +411,24 @@ public class PermissionAction extends DMCoreAction {
             return managablePerm;
         }
 
-        // if none permission is assigned for the anonymous user, but assigned to the
-        // all-registered-user and the individual user:
-        // 1. If this individual user permission is new, and the all-registered-user permissions are not the same as the
-        // individual user permissions: we create an new permission, if the permissions are the same, just ignore.
-        // 2). If this individual user permission already existed, and the all-registered-user permissions are not the
-        // same as the individual user permissions: we just update it, if the permissions are the same, we remove it
-        if (anonyPerm.isNonePerm() && !allUserPerm.isNonePerm() && !perm.isNonePerm()) {
-            if (perm.getId() == 0) {
-                if (!eqaulsPerms(allUserPerm, perm)) {
-                    // create a new permission
-                    managablePerm.setManagablePermType(ManagablePermType.NEW);
-                } else {
-                    managablePerm.setManagablePermType(ManagablePermType.IGNORE);
-                }
-            } else {
-                if (!eqaulsPerms(allUserPerm, perm)) {
-                    // create a new permission
-                    managablePerm.setManagablePermType(ManagablePermType.UPDATE);
-                } else {
-                    managablePerm.setManagablePermType(ManagablePermType.DELETE);
-                }
-            }
-            return managablePerm;
-        }
-
-        // if the permission is assigned for the anonymous user, the all-registered-user and the individual user:
+        // if the permissions are assigned for the all-registered-user and the individual user:
         // 1. If this individual user permission is new:
-        // a): if the individual permissions are the same as the all-registered-user permissions or the individual
-        // permissions are the same as the anonymous permissions, just ignore
+        // a): if the individual permissions are the same as the all-registered-user permissions,just ignore
         // b): otherwise we create a new permission for the individual user.
         //
         // 2). If this individual user permission already existed:
-        // a): if the individual permissions are the same as the all-registered-user permissions or the individual
-        // permissions are the same as the anonymous permissions, just remove it.
+        // a): if the individual permissions are the same as the all-registered-user permissions,just remove it.
         // b): otherwise we update permission for the individual user.
-        if (!anonyPerm.isNonePerm() && !allUserPerm.isNonePerm() && !perm.isNonePerm()) {
+        if (!allUserPerm.isNonePerm() && !perm.isNonePerm()) {
             if (perm.getId() == 0) {
-                if ((eqaulsPerms(allUserPerm, perm)) || (eqaulsPerms(anonyPerm, perm))) {
+                if ((eqaulsPerms(allUserPerm, perm))) {
                     managablePerm.setManagablePermType(ManagablePermType.IGNORE);
                 } else {
                     // create a new permission
                     managablePerm.setManagablePermType(ManagablePermType.NEW);
                 }
             } else {
-                if ((eqaulsPerms(allUserPerm, perm)) || (eqaulsPerms(anonyPerm, perm))) {
+                if ((eqaulsPerms(allUserPerm, perm))) {
                     managablePerm.setManagablePermType(ManagablePermType.DELETE);
                 } else {
                     managablePerm.setManagablePermType(ManagablePermType.UPDATE);
