@@ -28,186 +28,186 @@
  */
 package au.edu.monash.merc.capture.domain;
 
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "user_permission")
 public class Permission extends Domain {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "pk_generator")
-	@TableGenerator(name = "pk_generator", pkColumnName = "pk_column_name", valueColumnName = "pk_column_value", pkColumnValue = "user_perm_pk")
-	@Column(name = "id", nullable = false)
-	private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "pk_generator")
+    @TableGenerator(name = "pk_generator", pkColumnName = "pk_column_name", valueColumnName = "pk_column_value", pkColumnValue = "user_perm_pk")
+    @Column(name = "id", nullable = false)
+    private long id;
 
-	@Basic
-	@Column(name = "name", length = 200)
-	private String name;
+    @Basic
+    @Column(name = "name", length = 200)
+    private String name;
 
-	@Basic
-	@Column(name = "description")
-	private String description;
+    @Basic
+    @Column(name = "description")
+    private String description;
 
-	@Basic
-	@Column(name = "view_allowed")
-	private boolean viewAllowed;
+    @Basic
+    @Column(name = "view_allowed")
+    private boolean viewAllowed;
 
-	@Basic
-	@Column(name = "update_allowed")
-	private boolean updateAllowed;
+    @Basic
+    @Column(name = "update_allowed")
+    private boolean updateAllowed;
 
-	@Basic
-	@Column(name = "import_allowed")
-	private boolean importAllowed;
+    @Basic
+    @Column(name = "import_allowed")
+    private boolean importAllowed;
 
-	@Basic
-	@Column(name = "export_allowed")
-	private boolean exportAllowed;
+    @Basic
+    @Column(name = "export_allowed")
+    private boolean exportAllowed;
 
-	@Basic
-	@Column(name = "delete_allowed")
-	private boolean deleteAllowed;
+    @Basic
+    @Column(name = "delete_allowed")
+    private boolean deleteAllowed;
 
-	@Basic
-	@Column(name = "change_perm_allowed")
-	private boolean changePermAllowed;
+    @Basic
+    @Column(name = "change_perm_allowed")
+    private boolean changePermAllowed;
 
-	@Basic
-	@Column(name = "mdregister_allowed")
-	private boolean mdregisterAllowed;
+    @Basic
+    @Column(name = "mdregister_allowed")
+    private boolean mdregisterAllowed;
 
-	@Basic
-	@Column(name = "perm_type", nullable = false)
-	private String permType;
+    @Basic
+    @Column(name = "perm_type", nullable = false)
+    private String permType;
 
-	@ManyToOne(targetEntity = Collection.class)
-	@JoinColumn(referencedColumnName = "id", nullable = false, name = "collection_id")
-	private Collection collection;
+    @ManyToOne(targetEntity = Collection.class)
+    @JoinColumn(referencedColumnName = "id", nullable = false, name = "collection_id")
+    private Collection collection;
 
-	@ManyToOne(targetEntity = User.class, cascade = CascadeType.PERSIST)
-	@JoinColumn(referencedColumnName = "id", nullable = false, name = "perm_user_id")
-	private User permissionForUser;
+    @ManyToOne(targetEntity = User.class, cascade = CascadeType.PERSIST)
+    @JoinColumn(referencedColumnName = "id", nullable = false, name = "perm_user_id")
+    private User permissionForUser;
 
-	public long getId() {
-		return id;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public boolean isViewAllowed() {
-		return viewAllowed;
-	}
+    public boolean isViewAllowed() {
+        return viewAllowed;
+    }
 
-	public void setViewAllowed(boolean viewAllowed) {
-		this.viewAllowed = viewAllowed;
-	}
+    public void setViewAllowed(boolean viewAllowed) {
+        this.viewAllowed = viewAllowed;
+    }
 
-	public boolean isUpdateAllowed() {
-		return updateAllowed;
-	}
+    public boolean isUpdateAllowed() {
+        return updateAllowed;
+    }
 
-	public void setUpdateAllowed(boolean updateAllowed) {
-		this.updateAllowed = updateAllowed;
-	}
+    public void setUpdateAllowed(boolean updateAllowed) {
+        this.updateAllowed = updateAllowed;
+    }
 
-	public boolean isImportAllowed() {
-		return importAllowed;
-	}
+    public boolean isImportAllowed() {
+        return importAllowed;
+    }
 
-	public void setImportAllowed(boolean importAllowed) {
-		this.importAllowed = importAllowed;
-	}
+    public void setImportAllowed(boolean importAllowed) {
+        this.importAllowed = importAllowed;
+    }
 
-	public boolean isExportAllowed() {
-		return exportAllowed;
-	}
+    public boolean isExportAllowed() {
+        return exportAllowed;
+    }
 
-	public void setExportAllowed(boolean exportAllowed) {
-		this.exportAllowed = exportAllowed;
-	}
+    public void setExportAllowed(boolean exportAllowed) {
+        this.exportAllowed = exportAllowed;
+    }
 
-	public boolean isDeleteAllowed() {
-		return deleteAllowed;
-	}
+    public boolean isDeleteAllowed() {
+        return deleteAllowed;
+    }
 
-	public void setDeleteAllowed(boolean deleteAllowed) {
-		this.deleteAllowed = deleteAllowed;
-	}
+    public void setDeleteAllowed(boolean deleteAllowed) {
+        this.deleteAllowed = deleteAllowed;
+    }
 
-	public boolean isChangePermAllowed() {
-		return changePermAllowed;
-	}
+    public boolean isChangePermAllowed() {
+        return changePermAllowed;
+    }
 
-	public void setChangePermAllowed(boolean changePermAllowed) {
-		this.changePermAllowed = changePermAllowed;
-	}
+    public void setChangePermAllowed(boolean changePermAllowed) {
+        this.changePermAllowed = changePermAllowed;
+    }
 
-	public boolean isMdregisterAllowed() {
-		return mdregisterAllowed;
-	}
+    public boolean isMdregisterAllowed() {
+        return mdregisterAllowed;
+    }
 
-	public void setMdregisterAllowed(boolean mdregisterAllowed) {
-		this.mdregisterAllowed = mdregisterAllowed;
-	}
+    public void setMdregisterAllowed(boolean mdregisterAllowed) {
+        this.mdregisterAllowed = mdregisterAllowed;
+    }
 
-	public Collection getCollection() {
-		return collection;
-	}
+    public Collection getCollection() {
+        return collection;
+    }
 
-	public void setCollection(Collection collection) {
-		this.collection = collection;
-	}
+    public void setCollection(Collection collection) {
+        this.collection = collection;
+    }
 
-	public User getPermissionForUser() {
-		return permissionForUser;
-	}
+    public User getPermissionForUser() {
+        return permissionForUser;
+    }
 
-	public void setPermissionForUser(User permissionForUser) {
-		this.permissionForUser = permissionForUser;
-	}
+    public void setPermissionForUser(User permissionForUser) {
+        this.permissionForUser = permissionForUser;
+    }
 
-	public String getPermType() {
-		return permType;
-	}
+    public String getPermType() {
+        return permType;
+    }
 
-	public void setPermType(String permType) {
-		this.permType = permType;
-	}
+    public void setPermType(String permType) {
+        this.permType = permType;
+    }
 
-	public void setAllPermissions() {
-		viewAllowed = true;
-		updateAllowed = true;
-		importAllowed = true;
-		exportAllowed = true;
-		deleteAllowed = true;
-		changePermAllowed = true;
-	}
+    public void setAllPermissions() {
+        viewAllowed = true;
+        updateAllowed = true;
+        importAllowed = true;
+        exportAllowed = true;
+        deleteAllowed = true;
+        changePermAllowed = true;
+    }
+
+    @Transient
+    public boolean isNonePerm() {
+        if (!this.viewAllowed && !this.updateAllowed && !this.importAllowed && !this.exportAllowed && !this.deleteAllowed && !this.changePermAllowed
+                && !this.mdregisterAllowed) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

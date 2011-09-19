@@ -1227,7 +1227,6 @@ a.main_menu_link:hover {
 
 .table_data {
 	width: 100%;
-	table-layout: fixed;
 	text-align: left;
 	border: solid 1px #E1E8F0;
 	border-collapse: collapse;

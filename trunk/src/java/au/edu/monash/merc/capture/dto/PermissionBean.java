@@ -32,103 +32,110 @@ import java.io.Serializable;
 
 public class PermissionBean implements Serializable {
 
-	private long id;
+    private long id;
 
-	private long uid;
+    private long uid;
 
-	private String userName;
+    private String userName;
 
-	private boolean viewAllowed;
+    private boolean viewAllowed;
 
-	private boolean editAllowed;
+    private boolean editAllowed;
 
-	private boolean importAllowed;
+    private boolean importAllowed;
 
-	private boolean exportAllowed;
+    private boolean exportAllowed;
 
-	private boolean deleteAllowed;
+    private boolean deleteAllowed;
 
-	private boolean changePermAllowed;
+    private boolean changePermAllowed;
 
-	public long getId() {
-		return id;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public long getUid() {
-		return uid;
-	}
+    public long getUid() {
+        return uid;
+    }
 
-	public void setUid(long uid) {
-		this.uid = uid;
-	}
+    public void setUid(long uid) {
+        this.uid = uid;
+    }
 
-	public String getUserName() {
-		return userName;
-	}
+    public String getUserName() {
+        return userName;
+    }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public boolean isViewAllowed() {
-		return viewAllowed;
-	}
+    public boolean isViewAllowed() {
+        return viewAllowed;
+    }
 
-	public void setViewAllowed(boolean viewAllowed) {
-		this.viewAllowed = viewAllowed;
-	}
+    public void setViewAllowed(boolean viewAllowed) {
+        this.viewAllowed = viewAllowed;
+    }
 
-	public boolean isEditAllowed() {
-		return editAllowed;
-	}
+    public boolean isEditAllowed() {
+        return editAllowed;
+    }
 
-	public void setEditAllowed(boolean editAllowed) {
-		this.editAllowed = editAllowed;
-	}
+    public void setEditAllowed(boolean editAllowed) {
+        this.editAllowed = editAllowed;
+    }
 
-	public boolean isImportAllowed() {
-		return importAllowed;
-	}
+    public boolean isImportAllowed() {
+        return importAllowed;
+    }
 
-	public void setImportAllowed(boolean importAllowed) {
-		this.importAllowed = importAllowed;
-	}
+    public void setImportAllowed(boolean importAllowed) {
+        this.importAllowed = importAllowed;
+    }
 
-	public boolean isExportAllowed() {
-		return exportAllowed;
-	}
+    public boolean isExportAllowed() {
+        return exportAllowed;
+    }
 
-	public void setExportAllowed(boolean exportAllowed) {
-		this.exportAllowed = exportAllowed;
-	}
+    public void setExportAllowed(boolean exportAllowed) {
+        this.exportAllowed = exportAllowed;
+    }
 
-	public boolean isDeleteAllowed() {
-		return deleteAllowed;
-	}
+    public boolean isDeleteAllowed() {
+        return deleteAllowed;
+    }
 
-	public void setDeleteAllowed(boolean deleteAllowed) {
-		this.deleteAllowed = deleteAllowed;
-	}
+    public void setDeleteAllowed(boolean deleteAllowed) {
+        this.deleteAllowed = deleteAllowed;
+    }
 
-	public boolean isChangePermAllowed() {
-		return changePermAllowed;
-	}
+    public boolean isChangePermAllowed() {
+        return changePermAllowed;
+    }
 
-	public void setChangePermAllowed(boolean changePermAllowed) {
-		this.changePermAllowed = changePermAllowed;
-	}
+    public void setChangePermAllowed(boolean changePermAllowed) {
+        this.changePermAllowed = changePermAllowed;
+    }
 
-	public void setFullPermissions() {
-		this.viewAllowed = true;
-		this.editAllowed = true;
-		this.importAllowed = true;
-		this.exportAllowed = true;
-		this.deleteAllowed = true;
-		this.changePermAllowed = true;
-	}
+    public void setFullPermissions() {
+        this.viewAllowed = true;
+        this.editAllowed = true;
+        this.importAllowed = true;
+        this.exportAllowed = true;
+        this.deleteAllowed = true;
+        this.changePermAllowed = true;
+    }
 
+    public boolean isNonePerm() {
+        if (!this.viewAllowed && !this.editAllowed && !this.importAllowed && !this.exportAllowed && !this.deleteAllowed && !this.changePermAllowed) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

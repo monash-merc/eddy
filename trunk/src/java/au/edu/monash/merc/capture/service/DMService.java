@@ -45,158 +45,154 @@ import au.edu.monash.merc.capture.domain.Permission;
 import au.edu.monash.merc.capture.domain.PermissionRequest;
 import au.edu.monash.merc.capture.domain.Profile;
 import au.edu.monash.merc.capture.domain.Rights;
-import au.edu.monash.merc.capture.dto.AssignedPermissions;
-import au.edu.monash.merc.capture.dto.OrderBy;
-import au.edu.monash.merc.capture.dto.PublishBean;
-import au.edu.monash.merc.capture.dto.StageTransferBean;
-import au.edu.monash.merc.capture.dto.TransferFileBean;
+import au.edu.monash.merc.capture.dto.*;
 import au.edu.monash.merc.capture.dto.page.Pagination;
 
 public interface DMService {
 
-	public boolean checkWritePermission(String path);
+    public boolean checkWritePermission(String path);
 
-	public void createCollection(Collection collection, String rootPath);
+    public void createCollection(Collection collection, String rootPath);
 
-	public void deleteCollection(Collection collection, String rootPath);
+    public void deleteCollection(Collection collection, String rootPath);
 
-	public void deletePublisheCollection(Collection collection, String storeRootPath, String rifcsRootPath);
+    public void deletePublisheCollection(Collection collection, String storeRootPath, String rifcsRootPath);
 
-	public void updateCollection(Collection collection);
+    public void updateCollection(Collection collection);
 
-	public Pagination<Collection> getCollectionsByUserId(long uid, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+    public Pagination<Collection> getCollectionsByUserId(long uid, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
-	public Pagination<Collection> getAllPublicCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+    public Pagination<Collection> getAllPublicCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
-	public Pagination<Collection> getAllCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+    public Pagination<Collection> getAllCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
-	public Collection getCollectionById(long id);
+    public Collection getCollectionById(long id);
 
-	public Collection getCollection(long cid, long uid);
+    public Collection getCollection(long cid, long uid);
 
-	public boolean checkCollectionNameExisted(String colName);
+    public boolean checkCollectionNameExisted(String colName);
 
-	public Dataset captureData(String destFileName, File srcFile, boolean extractable, boolean globalAttOnly, Collection collection, String rootPath);
+    public Dataset captureData(String destFileName, File srcFile, boolean extractable, boolean globalAttOnly, Collection collection, String rootPath);
 
-	public List<String> discoverFiles(String stagePath, FilenameFilter filter);
+    public List<String> discoverFiles(String stagePath, FilenameFilter filter);
 
-	public void stageTransfer(StageTransferBean transferBean);
+    public void stageTransfer(StageTransferBean transferBean);
 
-	public Dataset captureStageData(TransferFileBean fBean, DataCaptureAdapter adapter, Collection co, String stageDir, String destRootPath,
-			boolean transferExistedFile);
+    public Dataset captureStageData(TransferFileBean fBean, DataCaptureAdapter adapter, Collection co, String stageDir, String destRootPath,
+                                    boolean transferExistedFile);
 
-	public void deleteDataset(Collection co, Dataset ds, String rootPath);
+    public void deleteDataset(Collection co, Dataset ds, String rootPath);
 
-	public byte[] getDatasetContent(long dsId, String rootPath);
+    public byte[] getDatasetContent(long dsId, String rootPath);
 
-	public byte[] getDatasetContent(Dataset ds, String rootPath);
+    public byte[] getDatasetContent(Dataset ds, String rootPath);
 
-	public InputStream downloadFile(long dsId, String rootPath);
+    public InputStream downloadFile(long dsId, String rootPath);
 
-	public InputStream downloadFile(Dataset ds, String rootPath);
+    public InputStream downloadFile(Dataset ds, String rootPath);
 
-	public Dataset getDatasetById(long id);
+    public Dataset getDatasetById(long id);
 
-	public List<Dataset> getDatasetByCollectionId(long cid);
+    public List<Dataset> getDatasetByCollectionId(long cid);
 
-	public List<Dataset> getDatasetByCollectionIdUsrId(long cid, long uid);
+    public List<Dataset> getDatasetByCollectionIdUsrId(long cid, long uid);
 
-	public boolean checkDatasetNameExisted(String dsName, long cid);
+    public boolean checkDatasetNameExisted(String dsName, long cid);
 
-	public Dataset getAllDatasetData(long dsId);
+    public Dataset getAllDatasetData(long dsId);
 
-	public List<Permission> getUserCoPerms(long permForUsrId, long coId);
+    public List<Permission> getUserCoPerms(long permForUsrId, long coId);
 
-	public List<Permission> getCollectionDefaultPerms(long cid);
+    public List<Permission> getCollectionDefaultPerms(long cid);
 
-	public Permission getAnonymousPerm(long cid);
+    public Permission getAnonymousPerm(long cid);
 
-	public void createUserPermission(Permission permission);
+    public void createUserPermission(Permission permission);
 
-	public void deleteUserPermission(Permission permission);
+    public void deleteUserPermission(Permission permission);
 
-	public void deletePermissionByPId(long pId);
+    public void deletePermissionByPId(long pId);
 
-	public void deleteAllPermissionsByColId(long cId);
+    public void deleteAllPermissionsByColId(long cId);
 
-	public void updateUserPermission(Permission permission);
+    public void updateUserPermission(Permission permission);
 
-	public void createUserPermissions(List<Permission> permissions);
+    public void createUserPermissions(List<Permission> permissions);
 
-	public void updateUserPermissions(List<Permission> permissions);
+    public void updateUserPermissions(List<Permission> permissions);
 
-	public void deleteUserPermissions(List<Permission> permissions);
+    public void deleteUserPermissions(List<Permission> permissions);
 
-	public void deleteUserPermissionsByIds(List<Long> pids);
+    public void deleteUserPermissionsByIds(List<Long> pids);
 
-	public void setCollectionPermissions(AssignedPermissions assignedPerms);
+    public void setCollectionPermissions(AssignedPermissions assignedPerms);
 
-	public List<Permission> getCollectionPermissions(long cid);
+    public List<Permission> getCollectionPermissions(long cid);
 
-	public void approveUserPermRequest(PermissionRequest permRequest);
+    public void saveUserRequestedPerm(ManagablePerm<Permission> requestPermission, long permRequestId);
 
-	public void savePermissionRequest(PermissionRequest permRequest);
+    public void savePermissionRequest(PermissionRequest permRequest);
 
-	public PermissionRequest getPermissionReqById(long id);
+    public PermissionRequest getPermissionReqById(long id);
 
-	public List<PermissionRequest> getPermissionRequestsByOwner(long ownerId);
+    public List<PermissionRequest> getPermissionRequestsByOwner(long ownerId);
 
-	public void deletePermissionRequestsByCoId(long coId);
+    public void deletePermissionRequestsByCoId(long coId);
 
-	public void deletePermissionRequestById(long pmReqId);
+    public void deletePermissionRequestById(long pmReqId);
 
-	public PermissionRequest getCoPermissionRequestByReqUser(long coid, long reqUserId);
+    public PermissionRequest getCoPermissionRequestByReqUser(long coid, long reqUserId);
 
-	public void updatePermissionRequest(PermissionRequest permRequest);
+    public void updatePermissionRequest(PermissionRequest permRequest);
 
-	public Pagination<PermissionRequest> getPermRequestsByPages(long ownerId, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+    public Pagination<PermissionRequest> getPermRequestsByPages(long ownerId, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
-	public void saveAuditEvent(AuditEvent event);
+    public void saveAuditEvent(AuditEvent event);
 
-	public void deleteEventByIdWithUserId(long eId, long userId);
+    public void deleteEventByIdWithUserId(long eId, long userId);
 
-	public AuditEvent getAuditEventById(long eid);
+    public AuditEvent getAuditEventById(long eid);
 
-	public Pagination<AuditEvent> getEventByUserId(long uid, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+    public Pagination<AuditEvent> getEventByUserId(long uid, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
-	public Profile getUserProfile(long userId);
+    public Profile getUserProfile(long userId);
 
-	public void updateProfile(Profile profile);
+    public void updateProfile(Profile profile);
 
-	public Avatar getUserAvatar(long userId);
+    public Avatar getUserAvatar(long userId);
 
-	public void updateAvatar(Avatar avatar);
+    public void updateAvatar(Avatar avatar);
 
-	public void sendMail(String emailFrom, String emailTo, String emailSubject, String emailBody, boolean isHtml);
+    public void sendMail(String emailFrom, String emailTo, String emailSubject, String emailBody, boolean isHtml);
 
-	public void sendMail(String emailFrom, String emailTo, String emailSubject, Map<String, String> templateValues, String templateFile,
-			boolean isHtml);
+    public void sendMail(String emailFrom, String emailTo, String emailSubject, Map<String, String> templateValues, String templateFile,
+                         boolean isHtml);
 
-	public void savePublishInfo(PublishBean pubBean);
+    public void savePublishInfo(PublishBean pubBean);
 
-	public List<Activity> getActivitiesByCollectionId(long cid);
+    public List<Activity> getActivitiesByCollectionId(long cid);
 
-	public List<Party> getPartiesByCollectionId(long cid);
+    public List<Party> getPartiesByCollectionId(long cid);
 
-	public List<Collection> getPublishedCollections();
+    public List<Collection> getPublishedCollections();
 
-	public Collection getPublishedCoByIdentifier(String identifier);
+    public Collection getPublishedCoByIdentifier(String identifier);
 
-	public void saveRights(Rights rights);
+    public void saveRights(Rights rights);
 
-	public void updateRights(Rights rights);
+    public void updateRights(Rights rights);
 
-	public Rights getRightsById(long id);
+    public Rights getRightsById(long id);
 
-	public Rights getRightsByCollectionId(long cid);
+    public Rights getRightsByCollectionId(long cid);
 
-	public Party getPartyByUserName(String firstName, String lastName);
+    public Party getPartyByUserName(String firstName, String lastName);
 
-	public Party getPartyByPartyKey(String partyKey);
+    public Party getPartyByPartyKey(String partyKey);
 
-	public void saveParty(Party party);
+    public void saveParty(Party party);
 
-	public Activity getActivityByActKey(String activityKey);
+    public Activity getActivityByActKey(String activityKey);
 
-	public void saveActivity(Activity activity);
+    public void saveActivity(Activity activity);
 }
