@@ -41,6 +41,15 @@
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
   </component>
+  <component name="FacetAutodetectingManager">
+    <autodetection-disabled>
+      <facet-type id="web">
+        <modules>
+          <module name="eddy" />
+        </modules>
+      </facet-type>
+    </autodetection-disabled>
+  </component>
   <component name="IdProvider" IDEtalkID="C736A3A4248807D73D3CCC0D42470298" />
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />

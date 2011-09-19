@@ -383,15 +383,15 @@
 
 		<!-- show adding party options -->
 		<action name="addPartyOptions" class="data.mdRegAction" method="addPartyOptions">
-			<result name="input">/web/mdreg/addparty_error.ftl</result>
-			<result name="error">/web/mdreg/addparty_error.ftl</result>
+			<result name="input">/web/mdreg/party_error.ftl</result>
+			<result name="error">/web/mdreg/party_error.ftl</result>
 			<result name="success">/web/mdreg/party_options.ftl</result>
 		</action>
 
 		<!-- selected adding party type -->
 		<action name="addPartyOpt" class="data.mdRegAction" method="addPartyOpt">
 			<result name="input">/web/mdreg/party_options.ftl</result>
-			<result name="error">/web/mdreg/addparty_error.ftl</result>
+			<result name="error">/web/mdreg/party_error.ftl</result>
 			<result name="success">/web/mdreg/add_party.ftl</result>
 		</action>
 
