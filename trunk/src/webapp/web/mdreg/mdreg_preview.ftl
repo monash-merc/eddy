@@ -191,20 +191,14 @@
 			</div>
 			<div class="blank_separator"></div>
 			<div class="single_border_block">
-				<p><b>Monash University Repository License</b></p>
-				<div class="rep_license_div">
-					<p>
-						Monash University (ABN 12 377 614 012) ("<b>University</b>") maintains a digital repository ("<b>Repository</b>") in which it stores and markes available 
-						various works via the Internet or other electronic means.
-					</p>
-					<p>
-						By submitting meterial for the Repository ("<b>Work</b>") the person(s) submitting the Work ("<b>Depositor</b>") agree to the following terms and conditions.
-					</p>
-					<p>
-						Please refer to <a href="http://www.monash.edu/eresearch/about/ands-merc.html" target="_blank">http://www.monash.edu/eresearch/about/ands-merc.html</a> for the <b>Terms and Conditions</b>
-					</p>
-					<br/>
-				</div>
+                <p><b>Terms and Conditions</b></p>
+                <div class="rep_license_div">
+                    <p>You are about to publish or register the above research work outside Monash University to be available to the general public via Internet sites that can harvest this information.  Sites include but are not limited to: Research Data Australia and search engines.</p>
+
+                    <p>Before you proceed, please ensure you have selected a licence to associate with your research data and work.</p>
+
+                    <p>By using this system to publish or register your research work you are continuing to agree to adhere to the Terms and Conditions of use detailed at <a href="http://www.monash.edu/eresearch/about/ands-merc.html" target="_blank">http://www.monash.edu/eresearch/about/ands-merc.html</a>. Please read these Terms and Conditions carefully before registering.</p>
+                </div>
 			</div>
 			<div class="none_border_block2">
 				<@s.submit value="I accept. Register"  name="register" cssClass="silver_b_input"/>

@@ -72,9 +72,8 @@
         <path refid="build.classpath"/>
     </path>
 
-
     <!-- =================================================================== -->
-    <!-- Cleans up compiled classes                                          -->
+    <!-- cleans up compiled classes                                          -->
     <!-- =================================================================== -->
     <target name="clean">
         <echo>Deleling the build classes directory</echo>
@@ -82,7 +81,7 @@
     </target>
 
     <!-- =================================================================== -->
-    <!-- Cleans up all                                                       -->
+    <!-- cleans up all                                                       -->
     <!-- =================================================================== -->
     <target name="clean-all">
         <echo>Deleling the build classes, deploy and distribute directories</echo>
@@ -92,14 +91,14 @@
     </target>
 
     <!-- =================================================================== -->
-    <!-- Prepares the build directories                                      -->
+    <!-- prepares the build directory                                        -->
     <!-- =================================================================== -->
     <target name="prepare" depends="clean">
         <mkdir dir="${build.classes.dir}"/>
     </target>
 
     <!-- =================================================================== -->
-    <!-- Compiles the source code                                            -->
+    <!-- compiles the java source classes                                    -->
     <!-- =================================================================== -->
     <target name="compile" depends="prepare" description="compiling the source files">
         <javac srcdir="${src.java.dir}" destdir="${build.classes.dir}" debug="on" deprecation="on" optimize="off"
@@ -125,7 +124,7 @@
     </target>
 
     <!-- =================================================================== -->
-    <!-- generate a dist directory                                         -->
+    <!-- generates a distributed directory                                   -->
     <!-- =================================================================== -->
     <target name="generate-dist-dir" depends="compile">
         <delete dir="${dist.dir}"/>
@@ -219,7 +218,7 @@
     </target>
 
     <!-- =================================================================== -->
-    <!-- packing a war file                                                  -->
+    <!-- packages a war file                                                  -->
     <!-- =================================================================== -->
     <target name="dist-war" depends="prepare-dist" description="packing the war">
         <jar destfile="${dist.war.dir}/${app.name}.war" basedir="${dist.pack.tmp.app.dir}"/>
@@ -297,7 +296,7 @@
     </target>
 
     <!-- =================================================================== -->
-    <!-- sync dev web to tomcat - freemarker file, css, js and images           -->
+    <!-- sync dev web to tomcat - freemarker files, css, js and images.etc   -->
     <!-- =================================================================== -->
     <target name="sync-dev-web-to-tomcat">
         <copy todir="${deploy.app.dir}">
@@ -313,7 +312,7 @@
     </target>
 
     <!-- =================================================================== -->
-    <!-- sync install web to tomcat - freemarker file, css, js and images           -->
+    <!-- sync install web to tomcat - freemarker files, css, js and images   -->
     <!-- =================================================================== -->
     <target name="sync-install-web-to-tomcat">
         <copy todir="${deploy.app.install.dir}/web">
@@ -387,9 +386,9 @@
     </target>
 
     <!-- =================================================================== -->
-    <!--     Javadoc                                                         -->
+    <!--    generates the java api docs                                      -->
     <!-- =================================================================== -->
-    <target name="generate.javadoc" depends="clean">
+    <target name="generate-javadoc" depends="clean">
         <javadoc destdir="${dist.javadoc.dir}" use="true" windowtitle="Eddy e-Research Distributed Data System"
                  classpathref="build.classpath">
             <packageset dir="${src.java.dir}" defaultexcludes="yes">
@@ -412,9 +411,9 @@
     </target>
 
     <!-- =================================================================== -->
-    <!--     tar the whole source code as a tar file                         -->
+    <!--     generates the project source tar archive file                   -->
     <!-- =================================================================== -->
-    <target name="generate.src.tar" depends="clean-all">
+    <target name="generate-src-tar" depends="clean-all">
         <echo message="Tar the source code ..."/>
         <delete dir="${dist.src.tar.dir}"/>
         <mkdir dir="${dist.src.tar.dir}"/>

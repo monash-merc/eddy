@@ -133,7 +133,7 @@ public class RightsAction extends DMCoreAction {
 						rights.setDerivatives("y");
 					}
 					if (StringUtils.isBlank(rights.getJurisdiction())) {
-						rights.setJurisdiction("");
+						rights.setJurisdiction("au");
 					}
 				}
 				return SUCCESS;
