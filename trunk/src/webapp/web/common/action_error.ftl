@@ -15,17 +15,14 @@
 	<div class="left_container_panel">
 		<br/>
 		<div class="left_middle_panel">
-			<br/>
-			<br/>
 			<div class="error_msg_div">
-			<#include "../template/action_errors.ftl" /> 
+			    <#include "../template/action_errors.ftl" />
 			</div>
 			<div class="none_border_space_block"></div>
+            <br/>
+            <br/>
 		</div>
-		 <br/>
-		 <br/>
-		 <br/>
-		 <br/>
+		<br/>
 	</div>
 	<div class="right_container_panel">		
 		<@s.if test="%{#session.authentication_flag =='authenticated'}">   

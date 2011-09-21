@@ -1,13 +1,17 @@
+<div style="clear:both"></div>
 <br/>
-<div style="clear:both"></div> 
-<div class="before_footer">
-	<a href="http://www.monash.edu" target ="blank"><img src="${base}/images/logo/logo_monash.png" border="0" alt="Monash University" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	<a href="http://www.monash.edu/eresearch" target ="blank"><img src="${base}/images/logo/logo_merc.png"  border="0" alt="Monash MeRC" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	<a href="http://www.ands.org.au" target ="blank"><img src="${base}/images/logo/logo_ands.png"  border="0" alt="ANDS" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	<!-- a href="http://www.tern.org.au" target ="blank"><img src="${base}/images/logo/logo_tern.jpg"  border="0" alt="TERN" /></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+<div class="sponsor">
+    <a href="http://www.monash.edu" target="blank"><img src="${base}/images/logo/logo_monash.png" alt="Monash University"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="http://www.monash.edu/eresearch" target="blank"><img src="${base}/images/logo/logo_merc.png" alt="Monash MeRC"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="http://www.ands.org.au" target="blank"><img src="${base}/images/logo/logo_ands.png" alt="ANDS"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </div>
+<div class="blank_separator"></div>
 <div class="footer">
-		&nbsp;&nbsp;Copyright @2010 Monash University e-Research Centre &nbsp;&nbsp;&nbsp;&nbsp;<b><@s.text name="app.version" /></b>
+    <br/>
+    <div class="copyright">
+        Copyright &copy; 2010-2011 Monash University. All Rights Reserved.
+        &nbsp;&nbsp;&nbsp;&nbsp;Powered by <a href="http://code.google.com/p/eddy/" target="_blank">Eddy <@s.text name="app.version" /></a>
+    </div>
+    <br/>
 </div>
-<br/>
 <br/>

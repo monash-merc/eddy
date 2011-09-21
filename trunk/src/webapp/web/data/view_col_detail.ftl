@@ -262,9 +262,13 @@ function doAfterImport(success) {
 		 	 </@s.if>
 		 	 <div style="clear:both"></div>
 		 	 <br/>
-		 	 <br/>
+             <br/>
+             <br/>
+             <@s.if test="%{permissionBean.viewAllowed == false}">
+                <div class="none_border_space_block"></div>
+             </@s.if>
 		</div>
-		 <div class="none_border_space_block"></div>
+        <br/>
 	</@s.else>
 	</div>
 	<div class="right_container_panel">		 

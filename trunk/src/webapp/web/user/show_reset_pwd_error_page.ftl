@@ -26,21 +26,26 @@ function refresh()
 <div style="clear:both"></div> 	
 <!-- End of Navigation Title -->
 <div class="main_body_container">
-	<div class="main_body_big_left_panel">
-		<br/>
-		<br/> 
-		<div class="error_msg_div">
-			<#include "../template/action_errors.ftl" /> 
-		</div>
-	    <br/>
-	    <br/>
-		<br/>
-		<br/>
-		<br/>
-		<br/>
-		<br/>
-	</div>	
-	<div style="clear:both"></div> 	 		
+	<div class="main_big_border">
+
+        <div class="none_boder_left_container">
+            <br/>
+            <div class="left_middle_panel">
+                <div class="error_msg_div">
+                    <#include "../template/action_errors.ftl" />
+                </div>
+                <div class="none_border_space_block"></div>
+                <br/>
+                <br/>
+            </div>
+            <div style="clear:both"></div>
+            <div class="right_container_panel">
+                  &nbsp;
+            </div>
+        </div>
+        <div style="clear:both"></div>
+
+	</div>
 </div>
 <br/>
 <#include "../template/footer.ftl"/>

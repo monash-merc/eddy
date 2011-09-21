@@ -317,6 +317,11 @@ public class AdminAction extends BaseAction {
 		try {
 			user = retrieveLoggedInUser();
 			regUser = this.userService.getUserById(regUser.getId());
+            if(regUser == null){
+                addActionError(getText("admin.get.user.not.found"));
+			    setNavBarAfterExc();
+                return ERROR;
+            }
 		} catch (Exception e) {
 			logger.error(e);
 			addActionError(getText("admin.get.user.details.error"));
