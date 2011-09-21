@@ -218,7 +218,7 @@
 		 			</tr>
 		 		</table>
 		 	</div>
-		 	<div class="blank_separator"></div>
+		 	<br/>
 		</div>
 		<br/>
 		<div style="clear:both"></div>

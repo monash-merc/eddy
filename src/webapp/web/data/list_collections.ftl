@@ -12,7 +12,12 @@
  
 <div class="main_body_container">
 <div class="main_big_border">
-	<div class="left_container_panel">
+    <@s.if test="%{#session.authentication_flag =='authenticated'}">
+		<div class="left_container_panel">
+	</@s.if>
+	<@s.else>
+		<div class="none_boder_left_container">
+	</@s.else>
 		<br/>
 		<#include "../template/action_errors.ftl" />
 		<div class="left_middle_panel">

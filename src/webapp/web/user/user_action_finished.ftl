@@ -13,15 +13,23 @@
 <#include "../template/action_title.ftl" />
 <!-- End of Navigation Title -->	
 <div class="main_body_container">
-	<div class="main_body_big_left_panel">
-		<br/>
-		<#include "../template/action_message.ftl" />
-		<br/>
-		<br/>
-		<br/>
-		<br/>
-	</div>	 
-	<div style="clear:both"></div> 			
+    <div class="main_big_border">
+        <div class="none_boder_left_container">
+            <br/>
+            <div class="left_middle_panel">
+                <br/>
+                <#include "../template/action_message.ftl" />
+                <div class="none_border_space_block"></div>
+                <br/>
+            </div>
+            <div style="clear:both"></div>
+            <div class="right_container_panel">
+                  &nbsp;
+            </div>
+        </div>
+        <div style="clear:both"></div>
+
+	</div>
 </div>
 <br/>
 <#include "../template/footer.ftl"/>

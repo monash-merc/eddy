@@ -65,7 +65,7 @@
 		 			</ul>
 		 			<p>Permissions can be granted to <b>All Registered Users</b> or<b> All Anonymous Users</b> or <b>An Individual User</b>.
 		 			<p>If the collection permissions are neither granted to <b>All Registered Users</b> nor <b>All Anonymous Users</b>, which means this collection is a private collection.</p>
-		 			<p>You can grant the specific permissions to an individual user in a collection, and the allowed permissions for <b>All Anonymous Users</b> in this collection will be inherited.</p>
+		 			<p>You can grant the specific permissions to an individual user in a collection, and the all allowed permissions for <b>All Anonymous Users</b> will be inherited by this individual user.</p>
 		 		</div>
 		 	</div>
 		 	<div class="blank_separator"></div>

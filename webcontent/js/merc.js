@@ -462,7 +462,7 @@ $('#save_rm_party').live('click',function(e){
 	}
 	var rowIndex = window.parent.$("#ands_reg_tab_data > tbody > tr").length;
 	//alert("party table rows: " + rowIndex);
-	
+	 closePartyNotFoundDiv();
 	var findTbody = window.parent.$('#ands_reg_tab_data > tbody:last');
 	
 	$(findTbody).append("<tr>\n<td align='center' width='50'>\n<input id='mdRegForm_partyList_" + rowIndex +"__selected' type='checkbox' checked='checked' name='partyList[" + rowIndex +"].selected' value='true' />\n" +
@@ -493,4 +493,12 @@ function closeParentWindows() {
 	window.parent.$('#externalSite').dialog('close');
 	window.parent.$('#externalSite').remove();
 };
+
+function closePartyNotFoundDiv(){
+    var pnf = window.parent.$("#party_not_found").val();
+    if(pnf != null){
+        window.parent.$('#party_not_found').remove();
+    }
+
+}
  

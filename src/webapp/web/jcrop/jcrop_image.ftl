@@ -63,9 +63,7 @@
 		<br/>
 		<div class="left_middle_panel">
 			<#include "../template/action_errors.ftl" /> 
-			<div class="non_border_div">
-		 			&nbsp;
-		 	</div>
+			<div class="none_border_block"></div>
 		 	<div class="dotted_border_div">
 		 	  	<table>
 					<tr>
@@ -102,11 +100,8 @@
 				</table>
 				<div class="blank_separator"></div>
 			</div>
-			<div class="non_border_div">
-		 			&nbsp;
-		 	</div>
+			<div class="none_border_block"></div>
 			<div style="clear:both"></div>
-			
 		</div>
 		<br/>
 		<div style="clear:both"></div>

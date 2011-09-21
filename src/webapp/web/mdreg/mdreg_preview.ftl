@@ -66,8 +66,8 @@
 			</div>
 			<div class="blank_separator"></div>
 			<div class="none_border_block2">
-				Public registration of the following metadata associated with this collection with the Research Data Australia website
-			</div>
+                <div class="p_title"><b>Public registration of the following metadata associated with this collection with the Research Data Australia website</b></div>
+            </div>
 			
 			<div class="none_border_block2">
 				<table class="ands_reg_tab_data" >
@@ -190,18 +190,9 @@
 				</table>
 			</div>
 			<div class="blank_separator"></div>
-			<div class="single_border_block">
-                <p><b>Terms and Conditions</b></p>
-                <div class="rep_license_div">
-                    <p>You are about to publish or register the above research work outside Monash University to be available to the general public via Internet sites that can harvest this information.  Sites include but are not limited to: Research Data Australia and search engines.</p>
 
-                    <p>Before you proceed, please ensure you have selected a licence to associate with your research data and work.</p>
-
-                    <p>By using this system to publish or register your research work you are continuing to agree to adhere to the Terms and Conditions of use detailed at <a href="http://www.monash.edu/eresearch/about/ands-merc.html" target="_blank">http://www.monash.edu/eresearch/about/ands-merc.html</a>. Please read these Terms and Conditions carefully before registering.</p>
-                </div>
-			</div>
 			<div class="none_border_block2">
-				<@s.submit value="I accept. Register"  name="register" cssClass="silver_b_input"/>
+				<@s.submit value="Register"  name="register" cssClass="silver_b_input"/>
 			</div>
 		</@s.form>
 		<br/>

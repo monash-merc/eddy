@@ -122,8 +122,7 @@
 			</div>
 			<div class="none_border_block"></div>
 		</div>	
-		<div class="none_border_space_block"></div>
-		<div class="none_border_block"></div>
+        <br/>
 	</div>
 	<div class="right_container_panel">
 		<#include "../template/subnav_section.ftl" />

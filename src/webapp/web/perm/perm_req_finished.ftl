@@ -84,7 +84,10 @@
 		 		 </div>
 		 		</@s.form>
 		 	 </div>  
-		 	 <div class="none_border_space_block"></div>
+		 	 <br/>
+             <br/>
+             <br/>
+             <br/>
 		</div>
 		<br/>
 		<div style="clear:both"></div>
