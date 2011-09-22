@@ -315,6 +315,8 @@ a.main_menu_link:hover {
     text-align: justify;
     font-size: 11px;
     color: #858585;
+    margin: 10px;
+    padding: 10px;
 }
 
 .use_policy a{
@@ -1132,6 +1134,13 @@ a.main_menu_link:hover {
 	padding: 5px;
 	text-align: center;
 	height: 200px;
+}
+
+.none_border_space_small {
+	mmargin: 15px;
+	padding: 5px;
+	text-align: center;
+	height: 100px;
 }
 
 .none_border_block a {
@@ -2058,6 +2067,12 @@ a.main_menu_link:hover {
 
 
 /** ==== START of Footer Section ==== **/
+
+.site_use_policy {
+	width: 978px;
+	border: solid 1px #c0c7d5;
+	margin: 0 auto;
+}
 .footer{
     margin: 0 auto;
     background: none repeat scroll 0 0 #EFF2F7;

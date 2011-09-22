@@ -50,14 +50,9 @@
             <br/>
         </div>
         <br/>
-        <div class="use_policy_outer">
-            <#include "../template/use_policy.ftl" />
-        </div>
-        <br/>
 	</div>
 	<div style="clear:both"></div>  		
 </div>
-<br/>
 <br/>
 <#include "../template/footer.ftl"/>
 </body>

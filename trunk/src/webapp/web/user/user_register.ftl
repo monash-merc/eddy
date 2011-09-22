@@ -99,12 +99,7 @@ function refresh()
             </div>
 	    </div>
 	    <br/>
-        <div class="reg_panel">
-            <#include "../template/use_policy.ftl" />
-        </div>
-		<br/>
-		<br/>
-	</div>	 
+	</div>
 	<div style="clear:both"></div> 		
 </div>
 <br/>

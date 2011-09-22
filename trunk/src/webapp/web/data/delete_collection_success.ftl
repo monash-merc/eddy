@@ -32,9 +32,6 @@
 			<div class="none_border_space_block"></div>
 		</div>
 		 <br/>
-		 <br/>
-		 <br/>
-		 <br/>
 	</div>
 	<div class="right_container_panel">		 
 		 <#include "../template/subnav_section.ftl" />
@@ -42,7 +39,6 @@
 	<div style="clear:both"></div>
 </div> 
 </div>
-<br/>
 <br/>
 <#include "../template/footer.ftl"/>
 

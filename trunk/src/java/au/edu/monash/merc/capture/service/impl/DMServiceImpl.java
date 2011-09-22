@@ -188,7 +188,8 @@ public class DMServiceImpl implements DMService {
     public void deleteCollection(Collection collection, String rootPath) {
         // delete the permissions first
         deleteAllPermissionsByColId(collection.getId());
-
+        //delete the permissions request if any
+        deletePermissionRequestsByCoId(collection.getId());
         // delete it from database first
         this.collectionService.deleteCollection(collection);
         // then delete it from the file storage
@@ -199,7 +200,8 @@ public class DMServiceImpl implements DMService {
     public void deletePublisheCollection(Collection collection, String storeRootPath, String rifcsRootPath) {
         // delete the permissions first
         deleteAllPermissionsByColId(collection.getId());
-
+        //delete the permissions request if any
+        deletePermissionRequestsByCoId(collection.getId());
         // delete it from database first
         // TODO:1. delete handle
         String uuidkey = collection.getUniqueKey();

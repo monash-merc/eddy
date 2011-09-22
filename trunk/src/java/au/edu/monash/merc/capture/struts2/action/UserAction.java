@@ -106,6 +106,7 @@ public class UserAction extends BaseAction {
 
 			// create a default user profile.
 			Profile p = genProfile();
+            p.setGender("Male");
 			p.setOrganization(organization);
 			user.setProfile(p);
 			p.setUser(user);

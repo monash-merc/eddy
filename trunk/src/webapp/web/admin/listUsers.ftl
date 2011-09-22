@@ -72,7 +72,7 @@
 				</table>
 			</div> 
 			<@s.if test="%{userPagination.pageResults.size() < 4}">
-					<div class="none_border_space_block"></div>
+					<div class="none_border_space_small"></div>
 			</@s.if>
 			<br/>
 			<#include "../pagination/pag_style3.ftl" />
