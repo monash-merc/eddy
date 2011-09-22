@@ -27,7 +27,7 @@
 		</@s.else>         
 		
     	<a href="${base}/search/showSearch.jspx" class="main_menu_link">Search</a>
-		<a href="${base}/cw_aboutus" class="main_menu_link" style="border-right-width: 1px;border-right-style: solid;	border-right-color: #595E7B;">About Us</a>
+		<a href="${base}/aboutus" class="main_menu_link" style="border-right-width: 1px;border-right-style: solid;	border-right-color: #595E7B;">About Us</a>
 		<!-- Main Menu END-->
 	</div>
 </div>

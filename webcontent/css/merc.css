@@ -135,6 +135,18 @@ a.main_menu_link:hover {
 	padding-left: 10px;
 	text-align: left;
 }
+.p_title3 { /**background:none repeat scroll 0 0 #F5F5F5;*/
+	background: none repeat scroll 0 0 #eff2f7;
+	color: #212121;
+	font-size: 12px;
+	font-weight: normal;
+	height: 25px;
+    line-height: 25px;
+    font-family: Arial, Verdana, sans-serif;
+	padding-left: 10px;
+    border-radius: 5px 5px;
+	-moz-border-radius: 5px 5px;
+}
 
 .perm_delim {
 	background: none repeat scroll 0 0 #eff2f7;
@@ -301,9 +313,10 @@ a.main_menu_link:hover {
 .use_policy{
     display: block;
     text-align: justify;
-    font-size: 12px;
+    font-size: 11px;
     color: #858585;
 }
+
 .use_policy a{
     color: #003766;
     text-decoration: none;
@@ -621,6 +634,16 @@ a.main_menu_link:hover {
 	color: #0E774A;
 	font-size: 11px;
 }
+.status_name_div{
+    color: #667a96;
+	font-size: 11px;
+    display:inline;
+}
+.status_value_div{
+    display: inline;
+	color: #c5a463;
+	font-size: 11px;
+}
 
 .inline_small_span {
 	font-size: 11px;
@@ -801,7 +824,11 @@ a.main_menu_link:hover {
 	margin-right: 0 auto;
 	height: 50px;
 }
-
+.home_use_policy{
+    margin: 0 auto;
+    padding: 10px;
+    width: 865px;
+}
 .page_fixed_div {
 	width: 978px;
 	margin: 0 auto;
@@ -825,6 +852,8 @@ a.main_menu_link:hover {
 	border-right: solid 1px #c0c7d5;
 	border-bottom: solid 1px #c0c7d5;
 }
+
+
 
 .main_install_head {
 	color: #003766;
@@ -1135,10 +1164,12 @@ a.main_menu_link:hover {
 .record_data {
 	display: inline;
 	float: left;
-	width: 730px;
+	width: 740px;
 	border: dotted 1px #e1e8f0;
-	padding: 5px 2px 5px 2px;
-	margin-left: 2px;
+	padding: 10px 2px 10px 2px;
+	margin-left: 5px;
+    border-radius: 5px 5px;
+	-moz-border-radius: 5px 5px;
 }
 
 .record_data2 {
@@ -1620,10 +1651,11 @@ a.main_menu_link:hover {
 .search_data {
 	display: inline;
 	float: left;
-	width: 700px;
+	width: 720px;
 	border: dotted 1px #e1e8f0;
-	padding: 5px 2px 5px 2px;
-	margin-left: 2px;
+	padding: 10px 2px 10px 2px;
+    border-radius: 5px 5px;
+	-moz-border-radius: 5px 5px;
 }
 
 .ands_blue {

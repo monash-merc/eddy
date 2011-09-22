@@ -38,7 +38,6 @@
 			 
 			<@s.iterator status="eventStat" value="eventPagination.pageResults" id="eventResult" >
 				<div class="left_inner_panel">
-					<div class="record_data_img2"><img src="${base}/images/dot.png" align="top" border="0" /></div>
 					<div class="record_data">
 						<div class="record_data_inline"><font color="#0E774A"><@s.date name="#eventResult.createdTime"  format="dd-MM-yyyy 'at' hh:mm a" /></font> &nbsp;&nbsp;<@s.property value="#eventResult.event" />, by <@s.property value="#eventResult.operator.displayName" /></div>
 					 	<div class="record_data_link2">
