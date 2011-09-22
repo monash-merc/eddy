@@ -36,7 +36,6 @@
 		<@s.if test="%{searchBean.collectionOnly == true}">
 			<@s.iterator status="colStat" value="pagination.pageResults" id="colResult" >
 				<div class="left_inner_panel">
-					<div class="record_data_img"><img src="${base}/images/link_arrow.png" align="top" border="0" /></div>
 					<div class="search_data">
 						<div class="record_data_link"><a href="${base}/${viewColDetailLink}?collection.id=${colResult.id}&collection.owner.id=${colResult.owner.id}&viewType=${viewType}" /><@s.property value="#colResult.name" /></a></div>
 						<div class="record_data_inline"><@s.property value="#colResult.briefDesc" /></div>

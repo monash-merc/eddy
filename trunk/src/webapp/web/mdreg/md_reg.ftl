@@ -18,8 +18,12 @@
 	<br/> 
 	<div class="left_middle_panel">
 		<#include "../template/action_errors.ftl" />
-		<br/>
-		<@s.form action="preRegMd.jspx" namespace="/data" method="post" id="mdRegForm">	
+        <div class="none_border_block2">
+            <div class="p_title3">Public registration of the following metadata associated with this collection with the Research Data Australia website</div>
+        </div>
+
+		<@s.form action="preRegMd.jspx" namespace="/data" method="post" id="mdRegForm">
+
 		<div class="single_border_block">
 			<@s.hidden name="collection.id" id="col"/>
 			<@s.hidden name="collection.name" id="coname"/>
@@ -63,11 +67,8 @@
 						<td></td>
 					</tr>
 				</table>
-			</div>
+		    </div>
 			<div class="blank_separator"></div>
-            <div class="none_border_block2">
-                <div class="p_title"><b>Public registration of the following metadata associated with this collection with the Research Data Australia website</b></div>
-            </div>
 
 			<div class="none_border_block2">
 				<table class="table_nobd">

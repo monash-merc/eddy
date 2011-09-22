@@ -71,11 +71,13 @@ $(document).ready(function() {
 				The proposed infrastructure will help to revisit and reuse the work carried out by research students and postdoctoral researchers who have left MW&C (Monash Weather & Climate) after finishing their degree or when their contract has ended. Particularly large amounts of data will be created in the coming years when the newly deployed Australian ACCESS climate model is evaluated by a team of postdoctoral researchers. These simulations will be done on the NCI computer platforms in collaboration with other Australian universities, the Bureau of Meteorology and CSIRO. It will be very beneficial for the MW&C researchers to be able to manage this data efficiently and publish it so that other participants will be able to process the data further. Funding of more than $2,000,000 has been secured for this work. In 2010-12 MW&C will carry out a suite of computer simulations to study the urban meteorology in a changing climate. Simulations will assess rainfall patterns in localised urban environments to inform the development, adoption, and operation of stormwater harvesting solutions in collaboration with the Institute for Sustainable Water Researchers, Monash University.
 				</p>
 			</div>
+            <div style="clear: both"></div>
 		</div>
-		<div style="clear:both"></div> 
-		
-		<br/>
-		<br>	
+		<div class="home_use_policy">
+            <div class="use_policy_outer">
+                <#include "template/use_policy.ftl" />
+            </div>
+        </div>
 	</div>
 	<div style="clear:both"></div> 
 </div>

@@ -40,7 +40,6 @@
 				<!-- START of Record -->
 				<@s.iterator status="colStat" value="pagination.pageResults" id="colResult" >
 				<div class="left_inner_panel">
-					<div class="record_data_img"><img src="${base}/images/link_arrow.png" align="top" border="0" /></div>
 					<div class="record_data">
 						<div class="record_data_link"><a href="${base}/${viewColDetailLink}?collection.id=${colResult.id}&collection.owner.id=${colResult.owner.id}&viewType=${viewType}"><@s.property value="#colResult.name" /></a></div>
 						<div class="record_data_inline"><@s.property value="#colResult.briefDesc" /></div>
@@ -49,10 +48,11 @@
 							Created date: <@s.date name="#colResult.createdTime" format="yyyy-MM-dd hh:mm" /> &nbsp;&nbsp;&nbsp;&nbsp;
 							Modified by <@s.property value="#colResult.modifiedByUser.displayName" />, &nbsp;&nbsp;&nbsp;&nbsp; 
 							Modified date: <@s.date name="#colResult.modifiedTime" format="yyyy-MM-dd hh:mm" />
-					 	 </div>
-					 	 <div class="record_data_link2"> 
+					 	</div>
+
+					 	<div class="record_data_link2">
 					 	 	<a href="${base}/${viewColDetailLink}?collection.id=${colResult.id}&collection.owner.id=${colResult.owner.id}&viewType=${viewType}">View details</a> 	
-					 	 </div>
+					 	</div>
 					</div>
 				</div>
 				<div style="clear:both"></div>

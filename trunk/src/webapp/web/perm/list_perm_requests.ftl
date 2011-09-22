@@ -23,7 +23,6 @@
 		 	<@s.if test="%{permRequests.size() > 0}">
 			 		<@s.iterator status="permReqStat" value="permRequests" id="pRequest" >
 					<div class="left_inner_panel">
-						<div class="record_data_img"><img src="${base}/images/link_arrow.png" align="top" border="0" /></div>
 						<div class="record_data">
 							<div class="name_title"><@s.property value="#pRequest.collection.name" /></div>
 							<div class="record_data_inline"><@s.property value="#pRequest.collection.briefDesc" /></div>

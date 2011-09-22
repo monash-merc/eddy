@@ -74,13 +74,16 @@ $(document).ready(function() {
 				leadership for the network and coordinates logistics as required.
 				</p>
 			</div>
+            <div style="clear:both"></div>
 		</div>
-		<div style="clear:both"></div> 
-		
-		<br/>
-		<br>	
+        <div class="home_use_policy">
+            <div class="use_policy_outer">
+                <#include "template/use_policy.ftl" />
+            </div>
+        </div>
 	</div>
-	<div style="clear:both"></div> 
+	<div style="clear:both"></div>
+
 </div>
 <br/>
 <!--
