@@ -157,7 +157,7 @@
 			 </form>
 			 <div class="blank_separator"></div>
 		</div>
-		 <div class="none_border_space_block"></div>
+		 <br/>
 	</div>
 	<div class="right_container_panel">		 
 		 <#include "../template/subnav_section.ftl" />
@@ -165,7 +165,6 @@
 	<div style="clear:both"></div>
 </div> 
 </div>
-<br/>
 <br/>
 <#include "../template/footer.ftl"/>
 </body>

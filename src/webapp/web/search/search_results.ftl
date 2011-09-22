@@ -53,7 +53,8 @@
 				<div style="clear:both"></div>
 			</@s.iterator>
 			<@s.if test="%{pagination.pageResults.size() < 4}">
-				<div class="none_border_space_block"></div>
+				<br/>
+                <br/>
 			</@s.if>
 			<br/>
 			<#include "../pagination/pag_style.ftl" />
@@ -77,7 +78,8 @@
 				<div style="clear:both"></div>
 			</@s.iterator>	
 			<@s.if test="%{dsPagination.pageResults.size() < 4}">
-				<div class="none_border_space_block"></div>
+				<br/>
+                <br/>
 			</@s.if>
 			<br/>
 			<#include "../pagination/search_page_style.ftl" />
@@ -85,5 +87,6 @@
 	</div>
 </@s.if>
 <@s.else>
-	<div class="none_border_space_block"></div>
+	<br/>
+    <br/>
 </@s.else>

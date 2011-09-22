@@ -50,7 +50,7 @@
 			<!-- END of Record -->
 			<div style="clear:both"></div>
 			<@s.if test="%{eventPagination.pageResults.size() < 4}">
-					<div class="none_border_space_block"></div>
+					<div class="none_border_space_small"></div>
 			</@s.if>
 			<br/>
 			<#include "../pagination/pag_style2.ftl" />

@@ -132,7 +132,6 @@
 </div>
 </div>
 <br/>
-<br/>
 <#include "../template/footer.ftl"/>
 </body>
 </html>

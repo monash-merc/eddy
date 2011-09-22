@@ -76,11 +76,7 @@ $(document).ready(function() {
 			</div>
             <div style="clear:both"></div>
 		</div>
-        <div class="home_use_policy">
-            <div class="use_policy_outer">
-                <#include "template/use_policy.ftl" />
-            </div>
-        </div>
+        <br/>
 	</div>
 	<div style="clear:both"></div>
 

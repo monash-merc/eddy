@@ -273,7 +273,6 @@ function doAfterImport(success) {
 </div> 
 </div>
 <br/>
-<br/>
 <#include "../template/footer.ftl"/>
 </body>
 </html>
