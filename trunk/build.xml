@@ -410,6 +410,16 @@
         <echo message="Eddy Java API v${javadoc.version} Javadoc Generated !!"/>
     </target>
 
+    <target name="zip-javadoc" depends="generate-javadoc">
+        <jar destfile="${dist.dir}/docs/${app.name}-${javadoc.version}-Java-API.zip">
+            <tarfileset dir="${dist.javadoc.dir}">
+                <include name="**/*.*"/>
+            </tarfileset>
+        </jar>
+        <echo message="zip the Java-API docs completed!"/>
+
+    </target>
+
     <!-- =================================================================== -->
     <!--     generates the project source tar archive file                   -->
     <!-- =================================================================== -->

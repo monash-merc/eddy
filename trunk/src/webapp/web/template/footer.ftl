@@ -10,6 +10,7 @@
     </div>
 </div>
 <div style="clear:both"></div>
+<div class="blank_separator"></div>
 <div class="sponsor">
     <a href="http://www.monash.edu" target="blank"><img src="${base}/images/logo/logo_monash.png" alt="Monash University"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <a href="http://www.monash.edu/eresearch" target="blank"><img src="${base}/images/logo/logo_merc.png" alt="Monash MeRC"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
