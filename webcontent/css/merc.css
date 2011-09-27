@@ -144,8 +144,6 @@ a.main_menu_link:hover {
     line-height: 25px;
     font-family: Arial, Verdana, sans-serif;
 	padding-left: 10px;
-    border-radius: 5px 5px;
-	-moz-border-radius: 5px 5px;
 }
 
 .perm_delim {
