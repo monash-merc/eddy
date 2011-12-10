@@ -97,7 +97,7 @@
 			 	 		<td width="30"><center><b> Import </b></center></td>
 			 	 		<td width="30"><center><b> Export </b></center></td>
 			 	 		<td width="30"><center><b> Delete </b></center></td>
-			 	 		<td width="55"><center><b> Permission </b></center></td>
+			 	 		<td width="65"><center><b> Access Control </b></center></td>
 			 	 	</tr>
 			 	  	<tr>
 						<td>

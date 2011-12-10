@@ -55,7 +55,7 @@
 					 	 <td><center><b> Import </b></center></td>
 					 	 <td><center><b> Export </b></center></td>
 					 	 <td><center><b> Delete </b></center></td>
-					 	 <td><center><b> Permission </b></center></td>
+					 	 <td width="100"><center><b>Access Control</b></center></td>
 					 </tr>
 					 <tr>
 					 	 <td>
