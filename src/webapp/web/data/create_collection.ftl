@@ -89,7 +89,7 @@
 		 				<td align="left">
 		 					<br/>
 		 					<@s.text name="collection.spatial.coverage"/>:
-		 					<div class="name_comment">* (<@s.text name="collection.spatial.coverage.hint" />)</div>
+		 					<div class="name_comment">* (<@s.text name="collection.spatial.coverage.hint" />. For global coverage, please leave this field blank)</div>
 		 				</td>
 		 				<td></td>
 		 			</tr>

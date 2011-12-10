@@ -65,21 +65,21 @@
 					 	 					</td>
 										</tr>
 										<tr>
-										 	 <td width="80"><center> View </center></td>
-										 	 <td width="80"><center><@s.checkbox name="permRequest.viewAllowed"  value="%{#pRequest.viewAllowed}" /></center></td>
-										 	 <td width="80"><center>Export</center></td>
-										 	 <td width="80"><center><@s.checkbox name="permRequest.exportAllowed" value="%{#pRequest.exportAllowed}" /></center></td>
+										 	 <td><center> View </center></td>
+										 	 <td><center><@s.checkbox name="permRequest.viewAllowed"  value="%{#pRequest.viewAllowed}" /></center></td>
+										 	 <td><center>Export</center></td>
+										 	 <td><center><@s.checkbox name="permRequest.exportAllowed" value="%{#pRequest.exportAllowed}" /></center></td>
 										</tr>
 										<tr>
 										 	 <td><center>Edit</center></td>
 										 	 <td><center><@s.checkbox name="permRequest.updateAllowed" value="%{#pRequest.updateAllowed}"/></center></td>
 										 	 <td><center>Delete</center></td>
-										 	  <td><center><@s.checkbox name="permRequest.deleteAllowed"  value="%{#pRequest.deleteAllowed}"/></center></td>
+										 	 <td><center><@s.checkbox name="permRequest.deleteAllowed"  value="%{#pRequest.deleteAllowed}"/></center></td>
 										</tr>
 										<tr>
 										 	 <td><center>Import</center></td>
 										 	 <td><center><@s.checkbox name="permRequest.importAllowed" value="%{#pRequest.importAllowed}"/></center></td>
-										 	 <td><center>Permission</center></td>
+										 	 <td width="100"><center>Access Control</center></td>
 										 	 <td><center><@s.checkbox name="permRequest.changePermAllowed" value="%{#pRequest.changePermAllowed}"/></center></td>
 										</tr>
 										<tr>
