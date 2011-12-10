@@ -21,15 +21,15 @@ import java.util.Random;
  */
 public class DefaultWordRenderer implements WordRenderer {
 
-	private static final Color DEFAULT_COLOR = Color.BLACK;
+	private static final Color DEFAULT_COLOR = new Color(12, 48, 57);
 	private static final List<Font> DEFAULT_FONTS = new ArrayList<Font>();
 
 	private final Color _color;
 	private final List<Font> _fonts;
 
 	static {
-		DEFAULT_FONTS.add(new Font("Arial", Font.BOLD, 38));
-		DEFAULT_FONTS.add(new Font("Courier", Font.BOLD, 38));
+		DEFAULT_FONTS.add(new Font("Arial", Font.ITALIC, 38));
+		DEFAULT_FONTS.add(new Font("Courier", Font.ITALIC, 38));
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class DefaultWordRenderer implements WordRenderer {
 			double charWitdth = gv.getVisualBounds().getWidth();
 
 			g.drawChars(itchar, 0, itchar.length, startPosX, 35);
-			startPosX = startPosX + (int) charWitdth;
+			startPosX = startPosX + (int) charWitdth +3;
 		}
 	}
 }
