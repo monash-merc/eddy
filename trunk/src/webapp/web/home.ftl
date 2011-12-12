@@ -6,7 +6,7 @@
 <#include "template/header.ftl"/>
 <script>
 $(document).ready(function() {
-	$('#merc').coinslider({ hoverPause: true, width: 250,height: 300, opacity: 0.5, });
+	$('#merc').coinslider({ hoverPause: true, width: 250,height: 300, opacity: 0.5 });
 });
 </script>
 </head>
