@@ -35,6 +35,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import au.edu.monash.merc.capture.domain.*;
 import org.apache.commons.lang.xwork.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +43,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import au.edu.monash.merc.capture.config.ConfigSettings;
-import au.edu.monash.merc.capture.domain.Activity;
-import au.edu.monash.merc.capture.domain.AuditEvent;
-import au.edu.monash.merc.capture.domain.Party;
-import au.edu.monash.merc.capture.domain.Permission;
-import au.edu.monash.merc.capture.domain.Rights;
-import au.edu.monash.merc.capture.domain.User;
 import au.edu.monash.merc.capture.dto.PartyBean;
 import au.edu.monash.merc.capture.dto.ProjectBean;
 import au.edu.monash.merc.capture.dto.PublishBean;
@@ -123,8 +118,8 @@ public class MDRegisterAction extends DMCoreAction {
             return ERROR;
         }
 
-        if (user.getId() != collection.getOwner().getId()) {
-            logger.error("user is not the owner of this collection. unable to register metadata for this collection.");
+        if ((user.getId() != collection.getOwner().getId()) && (user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
+            logger.error("The user is neither the owner of this collection nor the administrator, unable to register metadata for this collection.");
             addActionError(getText("ands.md.registration.permission.denied"));
             setNavAfterExc();
             return ERROR;
@@ -246,7 +241,7 @@ public class MDRegisterAction extends DMCoreAction {
         // merge previous existed parties if any
         populateAllParties(ps, partyBean);
         // merge previous existed project summary
-        popilateAllActivities(as, prolist);
+        populateAllActivities(as, prolist);
         setNavAfterSuccess();
         return SUCCESS;
     }
@@ -285,7 +280,7 @@ public class MDRegisterAction extends DMCoreAction {
         }
     }
 
-    private void popilateAllActivities(List<Activity> existedActivities, List<ProjectBean> rmProjList) {
+    private void populateAllActivities(List<Activity> existedActivities, List<ProjectBean> rmProjList) {
         // sign the rm project summary list to project list
         projectList = rmProjList;
         if (projectList != null && projectList.size() > 0) {
@@ -380,12 +375,14 @@ public class MDRegisterAction extends DMCoreAction {
             setNavAfterExc();
             return ERROR;
         }
-        if (user.getId() != collection.getOwner().getId()) {
-            logger.error("user is not the owner of this collection. unable to register metadata for this collection.");
+
+        if ((user.getId() != collection.getOwner().getId()) && (user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
+            logger.error("The user is neither the owner of this collection nor the administrator, unable to register metadata for this collection.");
             addActionError(getText("ands.md.registration.permission.denied"));
             setNavAfterExc();
             return ERROR;
         }
+
         try {
             collection = this.dmService.getCollection(collection.getId(), collection.getOwner().getId());
         } catch (Exception e) {
