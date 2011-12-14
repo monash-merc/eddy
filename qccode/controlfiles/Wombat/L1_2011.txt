@@ -1,0 +1,247 @@
+# AAHYWEH
+# Control file for L1 (input) to L2 (output) quality control.
+#
+# [Files]     - Contains paths and file names.
+# [Variables] - Variable names and quality control sections.
+#               Valid quality control sections are:
+#                RangeCheck   - reject data less than "Lower" or greater than "Upper"
+#                DiurnalCheck - reject data outside Avg(H.h)+/-NumSd*Stdev(H.h) where
+#                                Avg(H.h) is the average of all data at time H.h and
+#                                Stdev(H.h) is the standard deviation of all data at time H.h
+#                                 eg H.h = 8.5 is 0830
+#                 NOTE: The "Lower", "Upper" and "NumSd" keywords require a value for each
+#                       month of the year (12).  This can be written in shorthand as:
+#                        eg "[100]*12" (same value for each month)
+#                       or in longhand as:
+#                        eg "[100,110,120,130,140,150,150,140,130,120,110,100]" (different each month)
+#                ExcludeDates - reject data between specified dates, multiple date ranges can be
+#                               specified on separate lines but the lines must be numbered
+#                               sequentially from 0 (eg 0, 1, 2 etc)
+#                 NOTE: The date range is specified as:
+#                        eg "['2010-1-1 00:00','2010-9-16 00:00']"
+#                ExcludeHours - reject data at specified times between the specified date range,
+#                               multiple ranges can be specified on separate lines but the
+#                               lines must be numbered sequentially from 0 (eg 0, 1, 2, etc)
+#                 NOTE: The date range and hours to be rejected are specified as:
+#                        eg "['2008-04-22 00:00','2008-07-26 23:30',['09:30','10:00','10:30']]"
+# [Plots]     - Definition of time series plots
+#
+[Files]
+    [[L1]]
+        ncFilePath = /home/data/TERN/Sites/WombatStateForest/Data/Processed/2011/
+        ncFileName = WombatStateForest_2011_L1.nc
+    [[L2]]
+        ncFilePath = /home/data/TERN/Sites/WombatStateForest/Data/Processed/2011/
+        ncFileName = WombatStateForest_2011_L2.nc
+
+[Variables]
+# Figure 1: Variables are in the order they appear in the plot.
+    [[Flu]]
+        [[[RangeCheck]]]
+            Lower      = "[250]*12"
+            Upper      = "[500]*12"
+    [[Fld]]
+        [[[RangeCheck]]]
+            Lower      = "[250]*12"
+            Upper      = "[500]*12"
+    [[Fsu]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[500]*12"
+    [[Fsd]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[1500]*12"
+# Figure 2: Variables are in the order they appear in the plot.
+# Temperature covariances
+    [[UzT]]
+        [[[RangeCheck]]]
+            Lower      = "[-0.2]*12"
+            Upper      = "[1]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[UxT]]
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+    [[UyT]]
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+# H2O covariances
+    [[UzA]]
+        [[[RangeCheck]]]
+            Lower      = "[-0.01]*12"
+            Upper      = "[0.5]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[UxA]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+    [[UyA]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+# CO2 covariances
+    [[UzC]]
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[UxC]]
+        [[[RangeCheck]]]
+            Lower      = "[-4]*12"
+            Upper      = "[4]*12"
+    [[UyC]]
+        [[[RangeCheck]]]
+            Lower      = "[-4]*12"
+            Upper      = "[4]*12"
+# momentum covariances and variances
+    [[UxUz]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[UyUz]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[UxUy]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[UxUx]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[UyUy]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+# Figure 3: Variables are in the order they appear in the plot.
+    [[Cc_7500_Av]]
+        [[[RangeCheck]]]
+            Lower      = "[500]*12"
+            Upper      = "[1200]*12"
+    [[Ah_7500_Av]]
+        [[[RangeCheck]]]
+            Lower      = "[5]*12"
+            Upper      = "[35]*12"
+    [[Ah_HMP_01]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[25]*12"
+    [[Ah_HMP_02]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[25]*12"
+    [[Tv_CSAT]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[50]*12"
+    [[Ta_HMP_01]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[50]*12"
+    [[Ta_HMP_02]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[50]*12"
+    [[Ah_7500_Sd]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[3]*12"
+    [[Cc_7500_Sd]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[20]*12"
+# Figure 4: Variables are in the order they appear in the plot.
+    [[Fg_01]]
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[100]*12"
+    [[Fg_02]]
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[100]*12"
+    [[Sws_01]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[0.5]*12"
+    [[Sws_02]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[0.5]*12"
+    [[Ts_01]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[60]*12"
+# Figure 5: Variables are in the order they appear in the plot.
+    [[Wd_CSAT]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[360]*12"
+    [[Ws_CSAT]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[20]*12"
+    [[Ux]]
+        [[[RangeCheck]]]
+            Lower      = "[-20]*12"
+            Upper      = "[20]*12"
+    [[Uy]]
+        [[[RangeCheck]]]
+            Lower      = "[-20]*12"
+            Upper      = "[20]*12"
+    [[Uz]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+    [[ps]]
+        [[[RangeCheck]]]
+            Lower      = "[90]*12"
+            Upper      = "[100]*12"
+# CSAT and IRGA diagnostics
+    [[Diag_CSAT]]
+        [[[RangeCheck]]]
+            Lower      = "[-0.5]*12"
+            Upper      = "[10.5]*12"
+    [[Diag_7500]]
+        [[[RangeCheck]]]
+            Lower      = "[-0.5]*12"
+            Upper      = "[10.5]*12"
+    [[AGC_7500]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[65]*12"
+
+[Plots]
+    [[1]]
+        Title = "Radiative fluxes"
+        Variables = "['Fn_NR','Fsd','Fsu','Fld','Flu']"
+    [[2]]
+        Title = "Covariances (CSAT)"
+        Variables = "['UzT','UxT','UyT','UxUz','UyUz','UxUy','UxUx','UyUy']"
+    [[3]]
+        Title = "Covariances (CSAT/7500)"
+        Variables = "['UzA','UxA','UyA','UzC','UxC','UyC']"
+    [[4]]
+        Title = "Air temperature, humidity and CO2"
+        Variables = "['Ta_HMP_01','Ta_HMP_02','Tv_CSAT','Ah_HMP_01','Ah_HMP_02','Ah_7500_Sd','Ah_7500_Av','Cc_7500_Sd','Cc_7500_Av']"
+    [[5]]
+        Title = "Soil temperature, water content and heat flux"
+        Variables = "['Ts_01','Sws_01','Sws_02','Fg_01','Fg_02']"
+    [[6]]
+        Title = "Pressure, wind speed and direction"
+        Variables = "['ps','Ws_CSAT','Ux','Uy','Uz','Wd_CSAT']"

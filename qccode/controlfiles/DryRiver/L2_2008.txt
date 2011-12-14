@@ -1,0 +1,99 @@
+[Files]
+    [[L2]]
+        xlFilePath = D:/TERN/Sites/DryRiver/Data/Processed/2008/
+        xlFileName = DryRiver_2008_L2.xls
+        ncFilePath = D:/TERN/Sites/DryRiver/Data/Processed/2008/
+        ncFileName = DryRiver_2008_L2.nc
+    [[L3]]
+        xlFilePath = D:/TERN/Sites/DryRiver/Data/Processed/2008/
+        xlFileName = DryRiver_2008_L3.xls
+        ncFilePath = D:/TERN/Sites/DryRiver/Data/Processed/2008/
+        ncFileName = DryRiver_2008_L3.nc
+
+[Soil]
+    FgDepth = 0.08
+    BulkDensity = 1500
+    OrganicContent = 0.01
+    SwsDefault = 0.15
+    SwsSeries = "['Sws_01','Sws_02']"
+
+[Variables]
+# Figure 1: Variables are in the order the appear
+    [[Fn]]
+        [[[RangeCheck]]]
+            Lower      = [-150]*12
+            Upper      = [1100]*12
+# Figure 2: Variables are in the order the appear
+# H2O covariances
+    [[UzA]]
+        [[[Linear]]]
+            0      = "['2008-08-31 16:30','2008-11-09 18:00',0.863,0.0]"
+            1      = "['2008-11-09 18:30','2008-12-31 23:30',0.977,0.0]"
+    [[UxA]]
+        [[[Linear]]]
+            0      = "['2008-08-31 16:30','2008-11-09 18:00',0.863,0.0]"
+            1      = "['2008-11-09 18:30','2008-12-31 23:30',0.977,0.0]"
+    [[UyA]]
+        [[[Linear]]]
+            0      = "['2008-08-31 16:30','2008-11-09 18:00',0.863,0.0]"
+            1      = "['2008-11-09 18:30','2008-12-31 23:30',0.977,0.0]"
+# fluxes
+    [[Fh]]
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[600]*12"
+    [[Fe_wpl]]
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[600]*12"
+    [[Fc_wpl]]
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+    [[Fm]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+    [[ustar]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[2]*12"
+# Figure 3: Variables are in the order the appear
+    [[Ah_7500_Av]]
+        [[[Linear]]]
+            0      = "['2008-08-31 16:30','2008-11-09 18:00',0.863,-1.14]"
+            1      = "['2008-11-09 18:30','2008-12-31 23:30',0.977,-4.84]"
+    [[Ta_EC]]
+        [[[MergeSeries]]]
+            Source     = "['Ta_HMP_01','Ta_CSAT']"
+        [[[RangeCheck]]]
+            Lower      = [0]*12
+            Upper      = [50]*12
+    [[Ah_EC]]
+        [[[MergeSeries]]]
+            Source     = "['Ah_HMP_01','Ah_7500_Av']"
+        [[[RangeCheck]]]
+            Lower      = "[5,5,5,5,0,0,0,0,0,0,5,5]"
+            Upper      = [35]*12
+# Figure 4: Variables are in the order they appear
+    [[Fg]]
+        [[[RangeCheck]]]
+            Lower      = "[-300]*12"
+            Upper      = "[300]*12"
+
+[Plots]
+    [[1]]
+        Title = "Radiative fluxes"
+        Variables = "['Fsd','Fsu','Fld','Flu','Fn']"
+    [[2]]
+        Title = "Turbulent fluxes"
+        Variables = "['Fh','Fe_wpl','Fc_wpl','ustar','Fm']"
+    [[3]]
+        Title = "Air temperature, humidity and CO2"
+        Variables = "['Ta_EC','Ta_HMP_01','Ah_EC','Ah_HMP_01','Cc_7500_Av']"
+    [[4]]
+        Title = "Soil temperature, water content and heat flux"
+        Variables = "['Rain','Ts','Sws_01','Sws_02','Fg']"
+    [[5]]
+        Title = "Pressure, wind speed and direction"
+        Variables = "['ps','Ws_CSAT','Ux','Uy','Uz','Wd_CSAT']"

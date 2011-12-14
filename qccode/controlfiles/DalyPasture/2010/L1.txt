@@ -1,0 +1,374 @@
+# AAHYWEH
+# Control file for choosing data from the L1 Excel spreadsheet and writing it to a netCDF file.
+#
+# [General] - contains general information for the QA/QC process
+#             InLevel - input level (L1)
+#             Outlevel - output level (L1)
+#             Platform - machine type (PC/MAC), determines base year for Excel dates
+# [Files] - contains paths, file names and location of data in file
+# [Global] - global attributes to be written into the netCDF file
+# [Variables] - data to extract from Excel spreadsheet and write to netCDF file
+#
+[General]
+    Platform = PC    # Mac or PC
+
+[Files]
+    [[L1]]
+        xlFilePath = ../../../TERN/Sites/DalyPasture/Data/Processed/2010/
+        xlFileName = DalyPasture_2010_L1_20111130.xls
+        xlHeaderRow  = 2
+        xl1stDataRow = 5
+        ncFilePath = ../../../TERN/Sites/DalyPasture/Data/Processed/2010/
+        ncFileName = DalyPasture_2010_L1.nc
+
+[Global]
+    Contact  = peter.isaac@monash.edu
+    CanopyHeight = "0.5m"
+    DataURL = "http://ozflux.its.monash.edu.au/"
+    Description = "Flux tower data set from the Daly Pasture site for the calendar year 2010"
+    EndDateTime = "2010-12-31 23:30"
+    Institution = "Charles Darwin University"
+    Latitude = -14.06333
+    Location = "Latitude: -14.06333, Longitude: 131.31809"
+    Longitude = 131.31809
+    OzFluxURL = "http://ozflux.org.au/"
+    SiteName = DalyPasture
+    SitePI = "Lindsay Hutley"
+    Site = "Daly Pasture"
+    Soil = "red kandasol"
+    StartDateTime = "2010-01-01 00:00"
+    TimeStep = 30
+    Vegetation = "Improved pasture"
+
+[Variables]
+    [[xlDateTime]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = TIMESTAMP
+        [[[Attr]]]
+            Description = "Date/time in Excel format"
+            Units    = "days"
+    [[Fn_NR]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = Rn_meas_Avg
+        [[[Attr]]]
+            Description = "Net radiation (NRLite)"
+            Units    = "W/m2"
+    [[Fld]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = Ldown_Avg
+        [[[Attr]]]
+            Description = "Down-welling long wave (Kipp&Zonen)"
+            Units    = "W/m2"
+    [[Flu]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = Lup_Avg
+        [[[Attr]]]
+            Description = "Up-welling long wave (Kipp&Zonen)"
+            Units    = "W/m2"
+    [[Fsu]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = Kup_Avg
+        [[[Attr]]]
+            Description = "Up-welling short wave (Kipp&Zonen)"
+            Units    = "W/m2"
+    [[Fsd]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = Kdown_Avg
+        [[[Attr]]]
+            Description = "Down-welling short wave (Kipp&Zonen)"
+            Units    = "W/m2"
+    [[UzT]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = cov_Ts_Uz
+        [[[Attr]]]
+            Description = "Covariance of Uz and T (CSAT)"
+            Units    = "mC/s"
+    [[UxT]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = cov_Ts_Ux
+        [[[Attr]]]
+            Description = "Covariance of Ux and T (CSAT)"
+            Units    = "mC/s"
+    [[UyT]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = cov_Ts_Uy
+        [[[Attr]]]
+            Description = "Covariance of Uy and T (CSAT)"
+            Units    = "mC/s"
+    [[UzA]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = cov_h2o_Uz
+        [[[Attr]]]
+            Description = "Covariance of w and H2O (7500)"
+            Units    = "g/m2/s"
+    [[UxA]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = cov_h2o_Ux
+        [[[Attr]]]
+            Description = "Covariance of Ux and H2O (7500)"
+            Units    = "g/m2/s"
+    [[UyA]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = cov_h2o_Uy
+        [[[Attr]]]
+            Description = "Covariance of Uy and H2O (7500)"
+            Units    = "g/m2/s"
+    [[UzC]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = cov_co2_Uz
+        [[[Attr]]]
+            Description = "Covariance of Uz and CO2 (7500)"
+            Units    = "mg/m2/s"
+    [[UxC]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = cov_co2_Ux
+        [[[Attr]]]
+            Description = "Covariance of Ux and CO2 (7500)"
+            Units    = "mg/m2/s"
+    [[UyC]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = cov_co2_Uy
+        [[[Attr]]]
+            Description = "Covariance of Uy and CO2 (7500)"
+            Units    = "mg/m2/s"
+    [[UxUz]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = cov_Ux_Uz
+        [[[Attr]]]
+            Description = "Covariance of Ux and Uz"
+            Units    = "m2/s2"
+    [[UyUz]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = cov_Uy_Uz
+        [[[Attr]]]
+            Description = "Covariance of Uy and Uz"
+            Units    = "m2/s2"
+    [[UxUy]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = cov_Ux_Uy
+        [[[Attr]]]
+            Description = "Covariance of Ux and Uy"
+            Units    = "m2/s2"
+    [[Ux_Sd]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = stdev_Ux
+        [[[Attr]]]
+            Description = "Standard deviation of Ux"
+            Units    = "m/s"
+    [[UxUx]]
+        [[[Function]]]
+            0          = "Square(ds.series['Ux_Sd']['Data'])"
+        [[[Attr]]]
+            Description = "Variance of Ux"
+            Units    = "m2/s2"
+    [[Uy_Sd]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = stdev_Uy
+        [[[Attr]]]
+            Description = "Standard deviation of Uy"
+            Units    = "m/s"
+    [[UyUy]]
+        [[[Function]]]
+            0          = "Square(ds.series['Uy_Sd']['Data'])"
+        [[[Attr]]]
+            Description = "Variance of Uy"
+            Units    = "m2/s2"
+    [[Uz_Sd]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = stdev_Uz
+        [[[Attr]]]
+            Description = "Standard deviation of Uz"
+            Units    = "m/s"
+    [[UzUz]]
+        [[[Function]]]
+            0          = "Square(ds.series['Uz_Sd']['Data'])"
+        [[[Attr]]]
+            Description = "Variance of Uz"
+            Units    = "m2/s2"
+    [[Cc_7500_Av]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = co2_mean
+        [[[Attr]]]
+            Description = "CO2 concentration"
+            Units    = "mg/m3"
+    [[Ah_7500_Av]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = h2o_Avg
+        [[[Attr]]]
+            Description = "Absolute humidity (7500) at 2m"
+            Units    = "g/m3"
+    [[Ah_HMP_01]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = h2o_hmp_mean
+        [[[Attr]]]
+            Description = "Absoulte humidity (HMP) at 2m"
+            Units    = "g/m3"
+    [[Tv_CSAT]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = Ts_mean
+        [[[Attr]]]
+            Description = "Virtual air temperature (CSAT) at 2m"
+            Units    = "C"
+    [[Ta_HMP_01]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = t_hmp_mean
+        [[[Attr]]]
+            Description = "Air temperature (HMP) at 2m"
+            Units    = "C"
+    [[Ah_7500_Sd]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = stdev_h2o
+        [[[Attr]]]
+            Description = "Absolute humidity (7500) at 2m, stdev"
+            Units    = "g/m3"
+    [[AhAh]]
+        [[[Function]]]
+            0          = "Square(ds.series['Ah_7500_Sd']['Data'])"
+        [[[Attr]]]
+            Description = "Absolute humidity (7500) at 2m, variance"
+            Units    = "(g/m3)2"
+    [[Cc_7500_Sd]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = stdev_co2
+        [[[Attr]]]
+            Description = "CO2 concentration, stdev"
+            Units    = "mg/m3"
+    [[CcCc]]
+        [[[Function]]]
+            0          = "Square(ds.series['Cc_7500_Sd']['Data'])"
+        [[[Attr]]]
+            Description = "CO2 concentration, variance"
+            Units    = "(mg/m3)2"
+    [[Fg_01b]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = shf_Avg(2)
+        [[[Attr]]]
+            Description = "Ground heat flux 2"
+            Units    = "W/m2"
+    [[Fg_01a]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = shf_Avg(1)
+        [[[Attr]]]
+            Description = "Ground heat flux 1"
+            Units    = "W/m2"
+    [[Sws_01a]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = soil_water_T_Avg(1)
+        [[[Attr]]]
+            Description = "Soil water fraction at 5cm"
+            Units    = "frac"
+    [[Sws_02a]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = soil_water_T_Avg(2)
+        [[[Attr]]]
+            Description = "Soil water fraction at 50cm"
+            Units    = "frac"
+	  [[Ts_01a]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = Tsoil_avg
+        [[[Attr]]]
+            Description = "Soil temperature"
+            Units    = "C"
+    [[Rain]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = RainFall_Tot
+        [[[Attr]]]
+            Description = "Rainfall, 30 minute total"
+            Units    = "mm"
+    [[Wd_CSAT_Compass]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = wnd_dir_compass
+        [[[Attr]]]
+            Description = "Wind direction (CSAT) at 2m"
+            Units    = "deg"
+    [[Ws_CSAT]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = wnd_spd
+        [[[Attr]]]
+            Description = "Wind speed (CSAT) at 2m"
+            Units    = "m/s"
+    [[Ux]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = Ux_Avg
+        [[[Attr]]]
+            Description = "Ux (CSAT) at 2m"
+            Units    = "m/s"
+    [[Uy]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = Uy_Avg
+        [[[Attr]]]
+            Description = "Uy (CSAT) at 2m"
+            Units    = "m/s"
+    [[Uz]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = Uz_Avg
+        [[[Attr]]]
+            Description = "Uz (CSAT) at 2m"
+            Units    = "m/s"
+    [[ps]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = press_mean
+        [[[Attr]]]
+            Description = "Static pressure"
+            Units    = "kPa"
+    [[Diag_CSAT]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = csat_warnings
+        [[[Attr]]]
+            Description = "CSAT diagnostic value"
+            Units    = "none"
+    [[Diag_7500]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = irga_warnings
+        [[[Attr]]]
+            Description = "7500 diagnostic value"
+            Units    = "none"
+    [[AGC_7500]]
+        [[[xl]]]
+            Sheet    = Flux
+            Name     = agc_Avg
+        [[[Attr]]]
+            Description = "7500 AGC"
+            Units    = "none"

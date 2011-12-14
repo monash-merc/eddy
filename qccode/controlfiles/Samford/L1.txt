@@ -1,0 +1,323 @@
+#
+# Control file for L1 quality control.
+#  Input level - L1
+#  Output level - L2
+#
+# [Files] - contains paths and file names
+# [Variables] - variable names and quality control keys
+# [Plots] - definition of time series plots
+#
+[Files]
+    [[L1]]
+        ncFilePath = D:/TERN/Sites/Samford/Data/Processed/2010/
+        ncFileName = Samford_2010_June_L1.nc
+    [[L2]]
+        ncFilePath = D:/TERN/Sites/Samford/Data/Processed/2010/
+        ncFileName = Samford_2010_June_L2.nc
+
+[Variables]
+# Radiation
+    [[Flu]]
+        [[[RangeCheck]]]
+            Lower      = "[250]*12"
+            Upper      = "[600]*12"
+    [[Fld]]
+        [[[RangeCheck]]]
+            Lower      = "[225]*12"
+            Upper      = "[500]*12"
+    [[Fsu]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[500]*12"
+    [[Fsd]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[1500]*12"
+    [[Fn_NR]]
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[1000]*12"
+# Covariances: Temperature
+    [[UzT]]
+        [[[RangeCheck]]]
+            Lower      = "[-0.2]*12"
+            Upper      = "[1]*12"
+#        [[[DiurnalCheck]]]
+#            NumSd      = "[5]*12"
+    [[UxT]]
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+    [[UyT]]
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+# Covariances: H2O
+    [[UzA]]
+        [[[RangeCheck]]]
+            Lower      = "[-0.01]*12"
+            Upper      = "[0.5]*12"
+#        [[[DiurnalCheck]]]
+#            NumSd      = "[5]*12"
+    [[UxA]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+    [[UyA]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+# Covariances: CO2
+    [[UzC]]
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+#        [[[DiurnalCheck]]]
+#            NumSd      = "[5]*12"
+    [[UxC]]
+        [[[RangeCheck]]]
+            Lower      = "[-4]*12"
+            Upper      = "[4]*12"
+    [[UyC]]
+        [[[RangeCheck]]]
+            Lower      = "[-4]*12"
+            Upper      = "[4]*12"
+# Covariances and variances: Momentum
+    [[UxUz]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+#        [[[DiurnalCheck]]]
+#            NumSd      = "[5]*12"
+    [[UyUz]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+#        [[[DiurnalCheck]]]
+#            NumSd      = "[5]*12"
+    [[UxUy]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+#        [[[DiurnalCheck]]]
+#            NumSd      = "[5]*12"
+    [[UxUx]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+#        [[[DiurnalCheck]]]
+#            NumSd      = "[5]*12"
+    [[UyUy]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+#        [[[DiurnalCheck]]]
+#            NumSd      = "[5]*12"
+# Meteorology: CSAT
+    [[Tv_CSAT]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[50]*12"
+    [[Wd_CSAT]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[360]*12"
+    [[Ws_CSAT]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[20]*12"
+    [[Ux]]
+        [[[RangeCheck]]]
+            Lower      = "[-20]*12"
+            Upper      = "[20]*12"
+    [[Uy]]
+        [[[RangeCheck]]]
+            Lower      = "[-20]*12"
+            Upper      = "[20]*12"
+    [[Uz]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+    [[Diag_CSAT]]
+        [[[RangeCheck]]]
+            Lower      = "[-0.5]*12"
+            Upper      = "[10.5]*12"
+# Meteorology: LI-7500
+    [[Ah_7500_Av]]
+        [[[RangeCheck]]]
+            Lower      = "[5]*12"
+            Upper      = "[35]*12"
+    [[Cc_7500_Av]]
+        [[[RangeCheck]]]
+            Lower      = "[500]*12"
+            Upper      = "[1200]*12"
+    [[Ah_7500_Sd]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[10]*12"
+    [[Cc_7500_Sd]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[150]*12"
+    [[ps]]
+        [[[RangeCheck]]]
+            Lower      = "[95]*12"
+            Upper      = "[105]*12"
+    [[Diag_7500]]
+        [[[RangeCheck]]]
+            Lower      = "[-0.5]*12"
+            Upper      = "[10.5]*12"
+    [[AGC_7500]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[75]*12"
+# Meteorology: HMP45c
+    [[Ah_HMP_EC]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[25]*12"
+        [[[ExcludeDates]]]
+            0      = "['2010-01-01 00:00','2010-11-10 09:00']"
+    [[Ta_HMP_EC]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[50]*12"
+        [[[ExcludeDates]]]
+            0      = "['2010-01-01 00:00','2010-11-10 09:00']"
+# Meteorology: WindSonic4
+    [[Ws_WS4_2m]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[20]*12"
+    [[Wd_WS4_2m]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[360]*12"
+# Meteorology: Rain
+    [[Rain]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[20]*12"
+# Soil: Ground heat flux
+    [[Fg_01]]
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[100]*12"
+    [[Fg_02]]
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[100]*12"
+    [[Fg_03]]
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[100]*12"
+# Soil: Soil moisture
+    [[Sws_01]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[1]*12"
+    [[Sws_02]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[1]*12"
+    [[Sws_03]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[1]*12"
+    [[Sws_04]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[1]*12"
+    [[Sws_05]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[1]*12"
+    [[Sws_06]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[1]*12"
+    [[Sws_07]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[1]*12"
+    [[Sws_08]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[1]*12"
+    [[Sws_09]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[1]*12"
+    [[Sws_10]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[1]*12"
+    [[Sws_11]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[1]*12"
+    [[Sws_12]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[1]*12"
+    [[Sws_13]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[1]*12"
+    [[Sws_14]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[1]*12"
+    [[Sws_15]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[1]*12"
+    [[Sws_16]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[1]*12"
+# Soil: Soil temperature
+    [[Ts_01]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[60]*12"
+    [[Ts_02]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[60]*12"
+    [[Ts_03]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[60]*12"
+
+[Plots]
+    [[1]]
+        Title = "Radiative fluxes"
+        Variables = "['Fn_NR','Fsd','Fsu','Fld','Flu']"
+    [[2]]
+        Title = "Covariances (CSAT)"
+        Variables = "['UzT','UxT','UyT','UxUz','UyUz','UxUy','UxUx','UyUy']"
+    [[3]]
+        Title = "Covariances (CSAT/7500)"
+        Variables = "['UzA','UxA','UyA','UzC','UxC','UyC']"
+    [[4]]
+        Title = "Air temperature, humidity and CO2"
+        Variables = "['Ta_HMP_EC','Tv_CSAT','Ah_HMP_EC','Ah_7500_Av','Cc_7500_Av']"
+    [[5]]
+        Title = "Rainfall and diagnostics"
+        Variables = "['Rain','Ah_7500_Sd','Cc_7500_Sd','AGC_7500','Diag_7500','Diag_CSAT']"
+    [[6]]
+        Title = "Pressure, wind components and rainfall"
+        Variables = "['ps','Ux','Uy','Uz','Rain','Vbat','Tpanel']"
+    [[7]]
+        Title = "Wind speed and direction"
+        Variables = "['Ws_CSAT','Ws_WS4_2m','Wd_CSAT','Wd_WS4_2m']"
+    [[8]]
+        Title = "Soil temperature and ground heat flux"
+        Variables = "['Ts_01','Ts_02','Ts_03','Fg_01','Fg_02','Fg_03']"
+    [[9]]
+        Title = "Soil water content 1 to 8"
+        Variables = "['Sws_01','Sws_02','Sws_03','Sws_04','Sws_05','Sws_06','Sws_07','Sws_08']"
+    [[10]]
+        Title = "Soil water content 9 to 16"
+        Variables = "['Sws_09','Sws_10','Sws_11','Sws_12','Sws_13','Sws_14','Sws_15','Sws_16']"

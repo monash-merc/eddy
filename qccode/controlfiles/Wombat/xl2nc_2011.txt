@@ -1,0 +1,356 @@
+# AAHYWEH
+# Control file for choosing data from the L1 Excel spreadsheet and writing it to a netCDF file.
+#
+# [Files] - contains paths, file names and location of data in file
+# [Global] - global attributes to be written into the netCDF file
+# [Variables] - data to extract from Excel spreadsheet and write to netCDF file
+#
+[Files]
+    [[L1]]
+        xlFilePath = /home/data/TERN/Sites/WombatStateForest/Data/Processed/2011/
+        xlFileName = WombatStateForest_2011_L1_20110628.xls
+        xlHeaderRow  = 2
+        xl1stDataRow = 5
+        ncFilePath =  /home/data/TERN/Sites/WombatStateForest/Data/Processed/2011/
+        ncFileName = WombatStateForest_2011_L1.nc
+
+[Global]
+    SiteName = "WombatStateForest"
+    Latitude = -37.3362
+    Longitude = 141.6318
+    Elevation = "713 m"
+    Institute = "University of Melbourne"
+    Contact  = sarndt@unimelb.edu.au
+    TimeStep = 30
+    Vegetation = "Dry scherlophyll eucalypt forest"
+    CanopyHeight = "25 m"
+    Soil = "silt-clay/clay"
+
+[Variables]
+    [[xlDateTime]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = TIMESTAMP
+        [[[Attr]]]
+            Description = "Date/time in Excel format"
+            Units    = "days"
+    [[Flu]]
+        [[[xl]]]
+            Sheet    = slow_rad
+            Name     = Flu_cnr1_Avg
+        [[[Attr]]]
+            Description = "Up-welling long wave (Kipp&Zonen)"
+            Units    = "W/m2"
+    [[Fld]]
+        [[[xl]]]
+            Sheet    = slow_rad
+            Name     = Fld_cnr1_Avg
+        [[[Attr]]]
+            Description = "Down-welling long wave (Kipp&Zonen)"
+            Units    = "W/m2"
+    [[Fsu]]
+        [[[xl]]]
+            Sheet    = slow_rad
+            Name     = Fsu_cnr1_Avg
+        [[[Attr]]]
+            Description = "Up-welling short wave (Kipp&Zonen)"
+            Units    = "W/m2"
+    [[Fsd]]
+        [[[xl]]]
+            Sheet    = slow_rad
+            Name     = Fsd_cnr1_Avg
+        [[[Attr]]]
+            Description = "Down-welling short wave (Kipp&Zonen)"
+            Units    = "W/m2"
+    [[Fn_NR]]
+        [[[xl]]]
+            Sheet    = slow_rad
+            Name     = Fn_NR_Avg
+        [[[Attr]]]
+            Description = "Net radiation (NRlite)"
+            Units    = "W/m2"
+    [[UzT]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUzTv
+        [[[Attr]]]
+            Description = "Covariance of Uz and T (CSAT)"
+            Units    = "mC/s"
+    [[UxT]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUxTv
+        [[[Attr]]]
+            Description = "Covariance of Ux and T (CSAT)"
+            Units    = "mC/s"
+    [[UyT]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUyTv
+        [[[Attr]]]
+            Description = "Covariance of Uy and T (CSAT)"
+            Units    = "mC/s"
+    [[UzA]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUzAh
+        [[[Attr]]]
+            Description = "Covariance of w and H2O (7500)"
+            Units    = "g/m2/s"
+    [[UxA]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUxAh
+        [[[Attr]]]
+            Description = "Covariance of Ux and H2O (7500)"
+            Units    = "g/m2/s"
+    [[UyA]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUyAh
+        [[[Attr]]]
+            Description = "Covariance of Uy and H2O (7500)"
+            Units    = "g/m2/s"
+    [[UzC]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUzCc
+        [[[Attr]]]
+            Description = "Covariance of Uz and CO2 (7500)"
+            Units    = "mg/m2/s"
+    [[UxC]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUxCc
+        [[[Attr]]]
+            Description = "Covariance of Ux and CO2 (7500)"
+            Units    = "mg/m2/s"
+    [[UyC]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUyCc
+        [[[Attr]]]
+            Description = "Covariance of Uy and CO2 (7500)"
+            Units    = "mg/m2/s"
+    [[UxUz]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUzUx
+        [[[Attr]]]
+            Description = "Covariance of Ux and Uz"
+            Units    = "m2/s2"
+    [[UyUz]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUzUy
+        [[[Attr]]]
+            Description = "Covariance of Uy and Uz"
+            Units    = "m2/s2"
+    [[UxUy]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUxUy
+        [[[Attr]]]
+            Description = "Covariance of Ux and Uz"
+            Units    = "m2/s2"
+    [[UxUx]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUxUx
+        [[[Attr]]]
+            Description = "Variance of Ux"
+            Units    = "m2/s2"
+    [[UyUy]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUyUy
+        [[[Attr]]]
+            Description = "Variance of Uy"
+            Units    = "m2/s2"
+    [[Cc_7500_Av]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Cc_7500_Avg
+        [[[Attr]]]
+            Description = "CO2 concentration (7500) at 30m"
+            Units    = "mg/m3"
+    [[Ah_7500_Av]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Ah_7500_Avg
+        [[[Attr]]]
+            Description = "Absolute humidity (7500) at 30m"
+            Units    = "g/m3"
+    [[Ah_HMP_01]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Ah_HMP_01_Avg
+        [[[Attr]]]
+            Description = "Absolute humidity (HMP) at 30m"
+            Units    = "g/m3"
+    [[Ah_HMP_02]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Ah_HMP_Lwr_Avg
+        [[[Attr]]]
+            Description = "Absolute humidity (HMP) at 2m"
+            Units    = "g/m3"
+    [[Tv_CSAT]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Tv_CSAT_Avg
+        [[[Attr]]]
+            Description = "Virtual air temperature (CSAT) at 30m"
+            Units    = "C"
+    [[Ta_HMP_01]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Ta_HMP_01_Avg
+        [[[Attr]]]
+            Description = "Air temperature (HMP) at 30m"
+            Units    = "C"
+    [[Ta_HMP_02]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Ta_HMP_02_Avg
+        [[[Attr]]]
+            Description = "Air temperature (HMP) at 2m"
+            Units    = "C"
+    [[Ah_7500_Vr]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covAhAh
+        [[[Attr]]]
+            Description = "Absolute humidity (7500) at 30m, variance"
+            Units    = "(g/m3)2"
+    [[Ah_7500_Sd]]
+        [[[Function]]]
+            0          = "SquareRoot(ds.series['Ah_7500_Vr']['Data'])"
+        [[[Attr]]]
+            Description = "Absolute humidity (7500) at 30m, standard deviation"
+            Units    = "g/m3"
+    [[Cc_7500_Vr]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covCcCc
+        [[[Attr]]]
+            Description = "CO2 concentration (7500) at 30m, variance"
+            Units    = "(mg/m3)2"
+    [[Cc_7500_Sd]]
+        [[[Function]]]
+            0          = "SquareRoot(ds.series['Cc_7500_Vr']['Data'])"
+        [[[Attr]]]
+            Description = "CO2 concentration (7500) at 30m, standard deviation"
+            Units    = "mg/m3"
+    [[Fg_01]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = Fg_HFT3_01_Avg_CORR
+        [[[Attr]]]
+            Description = "Ground heat flux 1"
+            Units    = "W/m2"
+    [[Fg_02]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = Fg_HFP01_02_Avg
+        [[[Attr]]]
+            Description = "Ground heat flux 2"
+            Units    = "W/m2"
+    [[Sws_01]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Sws_616_01_Avg
+        [[[Attr]]]
+            Description = "Soil water fraction at 5cm depth"
+            Units    = "frac"
+    [[Sws_02]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Sws_616_02_Avg
+        [[[Attr]]]
+            Description = "Soil water fraction at 50cm depth"
+            Units    = "frac"
+    [[Ts_01]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Ts_TCAV_01_Avg_CORR
+        [[[Attr]]]
+            Description = "Soil temperature1"
+            Units    = "C"
+    [[Ts_02]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Ts_TCAV_02_Avg
+        [[[Attr]]]
+            Description = "Soil temperature2"
+            Units    = "C"
+    [[Wd_CSAT]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = WD_CSAT_Compass_Avg
+        [[[Attr]]]
+            Description = "Wind direction (CSAT) at 30m"
+            Units    = "deg"
+    [[Ws_CSAT]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = WS_CSAT_Avg
+        [[[Attr]]]
+            Description = "Wind speed (CSAT) at 30m"
+            Units    = "m/s"
+    [[Ux]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Ux_CSAT_Avg
+        [[[Attr]]]
+            Description = "Ux (CSAT) at 30m"
+            Units    = "m/s"
+    [[Uy]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Uy_CSAT_Avg
+        [[[Attr]]]
+            Description = "Uy (CSAT) at 30m"
+            Units    = "m/s"
+    [[Uz]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Uz_CSAT_Avg
+        [[[Attr]]]
+            Description = "Uz (CSAT) at 30m"
+            Units    = "m/s"
+    [[ps]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = ps_7500_Avg
+        [[[Attr]]]
+            Description = "Static pressure"
+            Units    = "kPa"
+    [[Diag_CSAT]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = CSAT_Warn
+        [[[Attr]]]
+            Description = "CSAT diagnostic value"
+            Units    = "none"
+    [[Diag_7500]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = 7500_Warn
+        [[[Attr]]]
+            Description = "7500 diagnostic value"
+            Units    = "none"
+    [[AGC_7500]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = AGC_7500_Avg
+        [[[Attr]]]
+            Description = "7500 AGC"
+            Units    = "none"
+    [[Rain]]
+        [[[xl]]]
+        		Sheet    = slow_met
+        		Name     = Rain_Tot
+        [[[Attr]]]
+            Description = "Rainfall, 30 minute total"
+            Units    = "mm*100"
