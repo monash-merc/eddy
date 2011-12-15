@@ -111,12 +111,17 @@ public class MDRegisterAction extends DMCoreAction {
             return ERROR;
         }
 
+        //check if none ldap user supported for md registration or not.
+        String noneLdapSupported = configSetting.getPropValue(ConfigSettings.ANDS_MD_REGISTER_FOR_NON_LDAP_USER_SUPPORTED);
+        boolean noneLdapSupprotForMd = Boolean.valueOf(noneLdapSupported);
+
         String passwd = user.getPassword();
-        if (!StringUtils.equals(passwd, "ldap")) {
+        if (!StringUtils.equals(passwd, "ldap") && !noneLdapSupprotForMd) {
             addActionError(getText("ands.md.registration.none.ldap.user.not.supported"));
             setNavAfterExc();
             return ERROR;
         }
+
 
         if ((user.getId() != collection.getOwner().getId()) && (user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
             logger.error("The user is neither the owner of this collection nor the administrator, unable to register metadata for this collection.");
@@ -168,7 +173,7 @@ public class MDRegisterAction extends DMCoreAction {
                 accessRights = getText("collection.access.type.public");
             } else {
                 User owner = collection.getOwner();
-                accessRights = getText("collection.access.type.private", new String[]{owner.getFirstName(), owner.getLastName(), owner.getEmail()});
+                accessRights = getText("collection.access.type.private", new String[]{owner.getDisplayName(), owner.getEmail()});
             }
         } catch (Exception e) {
             logger.error(e);
@@ -372,6 +377,17 @@ public class MDRegisterAction extends DMCoreAction {
         } catch (Exception e) {
             logger.error(e);
             addActionError(getText("ands.md.registration.get.user.failed"));
+            setNavAfterExc();
+            return ERROR;
+        }
+
+        //check if none ldap user supported for md registration or not.
+        String noneLdapSupported = configSetting.getPropValue(ConfigSettings.ANDS_MD_REGISTER_FOR_NON_LDAP_USER_SUPPORTED);
+        boolean noneLdapSupprotForMd = Boolean.valueOf(noneLdapSupported);
+
+        String passwd = user.getPassword();
+        if (!StringUtils.equals(passwd, "ldap") && !noneLdapSupprotForMd) {
+            addActionError(getText("ands.md.registration.none.ldap.user.not.supported"));
             setNavAfterExc();
             return ERROR;
         }

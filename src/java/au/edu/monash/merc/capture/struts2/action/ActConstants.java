@@ -44,6 +44,10 @@ public interface ActConstants {
 	static String SESSION_VIEW_PUBCO_FOR_LOGIN_USER = "view_pub_co_for_login_user";
 	
 	static String ANDS_SPATIAL_TYPE = "kmlPolyCoords";
+
+    static String ANDS_SPATIAL_TEXT_TYPE = "text";
+
+    static String ANDS_SPATIAL_GLOBAL = "Global";
 	
 	static String SEARCH_CONDITION_KEY = "search_condition_Key";
 

@@ -214,7 +214,6 @@ public class CaptureUtil {
 		tmp = StringUtils.replace(tmp, "),(", " ");
 		tmp = StringUtils.remove(tmp, "(");
 		tmp = StringUtils.remove(tmp, ")");
-		System.out.println(tmp);
 		return tmp;
 	}
 

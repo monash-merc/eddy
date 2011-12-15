@@ -29,6 +29,7 @@ package au.edu.monash.merc.capture.struts2.action;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -39,120 +40,127 @@ import au.edu.monash.merc.capture.domain.Permission;
 @Controller("data.showColEditAction")
 public class ShowEditColAction extends DMCoreAction {
 
-	private Logger logger = Logger.getLogger(this.getClass().getName());
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
-	private String colNameBeforeUpdate;
+    private String colNameBeforeUpdate;
 
-	private boolean privateCo;
+    private boolean globalCoverage;
 
-	public String showEditCollection() {
-		try {
-			checkUserPermissions(collection.getId(), collection.getOwner().getId());
-		} catch (Exception e) {
-			logger.error(e);
-			addFieldError("checkPermission", getText("check.permissions.error"));
-			setNavAfterException();
-			return ERROR;
-		}
-		try {
-			if (!permissionBean.isEditAllowed()) {
-				addFieldError("updatePermission", getText("show.collection.update.page.permission.denied"));
-				setNavAfterException();
-				return ERROR;
-			}
-			List<Permission> permissions = this.dmService.getCollectionDefaultPerms(collection.getId());
-			privateCo = checkIsPrivateCo(permissions);
-			collection = this.dmService.getCollection(collection.getId(), collection.getOwner().getId());
-			if (collection != null) {
-				// populate the user object
-				colNameBeforeUpdate = collection.getName();
-				// set page title and nav label.
-				setNavAfterSuccess();
-			} else {
-				addActionError(getText("show.collection.update.page.failed.collection.not.exist"));
-				setNavAfterException();
-				return ERROR;
-			}
-		} catch (Exception e) {
-			logger.error(e);
-			addActionError(getText("show.collection.update.page.failed") + " " + e.getMessage());
-			setNavAfterException();
-			return ERROR;
-		}
-		return SUCCESS;
-	}
+    public String showEditCollection() {
+        try {
+            checkUserPermissions(collection.getId(), collection.getOwner().getId());
+        } catch (Exception e) {
+            logger.error(e);
+            addFieldError("checkPermission", getText("check.permissions.error"));
+            setNavAfterException();
+            return ERROR;
+        }
+        try {
+            if (!permissionBean.isEditAllowed()) {
+                addFieldError("updatePermission", getText("show.collection.update.page.permission.denied"));
+                setNavAfterException();
+                return ERROR;
+            }
+            // List<Permission> permissions = this.dmService.getCollectionDefaultPerms(collection.getId());
 
-	private boolean checkIsPrivateCo(List<Permission> permissions) {
+            collection = this.dmService.getCollection(collection.getId(), collection.getOwner().getId());
+            if (collection != null) {
+                // populate the user object
+                colNameBeforeUpdate = collection.getName();
+                String spatialType = collection.getSpatialType();
+                String spatialCoverValue = collection.getSpatialCoverage();
+                if (StringUtils.isNotBlank(spatialType) && StringUtils.equals(spatialType, ActConstants.ANDS_SPATIAL_TEXT_TYPE) && StringUtils.equals(spatialCoverValue, ActConstants.ANDS_SPATIAL_GLOBAL)) {
+                    globalCoverage = true;
+                    collection.setSpatialCoverage("");
+                }
 
-		for (Permission perm : permissions) {
-			if (perm.isViewAllowed()) {
-				return false;
-			}
-		}
-		return true;
-	}
+                // set page title and nav label.
+                setNavAfterSuccess();
+            } else {
+                addActionError(getText("show.collection.update.page.failed.collection.not.exist"));
+                setNavAfterException();
+                return ERROR;
+            }
+        } catch (Exception e) {
+            logger.error(e);
+            addActionError(getText("show.collection.update.page.failed") + " " + e.getMessage());
+            setNavAfterException();
+            return ERROR;
+        }
+        return SUCCESS;
+    }
 
-	protected void setNavAfterException() {
+    private boolean checkIsPrivateCo(List<Permission> permissions) {
 
-		String startNav = null;
-		String startNavLink = null;
-		String secondNav = getText("show.collection.updating");
+        for (Permission perm : permissions) {
+            if (perm.isViewAllowed()) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-		if (viewType != null) {
-			if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
-				startNav = getText("mycollection.nav.label.name");
-				startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
-			}
+    protected void setNavAfterException() {
 
-			if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
-				startNav = getText("allcollection.nav.label.name");
-				startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
-			}
-			setPageTitle(startNav, secondNav + " Error");
-			navigationBar = generateNavLabel(startNav, startNavLink, secondNav, null, null, null);
-		}
-	}
+        String startNav = null;
+        String startNavLink = null;
+        String secondNav = getText("show.collection.updating");
 
-	private void setNavAfterSuccess() {
+        if (viewType != null) {
+            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+                startNav = getText("mycollection.nav.label.name");
+                startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
+            }
 
-		String startNav = null;
-		String startNavLink = null;
-		String secondNav = collection.getName();
-		String secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="
-				+ collection.getOwner().getId() + "&viewType=" + viewType;
+            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+                startNav = getText("allcollection.nav.label.name");
+                startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
+            }
+            setPageTitle(startNav, secondNav + " Error");
+            navigationBar = generateNavLabel(startNav, startNavLink, secondNav, null, null, null);
+        }
+    }
 
-		String thirdNav = getText("update.collection");
-		if (viewType != null) {
-			if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
-				startNav = getText("mycollection.nav.label.name");
-				startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
-			}
+    private void setNavAfterSuccess() {
 
-			if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
-				startNav = getText("allcollection.nav.label.name");
-				startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
-			}
+        String startNav = null;
+        String startNavLink = null;
+        String secondNav = collection.getName();
+        String secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="
+                + collection.getOwner().getId() + "&viewType=" + viewType;
 
-			// set the new page title after successful creating a new collection.
-			setPageTitle(startNav, (secondNav + " - " + thirdNav));
+        String thirdNav = getText("update.collection");
+        if (viewType != null) {
+            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+                startNav = getText("mycollection.nav.label.name");
+                startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
+            }
 
-			navigationBar = generateNavLabel(startNav, startNavLink, secondNav, secondNavLink, thirdNav, null);
-		}
-	}
+            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+                startNav = getText("allcollection.nav.label.name");
+                startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
+            }
 
-	public String getColNameBeforeUpdate() {
-		return colNameBeforeUpdate;
-	}
+            // set the new page title after successful creating a new collection.
+            setPageTitle(startNav, (secondNav + " - " + thirdNav));
 
-	public void setColNameBeforeUpdate(String colNameBeforeUpdate) {
-		this.colNameBeforeUpdate = colNameBeforeUpdate;
-	}
+            navigationBar = generateNavLabel(startNav, startNavLink, secondNav, secondNavLink, thirdNav, null);
+        }
+    }
 
-	public boolean isPrivateCo() {
-		return privateCo;
-	}
+    public String getColNameBeforeUpdate() {
+        return colNameBeforeUpdate;
+    }
 
-	public void setPrivateCo(boolean privateCo) {
-		this.privateCo = privateCo;
-	}
+    public void setColNameBeforeUpdate(String colNameBeforeUpdate) {
+        this.colNameBeforeUpdate = colNameBeforeUpdate;
+    }
+
+    public boolean isGlobalCoverage() {
+        return globalCoverage;
+    }
+
+    public void setGlobalCoverage(boolean globalCoverage) {
+        this.globalCoverage = globalCoverage;
+    }
 }
