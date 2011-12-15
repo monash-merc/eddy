@@ -363,6 +363,7 @@ function mctResetTools(controlDivId)
 
 function mctResetMap(controlDivId)
 {
+    cleanGlobalCover();
 	mctSetInputFieldValue(controlDivId, mctGetOriginalInputFieldValue(controlDivId));
 	mctResetTools(controlDivId);
 	mctCentreMap(controlDivId);
@@ -370,6 +371,7 @@ function mctResetMap(controlDivId)
 
 function mctEmptyMap(controlDivId)
 {
+    cleanGlobalCover();
 	mctSetInputFieldValue(controlDivId, '');
 	mctResetTools(controlDivId);
 	mctCentreMap(controlDivId);
@@ -524,6 +526,7 @@ function mctCentreMap(controlDivId)
 // ===========================================================================
 function mctStartPoint(tool, controlDivId)
 {
+    cleanGlobalCover();
 	var active = mctGetToolActive(tool);
 	mctResetTools(controlDivId);
 	
@@ -608,6 +611,7 @@ function mctRemoveMarker(controlDivId)
 // ===========================================================================
 function mctStartRegion(tool, controlDivId)
 {
+    cleanGlobalCover();
 	var active = mctGetToolActive(tool);
 	mctResetTools(controlDivId);	
 	if( !active )
@@ -800,6 +804,7 @@ function mctCheckSearchEvent(event, controlDivId)
 
 function mctShowAddressSearchDialog(tool, controlDivId)
 {
+    cleanGlobalCover();
 	var active = mctGetToolActive(tool);
 	mctResetTools(controlDivId);
 
@@ -924,7 +929,8 @@ function mctGetLonLatDialogHTML(controlDivId)
 }
 
 function mctShowLonLatDialog(tool, controlDivId)
-{	
+{
+    cleanGlobalCover();
 	var active = mctGetToolActive(tool);
 	mctResetTools(controlDivId);	
 
@@ -964,4 +970,12 @@ function mctSetMapFromText(controlDivId)
 	}
 }
 
+
+function cleanGlobalCover(){
+    var gcover = getObject("global_coverage");
+
+    if(gcover != null && gcover.checked == true){
+        gcover.checked = false;
+    }
+}
  

@@ -322,6 +322,23 @@ a.main_menu_link:hover {
     text-decoration: none;
 }
 
+.sponsor_link{
+   float: left;
+   width: 80px;
+}
+.ands_sponsor{
+    padding-top: 5px;
+    text-align: justify;
+    margin-left: 100px;
+    font-size: 11px;
+    color: #212121;
+}
+
+.ands_sponsor a{
+    color: #003766;
+    text-decoration: none;
+}
+
 .reg_options_middle {
 	padding: 10px;
 	margin: 10px;

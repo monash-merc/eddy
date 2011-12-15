@@ -6,6 +6,16 @@
 <title><@s.text name="mycollection.nav.label.name" /> - <@s.text name="create.new.collection" /></title>
 <#include "../template/jquery_header.ftl"/>
 <#include "../template/googlemap_header.ftl"/>
+<script type="text/javascript">
+    $("input[type=checkbox]").live('click',function(){
+        if($(this).is(":checked")){
+            //call map control javascript
+            mctEmptyMap('mct_control_spatialcvg');
+            //reset checkbox to true
+            $(this).attr("checked", true);
+        }
+    });
+</script>
 </head>
 <body>
 <!-- Navigation Section including sub nav menu -->
@@ -87,12 +97,17 @@
 		 			 
 		 			<tr>
 		 				<td align="left">
+                            <br/>
+                            Global Coverage: <@s.checkbox name="globalCoverage" id="global_coverage" />
+                            <div class="name_comment">* (The global coverage, please select the tick box)</div>
 		 					<br/>
 		 					<@s.text name="collection.spatial.coverage"/>:
-		 					<div class="name_comment">* (<@s.text name="collection.spatial.coverage.hint" />. For the global coverage, leave this field blank)</div>
+                            <div class="name_comment">* (<@s.text name="collection.spatial.coverage.hint" />)</div>
+                            <div class="blank_separator"></div>
 		 				</td>
 		 				<td></td>
 		 			</tr>
+
 		 			<tr>
 		 				<td align="left">
 		 					<@s.textarea  id="spatialcvg" name="collection.spatialCoverage" cssStyle="width: 200px; height: 80px;" cssClass="input_textarea" readonly ="true" />

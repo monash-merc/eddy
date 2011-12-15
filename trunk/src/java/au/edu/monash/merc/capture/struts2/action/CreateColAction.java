@@ -58,6 +58,8 @@ public class CreateColAction extends DMCoreAction {
 
     private boolean mdRegEnabled;
 
+    private boolean globalCoverage;
+
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     /**
@@ -136,14 +138,19 @@ public class CreateColAction extends DMCoreAction {
             // set collection modified by some user, in this case is an owner user
             collection.setModifiedByUser(user);
 
-            // check the spatial coverage and type
-            String spatialTmp = collection.getSpatialCoverage();
-            if (StringUtils.isBlank(spatialTmp)) {
-                collection.setSpatialCoverage(null);
+            if (globalCoverage) {
+                collection.setSpatialType(ActConstants.ANDS_SPATIAL_TEXT_TYPE);
+                collection.setSpatialCoverage(ActConstants.ANDS_SPATIAL_GLOBAL);
             } else {
-                collection.setSpatialType(ActConstants.ANDS_SPATIAL_TYPE);
+                // check the spatial coverage and type
+                String spatialTmp = collection.getSpatialCoverage();
+                if (StringUtils.isBlank(spatialTmp)) {
+                    collection.setSpatialCoverage("");
+                    collection.setSpatialCoverage("");
+                } else {
+                    collection.setSpatialType(ActConstants.ANDS_SPATIAL_TYPE);
+                }
             }
-
             // setup a default permissions.
             List<Permission> defaultPermissions = setDefaultPermissions();
             collection.setPermissions(defaultPermissions);
@@ -314,5 +321,13 @@ public class CreateColAction extends DMCoreAction {
 
     public void setMdRegEnabled(boolean mdRegEnabled) {
         this.mdRegEnabled = mdRegEnabled;
+    }
+
+    public boolean isGlobalCoverage() {
+        return globalCoverage;
+    }
+
+    public void setGlobalCoverage(boolean globalCoverage) {
+        this.globalCoverage = globalCoverage;
     }
 }

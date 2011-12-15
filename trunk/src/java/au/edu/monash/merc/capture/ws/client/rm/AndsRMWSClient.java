@@ -343,7 +343,7 @@ public class AndsRMWSClient extends Stub {
 		OMElement partyRegistryObjectsElement = respEnvelope.getBody().getFirstElement();
 		OMElement registryObject = partyRegistryObjectsElement.getFirstElement();
 
-		System.out.println("====> registryObject: " + registryObject);
+		//System.out.println("====> registryObject: " + registryObject);
 		// get the party group
 		OMAttribute groupAtt = registryObject.getAttribute(new QName("group"));
 		pb.setGroupName(groupAtt.getAttributeValue());
@@ -601,7 +601,7 @@ public class AndsRMWSClient extends Stub {
 		ActivityBean ab = new ActivityBean();
 
 		OMElement activityRegistryObjectsElement = respEnvelope.getBody().getFirstElement();
-		System.out.println("activity: rif-cs: " + activityRegistryObjectsElement);
+		//System.out.println("activity: rif-cs: " + activityRegistryObjectsElement);
 		OMElement registryObject = activityRegistryObjectsElement.getFirstElement();
 
 		// get the party group

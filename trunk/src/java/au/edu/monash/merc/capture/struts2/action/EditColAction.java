@@ -57,6 +57,8 @@ public class EditColAction extends DMCoreAction {
 
     private boolean mdRegEnabled;
 
+    private boolean globalCoverage;
+
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     public String editCollection() {
@@ -82,13 +84,19 @@ public class EditColAction extends DMCoreAction {
                 }
 
                 // check the spatial coverage and type
-                String spatialTmp = collection.getSpatialCoverage();
-                if (StringUtils.isBlank(spatialTmp)) {
-                    existedCollection.setSpatialCoverage(null);
-                    existedCollection.setSpatialType(null);
+                if (globalCoverage) {
+                    existedCollection.setSpatialType(ActConstants.ANDS_SPATIAL_TEXT_TYPE);
+                    existedCollection.setSpatialCoverage(ActConstants.ANDS_SPATIAL_GLOBAL);
                 } else {
-                    existedCollection.setSpatialType(ActConstants.ANDS_SPATIAL_TYPE);
-                    existedCollection.setSpatialCoverage(spatialTmp);
+                    // check the spatial coverage and type
+                    String spatialTmp = collection.getSpatialCoverage();
+                    if (StringUtils.isBlank(spatialTmp)) {
+                        existedCollection.setSpatialCoverage("");
+                        existedCollection.setSpatialType("");
+                    } else {
+                        existedCollection.setSpatialType(ActConstants.ANDS_SPATIAL_TYPE);
+                        existedCollection.setSpatialCoverage(collection.getSpatialCoverage());
+                    }
                 }
 
                 // retrieve the permissions for all registered users and anonymous users
@@ -332,5 +340,13 @@ public class EditColAction extends DMCoreAction {
 
     public void setMdRegEnabled(boolean mdRegEnabled) {
         this.mdRegEnabled = mdRegEnabled;
+    }
+
+    public boolean isGlobalCoverage() {
+        return globalCoverage;
+    }
+
+    public void setGlobalCoverage(boolean globalCoverage) {
+        this.globalCoverage = globalCoverage;
     }
 }
