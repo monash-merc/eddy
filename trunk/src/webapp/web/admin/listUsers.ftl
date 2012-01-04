@@ -37,10 +37,10 @@
 					<tr class="bg_grey_tr">
 				 		<td width="100"><center><b>Name</b></center></td>
 				 	 	<td width="180" ><center><b>Email</b></center></td>
-				 	 	<td width="200"><center><b>Organization</b></center></td>
+				 	 	<td width="180"><center><b>Organization</b></center></td>
 				 	 	<td width="70"><center><b>User Type</b></center></td>
 				 	 	<td width="40"><center><b>Active</b></center></td>
-				 	 	<td width="70"><center><b>&nbsp;</b></center></td>
+				 	 	<td width="90"><center><b>&nbsp;</b></center></td>
 				 	 </tr>
 				 	 <@s.iterator status="userStat" value="userPagination.pageResults" id="userResult" >
 				 	 <tr class="tr_small">
