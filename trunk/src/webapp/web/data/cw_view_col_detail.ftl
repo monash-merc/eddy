@@ -91,9 +91,12 @@ function doAfterImport(success) {
 							</span>
 						</td>
 					</tr>
-					<tr>
-						<td>&nbsp;</td>
-					</tr>
+					 <tr>
+                        <td>
+                            <div class="status_name_div">Metadata Registered: </div>
+                            <div class="status_value_div"><@s.property value="collection.published" /></div>
+                        </td>
+                    </tr>
 					<tr>
 						<td>
 		 	 	 			<div class="inline_td_div"> 
