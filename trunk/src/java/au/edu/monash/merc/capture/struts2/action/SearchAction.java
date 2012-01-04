@@ -161,7 +161,7 @@ public class SearchAction extends DMCoreAction {
 
         String appName = configSetting.getPropValue(ConfigSettings.APPLICATION_NAME);
 
-        if (StringUtils.equalsIgnoreCase(appName, "ecosystem")) {
+        if (StringUtils.equalsIgnoreCase(appName, "ozflux")) {
             //for ecosystem
             if (StringUtils.isBlank(searchBean.getResearcherName()) && StringUtils.isBlank(searchBean.getCollectionName())
                     && (searchBean.getStartDate() == null) && (searchBean.getEndDate() == null) && StringUtils.isBlank(searchBean.getSiteName())
