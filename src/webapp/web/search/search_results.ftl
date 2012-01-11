@@ -62,7 +62,6 @@
 		<@s.else>
 			<@s.iterator status="dsStat" value="dsPagination.pageResults" id="dsResult" >
 				<div class="left_inner_panel">
-					<div class="record_data_img"><img src="${base}/images/link_arrow.png" align="top" border="0" /></div>
 					<div class="search_data">
 						<div class="record_data_link"><a href="${base}/${viewColDetailLink}?collection.id=${dsResult.collection.id}&collection.owner.id=${dsResult.collection.owner.id}&viewType=${viewType}"><@s.property value="#dsResult.collection.name" /></a></div>
 						<div class="record_data_inline"><@s.property value="#dsResult.collection.briefDesc" /></div>
