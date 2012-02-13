@@ -17,28 +17,11 @@
 	<div class="mcpop_pmain_div">
 		<#include "../template/action_errors.ftl" />
 		<div class="mcpop_title">
-			<@s.if test="%{addPartyType == 'rm_party'}">
-				Search a researcher from the Research Master Web Service
-			</@s.if>
-			<@s.if test="%{addPartyType == 'user_defined_party'}">
-				Input a researcher information manually
-			</@s.if>
+		    The researcher details:
 	    </div>
-	    
+
 	 	<div class="mcpop_field">
 		    <br/>
-			<div class="mcpop_input_value">
-				<span class="inline_span2">
-				<@s.if test="%{addPartyType == 'rm_party'}">
-					Found a researcher information as bellow:
-				</@s.if>
-				<@s.else>
-					&nbsp;
-				</@s.else>
-				</span>
-			</div>
-			<div style="clear:both"></div>
-		 	<div class="blank_separator"></div>
             <div class="mcpop_input_value">
             <table  class="mcpop_tab" width="450">
                 <tr>
@@ -110,9 +93,9 @@
 		</div>
          <div style="clear:both"></div>
 		<div class="mcpop_bddiv">
-			<input type="button" value=" Back " class="mcpop_button" onclick="window.location = '${base}/data/addPartyOpt.jspx?addPartyType=${addPartyType}';" /> &nbsp;&nbsp; <input type="button"  value=" Cancel " class="mcpop_button" id="cancelAddParty" /> &nbsp;&nbsp; <input type="submit" name="options" value=" Save " class="mcpop_button" id="save_rm_party" />
+			<input type="button"  value=" Cancel " class="mcpop_button" id="cancelAddParty" /> &nbsp;&nbsp; <input type="submit" name="options" value=" Save " class="mcpop_button" id="save_rm_party" />
 		</div>
-		 
+
 	</div>
 </body>
 </html>

@@ -27,68 +27,78 @@
  */
 package au.edu.monash.merc.capture.dao.impl;
 
-import java.util.List;
-
+import au.edu.monash.merc.capture.dao.HibernateGenericDAO;
+import au.edu.monash.merc.capture.domain.Party;
+import au.edu.monash.merc.capture.repository.IPartyRepository;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
-import au.edu.monash.merc.capture.dao.HibernateGenericDAO;
-import au.edu.monash.merc.capture.domain.Party;
-import au.edu.monash.merc.capture.repository.IPartyRepository;
+import java.util.List;
 
 @Scope("prototype")
 @Repository
 public class PartyDAO extends HibernateGenericDAO<Party> implements IPartyRepository {
 
-	@Override
-	public Party getPartyByPartyKey(String partyKey) {
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		criteria.add(Restrictions.eq("partyKey", partyKey));
-		return (Party) criteria.uniqueResult();
-	}
+    @Override
+    public Party getPartyByPartyKey(String partyKey) {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        criteria.add(Restrictions.eq("partyKey", partyKey));
+        return (Party) criteria.uniqueResult();
+    }
 
-	@Override
-	public Party getPartyByUserName(String firstName, String lastName) {
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		criteria.add(Restrictions.eq("personGivenName", firstName)).add(Restrictions.eq("personFamilyName", lastName));
-		return (Party) criteria.uniqueResult();
-	}
+    @Override
+    public Party getPartyByEmail(String email) {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        criteria.add(Restrictions.eq("email", email));
+        return (Party) criteria.uniqueResult();
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Party> getAllParties() {
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		criteria.setComment("PartyDAO.getAllParties()");
-		return criteria.list();
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Party> getPartyByUserName(String firstName, String lastName) {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        criteria.add(Restrictions.eq("personGivenName", firstName));
+        if (lastName != null) {
+            criteria.add(Restrictions.eq("personFamilyName", lastName));
+        }
+        return criteria.list();
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Party> getPartiesByCollectionId(long cid) {
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		// create a alias for collections
-		Criteria colcrit = criteria.createAlias("collections", "co");
-		colcrit.add(Restrictions.eq("co.id", cid));
-		return criteria.list();
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Party> getAllParties() {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        criteria.setComment("PartyDAO.getAllParties()");
+        return criteria.list();
+    }
 
-	@Override
-	public void deletePartyById(long id) {
-		String del_hql = "DELETE FROM " + this.persistClass.getSimpleName() + " AS py WHERE py.id = :id";
-		Query query = this.session().createQuery(del_hql);
-		query.setLong("id", id);
-		query.executeUpdate();
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Party> getPartiesByCollectionId(long cid) {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        // create a alias for collections
+        Criteria colcrit = criteria.createAlias("collections", "co");
+        colcrit.add(Restrictions.eq("co.id", cid));
+        return criteria.list();
+    }
 
-	@Override
-	public void deletePartyByPartyKey(String partyKey) {
-		String del_hql = "DELETE FROM " + this.persistClass.getSimpleName() + " AS py WHERE py.partyKey = :partyKey";
-		Query query = this.session().createQuery(del_hql);
-		query.setString("partyKey", partyKey);
-		query.executeUpdate();
-	}
+    @Override
+    public void deletePartyById(long id) {
+        String del_hql = "DELETE FROM " + this.persistClass.getSimpleName() + " AS py WHERE py.id = :id";
+        Query query = this.session().createQuery(del_hql);
+        query.setLong("id", id);
+        query.executeUpdate();
+    }
+
+    @Override
+    public void deletePartyByPartyKey(String partyKey) {
+        String del_hql = "DELETE FROM " + this.persistClass.getSimpleName() + " AS py WHERE py.partyKey = :partyKey";
+        Query query = this.session().createQuery(del_hql);
+        query.setString("partyKey", partyKey);
+        query.executeUpdate();
+    }
 
 }

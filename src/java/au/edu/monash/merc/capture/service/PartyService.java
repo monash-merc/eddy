@@ -27,29 +27,31 @@
  */
 package au.edu.monash.merc.capture.service;
 
-import java.util.List;
-
 import au.edu.monash.merc.capture.domain.Party;
+
+import java.util.List;
 
 public interface PartyService {
 
-	public Party getPartyByPartyKey(String partyKey);
+    public Party getPartyByPartyKey(String partyKey);
 
-	public Party getPartyByUserName(String firstName, String lastName);
+    public List<Party> getPartyByUserName(String firstName, String lastName);
 
-	public Party getPartyById(long id);
+    public Party getPartyByEmail(String email);
 
-	public List<Party> getAllParties();
+    public Party getPartyById(long id);
 
-	public List<Party> getPartiesByCollectionId(long cid);
+    public List<Party> getAllParties();
 
-	public void saveParty(Party party);
+    public List<Party> getPartiesByCollectionId(long cid);
 
-	public void deleteParty(Party party);
+    public void saveParty(Party party);
 
-	public void deletePartyById(long id);
+    public void deleteParty(Party party);
 
-	public void deletePartyByPartyKey(String partyKey);
+    public void deletePartyById(long id);
 
-	public void updateParty(Party party);
+    public void deletePartyByPartyKey(String partyKey);
+
+    public void updateParty(Party party);
 }

@@ -39,6 +39,7 @@ import au.edu.monash.merc.capture.rifcs.RIFCSGenService;
 import au.edu.monash.merc.capture.service.*;
 import au.edu.monash.merc.capture.util.CaptureUtil;
 import au.edu.monash.merc.capture.util.stage.StageFileTransferThread;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -626,7 +627,7 @@ public class DMServiceImpl implements DMService {
             Party p = null;
             if (!partybean.isFromRm()) {
                 // search the party detail by the person's first name and last name from the database;
-                p = getPartyByUserName(partybean.getPersonGivenName(), partybean.getPersonFamilyName());
+                p = getPartyByEmail(partybean.getEmail());
             } else {
                 // search the party detail by the party's key
                 p = getPartyByPartyKey(partybean.getPartyKey());
@@ -737,8 +738,37 @@ public class DMServiceImpl implements DMService {
     }
 
     @Override
-    public Party getPartyByUserName(String firstName, String lastName) {
+    public Party getPartyByEmail(String email) {
+        return this.partyService.getPartyByEmail(email);
+    }
+
+    @Override
+    public List<Party> getPartyByUserName(String firstName, String lastName) {
         return this.partyService.getPartyByUserName(firstName, lastName);
+    }
+
+    @Override
+    public List<Party> getPartyByUserNameOrEmail(String userNameOrEmail) {
+        String searchFor = null;
+        List<Party> parties = new ArrayList<Party>();
+
+        if (StringUtils.contains(userNameOrEmail, "@")) {
+            Party p = this.getPartyByEmail(userNameOrEmail);
+            parties.add(p);
+            return parties;
+        }
+
+        String[] names = StringUtils.split(userNameOrEmail, " ");
+        if (names != null && names.length >= 2) {
+            String firstName = names[0];
+            String lastName = names[1];
+            parties = this.getPartyByUserName(firstName, lastName);
+        }
+        if (names != null && names.length == 1) {
+            String firstName = names[0];
+            parties = this.getPartyByUserName(firstName, null);
+        }
+        return parties;
     }
 
     @Override

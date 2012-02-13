@@ -78,7 +78,7 @@
 						</td>
 						<td align="left">
 							<div class="links_div">
-						 		 <a href="${base}/data/addPartyOptions.jspx" title="Adding another researcher" id="addtionalParty">Add Researcher</a> &nbsp;	
+						 		 <a href="${base}/data/showSearchParty.jspx" title="Adding another researcher" id="addtionalParty">Add Researcher</a> &nbsp;
 						 	</div>
 					 	</td>
 					</tr>
@@ -118,7 +118,7 @@
 			<@s.if test="%{partyList == null || partyList.size == 0}">
 			<div class="border_div_block" id="party_not_found">
 				<div class="yellow_div_block">
-					The associated researcher(s) not found
+					The associated researcher(s) not found, please select an associated researcher
 				</div>
 				<div style="clear:both"></div>
 			</div>
