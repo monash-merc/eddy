@@ -34,8 +34,10 @@ import au.edu.monash.merc.capture.domain.Party;
 public interface IPartyRepository {
 
 	public Party getPartyByPartyKey(String partyKey);
+
+    public Party getPartyByEmail(String email);
 	
-	public Party getPartyByUserName(String firstName, String lastName);
+	public List<Party> getPartyByUserName(String firstName, String lastName);
 
 	public List<Party> getAllParties();
 

@@ -381,26 +381,42 @@
 			<result name="success">/web/mdreg/mdreg_finished.ftl</result>
 		</action>
 
-		<!-- show adding party options -->
+        <!-- show show search party action -->
+		<action name="showSearchParty" class="data.mdRegAction" method="showSearchParty">
+			<result name="input">/web/mdreg/search_party.ftl</result>
+			<result name="error">/web/mdreg/search_party.ftl</result>
+			<result name="success">/web/mdreg/search_party.ftl</result>
+		</action>
+
+        <!-- show show search party action -->
+		<action name="searchParty" class="data.mdRegAction" method="searchParty">
+			<result name="input">/web/mdreg/search_party.ftl</result>
+			<result name="error">/web/mdreg/search_party.ftl</result>
+			<result name="success">/web/mdreg/search_party_results.ftl</result>
+		</action>
+
+		<!-->
 		<action name="addPartyOptions" class="data.mdRegAction" method="addPartyOptions">
 			<result name="input">/web/mdreg/party_error.ftl</result>
 			<result name="error">/web/mdreg/party_error.ftl</result>
 			<result name="success">/web/mdreg/party_options.ftl</result>
 		</action>
 
-		<!-- selected adding party type -->
+
 		<action name="addPartyOpt" class="data.mdRegAction" method="addPartyOpt">
 			<result name="input">/web/mdreg/party_options.ftl</result>
 			<result name="error">/web/mdreg/party_error.ftl</result>
 			<result name="success">/web/mdreg/add_party.ftl</result>
 		</action>
 
-		<!-- add a party from research master -->
+
 		<action name="addRMParty" class="data.mdRegAction" method="addRMParty">
 			<result name="input">/web/mdreg/add_party.ftl</result>
 			<result name="error">/web/mdreg/add_party.ftl</result>
 			<result name="success">/web/mdreg/add_party_success.ftl</result>
 		</action>
+		-->
+
 
 		<!-- add an user-defined party -->
 		<action name="addUDParty" class="data.mdRegAction" method="addUDParty">

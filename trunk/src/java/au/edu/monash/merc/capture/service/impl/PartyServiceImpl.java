@@ -27,76 +27,80 @@
  */
 package au.edu.monash.merc.capture.service.impl;
 
-import java.util.List;
-
+import au.edu.monash.merc.capture.dao.impl.PartyDAO;
+import au.edu.monash.merc.capture.domain.Party;
+import au.edu.monash.merc.capture.service.PartyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import au.edu.monash.merc.capture.dao.impl.PartyDAO;
-import au.edu.monash.merc.capture.domain.Party;
-import au.edu.monash.merc.capture.service.PartyService;
+import java.util.List;
 
 @Scope("prototype")
 @Service
 @Transactional
 public class PartyServiceImpl implements PartyService {
 
-	@Autowired
-	private PartyDAO partyDao;
+    @Autowired
+    private PartyDAO partyDao;
 
-	public void setPartyDao(PartyDAO partyDao) {
-		this.partyDao = partyDao;
-	}
+    public void setPartyDao(PartyDAO partyDao) {
+        this.partyDao = partyDao;
+    }
 
-	@Override
-	public Party getPartyByPartyKey(String partyKey) {
-		return this.partyDao.getPartyByPartyKey(partyKey);
-	}
+    @Override
+    public Party getPartyByPartyKey(String partyKey) {
+        return this.partyDao.getPartyByPartyKey(partyKey);
+    }
 
-	@Override
-	public Party getPartyByUserName(String firstName, String lastName) {
-		return this.partyDao.getPartyByUserName(firstName, lastName);
-	}
+    @Override
+    public Party getPartyByEmail(String email) {
+        return this.partyDao.getPartyByEmail(email);
+    }
 
-	@Override
-	public Party getPartyById(long id) {
-		return this.partyDao.get(id);
-	}
+    @Override
+    public List<Party> getPartyByUserName(String firstName, String lastName) {
+        return this.partyDao.getPartyByUserName(firstName, lastName);
+    }
 
-	@Override
-	public List<Party> getAllParties() {
-		return this.partyDao.getAllParties();
-	}
+    @Override
+    public Party getPartyById(long id) {
+        return this.partyDao.get(id);
+    }
 
-	@Override
-	public List<Party> getPartiesByCollectionId(long cid) {
-		return this.partyDao.getPartiesByCollectionId(cid);
-	}
+    @Override
+    public List<Party> getAllParties() {
+        return this.partyDao.getAllParties();
+    }
 
-	@Override
-	public void saveParty(Party party) {
-		this.partyDao.add(party);
-	}
+    @Override
+    public List<Party> getPartiesByCollectionId(long cid) {
+        return this.partyDao.getPartiesByCollectionId(cid);
+    }
 
-	@Override
-	public void deleteParty(Party party) {
-		this.partyDao.remove(party);
-	}
+    @Override
+    public void saveParty(Party party) {
+        this.partyDao.add(party);
+    }
 
-	@Override
-	public void deletePartyById(long id) {
-		this.partyDao.deletePartyById(id);
-	}
+    @Override
+    public void deleteParty(Party party) {
+        this.partyDao.remove(party);
+    }
 
-	@Override
-	public void deletePartyByPartyKey(String partyKey) {
-		this.partyDao.deletePartyByPartyKey(partyKey);
-	}
+    @Override
+    public void deletePartyById(long id) {
+        this.partyDao.deletePartyById(id);
+    }
 
-	@Override
-	public void updateParty(Party party) {
-		this.partyDao.update(party);
-	}
+    @Override
+    public void deletePartyByPartyKey(String partyKey) {
+        this.partyDao.deletePartyByPartyKey(partyKey);
+    }
+
+    @Override
+    public void updateParty(Party party) {
+        this.partyDao.update(party);
+    }
 }

@@ -185,7 +185,11 @@ public interface DMService {
 
     public Rights getRightsByCollectionId(long cid);
 
-    public Party getPartyByUserName(String firstName, String lastName);
+    public Party getPartyByEmail(String email);
+
+    public List<Party> getPartyByUserName(String firstName, String lastName);
+
+    public List<Party> getPartyByUserNameOrEmail(String userNameOrEmail);
 
     public Party getPartyByPartyKey(String partyKey);
 
