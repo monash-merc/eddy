@@ -136,7 +136,7 @@
 						</td> 
 						<td>
 							<div class="ands_blue">
-								<@s.property value="#party.personTitle" /> <@s.property value="#party.personGivenName" /> <@s.property value="#party.personFamilyName" /> - <@s.property value="#party.groupName" />
+								<@s.property value="#party.personTitle" /> <@s.property value="#party.personGivenName" /> ( <@s.property value="#party.groupName" /> - <@s.property value="#party.email" /> )
 							</div>
 							<@s.hidden name="partyList[${ptState.index}].partyKey" />
 						    <@s.hidden name="partyList[${ptState.index}].personTitle" />

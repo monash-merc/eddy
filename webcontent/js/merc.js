@@ -461,7 +461,7 @@ $('#save_rm_party').live('click',function(e){
 	
 	$(findTbody).append("<tr>\n<td align='center' width='50'>\n<input id='mdRegForm_partyList_" + rowIndex +"__selected' type='checkbox' checked='checked' name='partyList[" + rowIndex +"].selected' value='true' />\n" +
 		 "</td>\n" +
-		 "<td>\n<div class='ands_blue'>" + pTitle + " " + pGivenName + " " + pSName + " - " + pGroupName + "\n" +
+		 "<td>\n<div class='ands_blue'>" + pTitle + " " + pGivenName + " " + pSName + " ( " + pGroupName + " - " + pEmail + " )\n" +
 		 "<input id='mdRegForm_partyList_" + rowIndex + "__partyKey' type='hidden' name='partyList[" + rowIndex + "].partyKey' value='" + pKey + "' />\n" +
 		 "<input id='mdRegForm_partyList_" + rowIndex + "__personTitle' type='hidden' name='partyList[" + rowIndex + "].personTitle' value='" + pTitle + "'/>\n" +
 	     "<input id='mdRegForm_partyList_" + rowIndex + "__personGivenName' type='hidden' name='partyList[" + rowIndex + "].personGivenName' value='" + pGivenName + "' />\n" +
