@@ -27,25 +27,16 @@
  */
 package au.edu.monash.merc.capture.service;
 
+import au.edu.monash.merc.capture.adapter.DataCaptureAdapter;
+import au.edu.monash.merc.capture.domain.*;
+import au.edu.monash.merc.capture.dto.*;
+import au.edu.monash.merc.capture.dto.page.Pagination;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-
-import au.edu.monash.merc.capture.adapter.DataCaptureAdapter;
-import au.edu.monash.merc.capture.domain.Activity;
-import au.edu.monash.merc.capture.domain.AuditEvent;
-import au.edu.monash.merc.capture.domain.Avatar;
-import au.edu.monash.merc.capture.domain.Collection;
-import au.edu.monash.merc.capture.domain.Dataset;
-import au.edu.monash.merc.capture.domain.Party;
-import au.edu.monash.merc.capture.domain.Permission;
-import au.edu.monash.merc.capture.domain.PermissionRequest;
-import au.edu.monash.merc.capture.domain.Profile;
-import au.edu.monash.merc.capture.domain.Rights;
-import au.edu.monash.merc.capture.dto.*;
-import au.edu.monash.merc.capture.dto.page.Pagination;
 
 public interface DMService {
 
@@ -194,6 +185,8 @@ public interface DMService {
     public Party getPartyByPartyKey(String partyKey);
 
     public void saveParty(Party party);
+
+    public void updateParty(Party party);
 
     public Activity getActivityByActKey(String activityKey);
 

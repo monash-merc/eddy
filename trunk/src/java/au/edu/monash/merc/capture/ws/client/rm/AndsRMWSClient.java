@@ -790,6 +790,7 @@ public class AndsRMWSClient extends Stub {
 			e.printStackTrace();
 		}
 
+        nlaid = "MON:0000079309";
 		long time2 = System.currentTimeMillis();
 
 		for (int i = 0; i < 1; i++) {

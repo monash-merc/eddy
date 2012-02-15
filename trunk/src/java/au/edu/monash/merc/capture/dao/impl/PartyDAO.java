@@ -52,7 +52,7 @@ public class PartyDAO extends HibernateGenericDAO<Party> implements IPartyReposi
     @Override
     public Party getPartyByEmail(String email) {
         Criteria criteria = this.session().createCriteria(this.persistClass);
-        criteria.add(Restrictions.eq("email", email));
+        criteria.add(Restrictions.eq("email", email).ignoreCase());
         return (Party) criteria.uniqueResult();
     }
 
@@ -60,9 +60,9 @@ public class PartyDAO extends HibernateGenericDAO<Party> implements IPartyReposi
     @Override
     public List<Party> getPartyByUserName(String firstName, String lastName) {
         Criteria criteria = this.session().createCriteria(this.persistClass);
-        criteria.add(Restrictions.eq("personGivenName", firstName));
+        criteria.add(Restrictions.eq("personGivenName", firstName).ignoreCase());
         if (lastName != null) {
-            criteria.add(Restrictions.eq("personFamilyName", lastName));
+            criteria.add(Restrictions.eq("personFamilyName", lastName).ignoreCase());
         }
         return criteria.list();
     }

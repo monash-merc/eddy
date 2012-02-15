@@ -13,43 +13,52 @@
 </style>
 </head>
 <body>
-<br/>
-	<div class="mcpop_pmain_div">
-		<#include "../template/action_errors.ftl" />
-		<div class="mcpop_title">
-		    Add the associated researcher
-	    </div>
+<div class="mcpop_pmain_div">
+    <#include "../template/action_errors.ftl" />
+    <div class="mcpop_title">
+        Add the associated researcher
+    </div>
 
-	 	<div class="mcpop_field">
-		    <br/>
+    <@s.form action="selectParty.jspx" namespace="/data" method="post">
+        <div class="mcpop_field">
+            <br/>
 
-            <@s.if test="%{partyNotFound == false}">
-			<div class="mcpop_input_value">
-				<span class="inline_span2">
-					Found the researcher(s) information as bellow:
-				</span>
-			</div>
-			<div style="clear:both"></div>
-		 	<div class="blank_separator"></div>
+            <div class="mcpop_input_value">
+                <span class="inline_span2">
+                    Found the researcher(s) information as bellow:
+                </span>
+            </div>
+
+            <div style="clear:both"></div>
+            <div class="blank_separator"></div>
 
             <div class="mcpop_input_value">
                 <div class="name_comment">* Please select one of the following researcher(s)</div>
             </div>
 
             <div class="none_border_block2">
-				<table  class="mcpop_tab" width="450">
-					<@s.iterator status="ptState" value="foundPartyBeans" id="fpb" >
+                <table  class="mcpop_tab" width="450">
+                <@s.iterator status="ptState" value="foundPartyBeans" id="fpb" >
                     <tr>
                         <td colspan="4" class="tdbgcolor"></td>
                     </tr>
-					<tr>
-						<td colspan="2" align="center" rowspan="7">
-							<@s.checkbox name="foundPartyBeans[${ptState.index}].selected" />
-						</td>
-                    </tr>
+
                     <tr>
-                        <td width="90">Name:</td>
+                        <td align="center" rowspan="6">
+                            <@s.checkbox name="foundPartyBeans[${ptState.index}].selected" />
+                        </td>
+                        <td width="80">Name:</td>
                         <td><@s.property value="#fpb.personTitle" /> <@s.property value="#fpb.personGivenName" /> <@s.property value="#fpb.personFamilyName" /></td>
+                        <td align="center" rowspan="6">
+                            <@s.if test="%{#fpb.fromRm == false}">
+                            <div class="tab_div">
+                                <a href="${base}/data/showEditUDParty.jspx?addedPartyBean.partyKey=${fpb.partyKey}&searchCnOrEmail=${searchCnOrEmail}">Update</a>
+                            </div>
+                            </@s.if>
+                            <@s.else>
+                                &nbsp;
+                            </@s.else>
+                        </td>
                     </tr>
 
                     <tr>
@@ -72,8 +81,9 @@
                         <td>Group Web Site:</td>
                         <td>
                             <@s.property value="#fpb.originateSourceValue" />
-						</td>
-					</tr>
+                        </td>
+                    </tr>
+
                     <tr>
                         <td colspan="4" class="tdbgcolor">
                             <@s.hidden name="foundPartyBeans[${ptState.index}].partyKey" />
@@ -89,23 +99,19 @@
                             <@s.hidden name="foundPartyBeans[${ptState.index}].originateSourceValue" />
                             <@s.hidden name="foundPartyBeans[${ptState.index}].groupName" />
                             <@s.hidden name="foundPartyBeans[${ptState.index}].fromRm" />
+                            <@s.hidden name="searchCnOrEmail" />
                         </td>
                     </tr>
-					</@s.iterator>
-				</table>
+                </@s.iterator>
+                </table>
                 <div class="blank_separator"></div>
-			</div>
-            <div class="mcpop_bddiv">
-		        <input type="submit" value=" Next " class="mcpop_button" />
-		    </div>
-            </@s.if>
-            <@s.else>
-             <div class="none_border_block2">
-                Display manually input party information
-             </div>
-            </@s.else>
-		</div>
-    </div>
-
+                <br/>
+            </div>
+        </div>
+        <div class="mcpop_bddiv">
+            <input type="button" value=" Cancel " class="mcpop_button" onclick="window.location = '${base}/data/showSearchParty.jspx?searchCnOrEmail=${searchCnOrEmail}';" /> &nbsp;&nbsp; <input type="submit" value=" Next " class="mcpop_button" />
+        </div>
+    </@s.form>
+ </div>
 </body>
 </html>

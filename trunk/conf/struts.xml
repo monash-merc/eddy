@@ -388,41 +388,51 @@
 			<result name="success">/web/mdreg/search_party.ftl</result>
 		</action>
 
-        <!-- show show search party action -->
+        <!--  search party action -->
 		<action name="searchParty" class="data.mdRegAction" method="searchParty">
 			<result name="input">/web/mdreg/search_party.ftl</result>
-			<result name="error">/web/mdreg/search_party.ftl</result>
+            <result name="error">/web/mdreg/search_party.ftl</result>
+            <result name="pnotfound" type="chain">
+				<param name="actionName">showAddUDParty</param>
+				<param name="namespace">/data</param>
+                <param name="searchCnOrEmail">${searchCnOrEmail}</param>
+			</result>
 			<result name="success">/web/mdreg/search_party_results.ftl</result>
 		</action>
 
-		<!-->
-		<action name="addPartyOptions" class="data.mdRegAction" method="addPartyOptions">
-			<result name="input">/web/mdreg/party_error.ftl</result>
-			<result name="error">/web/mdreg/party_error.ftl</result>
-			<result name="success">/web/mdreg/party_options.ftl</result>
+         <!-- select search party action -->
+		<action name="selectParty" class="data.mdRegAction" method="selectParty">
+			<result name="input">/web/mdreg/search_party_results.ftl</result>
+			<result name="error">/web/mdreg/search_party_results.ftl</result>
+			<result name="success">/web/mdreg/party_detail.ftl</result>
 		</action>
 
-
-		<action name="addPartyOpt" class="data.mdRegAction" method="addPartyOpt">
-			<result name="input">/web/mdreg/party_options.ftl</result>
-			<result name="error">/web/mdreg/party_error.ftl</result>
-			<result name="success">/web/mdreg/add_party.ftl</result>
+        <!-- show add an user-defined party -->
+		<action name="showAddUDParty" class="data.mdRegAction" method="showAddUDParty">
+			<result name="input">/web/mdreg/add_ud_party.ftl</result>
+			<result name="error">/web/mdreg/add_ud_party.ftl</result>
+			<result name="success">/web/mdreg/add_ud_party.ftl</result>
 		</action>
-
-
-		<action name="addRMParty" class="data.mdRegAction" method="addRMParty">
-			<result name="input">/web/mdreg/add_party.ftl</result>
-			<result name="error">/web/mdreg/add_party.ftl</result>
-			<result name="success">/web/mdreg/add_party_success.ftl</result>
-		</action>
-		-->
-
 
 		<!-- add an user-defined party -->
 		<action name="addUDParty" class="data.mdRegAction" method="addUDParty">
-			<result name="input">/web/mdreg/add_party.ftl</result>
-			<result name="error">/web/mdreg/add_party.ftl</result>
-			<result name="success">/web/mdreg/add_party_success.ftl</result>
+			<result name="input">/web/mdreg/add_ud_party.ftl</result>
+			<result name="error">/web/mdreg/add_ud_party.ftl</result>
+			<result name="success">/web/mdreg/party_detail.ftl</result>
+		</action>
+
+        <!-- show edit user defined party -->
+		<action name="showEditUDParty" class="data.mdRegAction" method="showEditUDParty">
+			<result name="input">/web/mdreg/update_ud_party.ftl</result>
+			<result name="error">/web/mdreg/update_ud_party.ftl</result>
+			<result name="success">/web/mdreg/update_ud_party.ftl</result>
+		</action>
+
+        <!-- update user-defined party -->
+		<action name="updateUDParty" class="data.mdRegAction" method="updateUDParty">
+			<result name="input">/web/mdreg/update_ud_party.ftl</result>
+			<result name="error">/web/mdreg/update_ud_party.ftl</result>
+			<result name="success">/web/mdreg/party_detail.ftl</result>
 		</action>
 
 		<!-- collection righst or license options -->

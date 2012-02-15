@@ -77,8 +77,6 @@ public class MDRegisterAction extends DMCoreAction {
 
     private List<PartyBean> foundPartyBeans;
 
-    private boolean partyNotFound = false;
-
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     public String showMdReg() {
@@ -306,23 +304,6 @@ public class MDRegisterAction extends DMCoreAction {
         }
     }
 
-    private PartyBean copyPartyToPartyBean(Party p) {
-        PartyBean pb = new PartyBean();
-        pb.setPartyKey(p.getPartyKey());
-        pb.setPersonTitle(p.getPersonTitle());
-        pb.setPersonGivenName(p.getPersonGivenName());
-        pb.setPersonFamilyName(p.getPersonFamilyName());
-        pb.setUrl(p.getUrl());
-        pb.setEmail(p.getEmail());
-        pb.setAddress(p.getAddress());
-        pb.setIdentifierType(p.getIdentifierType());
-        pb.setIdentifierValue(p.getIdentifierValue());
-        pb.setOriginateSourceType(p.getOriginateSourceType());
-        pb.setOriginateSourceValue(p.getOriginateSourceValue());
-        pb.setGroupName(p.getGroupName());
-        pb.setFromRm(p.isFromRm());
-        return pb;
-    }
 
     public String preRegMd() {
         setViewColDetailLink(ActConstants.VIEW_COLLECTION_DETAILS_ACTION);
@@ -514,31 +495,36 @@ public class MDRegisterAction extends DMCoreAction {
             addFieldError("cnoremail", getText("ands.md.registration.search.party.cnoremail.must.be.provided"));
             return INPUT;
         }
-
         try {
             foundPartyBeans = searchPartyFromDb(searchCnOrEmail);
         } catch (Exception ex) {
             logger.error(ex.getMessage());
             addActionError(getText("ands.md.registration.search.party.failed"));
-            return SUCCESS;
+            return ERROR;
         }
         if (foundPartyBeans != null && foundPartyBeans.size() > 0) {
             return SUCCESS;
         }
 
+        if (foundPartyBeans == null) {
+            foundPartyBeans = new ArrayList<PartyBean>();
+        }
         try {
-            foundPartyBeans = searchPartyFromRMWS(searchCnOrEmail);
+            PartyBean pb = searchPartyFromRMWS(searchCnOrEmail);
+            if (pb != null) {
+                foundPartyBeans.add(pb);
+            }
         } catch (Exception ex) {
             logger.error(ex.getMessage());
             addActionError(getText("ands.md.registration.ws.failed") + ", Failed to find a researcher");
-            return SUCCESS;
+            return ERROR;
         }
         //if party not found
         if (foundPartyBeans.size() == 0) {
-            addActionError(getText("ands.md.registration.searcg.party.not.found"));
-            partyNotFound = true;
+            addActionError(getText("ands.md.registration.search.party.not.found"));
+            setSearchValueToPartyBean(searchCnOrEmail);
+            return PNOTFOUND;
         }
-
         return SUCCESS;
     }
 
@@ -554,8 +540,8 @@ public class MDRegisterAction extends DMCoreAction {
         return tempPbs;
     }
 
-    private List<PartyBean> searchPartyFromRMWS(String userNameOrEmail) {
-        List<PartyBean> tempPbs = new ArrayList<PartyBean>();
+    private PartyBean searchPartyFromRMWS(String userNameOrEmail) {
+
         LdapUser ldapUser = null;
         try {
             ldapUser = ldapService.searchLdapUser(searchCnOrEmail);
@@ -564,64 +550,161 @@ public class MDRegisterAction extends DMCoreAction {
         }
 
         if (ldapUser == null) {
-            return tempPbs;
+            logger.error("can't find an researcher from ldap");
+            return null;
         }
         //if found the LDAP user, then search the rm web service for the party
         try {
             String rmNlaId = paWsService.getNlaId(ldapUser.getUid());
             // get party
             PartyBean rmPartyBean = paWsService.getParty(rmNlaId);
-            tempPbs.add(rmPartyBean);
-            return tempPbs;
+            return rmPartyBean;
         } catch (Exception e) {
             String errorMsg = e.getMessage();
             if (StringUtils.containsIgnoreCase(errorMsg, "NLA Id not found") || StringUtils.containsIgnoreCase(errorMsg, "Invalid authcate username")) {
                 logger.error(errorMsg);
-                return tempPbs;
+                return null;
             } else {
                 throw new DataCaptureException(e);
             }
         }
     }
 
-    public String updateUDParty() {
-        try {
-            Party p = dmService.getPartyByPartyKey(addedPartyBean.getPartyKey());
-        } catch (Exception ex) {
-
+    public String selectParty() {
+        if (selectedPartyHasErrors()) {
+            return INPUT;
+        }
+        for (PartyBean pb : foundPartyBeans) {
+            if (pb.isSelected()) {
+                addedPartyBean = pb;
+            }
         }
         return SUCCESS;
+    }
 
+    private boolean selectedPartyHasErrors() {
+        int totalSelectedCounter = 0;
+        for (PartyBean pb : foundPartyBeans) {
+            if (pb.isSelected()) {
+                totalSelectedCounter++;
+            }
+        }
+        if (totalSelectedCounter == 0) {
+            addFieldError("nopartyselected", getText("ands.md.registration.add.party.one.party.must.be.selected"));
+            return true;
+        }
+        if (totalSelectedCounter > 1) {
+            addFieldError("morepartyselected", getText("ands.md.registration.add.party.only.one.party.needed"));
+            return true;
+        }
+        return false;
+    }
+
+    private PartyBean copyPartyToPartyBean(Party p) {
+        PartyBean pb = new PartyBean();
+        pb.setId(p.getId());
+        pb.setPartyKey(p.getPartyKey());
+        pb.setPersonTitle(p.getPersonTitle());
+        pb.setPersonGivenName(p.getPersonGivenName());
+        pb.setPersonFamilyName(p.getPersonFamilyName());
+        pb.setUrl(p.getUrl());
+        pb.setEmail(p.getEmail());
+        pb.setAddress(p.getAddress());
+        pb.setIdentifierType(p.getIdentifierType());
+        pb.setIdentifierValue(p.getIdentifierValue());
+        pb.setOriginateSourceType(p.getOriginateSourceType());
+        pb.setOriginateSourceValue(p.getOriginateSourceValue());
+        pb.setGroupName(p.getGroupName());
+        pb.setFromRm(p.isFromRm());
+        return pb;
+    }
+
+    private Party copyPartyBeanToParty(PartyBean pb) {
+        Party pa = new Party();
+        if (pb.getId() != 0) {
+            pa.setId(pb.getId());
+        }
+        pa.setPartyKey(pb.getPartyKey());
+        pa.setPersonTitle(pb.getPersonTitle());
+        pa.setPersonGivenName(pb.getPersonGivenName());
+        pa.setPersonFamilyName(pb.getPersonFamilyName());
+        pa.setUrl(pb.getUrl());
+        pa.setEmail(pb.getEmail());
+        pa.setAddress(pb.getAddress());
+        pa.setIdentifierType(pb.getIdentifierType());
+        pa.setIdentifierValue(pb.getIdentifierValue());
+        pa.setOriginateSourceType(pb.getOriginateSourceType());
+        pa.setOriginateSourceValue(pb.getOriginateSourceValue());
+        pa.setGroupName(pb.getGroupName());
+        pa.setFromRm(pb.isFromRm());
+        return pa;
+    }
+
+    private void setSearchValueToPartyBean(String searchValue) {
+        if (StringUtils.isNotBlank(searchCnOrEmail)) {
+            addedPartyBean = new PartyBean();
+            if (StringUtils.contains(searchCnOrEmail, "@")) {
+                addedPartyBean.setEmail(searchCnOrEmail);
+            } else {
+                String[] names = StringUtils.split(searchCnOrEmail, " ");
+                if (names != null && names.length >= 2) {
+                    String firstName = names[0];
+                    String lastName = names[1];
+                    addedPartyBean.setPersonGivenName(firstName);
+                    addedPartyBean.setPersonFamilyName(lastName);
+                }
+                if (names != null && names.length == 1) {
+                    String firstName = names[0];
+                    addedPartyBean.setPersonGivenName(firstName);
+                }
+            }
+        }
+    }
+
+    public String showAddUDParty() {
+        return SUCCESS;
     }
 
     public String addUDParty() {
-        try {
-            if (addedPartyBean != null) {
+
+        if (addedPartyBean != null) {
+            try {
                 Party p = dmService.getPartyByEmail(addedPartyBean.getEmail());
-                if (p == null) {
-                    p = new Party();
-                    String localKey = pidService.genUUIDWithPrefix();
-                    p.setPersonTitle(addedPartyBean.getPersonTitle());
-                    p.setPersonGivenName(addedPartyBean.getPersonGivenName());
-                    p.setPersonFamilyName(addedPartyBean.getPersonFamilyName());
-                    p.setEmail(addedPartyBean.getEmail());
-                    p.setAddress(addedPartyBean.getAddress());
-                    p.setUrl(addedPartyBean.getUrl());
-                    p.setPartyKey(localKey);
-                    p.setIdentifierValue(localKey);
-                    p.setIdentifierType("local");
-                    p.setOriginateSourceType("authoritative");
-                    p.setOriginateSourceValue(addedPartyBean.getOriginateSourceValue());
-                    p.setFromRm(addedPartyBean.isFromRm());
-                    p.setGroupName(addedPartyBean.getGroupName());
-                    this.dmService.saveParty(p);
-                } else {
+                if (p != null) {
                     logger.error(getText("ands.md.registration.add.party.already.existed"));
                     addActionError(getText("ands.md.registration.add.party.already.existed"));
                     return INPUT;
                 }
-                addedPartyBean = copyPartyToPartyBean(p);
+            } catch (Exception ex) {
+                logger.error("failed to get a party, " + ex.getMessage());
+                addActionError(getText("ands.md.registration.add.party.failed"));
+                return INPUT;
             }
+
+            try {
+                PartyBean partyBean = searchPartyFromRMWS(addedPartyBean.getEmail());
+                if (partyBean != null) {
+                    logger.error(getText("ands.md.registration.add.party.already.existed"));
+                    addActionError(getText("ands.md.registration.add.party.already.existed"));
+                    return INPUT;
+                }
+            } catch (Exception ex) {
+                logger.error("failed to search a party from research master web service, " + ex.getMessage());
+                addActionError(getText("ands.md.registration.add.party.failed"));
+                return INPUT;
+            }
+        }
+        try {
+            //create a new party
+            Party p = new Party();
+            p = copyPartyBeanToParty(addedPartyBean);
+            String localKey = pidService.genUUIDWithPrefix();
+            p.setPartyKey(localKey);
+            p.setIdentifierValue(localKey);
+            p.setIdentifierType("local");
+            p.setOriginateSourceType("authoritative");
+            this.dmService.saveParty(p);
+            addedPartyBean = copyPartyToPartyBean(p);
         } catch (Exception e) {
             logger.error("failed to save party, " + e.getMessage());
             addActionError(getText("ands.md.registration.add.party.failed"));
@@ -630,6 +713,38 @@ public class MDRegisterAction extends DMCoreAction {
         // just return
         return SUCCESS;
     }
+
+    public String showEditUDParty() {
+        try {
+            Party p = dmService.getPartyByPartyKey(addedPartyBean.getPartyKey());
+            if (p != null) {
+                addedPartyBean = copyPartyToPartyBean(p);
+            } else {
+                addActionError(getText("ands.md.registration.edit.party.not.existed"));
+                return ERROR;
+            }
+        } catch (Exception ex) {
+            addActionError(getText("ands.md.registration.edit.party.get.party.failed"));
+            return ERROR;
+        }
+        return SUCCESS;
+    }
+
+    public String updateUDParty() {
+        try {
+            if (StringUtils.isBlank(addedPartyBean.getPartyKey())) {
+                addFieldError("partyKey", getText("ands.md.registration.edit.party.key.must.be.provided"));
+                return INPUT;
+            }
+            Party party = copyPartyBeanToParty(addedPartyBean);
+            this.dmService.updateParty(party);
+        } catch (Exception ex) {
+            addActionError(getText("ands.md.registration.edit.party.failed"));
+            return ERROR;
+        }
+        return SUCCESS;
+    }
+
 
     private void setNavAfterSuccess() {
 
@@ -771,13 +886,5 @@ public class MDRegisterAction extends DMCoreAction {
 
     public void setFoundPartyBeans(List<PartyBean> foundPartyBeans) {
         this.foundPartyBeans = foundPartyBeans;
-    }
-
-    public boolean isPartyNotFound() {
-        return partyNotFound;
-    }
-
-    public void setPartyNotFound(boolean partyNotFound) {
-        this.partyNotFound = partyNotFound;
     }
 }

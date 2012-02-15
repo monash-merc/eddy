@@ -17,7 +17,7 @@
 	<div class="mcpop_pmain_div">
 		<#include "../template/action_errors.ftl" />
 		<div class="mcpop_title">
-		    The researcher details:
+		    Add the associated researcher
 	    </div>
 
 	 	<div class="mcpop_field">
@@ -93,7 +93,7 @@
 		</div>
          <div style="clear:both"></div>
 		<div class="mcpop_bddiv">
-			<input type="button"  value=" Cancel " class="mcpop_button" id="cancelAddParty" /> &nbsp;&nbsp; <input type="submit" name="options" value=" Save " class="mcpop_button" id="save_rm_party" />
+			<input type="button" value=" Cancel " class="mcpop_button" onclick="window.location = '${base}/data/showSearchParty.jspx?searchCnOrEmail=${searchCnOrEmail}';" /> &nbsp;&nbsp; <input type="submit" name="options" value=" Save " class="mcpop_button" id="save_rm_party" />
 		</div>
 
 	</div>

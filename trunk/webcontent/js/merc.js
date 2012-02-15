@@ -433,30 +433,24 @@ $('#save_rm_party').live('click',function(e){
 	var pSrcType = $('#ands_p_srctype').val();
 	var pSrcValue = $('#ands_p_srcvalue').val();
 	var pGroupName = $('#ands_p_groupname').val();
-	var pUserOwned = $('#ands_p_userowned').val();
 	var pFromRm =  $('#ands_p_fromrm').val();
 	//try to find a party which already added in the form
-	//If a party from the research master web service, 
 	//then the party key will be used as identifier value to find a party which is already added
-	//If a party from a user defined. then we have to check the party user full name( givenname and surname)
-	if(pFromRm == 'true'){
-		var alreadyAddedPKey = window.parent.$("input[value=" + pKey +"]").val();
-		if(alreadyAddedPKey != null){	
-			//close the parent windows
-			closeParentWindows();
-	  		return;
-	  	}
-	}else{
-		//find a party which already added by an user input
-		var alreadyAddedUserName = window.parent.$("input[value=" + pGivenName + "]").val();
-		var alreadyAddedSName = window.parent.$("input[value=" + pSName + "]").val();
-		if((alreadyAddedUserName != null) && (alreadyAddedSName != null)){
-			//close the parent windows
-			closeParentWindows();
-			return;
-		}
+
+
+	var alreadyAddedPKey = window.parent.$("input[value=" + pKey +"]").val();
+	if(alreadyAddedPKey != null){
+        var partyKeyName = window.parent.$("input[value=" + pKey +"]").attr('name');
+        var startIndex = partyKeyName.indexOf("[") +1;
+        var endIndex = partyKeyName.indexOf("]");
+        var keyIndex = partyKeyName.substring(startIndex, endIndex);
+        //set this party as an selected party if unselected
+        window.parent.$("#mdRegForm_partyList_" + keyIndex +"__selected").attr('checked', true);
+        //close the parent windows
+		closeParentWindows();
+		return;
 	}
-	
+
 	if(window.parent.$('#ands_reg_tab_data > tbody').length==0){
 		 window.parent.$('#ands_reg_tab_data').append('<tbody />');
 	}
@@ -485,7 +479,6 @@ $('#save_rm_party').live('click',function(e){
 	);
 	//close the parent windows
 	closeParentWindows();
-	
 });
  
 function closeParentWindows() {
