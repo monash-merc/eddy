@@ -754,7 +754,9 @@ public class DMServiceImpl implements DMService {
 
         if (StringUtils.contains(userNameOrEmail, "@")) {
             Party p = this.getPartyByEmail(userNameOrEmail);
-            parties.add(p);
+            if (p != null) {
+                parties.add(p);
+            }
             return parties;
         }
 
@@ -779,6 +781,11 @@ public class DMServiceImpl implements DMService {
     @Override
     public void saveParty(Party party) {
         this.partyService.saveParty(party);
+    }
+
+    @Override
+    public void updateParty(Party party) {
+        this.partyService.updateParty(party);
     }
 
     @Override

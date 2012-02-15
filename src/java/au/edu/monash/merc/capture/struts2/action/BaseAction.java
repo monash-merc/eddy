@@ -109,6 +109,8 @@ public class BaseAction extends ActionSupport implements SessionAware, ServletRe
 
 	protected static String REDIRECTCO = "redirectco";
 
+    protected static String PNOTFOUND = "pnotfound";
+
 	public void setConfigSetting(ConfigSettings configSetting) {
 		this.configSetting = configSetting;
 	}

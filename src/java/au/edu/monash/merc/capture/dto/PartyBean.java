@@ -31,153 +31,163 @@ import java.io.Serializable;
 
 public class PartyBean implements Serializable {
 
-	private String groupName;
+    private long id;
 
-	private String partyKey;
+    private String groupName;
 
-	private String originateSourceType;
+    private String partyKey;
 
-	private String originateSourceValue;
+    private String originateSourceType;
 
-	private String identifierType;
+    private String originateSourceValue;
 
-	private String identifierValue;
+    private String identifierType;
 
-	private String personTitle;
+    private String identifierValue;
 
-	private String personGivenName;
+    private String personTitle;
 
-	private String personFamilyName;
+    private String personGivenName;
 
-	private String url;
+    private String personFamilyName;
 
-	private String email;
+    private String url;
 
-	private String address;
+    private String email;
 
-	private String rifcsContent;
+    private String address;
 
-	private boolean selected;
+    private String rifcsContent;
 
-	private boolean fromRm;
+    private boolean selected;
 
-	public String getGroupName() {
-		return groupName;
-	}
+    private boolean fromRm;
 
-	public void setGroupName(String groupName) {
-		this.groupName = groupName;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public String getPartyKey() {
-		return partyKey;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public void setPartyKey(String partyKey) {
-		this.partyKey = partyKey;
-	}
+    public String getGroupName() {
+        return groupName;
+    }
 
-	public String getOriginateSourceType() {
-		return originateSourceType;
-	}
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
 
-	public void setOriginateSourceType(String originateSourceType) {
-		this.originateSourceType = originateSourceType;
-	}
+    public String getPartyKey() {
+        return partyKey;
+    }
 
-	public String getOriginateSourceValue() {
-		return originateSourceValue;
-	}
+    public void setPartyKey(String partyKey) {
+        this.partyKey = partyKey;
+    }
 
-	public void setOriginateSourceValue(String originateSourceValue) {
-		this.originateSourceValue = originateSourceValue;
-	}
+    public String getOriginateSourceType() {
+        return originateSourceType;
+    }
 
-	public String getIdentifierType() {
-		return identifierType;
-	}
+    public void setOriginateSourceType(String originateSourceType) {
+        this.originateSourceType = originateSourceType;
+    }
 
-	public void setIdentifierType(String identifierType) {
-		this.identifierType = identifierType;
-	}
+    public String getOriginateSourceValue() {
+        return originateSourceValue;
+    }
 
-	public String getIdentifierValue() {
-		return identifierValue;
-	}
+    public void setOriginateSourceValue(String originateSourceValue) {
+        this.originateSourceValue = originateSourceValue;
+    }
 
-	public void setIdentifierValue(String identifierValue) {
-		this.identifierValue = identifierValue;
-	}
+    public String getIdentifierType() {
+        return identifierType;
+    }
 
-	public String getPersonTitle() {
-		return personTitle;
-	}
+    public void setIdentifierType(String identifierType) {
+        this.identifierType = identifierType;
+    }
 
-	public void setPersonTitle(String personTitle) {
-		this.personTitle = personTitle;
-	}
+    public String getIdentifierValue() {
+        return identifierValue;
+    }
 
-	public String getPersonGivenName() {
-		return personGivenName;
-	}
+    public void setIdentifierValue(String identifierValue) {
+        this.identifierValue = identifierValue;
+    }
 
-	public void setPersonGivenName(String personGivenName) {
-		this.personGivenName = personGivenName;
-	}
+    public String getPersonTitle() {
+        return personTitle;
+    }
 
-	public String getPersonFamilyName() {
-		return personFamilyName;
-	}
+    public void setPersonTitle(String personTitle) {
+        this.personTitle = personTitle;
+    }
 
-	public void setPersonFamilyName(String personFamilyName) {
-		this.personFamilyName = personFamilyName;
-	}
+    public String getPersonGivenName() {
+        return personGivenName;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public void setPersonGivenName(String personGivenName) {
+        this.personGivenName = personGivenName;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public String getPersonFamilyName() {
+        return personFamilyName;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public void setPersonFamilyName(String personFamilyName) {
+        this.personFamilyName = personFamilyName;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public String getRifcsContent() {
-		return rifcsContent;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setRifcsContent(String rifcsContent) {
-		this.rifcsContent = rifcsContent;
-	}
+    public String getAddress() {
+        return address;
+    }
 
-	public boolean isSelected() {
-		return selected;
-	}
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-	public void setSelected(boolean selected) {
-		this.selected = selected;
-	}
+    public String getRifcsContent() {
+        return rifcsContent;
+    }
 
-	public boolean isFromRm() {
-		return fromRm;
-	}
+    public void setRifcsContent(String rifcsContent) {
+        this.rifcsContent = rifcsContent;
+    }
 
-	public void setFromRm(boolean fromRm) {
-		this.fromRm = fromRm;
-	}
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public boolean isFromRm() {
+        return fromRm;
+    }
+
+    public void setFromRm(boolean fromRm) {
+        this.fromRm = fromRm;
+    }
 }
