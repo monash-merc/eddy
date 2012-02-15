@@ -93,7 +93,7 @@
 						</td> 
 						<td>
 							<div class="ands_blue">
-								<@s.property value="#party.personTitle" /> <@s.property value="#party.personGivenName" /> <@s.property value="#party.personFamilyName" /> - <@s.property value="#party.groupName" />
+								<@s.property value="#party.personTitle" /> <@s.property value="#party.personGivenName" /> <@s.property value="#party.personFamilyName" /> ( <@s.property value="#party.groupName" /> - <@s.property value="#party.email" /> )
 								<@s.hidden name="partyList[${ptState.index}].partyKey" />
 							    <@s.hidden name="partyList[${ptState.index}].personTitle" />
 							    <@s.hidden name="partyList[${ptState.index}].personGivenName" />
