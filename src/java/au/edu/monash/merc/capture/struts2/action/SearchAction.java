@@ -27,25 +27,20 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import au.edu.monash.merc.capture.config.ConfigSettings;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-
 import au.edu.monash.merc.capture.domain.Dataset;
 import au.edu.monash.merc.capture.dto.AttributeBean;
 import au.edu.monash.merc.capture.dto.SearchBean;
 import au.edu.monash.merc.capture.dto.VariableBean;
 import au.edu.monash.merc.capture.dto.page.Pagination;
 import au.edu.monash.merc.capture.service.SearchService;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import java.util.*;
 
 @Scope("prototype")
 @Controller("search.searchAction")
@@ -159,9 +154,10 @@ public class SearchAction extends DMCoreAction {
 
     private boolean checkSearchErrors() {
 
-        String appName = configSetting.getPropValue(ConfigSettings.APPLICATION_NAME);
+        String dsLevelSearch = configSetting.getPropValue(ConfigSettings.DATASET_LEVEL_SEARCH_ENABLE);
+        boolean dsLevelEnable = Boolean.valueOf(dsLevelSearch);
 
-        if (StringUtils.equalsIgnoreCase(appName, "ozflux")) {
+        if (dsLevelEnable) {
             //for ecosystem
             if (StringUtils.isBlank(searchBean.getResearcherName()) && StringUtils.isBlank(searchBean.getCollectionName())
                     && (searchBean.getStartDate() == null) && (searchBean.getEndDate() == null) && StringUtils.isBlank(searchBean.getSiteName())
