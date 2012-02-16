@@ -13,6 +13,14 @@ $(document).ready(function(){
 	});
 });
 
+
+/**remove the message pane*/
+$(document).ready(function(){
+	$(".pop_pane .delete").click(function(){
+		$(this).parents(".pop_pane").remove();
+	});
+});
+
 /** pagination orderby */
 
 $(document).ready(function(){ 
@@ -399,7 +407,7 @@ $(function() {
             title: ($this.attr('title')) ? $this.attr('title') : 'External Site',
             autoOpen: true,
             width: 550,
-            height: 450,
+            height: 500,
             modal: true,
             resizable: true,
 			autoResize: true,
@@ -407,7 +415,7 @@ $(function() {
                 opacity: 0.5,
                 background: "black"
             }
-        }).width(550 - horizontalPadding).height(450 - verticalPadding);	        
+        }).width(550 - horizontalPadding).height(500 - verticalPadding);
 	});
 });
 

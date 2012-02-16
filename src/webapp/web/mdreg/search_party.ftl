@@ -19,13 +19,22 @@
     <div class="mcpop_title">
         Add the associated researcher
     </div>
+    <br/>
+    <div class="mcpop_field">
+        <div class="mcpop_input_justify">
+            To add an associated researcher, please enter a researcher name or E-mail to find whether a researcher exists or not.
+            If not exist, you need to enter a researcher information manually. (Highly recommend using an E-mail address to find a researcher information)
+        </div>
+    </div>
+    <br/>
     <@s.form action="searchParty.jspx" namespace="/data" method="post">
     <div class="mcpop_field">
         <br/>
         <div class="mcpop_input_value">
-            Enter a researcher full name or email bellow:
+            Enter a researcher full name or E-mail bellow:
         </div>
         <div class="blank_separator"></div>
+
         <div class="mcpop_input_value">
             <@s.textfield name="searchCnOrEmail" cssClass="pop_input_field" /><div class="name_comment">(e.g. John Smith or john.smith@ozflux.org)</div>
         </div>

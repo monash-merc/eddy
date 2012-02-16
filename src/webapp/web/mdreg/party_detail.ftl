@@ -22,6 +22,13 @@
 
 	 	<div class="mcpop_field">
 		    <br/>
+            <div class="blank_separator"></div>
+            <div class="mcpop_input_value">
+                <span class="inline_span2">
+                    The researcher information details:
+                </span>
+            </div>
+            <div class="blank_separator"></div>
             <div class="mcpop_input_value">
             <table  class="mcpop_tab" width="450">
                 <tr>
@@ -90,6 +97,7 @@
 			    <@s.hidden name="addedPartyBean.fromRm" id = "ands_p_fromrm"/>
 			</div>
 			<br/>
+            <br/>
 		</div>
          <div style="clear:both"></div>
 		<div class="mcpop_bddiv">

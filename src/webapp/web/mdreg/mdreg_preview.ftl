@@ -190,7 +190,11 @@
 			<div class="blank_separator"></div>
 
 			<div class="none_border_block2">
-				<@s.submit value="Register"  name="register" cssClass="silver_b_input"/>
+				<@s.submit value="Register" id="wait_modal" name='wait_modal' cssClass="silver_b_input"/>
+                <div id='mask'></div>
+                <div id='modal_window' >
+                    Registering the metadata, please wait ... <img src="${base}/images/wait_loader.gif" class="loading_image">
+                </div>
 			</div>
 		</@s.form>
 		<br/>

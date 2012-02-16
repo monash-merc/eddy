@@ -521,7 +521,7 @@ public class MDRegisterAction extends DMCoreAction {
         }
         //if party not found
         if (foundPartyBeans.size() == 0) {
-            addActionError(getText("ands.md.registration.search.party.not.found"));
+            setActionSuccessMsg(getText("ands.md.registration.search.party.not.found"));
             setSearchValueToPartyBean(searchCnOrEmail);
             return PNOTFOUND;
         }
