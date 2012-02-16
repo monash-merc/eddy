@@ -19,6 +19,15 @@
     <div class="mcpop_title">
        Add the associated researcher
     </div>
+
+    <@s.if test="%{actionSuccessMsg != null}">
+        <div class="none_border_block">
+            <div class="pop_pane">
+                <p><@s.property value="actionSuccessMsg" /></p>
+                <img src="${base}/images/btn-delete.png" alt="delete" class="delete" />
+            </div>
+        </div>
+    </@s.if>
     <@s.form action="addUDParty.jspx" namespace="/data" method="post">
         <div class="mcpop_field">
             <br/>

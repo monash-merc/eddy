@@ -133,7 +133,7 @@ function doAfterImport(success) {
 						 					</a>
 						 					<div id='mask'></div>
 										    <div id='modal_window' >
-										    	Calling Web Service, please wait ... <img src="${base}/images/wait_loader.gif" class="loading_image">
+										    	Calling Metadata Registration Service, please wait ... <img src="${base}/images/wait_loader.gif" class="loading_image">
 										    </div>        
 						 				</@s.if>
 					 				</@s.if>
