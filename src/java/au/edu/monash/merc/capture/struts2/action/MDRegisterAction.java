@@ -641,8 +641,9 @@ public class MDRegisterAction extends DMCoreAction {
     }
 
     private void setSearchValueToPartyBean(String searchValue) {
+        addedPartyBean = new PartyBean();
+        addedPartyBean.setGroupName(configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_GROUP_NAME));
         if (StringUtils.isNotBlank(searchCnOrEmail)) {
-            addedPartyBean = new PartyBean();
             if (StringUtils.contains(searchCnOrEmail, "@")) {
                 addedPartyBean.setEmail(searchCnOrEmail);
             } else {
