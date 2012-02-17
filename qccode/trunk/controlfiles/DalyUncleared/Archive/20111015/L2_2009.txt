@@ -1,0 +1,220 @@
+[Files]
+    [[L2]]
+        ncFilePath = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/
+        ncFileName = DalyUncleared_2009_L2.nc
+    [[L3]]
+        ncFilePath = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/
+        ncFileName = DalyUncleared_2009_L3.nc
+
+[Soil]
+    FgDepth = 0.08
+    BulkDensity = 1610
+    OrganicContent = 0.46
+    SwsDefault = 0.10
+    SwsSeries = "Sws_5cm"
+
+[Variables]
+# Figure 1: Variables are in the order the appear
+    [[Fn]]
+        [[[RangeCheck]]]
+            Lower      = [-150]*12
+            Upper      = [1100]*12
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Fld]]
+        [[[RangeCheck]]]
+            Lower      = "[200]*12"
+            Upper      = "[700]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = [5]*12
+        [[[ExcludeDates]]]
+            0      = "['2009-10-22 12:30','2009-11-26 10:30']"
+    [[Flu]]
+        [[[RangeCheck]]]
+            Lower      = "[250]*12"
+            Upper      = "[700]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = [5]*12
+        [[[ExcludeDates]]]
+            0      = "['2009-10-22 12:30','2009-11-26 10:30']"
+    [[Fsu]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[500]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+        [[[ExcludeDates]]]
+            0      = "['2009-10-22 12:30','2009-11-26 10:30']"
+    [[Fsd]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[1500]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+        [[[Linear]]]
+            0      = "['2009-1-1 00:00','2009-10-22 12:00',0.83,0.0]"
+        [[[ExcludeDates]]]
+            0      = "['2009-10-22 12:30','2009-11-26 10:30']"
+# Figure 2: Variables are in the order the appear
+# H2O covariances
+    [[UzA]]
+        [[[Linear]]]
+            0      = "['2009-01-01 00:00','2009-11-19 23:30',0.925,0.0]"
+            1      = "['2009-11-20 00:00','2010-01-01 00:00',0.837,0.0]"
+    [[UxA]]
+        [[[Linear]]]
+            0      = "['2009-01-01 00:00','2009-11-19 23:30',0.925,0.0]"
+            1      = "['2009-11-20 00:00','2010-01-01 00:00',0.837,0.0]"
+    [[UyA]]
+        [[[Linear]]]
+            0      = "['2009-01-01 00:00','2009-11-19 23:30',0.925,0.0]"
+            1      = "['2009-11-20 00:00','2010-01-01 00:00',0.837,0.0]"
+# L3 fluxes
+    [[Fh]]
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[600]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Fe_wpl]]
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[600]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Fc_wpl]]
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Fm]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[ustar]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[2]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+# Figure 3: Variables are in the order the appear
+    [[Cc_7500_Av]]
+        [[[RangeCheck]]]
+            Lower      = "[500]*12"
+            Upper      = "[1200]*12"
+        [[[Linear]]]
+            0      = "['2009-1-1 00:00','2010-1-1 00:00',1.0,0.0]"
+    [[Ah_7500_Av]]
+        [[[RangeCheck]]]
+            Lower      = "[5,5,5,5,0,0,0,0,0,0,5,5]"
+            Upper      = "[35]*12"
+        [[[Linear]]]
+            0      = "['2009-01-01 00:00','2009-11-19 23:30',0.925,-1.87]"
+            1      = "['2009-11-20 00:00','2010-01-01 00:00',0.837,-2.32]"
+    [[Ah_HMP_EC]]
+        [[[RangeCheck]]]
+            Lower      = "[5,5,5,5,0,0,0,0,0,0,5,5]"
+            Upper      = "[30]*12"
+    [[Ah_HMP_2m]]
+        [[[RangeCheck]]]
+            Lower      = "[5,5,5,5,0,0,0,0,0,0,5,5]"
+            Upper      = "[30]*12"
+    [[Tv_CSAT]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[50]*12"
+    [[Ta_HMP_EC]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[50]*12"
+    [[Ta_HMP_2m]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[50]*12"
+    [[Ta_EC]]
+        [[[MergeSeries]]]
+            Source     = "['Ta_HMP_EC','Ta_HMP_2m','Ta_CSAT']"
+        [[[RangeCheck]]]
+            Lower      = [0]*12
+            Upper      = [50]*12
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Ah_EC]]
+        [[[MergeSeries]]]
+            Source     = "['Ah_HMP_EC','Ah_HMP_2m','Ah_7500_Av']"
+        [[[RangeCheck]]]
+            Lower      = "[5,5,5,5,0,0,0,0,0,0,5,5]"
+            Upper      = [35]*12
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+# Figure 4: Variables are in the order the appear
+    [[Fg_2]]
+        [[[Linear]]]
+            0      = "['2009-1-1 00:00','2010-1-1 00:00',0.49,-3]"
+    [[Sws_50cm]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[0.5]*12"
+    [[Sws_5cm]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[0.5]*12"
+    [[Ts]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[60]*12"
+    [[Fg]]
+        [[[RangeCheck]]]
+            Lower      = "[-300]*12"
+            Upper      = "[300]*12"
+# Figure 5: Variables are in the order the appear
+    [[Rain]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[50]*12"
+    [[Wd_CSAT]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[360]*12"
+        [[[Correction]]]
+            0 = "['2009-1-1 00:00','2010-1-1 00:00',180]"
+    [[Ws_CSAT]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[20]*12"
+    [[Ux]]
+        [[[RangeCheck]]]
+            Lower      = "[-20]*12"
+            Upper      = "[20]*12"
+    [[Uy]]
+        [[[RangeCheck]]]
+            Lower      = "[-20]*12"
+            Upper      = "[20]*12"
+    [[Uz]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+    [[ps]]
+        [[[RangeCheck]]]
+            Lower      = "[95]*12"
+            Upper      = "[105]*12"
+
+[Plots]
+    [[1]]
+        Title = "Radiative fluxes"
+        Variables = "['Fsd','Fsu','Fld','Flu','Fn']"
+    [[2]]
+        Title = "Turbulent fluxes"
+        Variables = "['Fh','Fe_wpl','Fc_wpl','ustar','Fm','Rain']"
+    [[3]]
+        Title = "Air temperature, humidity and CO2"
+        Variables = "['Ta_EC','Ah_EC','Cc_7500_Av','Rain']"
+    [[4]]
+        Title = "Soil temperature, water content and heat flux"
+        Variables = "['Ts','Sws_5cm','Sws_50cm','Fg','Rain']"
+    [[5]]
+        Title = "Pressure, wind speed and direction"
+        Variables = "['ps','Ws_CSAT','Ux','Uy','Uz','Wd_CSAT','Rain']"

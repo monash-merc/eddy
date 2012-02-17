@@ -1,0 +1,119 @@
+#
+# Control file for L2 quality control.
+#  Input level - L2
+#  Output level - L3
+#
+# [Files] - contains paths and file names
+# [Soil] - constants used in correcting Fg for storage
+# [Variables] - variable names and quality control keys, only those variables
+#               corrected or calculated at this level need to be specified in
+#               this control file.
+# [Plots] - definition of time series plots
+#
+[Files]
+    [[L2]]
+        ncFilePath = D:/TERN/Sites/Samford/Data/Processed/2010/
+        ncFileName = Samford_2010_June_L2.nc
+    [[L3]]
+        ncFilePath = D:/TERN/Sites/Samford/Data/Processed/2010/
+        ncFileName = Samford_2010_June_L3.nc
+
+[Soil]
+    FgDepth = 0.08
+    BulkDensity = 1900
+    OrganicContent = 0.01
+    SwsSeries = Sws_05
+    SwsDefault = 0.15
+
+[Variables]
+# Radiation
+    [[Fn]]
+        [[[RangeCheck]]]
+            Lower      = [-150]*12
+            Upper      = [1100]*12
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+# Covariances: H2O
+    [[UzA]]
+        [[[Linear]]]
+            0      = "['2010-01-01 00:00','2011-01-01 00:00',1.0,0.0]"
+    [[UxA]]
+        [[[Linear]]]
+            0      = "['2010-01-01 00:00','2011-01-01 00:00',1.0,0.0]"
+    [[UyA]]
+        [[[Linear]]]
+            0      = "['2010-01-01 00:00','2011-01-01 00:00',1.0,0.0]"
+# Fluxes
+    [[Fh]]
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[600]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Fe_wpl]]
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[600]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Fc_wpl]]
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Fm]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[ustar]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[2]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+# Meteorology: LI-7500
+    [[Cc_7500_Av]]
+        [[[Linear]]]
+            0      = "['2010-01-01 00:00','2011-01-01 00:00',1.0,0.0]"
+    [[Ah_7500_Av]]
+        [[[Linear]]]
+            0      = "['2010-01-01 00:00','2011-01-01 00:00',1.0,0.0]"
+# Meteorology: Air temperature
+    [[Ta_EC]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[50]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+# Meteorology: Absolute humidity
+    [[Ah_EC]]
+        [[[RangeCheck]]]
+            Lower      = "[5]*12"
+            Upper      = "[25]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[6]*12"
+# Soil: Ground heat flux
+    [[Fg]]
+        [[[RangeCheck]]]
+            Lower      = "[-300]*12"
+            Upper      = "[300]*12"
+
+[Plots]
+    [[1]]
+        Title = "Radiative fluxes"
+        Variables = "['Fsd','Fsu','Fld','Flu','Fn']"
+    [[2]]
+        Title = "Turbulent fluxes"
+        Variables = "['Fh','Fe_wpl','Fc_wpl','ustar','Fm']"
+    [[3]]
+        Title = "Air temperature, humidity and CO2"
+        Variables = "['Ta_EC','Ah_EC','Cc_7500_Av']"
+    [[4]]
+        Title = "Soil temperature, water content and heat flux"
+        Variables = "['Ts','Sws_01','Sws_02','Fg']"
+    [[5]]
+        Title = "Pressure, wind speed and direction"
+        Variables = "['ps','Ws_CSAT','Ux','Uy','Uz','Wd_CSAT']"

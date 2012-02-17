@@ -1,0 +1,9 @@
+[Files]
+    [[L1]]
+        xlFilePath = ../../../TERN/Sites/DalyUncleared/Data/Processed/2010/
+        xlFileName = DalyUncleared_CABLE_2010.xls
+        ncFilePath = ../../../TERN/Sites/DalyUncleared/Data/Processed/2010/
+        ncFileName = DalyUncleared_CABLE_2010.nc
+
+[Output]
+    L1 = "['Fsd','Fld','Ah','CO2','Tair','Rain','WS','ps']"

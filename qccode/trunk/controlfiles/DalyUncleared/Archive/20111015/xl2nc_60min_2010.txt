@@ -1,0 +1,81 @@
+[Files]
+    [[L1]]
+        xlFilePath = ../../../TERN/Sites/DalyUncleared/Data/Processed/2010/
+        xlFileName = CABLE_Drivers.xls
+        xlHeaderRow  = 1
+        xl1stDataRow = 3
+        ncFilePath = ../../../TERN/Sites/DalyUncleared/Data/Processed/2010/
+        ncFileName = DalyUncleared_CABLE_2010.nc
+
+[Global]
+    SiteName = DalyUncleared
+    Latitude = -14.1592
+    Longitude = 131.3881
+    Contact  = peter.isaac@arts.monash.edu.au
+    TimeStep = 60
+    InterpolateTo = 30
+
+[Variables]
+    [[xlDateTime]]
+        [[[xl]]]
+            Sheet    = 60minutes
+            Name     = DateTime
+        [[[Attr]]]
+            Description = "Date/time in Excel format"
+            Units    = "days"
+    [[Fsd]]
+        [[[xl]]]
+            Sheet    = 60minutes
+            Name     = SWdown
+        [[[Attr]]]
+            Description = "Down-welling short wave (Kipp&Zonen)"
+            Units    = "W/m2"
+    [[Fld]]
+        [[[xl]]]
+            Sheet    = 60minutes
+            Name     = LWdown
+        [[[Attr]]]
+            Description = "Down-welling long wave (Kipp&Zonen)"
+            Units    = "W/m2"
+    [[CO2]]
+        [[[xl]]]
+            Sheet    = 60minutes
+            Name     = CO2
+        [[[Attr]]]
+            Description = "CO2 concentration"
+            Units    = "mg/m3"
+    [[Ah]]
+        [[[xl]]]
+            Sheet    = 60minutes
+            Name     = Ah
+        [[[Attr]]]
+            Description = "Absolute humidity"
+            Units    = "g/m3"
+    [[Tair]]
+        [[[xl]]]
+            Sheet    = 60minutes
+            Name     = Tair
+        [[[Attr]]]
+            Description = "Air temperature"
+            Units    = "C"
+    [[Rain]]
+        [[[xl]]]
+            Sheet    = 60minutes
+            Name     = Rainf
+        [[[Attr]]]
+            Description = "Rainfall, 60 minute total"
+            Units    = "mm"
+    [[WS]]
+        [[[xl]]]
+            Sheet    = 60minutes
+            Name     = WS
+        [[[Attr]]]
+            Description = "Wind speed at 10m"
+            Units    = "m/s"
+    [[ps]]
+        [[[xl]]]
+            Sheet    = 60minutes
+            Name     = PSurf
+        [[[Attr]]]
+            Description = "Static pressure"
+            Units    = "kPa"

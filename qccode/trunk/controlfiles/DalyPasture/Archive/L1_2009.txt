@@ -1,0 +1,234 @@
+[General]
+TimeStep     = 30
+PNGFile      = No
+
+[Files]
+    [[L1]]
+        ncFilePath = D:/ARCSpatial/Sites/DalyPasture/Data/Processed/2009/
+        ncFileName = DalyPasture_2009_L1.nc
+    [[L2]]
+        xlFilePath = D:/ARCSpatial/Sites/DalyPasture/Data/Processed/2009/
+        xlFileName = DalyPasture_2009_L2.xls
+        ncFilePath = D:/ARCSpatial/Sites/DalyPasture/Data/Processed/2009/
+        ncFileName = DalyPasture_2009_L2.nc
+    [[PNG]]
+        PNGFilePath  = D:/ARCSpatial/Sites/DalyPasture/Data/Processed/2009/Plots/
+
+[Output]
+    L2 = "['Ah_7500_Av','Ah_HMP_5m','Ah_HMP_2m','Cc_7500_Av','Tv_CSAT','Ta_HMP_5m','Ta_HMP_2m']"
+
+[Variables]
+# Figure 1: Variables are in the order they appear in the plot.
+    [[Fn_NR]]
+        [[[RangeCheck]]]
+            Lower      = [-150]*12
+            Upper      = [1100]*12
+        [[[DiurnalCheck]]]
+            NumSd      = [5]*12
+    [[Flu]]
+        [[[RangeCheck]]]
+            Lower      = [300]*12
+            Upper      = [700]*12
+        [[[DiurnalCheck]]]
+            NumSd      = [5]*12
+    [[Fld]]
+        [[[RangeCheck]]]
+            Lower      = [250]*12
+            Upper      = [500]*12
+        [[[DiurnalCheck]]]
+            NumSd      = [5]*12
+    [[Fsd]]
+        [[[RangeCheck]]]
+            Lower      = [-10]*12
+            Upper      = [1250]*12
+    [[Fsu]]
+        [[[RangeCheck]]]
+            Lower      = [-10]*12
+            Upper      = [500]*12
+# Figure 2: Variables are in the order they appear in the plot.
+    [[UzT]]
+        [[[RangeCheck]]]
+            Lower      = "[-0.2]*12"
+            Upper      = "[1]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[UxT]]
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+    [[UyT]]
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+    [[UzA]]
+        [[[RangeCheck]]]
+            Lower      = "[-0.01]*12"
+            Upper      = "[0.5]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[UxA]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+    [[UyA]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+    [[UzC]]
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[UxC]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+    [[UyC]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+    [[UxUz]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[UyUz]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[UxUy]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[UxUx]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[UyUy]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+# Figure 3: Variables are in the order they appear in the plot.
+    [[Cc_7500_Av]]
+        [[[RangeCheck]]]
+            Lower      = "[500]*12"
+            Upper      = "[1500]*12"
+    [[Ah_7500_Av]]
+        [[[RangeCheck]]]
+            Lower      = "[5,5,5,5,0,0,0,0,0,0,5,5]"
+            Upper      = "[30]*12"
+    [[Ah_HMP_2m]]
+        [[[RangeCheck]]]
+            Lower      = "[5,5,5,5,0,0,0,0,0,0,5,5]"
+            Upper      = [25]*12
+    [[Tv_CSAT]]
+        [[[RangeCheck]]]
+            Lower      = [0]*12
+            Upper      = [50]*12
+    [[Ta_HMP_2m]]
+        [[[RangeCheck]]]
+            Lower      = [0]*12
+            Upper      = [50]*12
+# Variance and standard deviation of absolute humidities, used for QC checks
+    [[Ah_7500_Sd]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[5]*12"
+    [[Cc_7500_Sd]]
+        [[[RangeCheck]]]
+            Lower      = [0]*12
+            Upper      = [150]*12
+# Figure 4: Variables are in the order they appear in the plot.
+    [[Fg_2]]
+        [[[RangeCheck]]]
+            Lower      = [-100]*12
+            Upper      = [100]*12
+    [[Fg_1]]
+        [[[RangeCheck]]]
+            Lower      = [-100]*12
+            Upper      = [100]*12
+    [[Sws_50cm]]
+        [[[RangeCheck]]]
+            Lower      = [0]*12
+            Upper      = [0.5]*12
+    [[Sws_5cm]]
+        [[[RangeCheck]]]
+            Lower      = [0]*12
+            Upper      = [0.5]*12
+    [[Ts]]
+        [[[RangeCheck]]]
+            Lower      = [0]*12
+            Upper      = [60]*12
+# Figure 5: Variables are in the order they appear in the plot.
+    [[Rain]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[50]*12"
+    [[Wd_CSAT]]
+        [[[RangeCheck]]]
+            Lower      = [0]*12
+            Upper      = [360]*12
+    [[Ws_CSAT]]
+        [[[RangeCheck]]]
+            Lower      = [0]*12
+            Upper      = [20]*12
+    [[Ux]]
+        [[[RangeCheck]]]
+            Lower      = "[-20]*12"
+            Upper      = "[20]*12"
+    [[Uy]]
+        [[[RangeCheck]]]
+            Lower      = "[-20]*12"
+            Upper      = "[20]*12"
+    [[Uz]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+    [[ps]]
+        [[[RangeCheck]]]
+            Lower      = [95]*12
+            Upper      = [105]*12
+# CSAT and IRGA diagnostics
+    [[Diag_CSAT]]
+        [[[RangeCheck]]]
+            Lower      = [-0.5]*12
+            Upper      = [10.5]*12
+    [[Diag_7500]]
+        [[[RangeCheck]]]
+            Lower      = [-0.5]*12
+            Upper      = [10.5]*12
+    [[AGC_7500]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[90]*12"
+
+[Plots]
+    [[L1L2]]
+        [[[1]]]
+            Title = "Radiative fluxes"
+            Variables = "['Fsd','Fsu','Fld','Flu','Fn_NR']"
+        [[[2]]]
+            Title = "Covariances (CSAT)"
+            Variables = "['UzT','UxT','UyT','UxUz','UyUz']"
+        [[[3]]]
+            Title = "Covariances (CSAT/7500)"
+            Variables = "['UzA','UxA','UyA','UzC','UxC','UyC']"
+        [[[4]]]
+            Title = "Air temperature, humidity and CO2"
+            Variables = "['Ta_HMP_2m','Tv_CSAT','Ah_HMP_2m','Ah_7500_Av','Cc_7500_Av']"
+        [[[5]]]
+            Title = "Soil temperature, water content and heat flux"
+            Variables = "['Ts','Sws_5cm','Sws_50cm','Fg_1','Fg_2']"
+        [[[6]]]
+            Title = "Pressure, wind speed and direction"
+            Variables = "['Rain','ps','Ws_CSAT','Ux','Uy','Uz','Wd_CSAT']"

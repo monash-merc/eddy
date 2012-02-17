@@ -1,0 +1,272 @@
+# AAHYWEH
+# Control file for L2 (input) to L3 (output) quality control.
+#
+# [Files]     - contains paths and file names
+# [Soil]      - constants used in correcting Fg for storage
+# [Variables] - variable names and quality control keys, only those variables
+#               corrected or calculated at this level need to be specified in
+#               this control file.
+#               Valid quality control sections are:
+#                RangeCheck   - reject data less than "Lower" or greater than "Upper"
+#                DiurnalCheck - reject data outside Avg(H.h)+/-NumSd*Stdev(H.h) where
+#                                Avg(H.h) is the average of all data at time H.h and
+#                                Stdev(H.h) is the standard deviation of all data at time H.h
+#                                 eg H.h = 8.5 is 0830
+#                 NOTE: The "Lower", "Upper" and "NumSd" keywords require a value for each
+#                       month of the year (12).  This can be written in shorthand as:
+#                        eg "[100]*12" (same value for each month)
+#                       or in longhand as:
+#                        eg "[100,110,120,130,140,150,150,140,130,120,110,100]" (different each month)
+#                ExcludeDates - reject data between specified dates, multiple date ranges can be
+#                               specified on separate lines but the lines must be numbered
+#                               sequentially from 0 (eg 0, 1, 2 etc)
+#                 NOTE: The date range is specified as:
+#    [[[ExcludeDates]]]
+#        0 = "['2010-01-01 00:00','2010-09-16 00:00']"
+#                ExcludeHours - reject data at specified times between the specified date range,
+#                               multiple ranges can be specified on separate lines but the
+#                               lines must be numbered sequentially from 0 (eg 0, 1, 2, etc)
+#                 NOTE: The date range and hours to be rejected are specified as:
+#                        eg "['2008-04-22 00:00','2008-07-26 23:30',['09:30','10:00','10:30']]"
+#                Linear       - apply a linear correction to the data within a date range,
+#                               multiple ranges can be specified on separate lines but the
+#                               lines must be numbered sequentially from 0 (eg 0, 1, 2, etc)
+#                 NOTE: The date range, slope and offset are specified as:
+#                        eg "['2010-01-01 00:00','2011-01-01 00:00',1.0,0.0]"
+#                Correction   - apply an offset to a wind direction measurement to correct for alignment
+#                               multiple ranges can be specified on separate lines but the
+#                               lines must be numbered sequentially from 0 (eg 0, 1, 2, etc)
+#                 NOTE: The date range and correction are specified as follows:
+#                        eg "['2009-1-1 00:00','2010-1-1 00:00',180]"
+# [Plots]     - definition of time series plots
+#
+[General]
+    PlotWidth = 10.9
+    PlotHeight = 7.5
+    Platform = PC    # Mac or PC
+
+[Files]
+    [[L1]]
+        ncFilePath = ../../../TERN/Sites/DalyUncleared/Data/Processed/2007/
+        ncFileName = DalyUncleared_2007_L1.nc
+    [[L2]]
+        ncFilePath = ../../../TERN/Sites/DalyUncleared/Data/Processed/2007/
+        ncFileName = DalyUncleared_2007_L2.nc
+        xlFilePath = ../../../TERN/Sites/DalyUncleared/Data/Processed/2007/
+        xlFileName = DalyUncleared_2007_L2.xls
+
+[Output]
+    L2 = "['Ah_7500_Av','Ah_HMP_01','Cc_7500_Av','Tv_CSAT','Ta_HMP_01']"
+
+[Variables]
+    [[Fn_NR]]
+    # net radiation from the NRlite
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[1000]*12"
+    [[Fld]]
+    # Downwelling longwave radiation from CG3
+        [[[RangeCheck]]]
+            Lower      = "[250]*12"
+            Upper      = "[700]*12"
+    [[Flu]]
+        [[[RangeCheck]]]
+            Lower      = "[250]*12"
+            Upper      = "[700]*12"
+    [[Fsu]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[500]*12"
+    [[Fsd]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[1500]*12"
+# Figure 2: Variables are in the order the appear
+# Temperature covariances
+    [[UzT]]
+        [[[RangeCheck]]]
+            Lower      = "[-0.2]*12"
+            Upper      = "[1]*12"
+    [[UxT]]
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+    [[UyT]]
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+# H2O covarinaces
+    [[UzA]]
+        [[[RangeCheck]]]
+            Lower      = "[-0.01]*12"
+            Upper      = "[0.5]*12"
+    [[UxA]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+    [[UyA]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+# CO2 covariances
+    [[UzC]]
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+    [[UxC]]
+        [[[RangeCheck]]]
+            Lower      = "[-4]*12"
+            Upper      = "[4]*12"
+    [[UyC]]
+        [[[RangeCheck]]]
+            Lower      = "[-4]*12"
+            Upper      = "[4]*12"
+# momentum covariances and variances
+    [[UxUz]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+    [[UyUz]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+    [[UxUy]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+    [[UxUx]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+    [[UyUy]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+# Figure 3: Variables are in the order the appear
+    [[Cc_7500_Av]]
+        [[[RangeCheck]]]
+            Lower      = "[500]*12"
+            Upper      = "[1200]*12"
+    [[Ah_7500_Av]]
+        [[[RangeCheck]]]
+            Lower      = "[5,5,5,5,0,0,0,0,0,0,5,5]"
+            Upper      = "[35]*12"
+    [[Ah_HMP_01]]
+        [[[RangeCheck]]]
+            Lower      = "[5,5,5,5,0,0,0,0,0,0,5,5]"
+            Upper      = "[30]*12"
+        [[[ExcludeDates]]]
+            0 = "['2007-06-09 18:30','2008-01-01 00:00']"
+    [[Tv_CSAT]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[50]*12"
+   [[Ta_HMP_01]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[50]*12"
+        [[[ExcludeDates]]]
+            0 = "['2007-06-09 18:30','2008-01-01 00:00']"
+# Variance and standard deviation of absolute humidities, used for QC checks
+    [[AhAh]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[5]*12"
+    [[Ah_7500_Sd]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[5]*12"
+    [[CcCc]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[100]*12"
+    [[Cc_7500_Sd]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[25]*12"
+# Figure 4: Variables are in the order the appear
+    [[Fg_01b]]
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[150]*12"
+    [[Fg_01a]]
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[150]*12"
+    [[Sws_01a]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[0.5]*12"
+    [[Sws_02a]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[0.5]*12"
+    [[Ts_01a]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[60]*12"
+# Figure 5: Variables are in the order the appear
+    [[Rain]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[50]*12"
+    [[Wd_CSAT_Compass]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[360]*12"
+    [[Ws_CSAT]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[20]*12"
+    [[Ux]]
+        [[[RangeCheck]]]
+            Lower      = "[-20]*12"
+            Upper      = "[20]*12"
+    [[Uy]]
+        [[[RangeCheck]]]
+            Lower      = "[-20]*12"
+            Upper      = "[20]*12"
+    [[Uz]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+    [[ps]]
+        [[[RangeCheck]]]
+            Lower      = "[95]*12"
+            Upper      = "[105]*12"
+# CSAT and IRGA diagnostics
+    [[Diag_CSAT]]
+        [[[RangeCheck]]]
+            Lower      = "[-0.5]*12"
+            Upper      = "[20.5]*12"
+    [[Diag_7500]]
+        [[[RangeCheck]]]
+            Lower      = "[-0.5]*12"
+            Upper      = "[10.5]*12"
+    [[AGC_7500]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[70]*12"
+
+[Plots]
+    [[1]]
+        Title = "Radiative fluxes"
+        Variables = "['Fsd','Fsu','Fld','Flu','Fn_NR']"
+    [[2]]
+        Title = "Covariances (CSAT)"
+        Variables = "['UzT','UxT','UyT','UxUz','UyUz','UxUx','UyUy']"
+    [[3]]
+        Title = "Covariances (CSAT/7500)"
+        Variables = "['UzA','UxA','UyA','UzC','UxC','UyC']"
+    [[4]]
+        Title = "Air temperature, humidity and CO2"
+        Variables = "['Ta_HMP_01','Tv_CSAT','Ah_HMP_01','Ah_7500_Av','Cc_7500_Av']"
+    [[5]]
+        Title = "Soil temperature, water content & rain"
+        Variables = "['Ts_01a','Sws_01a','Sws_02a','Rain']"
+    [[6]]
+        Title = "Soil temperature, heat flux & rain"
+        Variables = "['Ts_01a','Fg_01a','Fg_01b','Rain']"
+    [[7]]
+        Title = "Pressure, wind speed, wind direction & rainfall"
+        Variables = "['ps','Ws_CSAT','Ux','Uy','Uz','Wd_CSAT_Compass','Rain']"

@@ -1,0 +1,271 @@
+[General]
+TimeStep     = 30
+PNGFile      = No
+zmd = 10           # instrument height above displacement plane
+z0 = 1.6           # roughness length
+
+[Files]
+    [[L3]]
+        ncFilePath = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/
+        ncFileName = DalyUncleared_2009_L3.nc
+        xlFilePath = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/
+        xlFileName = DalyUncleared_2009_L3.xls
+    [[L4]]
+        ncFilePath = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/
+        ncFileName = DalyUncleared_2009_L4.nc
+        xlFilePath = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/
+        xlFileName = DalyUncleared_2009_L4.xls
+
+[Output]
+    L3 = "['Ah_EC','Cc_7500_Av','eta','Fc_wpl','Fe_wpl','Fg','Fh','Fld','Flu','Fm','Fn','Fsd','Fsu','ps','Rain','Sws_50cm','Sws_5cm','Ta_EC','theta','Ts','ustar','Ws_CSAT','Wd_CSAT']"
+    L4 = "['Ah_EC','Cc_7500_Av','eta','Fc_wpl','Fe_wpl','Fg','Fh','Fld','Flu','Fm','Fn','Fsd','Fsu','ps','Rain','Sws_50cm','Sws_5cm','Ta_EC','theta','Ts','ustar','Ws_CSAT','Wd_CSAT']"
+
+[Variables]
+    [[Ah_EC]]
+        [[[GapFillFromAlternate]]]
+            [[[[First]]]]
+                FileName = D:/ARCSpatial/Sites/DalyRegrowth/Data/Processed/2009/DalyRegrowth_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[0.987,-0.11],'All']]"
+            [[[[Second]]]]
+                FileName = D:/ARCSpatial/Sites/DalyPasture/Data/Processed/2009/DalyPasture_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[0.988,-0.24],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+        [[[RangeCheck]]]
+            Lower      = "[5,5,5,5,0,0,0,0,0,0,5,5]"
+            Upper      = [35]*12
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Cc_7500_Av]]
+        [[[GapFillFromAlternate]]]
+            [[[[First]]]]
+                FileName = D:/ARCSpatial/Sites/DalyRegrowth/Data/Processed/2009/DalyRegrowth_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[0.982,0.0],'All']]"
+            [[[[Second]]]]
+                FileName = D:/ARCSpatial/Sites/DalyPasture/Data/Processed/2009/DalyPasture_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[0.938,0.0],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+        [[[RangeCheck]]]
+            Lower      = "[500]*12"
+            Upper      = "[1200]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Fg]]
+        [[[GapFillFromClimatology]]]
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+        [[[RangeCheck]]]
+            Lower      = "[-300]*12"
+            Upper      = "[300]*12"
+    [[Fld]]
+        [[[GapFillFromAlternate]]]
+            [[[[First]]]]
+                FileName = D:/ARCSpatial/Sites/DalyRegrowth/Data/Processed/2009/DalyRegrowth_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[0.987,0.0],'All']]"
+            [[[[Second]]]]
+                FileName = D:/ARCSpatial/Sites/DalyPasture/Data/Processed/2009/DalyPasture_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[1.01,0.0],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+        [[[RangeCheck]]]
+            Lower      = "[250]*12"
+            Upper      = "[700]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = [5]*12
+    [[Flu]]
+        [[[GapFillFromAlternate]]]
+            [[[[First]]]]
+                FileName = D:/ARCSpatial/Sites/DalyRegrowth/Data/Processed/2009/DalyRegrowth_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[0.856,0.0],'All']]"
+            [[[[Second]]]]
+                FileName = D:/ARCSpatial/Sites/DalyPasture/Data/Processed/2009/DalyPasture_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[1.03,0.0],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+        [[[RangeCheck]]]
+            Lower      = "[300]*12"
+            Upper      = "[700]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = [5]*12
+    [[Fn]]
+        [[[GapFillFromAlternate]]]
+            [[[[First]]]]
+                FileName = D:/ARCSpatial/Sites/DalyRegrowth/Data/Processed/2009/DalyRegrowth_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[0.942,2],'All']]"
+            [[[[Second]]]]
+                FileName = D:/ARCSpatial/Sites/DalyPasture/Data/Processed/2009/DalyPasture_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[0.913,-7],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+        [[[RangeCheck]]]
+            Lower      = [-150]*12
+            Upper      = [1100]*12
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Fsd]]
+        [[[GapFillFromAlternate]]]
+            [[[[First]]]]
+                FileName = D:/ARCSpatial/Sites/DalyRegrowth/Data/Processed/2009/DalyRegrowth_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[0.924,11],'All']]"
+            [[[[Second]]]]
+                FileName = D:/ARCSpatial/Sites/DalyPasture/Data/Processed/2009/DalyPasture_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[0.916,12],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[1500]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Fsu]]
+        [[[GapFillFromAlternate]]]
+            [[[[First]]]]
+                FileName = D:/ARCSpatial/Sites/DalyRegrowth/Data/Processed/2009/DalyRegrowth_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[0.905,0],'All']]"
+            [[[[Second]]]]
+                FileName = D:/ARCSpatial/Sites/DalyPasture/Data/Processed/2009/DalyPasture_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[0.888,4],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[500]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[ps]]
+        [[[GapFillFromAlternate]]]
+            [[[[First]]]]
+                FileName = D:/ARCSpatial/Sites/DalyRegrowth/Data/Processed/2009/DalyRegrowth_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[1.0,0.0],'All']]"
+            [[[[Second]]]]
+                FileName = D:/ARCSpatial/Sites/DalyPasture/Data/Processed/2009/DalyPasture_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[1.0,0.0],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+        [[[RangeCheck]]]
+            Lower      = "[95]*12"
+            Upper      = "[105]*12"
+    [[Sws_5cm]]
+        [[[GapFillFromClimatology]]]
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+    [[Sws_50cm]]
+        [[[GapFillFromClimatology]]]
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+    [[Ta_EC]]
+        [[[GapFillFromAlternate]]]
+            [[[[First]]]]
+                FileName = D:/ARCSpatial/Sites/DalyRegrowth/Data/Processed/2009/DalyRegrowth_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[0.925,2.22],'All']]"
+            [[[[Second]]]]
+                FileName = D:/ARCSpatial/Sites/DalyPasture/Data/Processed/2009/DalyPasture_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[0.734,8.12],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+        [[[RangeCheck]]]
+            Lower      = [0]*12
+            Upper      = [50]*12
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Ts]]
+        [[[GapFillFromClimatology]]]
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[60]*12"
+    [[Wd_CSAT]]
+        [[[GapFillFromAlternate]]]
+            [[[[First]]]]
+                FileName = D:/ARCSpatial/Sites/DalyRegrowth/Data/Processed/2009/DalyRegrowth_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[1.0,0.0],'All']]"
+            [[[[Second]]]]
+                FileName = D:/ARCSpatial/Sites/DalyPasture/Data/Processed/2009/DalyPasture_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[1.0,0.0],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[360]*12"
+    [[Ws_CSAT]]
+        [[[GapFillFromAlternate]]]
+            [[[[First]]]]
+                FileName = D:/ARCSpatial/Sites/DalyRegrowth/Data/Processed/2009/DalyRegrowth_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[1.01,0.0],'All']]"
+            [[[[Second]]]]
+                FileName = D:/ARCSpatial/Sites/DalyPasture/Data/Processed/2009/DalyPasture_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[0.75,0.0],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+        [[[ReplaceOnDiff]]]
+            [[[[First]]]]
+                FileName = D:/ARCSpatial/Sites/DalyRegrowth/Data/Processed/2009/DalyRegrowth_2009_L3.nc
+                Transform = "[['2009-01-01 00:00','2010-01-01 00:00',[1.01,0.0],'All']]"
+                Range = "[['2009-01-01 00:00','2010-01-01 00:00',[1.0,-1.0],'s']]"
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[20]*12"
+# fluxes
+    [[Fe_wpl]]
+        [[[GapFillUsingRatios]]]
+            xlSheet = EFi
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+        [[[GapFillFromClimatology]]]
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[600]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Fh]]
+        [[[GapFillUsingRatios]]]
+            xlSheet = BRi
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+        [[[GapFillFromClimatology]]]
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[600]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Fc_wpl]]
+        [[[GapFillUsingRatios]]]
+            xlSheet = WUEi
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+        [[[GapFillFromClimatology]]]
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[ustar]]
+        [[[ReplaceOnDiff]]]
+            [[[[First]]]]
+                AltVarName = "uscalc"
+                Range = """[['2009-01-01 00:00','2009-04-14 04:00',[1.0,-1.0],'s'],
+                            ['2009-04-14 04:30','2009-10-22 19:00',[0.5,-0.5],'s'],
+                            ['2009-10-22 19:30','2010-01-01 00:00',[1.0,-1.0],'s']]"""
+        [[[GapFillFromClimatology]]]
+            FileName = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2009/Climatology_2009_20100711.xls
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[2]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+
+[Plots]
+    [[L3L4]]
+        [[[1]]]
+            Title = "Radiative fluxes"
+            Variables = "['Rain','Fsd','Fsu','Fld','Flu','Fn']"
+        [[[2]]]
+            Title = "Turbulent fluxes"
+            Variables = "['Rain','Fh','Fe_wpl','Fc_wpl','ustar','Fm']"
+        [[[3]]]
+            Title = "Air temperature, humidity and CO2"
+            Variables = "['Rain','Ta_EC','Ah_EC','Cc_7500_Av']"
+        [[[4]]]
+            Title = "Soil temperature, water content and heat flux"
+            Variables = "['Rain','Ts','Sws_5cm','Sws_50cm','Fg']"
+        [[[5]]]
+            Title = "Pressure, wind speed and direction"
+            Variables = "['Rain','ps','Ws_CSAT','Ux','Uy','Uz','Wd_CSAT']"

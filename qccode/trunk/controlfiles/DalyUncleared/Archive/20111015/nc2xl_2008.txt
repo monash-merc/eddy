@@ -1,0 +1,21 @@
+[Files]
+    [[L2]]
+        xlFilePath = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2008/
+        xlFileName = DalyUncleared_2008_L2.xls
+        ncFilePath = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2008/
+        ncFileName = DalyUncleared_2008_L2.nc
+    [[L3]]
+        ncFilePath = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2008/
+        ncFileName = DalyUncleared_2008_L3.nc
+        xlFilePath = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2008/
+        xlFileName = DalyUncleared_2008_L3.xls
+    [[L4]]
+        ncFilePath = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2008/
+        ncFileName = DalyUncleared_2008_L4.nc
+        xlFilePath = D:/ARCSpatial/Sites/DalyUncleared/Data/Processed/2008/
+        xlFileName = DalyUncleared_2008_L4.xls
+
+[Output]
+    L2 = "['Ah_7500_Av','Ah_HMP_EC','Ah_HMP_2m','Cc_7500_Av','Tv_CSAT','Ta_HMP_EC','Ta_HMP_2m']"
+    L3 = "['Ah_EC','Cc_7500_Av','Cs','eta','Fc_wpl','Fe_wpl','Fg','Fh','Fld','Flu','Fm','Fn','Fn_KZ','Fn_NR','Fsd','Fsu','ps','Rain','S','Sws_50cm','Sws_5cm','Ta_EC','theta','Ts','ustar','Ws_CSAT','Wd_CSAT']"
+    L4 = "['Ah_EC','BR','Cc_7500_Av','EF','eta','Fc_wpl','Fe_wpl','Fg','Fh','Fld','Flu','Fm','Fn','Fsd','Fsu','ps','Rain','Sws_50cm','Sws_5cm','Ta_EC','theta','Ts','ustar','Ws_CSAT','Wd_CSAT','WUE']"

@@ -1,0 +1,834 @@
+[General]
+InLevel = L1
+OutLevel = L1
+Platform = Mac    # Mac or PC
+
+[Files]
+    [[L1]]
+        xlFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level1/
+        xlFileName = ASM_EC_2011_3Jul-Sep.xls
+        xlHeaderRow  = 1
+        xl1stDataRow = 4
+        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
+        ncFileName = ASM_EC_2011_3Jul-Sep_L1.nc
+
+[Global]
+    SiteName = AliceSpringsMulga
+    Site = "Alice Springs Mulga, Northern Territory, Australia"
+    Location = "Latitude: -22.283, Longitude: 133.249"
+    Contact  = James.Cleverly@UTS.edu.au
+    TimeStep = 30
+
+[Variables]
+    [[xlDateTime]]
+        [[[xl]]]
+            Sheet    = slow_core
+            Name     = TIMESTAMP
+        [[[Attr]]]
+            Description = "Date/time in Excel format"
+            Units    = "days"
+    [[Fc_raw]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = Fc_raw_Avg
+        [[[Attr]]]
+            Description = "Flux of carbon"
+            Units    = "mg/(m2 s)"
+    [[Fe_raw]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = Fe_raw_Avg
+        [[[Attr]]]
+            Description = "Latent heat flux"
+            Units    = "W/m2"
+    [[Fh]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = Fh_Avg
+        [[[Attr]]]
+            Description = "Sensible heat flux"
+            Units    = "W/m2"
+    [[Fnr]]
+        [[[xl]]]
+            Sheet    = slow_rad
+            Name     = Fn_CNR1_Avg
+        [[[Attr]]]
+            Description = "Net radiation (Kipp&Zonen)"
+            Units    = "W/m2"
+    [[Flu]]
+        [[[xl]]]
+            Sheet    = slow_rad
+            Name     = Flu_CNR1_Avg
+        [[[Attr]]]
+            Description = "Up-welling long wave (Kipp&Zonen)"
+            Units    = "W/m2"
+    [[Fld]]
+        [[[xl]]]
+            Sheet    = slow_rad
+            Name     = Fld_CNR1_Avg
+        [[[Attr]]]
+            Description = "Down-welling long wave (Kipp&Zonen)"
+            Units    = "W/m2"
+    [[Fsd]]
+        [[[xl]]]
+            Sheet    = slow_rad
+            Name     = Fsd_CNR1_Avg
+        [[[Attr]]]
+            Description = "Down-welling short wave (Kipp&Zonen)"
+            Units    = "W/m2"
+    [[Fsu]]
+        [[[xl]]]
+            Sheet    = slow_rad
+            Name     = Fsu_CNR1_Avg
+        [[[Attr]]]
+            Description = "Up-welling short wave (Kipp&Zonen)"
+            Units    = "W/m2"
+    [[UzT]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUzTv
+        [[[Attr]]]
+            Description = "Covariance of Uz and T (CSAT)"
+            Units    = "mC/s"
+    [[UxT]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUxTv
+        [[[Attr]]]
+            Description = "Covariance of Ux and T (CSAT)"
+            Units    = "mC/s"
+    [[UyT]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUyTv
+        [[[Attr]]]
+            Description = "Covariance of Uy and T (CSAT)"
+            Units    = "mC/s"
+    [[UzA]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUzAh
+        [[[Attr]]]
+            Description = "Covariance of w and H2O (7500)"
+            Units    = "g/m2/s"
+    [[UxA]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUxAh
+        [[[Attr]]]
+            Description = "Covariance of Ux and H2O (7500)"
+            Units    = "g/m2/s"
+    [[UyA]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUyAh
+        [[[Attr]]]
+            Description = "Covariance of Uy and H2O (7500)"
+            Units    = "g/m2/s"
+    [[UzC]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUzCc
+        [[[Attr]]]
+            Description = "Covariance of Uz and CO2 (7500)"
+            Units    = "mg/m2/s"
+    [[UxC]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUxCc
+        [[[Attr]]]
+            Description = "Covariance of Ux and CO2 (7500)"
+            Units    = "mg/m2/s"
+    [[UyC]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUyCc
+        [[[Attr]]]
+            Description = "Covariance of Uy and CO2 (7500)"
+            Units    = "mg/m2/s"
+    [[UxUz]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUzUx
+        [[[Attr]]]
+            Description = "Covariance of Ux and Uz"
+            Units    = "m2/s2"
+    [[UyUz]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUzUy
+        [[[Attr]]]
+            Description = "Covariance of Uy and Uz"
+            Units    = "m2/s2"
+    [[UxUy]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUxUy
+        [[[Attr]]]
+            Description = "Covariance of Ux and Uy"
+            Units    = "m2/s2"
+    [[UxUx]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUxUx
+        [[[Attr]]]
+            Description = "Variance of Ux"
+            Units    = "m2/s2"
+    [[UyUy]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covUyUy
+        [[[Attr]]]
+            Description = "Variance of Uy"
+            Units    = "m2/s2"
+    [[Cc_7500_Av]]
+        [[[xl]]]
+            Sheet    = slow_core
+            Name     = Cc_7500_Avg
+        [[[Attr]]]
+            Description = "CO2 concentration"
+            Units    = "mg/m3"
+    [[Ah_7500_Av]]
+        [[[xl]]]
+            Sheet    = slow_core
+            Name     = Ah_7500_Avg
+        [[[Attr]]]
+            Description = "Absolute humidity (7500)"
+            Units    = "g/m3"
+    [[Ah_HMP]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Ah_HMP_01_Avg
+        [[[Attr]]]
+            Description = "Absolute humidity (HMP) at 11.67m"
+            Units    = "g/m3"
+    [[Ah_HMP_200cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = Ah_HMP_02_Avg
+        [[[Attr]]]
+            Description = "Absolute humidity (HMP) at 2m"
+            Units    = "g/m3"
+    [[Ah_HMP_425cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = Ah_HMP_03_Avg
+        [[[Attr]]]
+            Description = "Absolute humidity (HMP) at 4.25m"
+            Units    = "g/m3"
+    [[Ah_HMP_657cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = Ah_HMP_04_Avg
+        [[[Attr]]]
+            Description = "Absolute humidity (HMP) at 6.57m"
+            Units    = "g/m3"
+    [[Tv_CSAT]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Tv_CSAT_Avg
+        [[[Attr]]]
+            Description = "Virtual air temperature (CSAT)"
+            Units    = "C"
+    [[Ta_HMP]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Ta_HMP_01_Avg
+        [[[Attr]]]
+            Description = "Air temperature (HMP) at 11.67m"
+            Units    = "C"
+    [[Ta_HMP_200cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = Ta_HMP_02_Avg
+        [[[Attr]]]
+            Description = "Air temperature (HMP) at 2m"
+            Units    = "C"
+    [[Ta_HMP_425cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = Ta_HMP_03_Avg
+        [[[Attr]]]
+            Description = "Air temperature (HMP) at 4.25m"
+            Units    = "C"
+    [[Ta_HMP_657cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = Ta_HMP_04_Avg
+        [[[Attr]]]
+            Description = "Air temperature (HMP) at 6.57m"
+            Units    = "C"
+    [[AhAh]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covAhAh
+        [[[Attr]]]
+            Description = "Variance of Absolute humidity (7500)"
+            Units    = "g2/m6"
+    [[CcCc]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = covCcCc
+        [[[Attr]]]
+            Description = "Variance of CO2 concentration"
+            Units    = "mg2/m6"
+    [[Fg_bs]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = Fg_CN3_01_Avg
+        [[[Attr]]]
+            Description = "Ground heat flux in bare soil"
+            Units    = "W/m2"
+    [[Fg_ms]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = Fg_CN3_02_Avg
+        [[[Attr]]]
+            Description = "Ground heat flux under mulga and soil"
+            Units    = "W/m2"
+    [[Fg_mu]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = Fg_CN3_03_Avg
+        [[[Attr]]]
+            Description = "Ground heat flux under mulla and ground-cover understory"
+            Units    = "W/m2"
+    [[Sws_bs]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Sws_616_01
+        [[[Attr]]]
+            Description = "Soil water content in bare soil"
+            Units    = "frac"
+    [[Sws_ms]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Sws_616_02
+        [[[Attr]]]
+            Description = "Soil water content under mulga and soil"
+            Units    = "frac"
+    [[Sws_mu]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Sws_616_03
+        [[[Attr]]]
+            Description = "Soil water content under mulga and ground-cover understory"
+            Units    = "frac"
+    [[Ts_bs]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Ts_TCAV_01_Avg
+        [[[Attr]]]
+            Description = "Soil temperature in bare soil"
+            Units    = "C"
+    [[Ts_ms]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Ts_TCAV_02_Avg
+        [[[Attr]]]
+            Description = "Soil temperature under mulga and soil"
+            Units    = "C"
+    [[Ts_mu]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Ts_TCAV_03_Avg
+        [[[Attr]]]
+            Description = "Soil temperature under mulga and ground-cover understory"
+            Units    = "C"
+    [[Rain]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Rain_Tot
+        [[[Attr]]]
+            Description = "Rainfall, 30 minute total"
+            Units    = "mm"
+    [[Wd_CSAT_Compass]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = WD_CSAT_Compass_Avg
+        [[[Attr]]]
+            Description = "Wind direction (CSAT)"
+            Units    = "deg"
+    [[Ws_CSAT]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = WS_CSAT_Avg
+        [[[Attr]]]
+            Description = "Wind speed (CSAT)"
+            Units    = "m/s"
+    [[Ux]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Ux_CSAT_Avg
+        [[[Attr]]]
+            Description = "Ux (CSAT)"
+            Units    = "m/s"
+    [[Uy]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Uy_CSAT_Avg
+        [[[Attr]]]
+            Description = "Uy (CSAT)"
+            Units    = "m/s"
+    [[Uz]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Uz_CSAT_Avg
+        [[[Attr]]]
+            Description = "Uz (CSAT)"
+            Units    = "m/s"
+    [[ps]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ps_CS106_Avg
+        [[[Attr]]]
+            Description = "Atmospheric pressure"
+            Units    = "kPa"
+    [[Diag_CSAT]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = CSAT_Warn
+        [[[Attr]]]
+            Description = "CSAT diagnostic value"
+            Units    = "none"
+    [[Diag_7500]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = 7500_Warn
+        [[[Attr]]]
+            Description = "7500 diagnostic value"
+            Units    = "none"
+    [[AGC_7500]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = AGC_7500_Avg
+        [[[Attr]]]
+            Description = "7500 AGC"
+            Units    = "none"
+    [[albedo]]
+        [[[xl]]]
+            Sheet    = slow_rad
+            Name     = albedo_Avg
+        [[[Attr]]]
+            Description = "solar albedo"
+            Units    = "unitless"
+    [[Fm]]
+        [[[xl]]]
+            Sheet    = slow_flux
+            Name     = Fm_Avg
+        [[[Attr]]]
+            Description = "Momentum flux"
+            Units    = "kg/(m s2)"
+    [[RH_HMP]]
+        [[[xl]]]
+            Sheet    = slow_core
+            Name     = RH_HMP_01_Avg
+        [[[Attr]]]
+            Description = "Relative humidity (HMP) at 11.67m"
+            Units    = "fraction"
+    [[RH_HMP_200cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = RH_HMP_02_Avg
+        [[[Attr]]]
+            Description = "Relative humidity (HMP) at 2m"
+            Units    = "fraction"
+    [[RH_HMP_425cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = RH_HMP_03_Avg
+        [[[Attr]]]
+            Description = "Relative humidity (HMP) at 4.25m"
+            Units    = "fraction"
+    [[RH_HMP_657cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = RH_HMP_04_Avg
+        [[[Attr]]]
+            Description = "Relative humidity (HMP) at 6.57m"
+            Units    = "fraction"
+    [[delTs_bs]]
+        [[[xl]]]
+            Sheet    = slow_core
+            Name     = del_Tsoil(1)
+        [[[Attr]]]
+            Description = "30-min change in soil temperature in bare soil"
+            Units    = "C"
+    [[delTs_ms]]
+        [[[xl]]]
+            Sheet    = slow_core
+            Name     = del_Tsoil(2)
+        [[[Attr]]]
+            Description = "30-min change in soil temperature under mulga and soil"
+            Units    = "C"
+    [[delTs_mu]]
+        [[[xl]]]
+            Sheet    = slow_core
+            Name     = del_Tsoil(3)
+        [[[Attr]]]
+            Description = "30-min change in soil temperature under mulga and ground-cover understory"
+            Units    = "C"
+    [[Ws_WS_925cm]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = WS_WS_01_Avg
+        [[[Attr]]]
+            Description = "Wind speed (Wind Sentry) at 9.25m"
+            Units    = "m/s"
+    [[Wd_WS_925cm]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = WD_WS_01_Avg
+        [[[Attr]]]
+            Description = "Wind direction (Wind Sentry) at 9.25m"
+            Units    = "deg"
+    [[Ws_WS_200cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = WS_WS_02_Avg
+        [[[Attr]]]
+            Description = "Wind speed (Wind Sentry) at 2m"
+            Units    = "m/s"
+    [[Ws_WS_425cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = WS_WS_03_Avg
+        [[[Attr]]]
+            Description = "Wind speed (Wind Sentry) at 4.25m"
+            Units    = "m/s"
+    [[Ws_WS_662cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = WS_WS_04_Avg
+        [[[Attr]]]
+            Description = "Wind speed (Wind Sentry) at 6.62m"
+            Units    = "m/s"
+    [[Ws_CSAT_Sd]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = WS_CSAT_Sd
+        [[[Attr]]]
+            Description = "Standard deviation of wind speed (CSAT)"
+            Units    = "m/s"
+    [[Wd_CSAT_Sd]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = WD_CSAT_Sd
+        [[[Attr]]]
+            Description = "Standard deviation of wind direction (CSAT)"
+            Units    = "deg"
+    [[Ws_WS_925cm_Sd]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = WS_WS_01_Sd
+        [[[Attr]]]
+            Description = "Standard deviation of wind speed (Wind Sentry) at 9.25m"
+            Units    = "m/s"
+    [[Wd_WS_925cm_Sd]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = WD_WS_01_Sd
+        [[[Attr]]]
+            Description = "Standard deviation of wind direction (Wind Sentry) at 9.25m"
+            Units    = "deg"
+    [[Ws_WS_200cm_Sd]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = WS_WS_02_Std
+        [[[Attr]]]
+            Description = "Standard deviation of wind speed (Wind Sentry) at 2m"
+            Units    = "m/s"
+    [[Ws_WS_425cm_Sd]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = WS_WS_03_Std
+        [[[Attr]]]
+            Description = "Standard deviation of wind speed (Wind Sentry) at 4.25m"
+            Units    = "m/s"
+    [[Ws_WS_662cm_Sd]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = WS_WS_04_Std
+        [[[Attr]]]
+            Description = "Standard deviation of wind speed (Wind Sentry) at 6.62m"
+            Units    = "m/s"
+    [[rho_a]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = rho_a_Avg
+        [[[Attr]]]
+            Description = "moist air density"
+            Units    = "kg/m3"
+    [[Tpanel]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Tpanel_Avg
+        [[[Attr]]]
+            Description = "CR3000 datalogger panel temperature"
+            Units    = "C"
+    [[Vbat]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = Vbat_Avg
+        [[[Attr]]]
+            Description = "Battery voltage"
+            Units    = "V"
+    [[C_ppm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = co2_um_m_Avg
+        [[[Attr]]]
+            Description = "CO2 molar concentration (ppm)"
+            Units    = "umol/mol"
+    [[H_ppt]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = h2o_mm_m_Avg
+        [[[Attr]]]
+            Description = "H2O molar concentration (ppt)"
+            Units    = "mmol/mol"
+    [[es_HMP]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = es_HMP_01_Avg
+        [[[Attr]]]
+            Description = "saturation vapour pressure (HMP) at 11.67m"
+            Units    = "kPa"
+    [[es_HMP_200cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = es_HMP_02_Avg
+        [[[Attr]]]
+            Description = "saturation vapour pressure (HMP) at 2m"
+            Units    = "kPa"
+    [[es_HMP_425cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = es_HMP_03_Avg
+        [[[Attr]]]
+            Description = "saturation vapour pressure (HMP) at 4.25m"
+            Units    = "kPa"
+    [[es_HMP_657cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = es_HMP_04_Avg
+        [[[Attr]]]
+            Description = "saturation vapour pressure (HMP) at 6.57m"
+            Units    = "kPa"
+    [[e_HMP]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = e_HMP_01_Avg
+        [[[Attr]]]
+            Description = "atmospheric vapour pressure (HMP) at 11.67m"
+            Units    = "kPa"
+    [[e_HMP_200cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = e_HMP_02_Avg
+        [[[Attr]]]
+            Description = "atmospheric vapour pressure (HMP) at 2m"
+            Units    = "kPa"
+    [[e_HMP_425cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = e_HMP_03_Avg
+        [[[Attr]]]
+            Description = "atmospheric vapour pressure (HMP) at 4.25m"
+            Units    = "kPa"
+    [[e_HMP_657cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = e_HMP_04_Avg
+        [[[Attr]]]
+            Description = "atmospheric vapour pressure (HMP) at 6.57m"
+            Units    = "kPa"
+    [[rho_d]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = rho_d_Avg
+        [[[Attr]]]
+            Description = "density of dry air"
+            Units    = "kg/m3"
+    [[Tpanel_CR1000]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = Tpanel_CR1000_Avg
+        [[[Attr]]]
+            Description = "soil datalogger panel temperature (CR1000)"
+            Units    = "C"
+    [[Tpanel_CR3000b]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = Tpanel_storage_Avg
+        [[[Attr]]]
+            Description = "vertical gradient datalogger panel temperature (CR3000)"
+            Units    = "C"
+    [[TDR_bs1_60cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(1)
+        [[[Attr]]]
+            Description = "TDR soil water content in bare soil at 60cm"
+            Units    = "fraction"
+    [[TDR_bs1_10cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(2)
+        [[[Attr]]]
+            Description = "TDR soil water content in bare soil at 10cm"
+            Units    = "fraction"
+    [[TDR_bs1_100cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(3)
+        [[[Attr]]]
+            Description = "TDR soil water content in bare soil at 100cm"
+            Units    = "fraction"
+    [[TDR_ms1_100cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(4)
+        [[[Attr]]]
+            Description = "TDR soil water content under mulga and soil at 100cm"
+            Units    = "fraction"
+    [[TDR_ms1_10cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(5)
+        [[[Attr]]]
+            Description = "TDR soil water content under mulga and soil at 10cm"
+            Units    = "fraction"
+    [[TDR_ms1_60cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(6)
+        [[[Attr]]]
+            Description = "TDR soil water content under mulga and soil at 60cm"
+            Units    = "fraction"
+    [[TDR_rain_0cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(7)
+        [[[Attr]]]
+            Description = "TDR soil water content at soil surface near raingage"
+            Units    = "fraction"
+    [[TDR_mu1_100cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(8)
+        [[[Attr]]]
+            Description = "TDR soil water content under mulga and understory at 100cm"
+            Units    = "fraction"
+    [[TDR_mu1_60cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(9)
+        [[[Attr]]]
+            Description = "TDR soil water content under mulga and understory at 60cm"
+            Units    = "fraction"
+    [[TDR_mu1_10cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(10)
+        [[[Attr]]]
+            Description = "TDR soil water content under mulga and understory at 10cm"
+            Units    = "fraction"
+    [[TDR_bs2_143cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(11)
+        [[[Attr]]]
+            Description = "TDR soil water content under bare soil at 143cm"
+            Units    = "fraction"
+    [[TDR_bs2_100cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(12)
+        [[[Attr]]]
+            Description = "TDR soil water content under bare soil at 100cm"
+            Units    = "fraction"
+    [[TDR_bs2_60cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(13)
+        [[[Attr]]]
+            Description = "TDR soil water content under bare soil at 60cm"
+            Units    = "fraction"
+    [[TDR_bs2_10cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(14)
+        [[[Attr]]]
+            Description = "TDR soil water content under bare soil at 10cm"
+            Units    = "fraction"
+    [[TDR_mu2_100cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(15)
+        [[[Attr]]]
+            Description = "TDR soil water content under mulga and understory at 100cm"
+            Units    = "fraction"
+    [[TDR_mu2_60cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(16)
+        [[[Attr]]]
+            Description = "TDR soil water content under mulga and understory at 60cm"
+            Units    = "fraction"
+    [[TDR_mu2_10cm_a]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(17)
+        [[[Attr]]]
+            Description = "TDR soil water content under mulga and understory at 10cm"
+            Units    = "fraction"
+    [[TDR_mu2_10cm_b]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(18)
+        [[[Attr]]]
+            Description = "TDR soil water content under mulga and understory at 10cm"
+            Units    = "fraction"
+    [[TDR_ms2_100cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(19)
+        [[[Attr]]]
+            Description = "TDR soil water content under mulga and soil at 100cm"
+            Units    = "fraction"
+    [[TDR_ms2_60cm]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(20)
+        [[[Attr]]]
+            Description = "TDR soil water content under mulga and soil at 60cm"
+            Units    = "fraction"
+    [[TDR_ms2_10cm_a]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(21)
+        [[[Attr]]]
+            Description = "TDR soil water content under mulga and soil at 10cm"
+            Units    = "fraction"
+    [[TDR_ms2_10cm_b]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = ToppVWC(22)
+        [[[Attr]]]
+            Description = "TDR soil water content under mulga and soil at 10cm"
+            Units    = "fraction"
+    [[Vbat_TopPanel]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = Vbat_check_Avg(1)
+        [[[Attr]]]
+            Description = "Battery voltage check for upper PV panel"
+            Units    = "V"
+    [[Vbat_BotPanel]]
+        [[[xl]]]
+            Sheet    = ex_met
+            Name     = Vbat_check_Avg(2)
+        [[[Attr]]]
+            Description = "Battery voltage check for lower PV panel"
+            Units    = "V"

@@ -1,0 +1,17 @@
+[Files]
+    [[in]]
+        ncFilePath = ../../../TERN/Sites/HowardSprings/Data/Processed/2008/
+        ncFileName = HowardSprings_2008_L3.nc
+    [[out]]
+        xlFilePath = ../../../TERN/Sites/HowardSprings/Data/Processed/2008/
+        xlFileName = Climatology_2008.xls
+
+[Output]
+    # meteorological series
+    met  = "['Ta_EC','Ta_HMP_01','Ah_EC','Ah_HMP_01','Cc_7500_Av','Ws_CSAT','Wd_CSAT_Compass','ps']"
+    # radiation series
+    rad  = "['Fld','Flu','Fn','Fsd','Fsu']"
+    # soil series
+    soil = "['Ts_01','Sws_01','Sws_02','Sws_03','Fg']"
+    # turbulent flux series
+    flux = "['Fc_wpl','Fe_wpl','Fh','Fm','ustar']"

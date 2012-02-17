@@ -1,0 +1,278 @@
+[General]
+zmd = 10           # instrument height above displacement plane
+z0 = 1.6           # roughness length
+
+[Files]
+    [[L3]]
+        ncFilePath = ../../../TERN/Sites/DalyUncleared/Data/Processed/2010/
+        ncFileName = DalyUncleared_2010_L3.nc
+    [[L4]]
+        ncFilePath = ../../../TERN/Sites/DalyUncleared/Data/Processed/2010/
+        ncFileName = DalyUncleared_2010_L4.nc
+
+[Variables]
+    [[Ah_EC]]
+        [[[GapFillFromAlternate]]]
+#            [[[[First]]]]
+#                FileName = "../../../TERN/Sites/DalyRegrowth/Data/Processed/2010/DalyRegrowth_2010_L3.nc"
+#                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[0.998,-0.63],'All']]"
+#            [[[[Second]]]]
+#                FileName = "../../../TERN/Sites/DalyPasture/Data/Processed/2010/DalyPasture_2010_L3.nc"
+#                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[1.012,-1.21],'All']]"
+            [[[[First]]]]
+                FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/DalyUncleared_CABLE_2010.nc"
+                AltVarName = "Ah"
+                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[1.0,0.0],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls"
+        [[[RangeCheck]]]
+            Lower      = "[5,5,5,5,0,0,0,0,0,0,5,5]"
+            Upper      = "[35]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Cc_7500_Av]]
+        [[[GapFillFromAlternate]]]
+#            [[[[First]]]]
+#                FileName = "../../../TERN/Sites/DalyRegrowth/Data/Processed/2010/DalyRegrowth_2010_L3.nc"
+#                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[0.919,0.0],'All']]"
+#            [[[[Second]]]]
+#                FileName = "../../../TERN/Sites/DalyPasture/Data/Processed/2010/DalyPasture_2010_L3.nc"
+#                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[0.830,0.0],'All']]"
+            [[[[First]]]]
+                FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/DalyUncleared_CABLE_2010.nc"
+                AltVarName = "CO2"
+                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[1.0,0.0],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls"
+        [[[RangeCheck]]]
+            Lower      = "[500]*12"
+            Upper      = "[1200]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Fg]]
+        [[[GapFillFromClimatology]]]
+            FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls"
+        [[[RangeCheck]]]
+            Lower      = "[-300]*12"
+            Upper      = "[300]*12"
+    [[Fld]]
+        [[[GapFillFromAlternate]]]
+#            [[[[First]]]]
+#                FileName = ../../../TERN/Sites/DalyRegrowth/Data/Processed/2010/DalyRegrowth_2010_L3.nc
+#                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[1.004,0.0],'All']]"
+#            [[[[Second]]]]
+#                FileName = ../../../TERN/Sites/DalyPasture/Data/Processed/2010/DalyPasture_2010_L3.nc
+#                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[1.026,0.0],'All']]"
+            [[[[First]]]]
+                FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/DalyUncleared_CABLE_2010.nc"
+                AltVarName = "Fld"
+                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[1.0,0.0],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls"
+        [[[RangeCheck]]]
+            Lower      = "[250]*12"
+            Upper      = "[700]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Flu]]
+        [[[GapFillFromAlternate]]]
+            [[[[First]]]]
+                FileName = "../../../TERN/Sites/DalyRegrowth/Data/Processed/2010/DalyRegrowth_2010_L3.nc"
+                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[0.999,0.0],'All']]"
+            [[[[Second]]]]
+                FileName = "../../../TERN/Sites/DalyPasture/Data/Processed/2010/DalyPasture_2010_L3.nc"
+                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[1.43,0.0],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls"
+        [[[RangeCheck]]]
+            Lower      = "[300]*12"
+            Upper      = "[700]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Fn]]
+        [[[GapFillFromAlternate]]]
+            [[[[First]]]]
+                FileName = "../../../TERN/Sites/DalyRegrowth/Data/Processed/2010/DalyRegrowth_2010_L3.nc"
+                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[0.953,5],'All']]"
+            [[[[Second]]]]
+                FileName = "../../../TERN/Sites/DalyPasture/Data/Processed/2010/DalyPasture_2010_L3.nc"
+                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[0.947,-2],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls"
+        [[[RangeCheck]]]
+            Lower      = "[-150]*12"
+            Upper      = "[1100]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Fsd]]
+        [[[GapFillFromAlternate]]]
+#            [[[[First]]]]
+#                FileName = "../../../TERN/Sites/DalyRegrowth/Data/Processed/2010/DalyRegrowth_2010_L3.nc"
+#                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[0.927,7],'All']]"
+#            [[[[Second]]]]
+#                FileName = "../../../TERN/Sites/DalyPasture/Data/Processed/2010/DalyPasture_2010_L3.nc"
+#                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[0.905,11],'All']]"
+            [[[[First]]]]
+                FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/DalyUncleared_CABLE_2010.nc"
+                AltVarName = "Fsd"
+                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[1.0,0.0],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls"
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[1500]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Fsu]]
+        [[[GapFillFromAlternate]]]
+            [[[[First]]]]
+                FileName = "../../../TERN/Sites/DalyRegrowth/Data/Processed/2010/DalyRegrowth_2010_L3.nc"
+                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[0.836,0],'All']]"
+            [[[[Second]]]]
+                FileName = "../../../TERN/Sites/DalyPasture/Data/Processed/2010/DalyPasture_2010_L3.nc"
+                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[0.668,3],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls"
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[500]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[ps]]
+        [[[GapFillFromAlternate]]]
+#            [[[[First]]]]
+#                FileName = "../../../TERN/Sites/DalyRegrowth/Data/Processed/2010/DalyRegrowth_2010_L3.nc"
+#                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[1.0,0.0],'All']]"
+#            [[[[Second]]]]
+#                FileName = "../../../TERN/Sites/DalyPasture/Data/Processed/2010/DalyPasture_2010_L3.nc"
+#                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[1.0,0.0],'All']]"
+            [[[[First]]]]
+                FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/DalyUncleared_CABLE_2010.nc"
+                AltVarName = "ps"
+                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[1.0,0.0],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls"
+        [[[RangeCheck]]]
+            Lower      = "[95]*12"
+            Upper      = "[105]*12"
+    [[Sws_5cm]]
+        [[[GapFillFromClimatology]]]
+            FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls"
+    [[Sws_50cm]]
+        [[[GapFillFromClimatology]]]
+            FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls"
+    [[Ta_EC]]
+        [[[GapFillFromAlternate]]]
+#            [[[[First]]]]
+#                FileName = "../../../TERN/Sites/DalyRegrowth/Data/Processed/2010/DalyRegrowth_2010_L3.nc"
+#                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[0.938,1.84],'All']]"
+#            [[[[Second]]]]
+#                FileName = "../../../TERN/Sites/DalyPasture/Data/Processed/2010/DalyPasture_2010_L3.nc"
+#                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[0.783,6.82],'All']]"
+            [[[[First]]]]
+                FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/DalyUncleared_CABLE_2010.nc"
+                AltVarName = "Tair"
+                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[1.0,0.0],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls"
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[50]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Ts]]
+        [[[GapFillFromClimatology]]]
+            FileName = ../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[60]*12"
+    [[Wd_CSAT]]
+        [[[GapFillFromAlternate]]]
+            [[[[First]]]]
+                FileName = "../../../TERN/Sites/DalyRegrowth/Data/Processed/2010/DalyRegrowth_2010_L3.nc"
+                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[1.0,0.0],'All']]"
+            [[[[Second]]]]
+                FileName = "../../../TERN/Sites/DalyPasture/Data/Processed/2010/DalyPasture_2010_L3.nc"
+                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[1.0,0.0],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls"
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[360]*12"
+    [[Ws_CSAT]]
+        [[[GapFillFromAlternate]]]
+#            [[[[First]]]]
+#                FileName = "../../../TERN/Sites/DalyRegrowth/Data/Processed/2010/DalyRegrowth_2010_L3.nc"
+#                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[1.04,0.0],'All']]"
+#            [[[[Second]]]]
+#                FileName = "../../../TERN/Sites/DalyPasture/Data/Processed/2010/DalyPasture_2010_L3.nc"
+#                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[0.784,0.0],'All']]"
+            [[[[First]]]]
+                FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/DalyUncleared_CABLE_2010.nc"
+                AltVarName = "WS"
+                Transform = "[['2010-01-01 00:00','2011-01-01 00:00',[1.0,0.0],'All']]"
+        [[[GapFillFromClimatology]]]
+            FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls"
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[20]*12"
+# fluxes
+    [[Fe_wpl]]
+        [[[GapFillUsingRatios]]]
+            xlSheet = EFi
+            FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls"
+        [[[GapFillFromClimatology]]]
+            FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls"
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[600]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Fh]]
+        [[[GapFillUsingRatios]]]
+            xlSheet = BRi
+            FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls"
+        [[[GapFillFromClimatology]]]
+            FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls"
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[600]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[Fc_wpl]]
+        [[[GapFillUsingRatios]]]
+            xlSheet = WUEi
+            FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls"
+        [[[GapFillFromClimatology]]]
+            FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls"
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+    [[ustar]]
+        [[[GapFillFromClimatology]]]
+            FileName = "../../../TERN/Sites/DalyUncleared/Data/Processed/2010/Climatology_2010.xls"
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[2]*12"
+        [[[DiurnalCheck]]]
+            NumSd      = "[5]*12"
+
+[Plots]
+    [[L3L4]]
+        [[[1]]]
+            Title = "Radiative fluxes"
+            Variables = "['Rain','Fsd','Fsu','Fld','Flu','Fn']"
+        [[[2]]]
+            Title = "Turbulent fluxes"
+            Variables = "['Rain','Fh','Fe_wpl','Fc_wpl','ustar','Fm']"
+        [[[3]]]
+            Title = "Air temperature, humidity and CO2"
+            Variables = "['Rain','Ta_EC','Ah_EC','Cc_7500_Av']"
+        [[[4]]]
+            Title = "Soil temperature, water content and heat flux"
+            Variables = "['Rain','Ts','Sws_5cm','Sws_50cm','Fg']"
+        [[[5]]]
+            Title = "Pressure, wind speed and direction"
+            Variables = "['Rain','ps','Ws_CSAT','Ux','Uy','Uz','Wd_CSAT']"

@@ -1,0 +1,107 @@
+[Files]
+    [[L2]]
+        ncFilePath = D:/TERN/Sites/HowardSprings/Data/Processed/2008/
+        ncFileName = HowardSprings_2008_L2.nc
+    [[L3]]
+        ncFilePath = D:/TERN/Sites/HowardSprings/Data/Processed/2008/
+        ncFileName = HowardSprings_2008_L3.nc
+
+[Soil]
+    FgDepth = 0.08
+    BulkDensity = 1900
+    OrganicContent = 0.01
+    SwsDefault = 0.15
+    SwsSeries = "Sws_01"
+
+[Variables]
+# Radiation
+    [[Fn]]
+        [[[RangeCheck]]]
+            Lower      = [-150]*12
+            Upper      = [1100]*12
+# H2O covarinaces
+    [[UzA]]
+        [[[Linear]]]
+            0      = "['2008-1-1 00:00','2008-4-3 17:30',0.92,0.0]"
+            1      = "['2008-4-3 18:00','2008-8-11 13:00',0.92,0.0]"
+            2      = "['2008-8-11 13:30','2008-8-28 18:00',0.87,0.0]"
+            3      = "['2008-8-28 18:30','2008-12-31 23:30',0.92,0.0]"
+    [[UxA]]
+        [[[Linear]]]
+            0      = "['2008-1-1 00:00','2008-4-3 17:30',0.92,0.0]"
+            1      = "['2008-4-3 18:00','2008-8-11 13:00',0.92,0.0]"
+            2      = "['2008-8-11 13:30','2008-8-28 18:00',0.87,0.0]"
+            3      = "['2008-8-28 18:30','2008-12-31 23:30',0.92,0.0]"
+    [[UyA]]
+        [[[Linear]]]
+            0      = "['2008-1-1 00:00','2008-4-3 17:30',0.92,0.0]"
+            1      = "['2008-4-3 18:00','2008-8-11 13:00',0.92,0.0]"
+            2      = "['2008-8-11 13:30','2008-8-28 18:00',0.87,0.0]"
+            3      = "['2008-8-28 18:30','2008-12-31 23:30',0.92,0.0]"
+# Turbulent fluxes
+    [[Fh]]
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[600]*12"
+    [[Fe_wpl]]
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[600]*12"
+    [[Fc_wpl]]
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+    [[Fm]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+    [[ustar]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[2]*12"
+# Meteorological
+    [[Cc_7500_Av]]
+        [[[Linear]]]
+            0      = "['2008-01-01 00:00','2008-04-03 17:30',1.0,30]"
+            1      = "['2008-08-11 13:30','2008-08-28 18:00',1.0,25]"
+    [[Ah_7500_Av]]
+        [[[Linear]]]
+            0      = "['2008-01-01 00:00','2008-04-03 17:30',0.92,-0.94]"
+            1      = "['2008-04-03 18:00','2008-08-11 13:00',0.92,1.90]"
+            2      = "['2008-08-11 13:30','2008-08-28 18:00',0.87,-2.62]"
+            3      = "['2008-08-28 18:30','2008-12-31 23:30',0.92,-0.94]"
+    [[Ta_EC]]
+        [[[RangeCheck]]]
+            Lower      = [0]*12
+            Upper      = [50]*12
+    [[Ah_EC]]
+        [[[RangeCheck]]]
+            Lower      = "[5,5,5,5,0,0,0,0,0,0,5,5]"
+            Upper      = [35]*12
+    [[Fg]]
+        [[[RangeCheck]]]
+            Lower      = "[-300]*12"
+            Upper      = "[300]*12"
+    [[Sws_01]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[0.5]*12"
+        [[[ExcludeDates]]]
+            0          = "['2008-01-01 00:00','2008-2-8 17:30']"
+
+[Plots]
+    [[1]]
+        Title = "Radiative fluxes"
+        Variables = "['Fsd','Fsu','Fld','Flu','Fn']"
+    [[2]]
+        Title = "Turbulent fluxes"
+        Variables = "['Fh','Fe_wpl','Fc_wpl','ustar','Fm']"
+    [[3]]
+        Title = "Air temperature, humidity and CO2"
+        Variables = "['Ta_EC','Ta_HMP_01','Ah_EC','Ah_HMP_01','Cc_7500_Av']"
+    [[4]]
+        Title = "Soil temperature, water content and heat flux"
+        Variables = "['Rain','Ts','Sws_01','Sws_02','Sws_03','Fg']"
+    [[5]]
+        Title = "Pressure, wind speed and direction"
+        Variables = "['ps','Ws_CSAT','Ux','Uy','Uz','Wd_CSAT']"

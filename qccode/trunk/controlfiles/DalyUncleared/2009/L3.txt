@@ -1,0 +1,189 @@
+# AAHYWEH
+# Control file for L2 (input) to L3 (output) quality control.
+#
+# [Files]     - contains paths and file names
+# [Soil]      - constants used in correcting Fg for storage
+# [Variables] - variable names and quality control keys, only those variables
+#               corrected or calculated at this level need to be specified in
+#               this control file.
+#               Valid quality control sections are:
+#                RangeCheck   - reject data less than "Lower" or greater than "Upper"
+#                DiurnalCheck - reject data outside Avg(H.h)+/-NumSd*Stdev(H.h) where
+#                                Avg(H.h) is the average of all data at time H.h and
+#                                Stdev(H.h) is the standard deviation of all data at time H.h
+#                                 eg H.h = 8.5 is 0830
+#                 NOTE: The "Lower", "Upper" and "NumSd" keywords require a value for each
+#                       month of the year (12).  This can be written in shorthand as:
+#                        eg "[100]*12" (same value for each month)
+#                       or in longhand as:
+#                        eg "[100,110,120,130,140,150,150,140,130,120,110,100]" (different each month)
+#                ExcludeDates - reject data between specified dates, multiple date ranges can be
+#                               specified on separate lines but the lines must be numbered
+#                               sequentially from 0 (eg 0, 1, 2 etc)
+#                 NOTE: The date range is specified as:
+#        [[[ExcludeDates]]]
+#            0 = "['2010-01-01 00:00','2010-09-16 00:00']"
+#                ExcludeHours - reject data at specified times between the specified date range,
+#                               multiple ranges can be specified on separate lines but the
+#                               lines must be numbered sequentially from 0 (eg 0, 1, 2, etc)
+#                 NOTE: The date range and hours to be rejected are specified as:
+#                        eg "['2008-04-22 00:00','2008-07-26 23:30',['09:30','10:00','10:30']]"
+#                Linear       - apply a linear correction to the data within a date range,
+#                               multiple ranges can be specified on separate lines but the
+#                               lines must be numbered sequentially from 0 (eg 0, 1, 2, etc)
+#                 NOTE: The date range, slope and offset are specified as:
+#                        eg "['2010-01-01 00:00','2011-01-01 00:00',1.0,0.0]"
+#                Correction   - apply an offset to a wind direction measurement to correct for alignment
+#                               multiple ranges can be specified on separate lines but the
+#                               lines must be numbered sequentially from 0 (eg 0, 1, 2, etc)
+#                 NOTE: The date range and correction are specified as follows:
+#                        eg "['2009-1-1 00:00','2010-1-1 00:00',180]"
+# MergeSeries
+#  Used to specify the data series to be merged to form a single data series.
+#  Examples of series that can be merged are soil moisture measurements at the same depth,
+#  soil heat flux measurements at the same depth, air temperature and humidity series to provide
+#  a single series to provide one set of data for use with the WPL correction.
+#        [[[MergeSeries]]]
+#            Source     = "['Fn_KZ','Fn_NR']"
+# [Plots]     - definition of time series plots
+#
+[General]
+    # set the width and height of the plot windows in inches
+    PlotWidth = 10.7
+    PlotHeight = 8
+    Platform = PC    # Mac or PC
+
+[Files]
+    [[L2]]
+        ncFilePath = ../../../TERN/Sites/DalyUncleared/Data/Processed/2009/
+        ncFileName = DalyUncleared_2009_L2.nc
+    [[L3]]
+        ncFilePath = ../../../TERN/Sites/DalyUncleared/Data/Processed/2009/
+        ncFileName = DalyUncleared_2009_L3.nc
+        xlFilePath = ../../../TERN/Sites/DalyUncleared/Data/Processed/2009/
+        xlFileName = DalyUncleared_2009_L3.xls
+
+[Output]
+    L3 = "['Ah_EC','Cc_7500_Av','eta','Fc_wpl','Fe_wpl','Fg','Fh','Fld','Flu','Fm','Fn','Fn_KZ','Fn_NR','Fsd','Fsu','ps','Sws_01','Sws_02','Ta_EC','theta','Ts_01','ustar','Ws_CSAT','Wd_CSAT_Compass']"
+
+[Soil]
+    FgDepth = 0.08
+    BulkDensity = 1900
+    OrganicContent = 0.01
+    SwsDefault = 0.15
+    SwsSeries = "['Sws_01']"
+
+[Variables]
+# Radiation
+    [[Fn]]
+        [[[MergeSeries]]]
+            Source     = "['Fn_KZ','Fn_NR']"
+        [[[RangeCheck]]]
+            Lower      = [-150]*12
+            Upper      = [1100]*12
+    [[Fsd]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[1500]*12"
+        [[[Linear]]]
+            0      = "['2009-01-01 00:00','2009-10-22 00:00',0.83,0.0]"
+# H2O covarinaces
+    [[UzA]]
+        [[[Linear]]]
+            0      = "['2009-01-01 00:00','2009-11-19 23:30',0.925,0.0]"
+            1      = "['2009-11-20 00:00','2010-01-01 00:00',0.837,0.0]"
+    [[UxA]]
+            0      = "['2009-01-01 00:00','2009-11-19 23:30',0.925,0.0]"
+            1      = "['2009-11-20 00:00','2010-01-01 00:00',0.837,0.0]"
+    [[UyA]]
+        [[[Linear]]]
+            0      = "['2009-01-01 00:00','2009-11-19 23:30',0.925,0.0]"
+            1      = "['2009-11-20 00:00','2010-01-01 00:00',0.837,0.0]"
+# Turbulent fluxes
+    [[Fh]]
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[600]*12"
+    [[Fe_wpl]]
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[600]*12"
+    [[Fc_wpl]]
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+    [[Fm]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+    [[ustar]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[2]*12"
+# Meteorological
+    [[Cc_7500_Av]]
+        [[[Linear]]]
+            0      = "['2009-1-1 00:00','2010-1-1 00:00',1.0,0.0]"
+    [[Ah_7500_Av]]
+        [[[Linear]]]
+            0      = "['2009-01-01 00:00','2009-11-19 23:30',0.925,-1.87]"
+            1      = "['2009-11-20 00:00','2010-01-01 00:00',0.837,-2.32]"
+    [[Ta_EC]]
+        [[[MergeSeries]]]
+            Source     = "['Ta_HMP_02','Ta_CSAT','Ta_HMP_01']"
+        [[[RangeCheck]]]
+            Lower      = [0]*12
+            Upper      = [50]*12
+    [[Ah_EC]]
+        [[[MergeSeries]]]
+            Source     = "['Ah_HMP_02','Ah_7500_Av','Ah_HMP_01']"
+        [[[RangeCheck]]]
+            Lower      = "[5,5,5,5,0,0,0,0,0,0,5,5]"
+            Upper      = [35]*12
+    [[Wd_CSAT_Compass]]
+        [[[Correction]]]
+            0 = "['2009-01-01 00:00','2010-01-01 00:00',180]"
+    [[Fg_01b]]
+        [[[Linear]]]
+            0      = "['2009-01-01 00:00','2010-01-01 00:00',0.49,-3]"
+    [[Fg_01]]
+        [[[AverageSeries]]]
+            Source     = "['Fg_01a','Fg_01b']"
+        [[[RangeCheck]]]
+            Lower      = "[-300]*12"
+            Upper      = "[300]*12"
+    [[Sws_01]]
+        [[[AverageSeries]]]
+            Source     = "['Sws_01a']"
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[0.5]*12"
+    [[Sws_02]]
+        [[[AverageSeries]]]
+            Source     = "['Sws_02a']"
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[0.5]*12"
+    [[Ts_01]]
+        [[[AverageSeries]]]
+            Source     = "['Ts_01a']"
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[60]*12"
+
+[Plots]
+    [[1]]
+        Title = "Radiative fluxes"
+        Variables = "['Fsd','Fsu','Fld','Flu','Fn']"
+    [[2]]
+        Title = "Turbulent fluxes"
+        Variables = "['Fh','Fe_wpl','Fc_wpl','ustar','Fm']"
+    [[3]]
+        Title = "Air temperature, humidity and CO2"
+        Variables = "['Ta_EC','Ta_HMP_01','Ah_EC','Ah_HMP_01','Cc_7500_Av']"
+    [[4]]
+        Title = "Soil temperature, water content and heat flux"
+        Variables = "['Rain','Ts_01','Sws_01','Sws_02','Fg_01']"
+    [[5]]
+        Title = "Pressure, wind speed and direction"
+        Variables = "['ps','Ws_CSAT','Ux','Uy','Uz','Wd_CSAT_Compass']"
