@@ -31,7 +31,7 @@
     <div class="mcpop_field">
         <br/>
         <div class="mcpop_input_value">
-            Enter a researcher full name or E-mail bellow:
+            Enter a researcher name or E-mail bellow:
         </div>
         <div class="blank_separator"></div>
 
