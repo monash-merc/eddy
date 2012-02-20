@@ -26,8 +26,8 @@ import qcio
 import qcls
 import qcplot
 import qcutils
-from interior_xl2nc import autoxl2nc
-from interior_nc2xl import autonc2xl
+#from interior_xl2nc import autoxl2nc
+#from interior_nc2xl import autonc2xl
 
 
 def startlog():
@@ -474,7 +474,7 @@ class qcgui(Tkinter.Frame):
                     Variables included in output file
             """
         self.do_progress(text='Exporting L2 NetCDF -> Xcel ...')                     # put up the progress message
-        autonc2xl(self.cf,'L2')
+        qcio.autonc2xl(self.cf,'L2')
         self.do_progress(text='Finished L2 Data Export')              # tell the user we are done
         log.info(' Finished saving L2 data')
 
@@ -498,7 +498,7 @@ class qcgui(Tkinter.Frame):
                     Variables included in output file
             """
         self.do_progress(text='Exporting L3 NetCDF -> Xcel ...')                     # put up the progress message
-        autonc2xl(self.cf,'L3')
+        qcio.autonc2xl(self.cf,'L3')
         self.do_progress(text='Finished L3 Data Export')              # tell the user we are done
         log.info(' Finished saving L3 data')
 
@@ -522,7 +522,7 @@ class qcgui(Tkinter.Frame):
                     Variables included in output file
             """
         self.do_progress(text='Exporting L4 NetCDF -> Xcel ...')                     # put up the progress message
-        autonc2xl(self.cf,'L4')
+        qcio.autonc2xl(self.cf,'L4')
         self.do_progress(text='Finished L4 Data Export')              # tell the user we are done
         log.info(' Finished saving L4 data')
 
@@ -585,9 +585,9 @@ class qcgui(Tkinter.Frame):
         if 'InLevel' in self.cf['General']:
             InLevel = self.cf['General']['InLevel']
             OutLevel = self.cf['General']['OutLevel']
-            autoxl2nc(self.cf,InLevel,OutLevel)
+            qcio.autoxl2nc(self.cf,InLevel,OutLevel)
         else:
-            autoxl2nc(self.cf,'L1','L1')
+            qcio.autoxl2nc(self.cf,'L1','L1')
         self.do_progress(text='Finished Data Ingest')
         log.info(' Finished Data Ingest')
 
