@@ -214,75 +214,6 @@ def l3qc_AliceSpringsMulga(cf,ds2):
     qcck.gaps(cf,ds3)
     return ds3
 
-def l3qc_DalyRegrowth(cf,ds2):
-    """
-        Corrections applied for Daly Regrowth site
-        Generates L3 from L2 data
-        
-        Functions performed:
-            qcts.ApplyLinear (Ah_7500_Av, Cc_7500_Av, UzA, UxA, UyA, Fc_wpl)
-            qcts.MergeSeries (Ah_HMP_5m, Ah_EC, Ta_HMP_5m, Ta_EC, Fn)
-            qcts.TaFromTv
-            qcts.CoordRotation2D
-            qcts.CalculateFluxes
-            qcts.FhvtoFh
-            qcts.Fe_WPL
-            qcts.Fc_WPL
-            qcts.CalculateNetRadiation
-            qcts.InterpolateOverMissing (Sws_5cm)
-            qcts.AverageSeriesByElements (Fg)
-            qcts.CorrectFgForStorage
-            qcts.CalculateAvailableEnergy
-            qcck.do_qcchecks
-        """
-    # make a copy of the L2 data
-    ds3 = copy.deepcopy(ds2)
-    ds3.globalattributes['Level'] = 'L3'
-    ds3.globalattributes['EPDversion'] = sys.version
-    ds3.globalattributes['QCVersion'] = __doc__
-    ds3.globalattributes['Functions'] = 'ApplyLinear, MergeSeries, TaFromTv, CoordRotation2D, CalculateFluxes, Fe_WPL, Fc_WPL, CalculateNetRadiation, InterpolateOverMissing, CorrectFgForStorage, CalculateAvailableEnergy, do_qcchecks'
-    # apply linear corrections to the LI-7500 Ah and Fe data
-    qcts.ApplyLinear(cf,ds3,'Ah_7500_Av')
-    qcts.ApplyLinear(cf,ds3,'Cc_7500_Av')
-    qcts.ApplyLinear(cf,ds3,'UzA')
-    qcts.ApplyLinear(cf,ds3,'UxA')
-    qcts.ApplyLinear(cf,ds3,'UyA')
-    # merge the 2m and 5m HMP Ah data (5m missing until 21/4, 2m present from 15/3)
-    qcts.MergeSeries(ds3,'Ah_HMP_5m','Ah_HMP_5m','Ah_HMP_2m',[0,10])
-    # merge the HMP and corrected 7500 data
-    qcts.MergeSeries(ds3,'Ah_EC','Ah_HMP_5m','Ah_7500_Av',[0,10])
-    # get the air temperature from the CSAT virtual temperature
-    qcts.TaFromTv(ds3,'Ta_CSAT','Tv_CSAT','Ah_EC','ps')
-    # merge the 2m and 5m HMP Ta data (5m missing until 21/4, 2m present from 15/3)
-    qcts.MergeSeries(ds3,'Ta_HMP_5m','Ta_HMP_5m','Ta_HMP_2m',[0,10])
-    # merge the air temperature from the HMP with that derived from the CSAT
-    qcts.MergeSeries(ds3,'Ta_EC','Ta_HMP_5m','Ta_CSAT',[0,10])
-    # do the 2D coordinate rotation
-    qcts.CoordRotation2D(ds3)
-    # calculate the fluxes from the covariances
-    qcts.CalculateFluxes(ds3)
-    # approximate wT from virtual wT using wA (ref: Campbell OPECSystem manual)
-    attr = 'Fh rotated and converted from virtual heat flux'
-    qcts.FhvtoFh(ds3,'Ta_EC','Fh','Tv_CSAT','Fe_raw','ps','Ah_EC','Fh_rv',attr)
-    # correct the H2O flux
-    qcts.Fe_WPL(ds3,'Fe_wpl','Fe_raw','Fh_rv','Ta_EC','Ah_EC','ps')
-    # correct the CO2 flux
-    qcts.Fc_WPL(ds3,'Fc_wpl','Fc_raw','Fh_rv','Fe_wpl','Ta_EC','Ah_EC','Cc_7500_Av','ps')
-    qcts.ApplyLinear(cf,ds3,'Fc_wpl')
-    # calculate the net radiation from the Kipp and Zonen CNR1
-    qcts.CalculateNetRadiation(ds3,'Fn_KZ','Fsd','Fsu','Fld','Flu')
-    # combine the net radiation from the Kipp and Zonen CNR1 and the NRlite
-    qcts.MergeSeries(ds3,'Fn','Fn_KZ','Fn_NR',[0,10])
-    # interpolate over missing soil moisture values
-    qcts.InterpolateOverMissing(ds3,series=['Sws_5cm'])
-    # correct the measured soil heat flux for storage in the soil layer above the sensor
-    qcts.CorrectFgForStorage(cf,ds3,'Fg','Fg_1','Ts','Sws')
-    # calculate the available energy
-    qcts.CalculateAvailableEnergy(ds3,'Fa','Fn','Fg')
-    # re-apply the quality control checks (range, diurnal and rules)
-    qcck.do_qcchecks(cf,ds3)
-    return ds3
-
 def l3qc_FoggDam(cf,ds2):
     """
         Corrections applied for Fogg Dam site
@@ -427,78 +358,6 @@ def l3qc_Standard(cf,ds2):
     qcutils.GetSeriesStats(cf,ds3)
     return ds3
 
-#def l3qc_SturtPlains(cf,ds2):
-    #"""
-        #Corrections applied for Sturt Plains site
-        #Generates L3 from L2 data
-        
-        #Functions performed:
-            #qcts.ApplyLinear (Ah_7500_Av, Cc_7500_Av, UzA, UxA, UyA, Rain, Sws_5cm)
-            #qcts.MergeSeries (Ah_EC, Ta_EC, Fsd, Fsu, Fn)
-            #qcts.TaFromTv
-            #qcts.CoordRotation2D
-            #qcts.CalculateFluxes
-            #qcts.FhvtoFh
-            #qcts.Fe_WPL
-            #qcts.Fc_WPL
-            #qcts.CalculateNetRadiation
-            #qcts.InterpolateOverMissing (Sws_5cm)
-            #qcts.AverageSeriesByElements (Fg)
-            #qcts.CorrectFgForStorage
-            #qcts.CalculateAvailableEnergy
-            #qcck.do_qcchecks
-        #"""
-    ## make a copy of the L2 data
-    #ds3 = copy.deepcopy(ds2)
-    #ds3.globalattributes['Level'] = 'L3'
-    #ds3.globalattributes['EPDversion'] = sys.version
-    #ds3.globalattributes['QCVersion'] = __doc__
-    #ds3.globalattributes['Functions'] = 'ApplyLinear, MergeSeries, TaFromTv, CoordRotation2D, CalculateFluxes, Fe_WPL, Fc_WPL, CalculateNetRadiation, InterpolateOverMissing, AverageSeriesByElements, CorrectFgForStorage, CalculateAvailableEnergy, do_qcchecks'
-    ## apply linear corrections to the LI-7500 Ah and Fe data
-    #qcts.ApplyLinear(cf,ds3,'Ah_7500_Av')
-    #qcts.ApplyLinear(cf,ds3,'Cc_7500_Av')
-    #qcts.ApplyLinear(cf,ds3,'UzA')
-    #qcts.ApplyLinear(cf,ds3,'UxA')
-    #qcts.ApplyLinear(cf,ds3,'UyA')
-    #qcts.ApplyLinear(cf,ds3,'Rain')     # correct for error in logger program
-    ## merge the HMP and corrected 7500 data
-    #qcts.MergeSeries(ds3,'Ah_EC','Ah_HMP_5m','Ah_7500_Av',[0,10])
-    ## get the air temperature from the CSAT virtual temperature
-    #qcts.TaFromTv(ds3,'Ta_CSAT','Tv_CSAT','Ah_EC','ps')
-    ## merge the air temperature from the HMP with that derived from the CSAT
-    #qcts.MergeSeries(ds3,'Ta_EC','Ta_HMP_5m','Ta_CSAT',[0,10])
-    ## do the 2D coordinate rotation
-    #qcts.CoordRotation2D(ds3)
-    ## calculate the fluxes
-    #qcts.CalculateFluxes(ds3)
-    ## approximate wT from virtual wT using wA (ref: Campbell OPECSystem manual)
-    #attr = 'Fh rotated and converted from virtual heat flux'
-    #qcts.FhvtoFh(ds3,'Ta_EC','Fh','Tv_CSAT','Fe_raw','ps','Ah_EC','Fh_rv',attr)
-    ## correct the H2O flux
-    #qcts.Fe_WPL(ds3,'Fe_wpl','Fe_raw','Fh_rv','Ta_EC','Ah_EC','ps')
-    ## correct the CO2 flux
-    #qcts.Fc_WPL(ds3,'Fc_wpl','Fc_raw','Fh_rv','Fe_wpl','Ta_EC','Ah_EC','Cc_7500_Av','ps')
-    ## merge the shortwave radiation from the CNR1 and the CM11
-    #qcts.MergeSeries(ds3,'Fsd','Fsd_CNR1','Fsd_CM11',[0,10])
-    #qcts.MergeSeries(ds3,'Fsu','Fsu_CNR1','Fsu_CM11',[0,10])
-    ## calculate the net radiation from the Kipp and Zonen CNR1
-    #qcts.CalculateNetRadiation(ds3,'Fn_KZ','Fsd','Fsu','Fld','Flu')
-    ## combine the net radiation from the Kipp and Zonen CNR1 and the NRlite
-    #qcts.MergeSeries(ds3,'Fn','Fn_KZ','Fn_NR',[0,10])
-    ## crude fix for values of soil moisture that are too high
-    #qcts.ApplyLinear(cf,ds3,'Sws_5cm')
-    ## interpolate over missing soil moisture values
-    #qcts.InterpolateOverMissing(ds3,series=['Sws_5cm'])
-    ## average the soil heat flux data
-    #qcts.AverageSeriesByElements(ds3,'Fg_Av',['Fg_1','Fg_2'])
-    ## correct the measured soil heat flux for storage in the soil layer above the sensor
-    #qcts.CorrectFgForStorage(cf,ds3,'Fg','Fg_Av','Ts','Sws')
-    ## calculate the available energy
-    #qcts.CalculateAvailableEnergy(ds3,'Fa','Fn','Fg')
-    ## re-apply the quality control checks (range, diurnal and rules)
-    #qcck.do_qcchecks(cf,ds3)
-    #return ds3
-
 def l4qc_FillMetGaps(cf,ds3):
     """
         Fill gaps in met data from other sources
@@ -599,4 +458,3 @@ def l4qc_GapFilledFluxes(cf,ds3):
     # compute daily statistics
     qcts.ComputeDailySums(cf,ds4)
     return ds4
-

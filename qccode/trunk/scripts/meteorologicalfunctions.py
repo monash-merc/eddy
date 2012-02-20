@@ -99,6 +99,7 @@ def theta(T,p):
     # Returns
     #  theta - potential temperature, K
     return (T+273.15)*(100/p)**0.286
+
 def vapourpressure(Ah,Ta):
     # Calculate vapour pressure from absolute humidity and temperature
     #  Ah - absolute humidity, g/m3
