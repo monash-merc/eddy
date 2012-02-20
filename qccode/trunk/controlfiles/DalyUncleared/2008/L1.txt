@@ -14,11 +14,11 @@
 
 [Files]
     [[L1]]
-        xlFilePath = ../../../TERN/Sites/DalyUncleared/Data/Processed/2008/
+        xlFilePath = ../../Sites/DalyUncleared/Data/Processed/2008/
         xlFileName = DalyUncleared_2008_L1_20111016.xls
         xlHeaderRow  = 2
         xl1stDataRow = 5
-        ncFilePath = ../../../TERN/Sites/DalyUncleared/Data/Processed/2008/
+        ncFilePath = ../../Sites/DalyUncleared/Data/Processed/2008/
         ncFileName = DalyUncleared_2008_L1.nc
 
 [Global]

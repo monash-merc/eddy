@@ -112,10 +112,12 @@ nfig = nfig + 1
 fig = plt.figure(nfig,figsize=(plotwidth,plotheight))
 plt.figtext(0.5,0.95,SiteName,horizontalalignment='center',size=16)
 slope2 = numpy.ma.masked_where(correl<0.95,slope)
-qcplot.tsplot(DT_daily,slope,sub=[4,1,1],ylabel='Slope',colours=correl)
-qcplot.tsplot(DT_daily,slope2,sub=[4,1,2],ylabel='Slope',colours=correl)
-qcplot.tsplot(DT_daily,offset,sub=[4,1,3],ylabel='Offset',colours=correl)
-qcplot.tsplot(DT_daily,number,sub=[4,1,4],ylabel='Number',colours=correl)
+offset2 = numpy.ma.masked_where(correl<0.95,offset)
+qcplot.tsplot(DT_daily,slope,sub=[5,1,1],ylabel='Slope',colours=correl)
+qcplot.tsplot(DT_daily,slope2,sub=[5,1,2],ylabel='Slope(r>0.95)',colours=correl)
+qcplot.tsplot(DT_daily,offset,sub=[5,1,3],ylabel='Offset',colours=correl)
+qcplot.tsplot(DT_daily,offset2,sub=[5,1,4],ylabel='Offset(r>0.95)',colours=correl)
+qcplot.tsplot(DT_daily,number,sub=[5,1,5],ylabel='Number',colours=correl)
 
 symbol = ['ro','bo','yo','r+','b+','y+','r*','b*','y*','r^','b^','y^']
 monthlist = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
@@ -131,6 +133,8 @@ for i in [1,2,3,4,5,6,7,8,9,10,11,12]:
         x = ah_HMP1_daily_avg[index]
         y = ah_avgdiff_daily[index]
         plt.plot(x,y,symbol[i-1],label=monthlist[i-1])
+        plt.xlabel('Ah_HMP (g/m3)')
+        plt.ylabel('Ah_7500 - Ah_HMP (g/m3)')
     plt.legend(loc=2,scatterpoints=0,frameon=False)
 
 MnthList = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
@@ -156,14 +160,11 @@ for i in [1,2,3,4,5,6,7,8,9,10,11,12]:
 
 nfig = nfig + 1
 figts = plt.figure(nfig,figsize=(plotwidth,plotheight))
-axts = figts.add_subplot(411)
-a = axts.scatter(DT_daily,slope2,c=correl)
-bxts = figts.add_subplot(412)
-b = bxts.scatter(DT_daily,offset,c=correl)
-cxts = figts.add_subplot(413)
-c = cxts.scatter(DT_daily,ah_stdratio_daily,c=correl)
-dxts = figts.add_subplot(414)
-d = dxts.scatter(DT_daily,ah_rangeratio_daily,c=correl)
+plt.figtext(0.5,0.95,SiteName,horizontalalignment='center',size=16)
+qcplot.tsplot(DT_daily,slope2,sub=[4,1,1],ylabel='m(r>0.95)',colours=correl)
+qcplot.tsplot(DT_daily,offset2,sub=[4,1,2],ylabel='b(r>0.95)',colours=correl)
+qcplot.tsplot(DT_daily,ah_stdratio_daily,sub=[4,1,3],ylabel='Sd(HMP)/Sd(7500)',colours=correl)
+qcplot.tsplot(DT_daily,ah_rangeratio_daily,sub=[4,1,4],ylabel='HMPr/7500r',colours=correl)
 
 class PointBrowser:
     def __init__(self):
@@ -190,9 +191,13 @@ class PointBrowser:
         if event.key not in ('n', 'f', 'b', 'q'): return
 
     def new(self):
+        print 'Creating new XY plot ...'
         self.nfig += 1
         self.figxy = plt.figure(self.nfig,figsize=(5,4))
+        self.figxy.subplots_adjust(bottom=0.15,left=0.15)
         self.axxy = self.figxy.add_subplot(111)
+        self.axxy.set_xlabel('Ah_7500 (g/m3)')
+        self.axxy.set_ylabel('Ah_HMP (g/m3)')
         if self.ind_day!=0:
             self.start_date.append(DT_daily[self.start_ind_day])
             self.end_date.append(DT_daily[self.ind_day])
@@ -223,7 +228,9 @@ class PointBrowser:
         x = ah_7500_30min_1d[self.start_ind_30min:i]
         y = ah_HMP1_30min_1d[self.start_ind_30min:i]
         self.axxy.cla()
-        b = self.axxy.plot(x,y,'b.')
+        self.axxy.plot(x,y,'b.')
+        self.axxy.set_xlabel('Ah_7500 (g/m3)')
+        self.axxy.set_ylabel('Ah_HMP (g/m3)')
         self.coefs = numpy.ma.polyfit(x,y,1)
         xfit = numpy.ma.array([numpy.ma.minimum(x),numpy.ma.maximum(x)])
         yfit = numpy.polyval(self.coefs,xfit)

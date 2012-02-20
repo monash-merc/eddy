@@ -1,9 +1,9 @@
 [Files]
     [[in]]
-        ncFilePath = ../../../TERN/Sites/DalyUncleared/Data/Processed/2007/
+        ncFilePath = ../../Sites/DalyUncleared/Data/Processed/2007/
         ncFileName = DalyUncleared_2007_L3.nc
     [[out]]
-        xlFilePath = ../../../TERN/Sites/DalyUncleared/Data/Processed/2007/
+        xlFilePath = ../../Sites/DalyUncleared/Data/Processed/2007/
         xlFileName = Climatology_2007.xls
 
 [Output]

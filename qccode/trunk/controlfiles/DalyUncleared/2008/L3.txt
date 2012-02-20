@@ -55,12 +55,12 @@
 
 [Files]
     [[L2]]
-        ncFilePath = ../../../TERN/Sites/DalyUncleared/Data/Processed/2008/
+        ncFilePath = ../../Sites/DalyUncleared/Data/Processed/2008/
         ncFileName = DalyUncleared_2008_L2.nc
     [[L3]]
-        ncFilePath = ../../../TERN/Sites/DalyUncleared/Data/Processed/2008/
+        ncFilePath = ../../Sites/DalyUncleared/Data/Processed/2008/
         ncFileName = DalyUncleared_2008_L3.nc
-        xlFilePath = ../../../TERN/Sites/DalyUncleared/Data/Processed/2008/
+        xlFilePath = ../../Sites/DalyUncleared/Data/Processed/2008/
         xlFileName = DalyUncleared_2008_L3.xls
 
 [Output]

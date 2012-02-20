@@ -7,6 +7,8 @@ import numpy
 import qcutils
 
 def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
+    SiteName = dsa.globalattributes['SiteName']
+    PlotDescription = cf['Plots'][str(nFig)]['Title']
     dt = int(dsa.globalattributes['TimeStep'])
     PlotWidth = 13
     PlotHeight = 9
@@ -33,6 +35,7 @@ def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
     plt.ioff()
     fig = plt.figure(int(nFig),figsize=(PlotWidth,PlotHeight))
     fig.clf()
+    plt.figtext(0.5,0.95,SiteName+': '+PlotDescription,ha='center',size=16)
     print time.strftime('%X')+' Generating the plot'
     for ThisOne, n in zip(SeriesList,range(nGraphs)):
         if ThisOne in dsa.series.keys() and ThisOne in dsb.series.keys():
@@ -72,8 +75,11 @@ def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
             ts_axL.xaxis.set_major_formatter(fmt)
             ts_axL.set_xlim(XAxMin,XAxMax)
             ts_axL.set_ylim(LYAxMin,LYAxMax)
-            ts_axL.set_xlabel('',visible=False)
-            TextStr = ThisOne+'('+Units+')'+' '+str(nRecs)+' '+str(nNotM)+' '+str(nMskd)
+            if n==0:
+                ts_axL.set_xlabel('Date',visible=True)
+            else:
+                ts_axL.set_xlabel('',visible=False)
+            TextStr = ThisOne+'('+Units+')'+str(nRecs)+' '+str(nNotM)+' '+str(nMskd)
             plt.figtext(ts_XAxOrg+0.01,YAxOrg+ts_YAxLen-0.025,TextStr,color='b')
             if n > 0: plt.setp(ts_axL.get_xticklabels(), visible=False)
             #Plot the Level 2 data series on the same X axis but with the scale on the right Y axis.
@@ -141,7 +147,12 @@ def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
                 hr2_ax.plot(Hr2,Av2,'y-',Hr2,Mx2,'r-',Hr2,Mn2,'b-')
             plt.xlim(0,24)
             plt.xticks([0,6,12,18,24])
-            if n > 0: plt.setp(hr2_ax.get_xticklabels(), visible=False)
+            if n==0:
+                hr2_ax.set_xlabel('Hour',visible=True)
+            else:
+                hr2_ax.set_xlabel('',visible=False)
+                plt.setp(hr2_ax.get_xticklabels(), visible=False)
+            #if n > 0: plt.setp(hr2_ax.get_xticklabels(), visible=False)
             # vertical lines to show frequency distribution of flags
             bins = numpy.arange(0.5,23.5)
             ind = bins[:len(bins)-1]+0.5
@@ -155,7 +166,12 @@ def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
             bar_ax.vlines(ind,ymin,hist)
             for i,j in zip(ind,hist):
                 if j>0.05*numpy.max(hist): bar_ax.text(i,j+delta,str(int(i)),ha='center',size='small')
-            if n > 0: plt.setp(bar_ax.get_xticklabels(), visible=False)
+            if n==0:
+                bar_ax.set_xlabel('Flag',visible=True)
+            else:
+                bar_ax.set_xlabel('',visible=False)
+                plt.setp(bar_ax.get_xticklabels(), visible=False)
+            #if n > 0: plt.setp(bar_ax.get_xticklabels(), visible=False)
         else:
             txt = '  plttimeseries: series '+ThisOne+' not in data structure'
             print txt
