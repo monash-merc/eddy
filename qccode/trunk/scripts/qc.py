@@ -26,8 +26,6 @@ import qcio
 import qcls
 import qcplot
 import qcutils
-#from interior_xl2nc import autoxl2nc
-#from interior_nc2xl import autonc2xl
 
 
 def startlog():
@@ -64,6 +62,8 @@ class qcgui(Tkinter.Frame):
         self.fileloadLabel.grid(row=1,column=0,columnspan=1)
         self.doxl2nc1Button = Tkinter.Button (self, text="Load Datalogger Data", command=self.do_xl2ncCall )
         self.doxl2nc1Button.grid(row=1,column=1,columnspan=1)
+        self.doxl2nc2Button = Tkinter.Button (self, text="Load Corrected Data", command=self.do_xl2ncCall )
+        self.doxl2nc2Button.grid(row=1,column=4,columnspan=2)
         self.doxl2nc2Button = Tkinter.Button (self, text="Load Gapfilled Data", command=self.do_xl2ncCall )
         self.doxl2nc2Button.grid(row=1,column=6,columnspan=2)
         
@@ -115,9 +115,9 @@ class qcgui(Tkinter.Frame):
         #self.closeplotwindowsButton = Tkinter.Button (self, text="Close plot windows", command=self.do_closeplotwindows )
         #self.closeplotwindowsButton.grid(row=9,column=0,columnspan=1)
         self.quitButton = Tkinter.Button (self, text="Quit", command=self.do_quit )
-        self.quitButton.grid(row=9,column=0,columnspan=1)
+        self.quitButton.grid(row=9,column=1,columnspan=1)
         self.progress = Tkinter.Label(self, text='Waiting for input ...')
-        self.progress.grid(row=9,column=1,columnspan=7)
+        self.progress.grid(row=9,column=2,columnspan=6)
 
     def do_l2qc(self):
         """
@@ -324,7 +324,8 @@ class qcgui(Tkinter.Frame):
         sitename = self.ds3.globalattributes['SiteName']
         self.do_progress(text='Doing L4 QC: '+sitename+' ...')
         if 'firstMonth' in self.cf['General']:
-            self.ds4 = qcls.l4qc_GapFilledFluxes(self.cf,self.ds3)
+            self.ds3b = qcio.nc_read_series(self.cf,'L4')
+            self.ds4 = qcls.l4qc_GapFilledFluxes(self.cf,self.ds3b)
         elif 'zmd' in self.cf['General']:
             self.ds4 = qcls.l4qc_FillMetGaps(self.cf,self.ds3)
         self.do_progress(text='Finished L4: '+sitename)
@@ -474,7 +475,15 @@ class qcgui(Tkinter.Frame):
                     Variables included in output file
             """
         self.do_progress(text='Exporting L2 NetCDF -> Xcel ...')                     # put up the progress message
-        qcio.autonc2xl(self.cf,'L2')
+        if qcutils.incf(self.cf,'Output') and qcutils.haskey(self.cf,'Output','noDefaultXl'):
+            self.cf = qcio.loadcontrolfile('../controlfiles')
+            if len(self.cf)==0:
+                self.do_progress(text='Waiting for input ...')
+                return
+            InLevel = self.cf['General']['InputLevel']
+            qcio.autonc2xl(self.cf,InLevel)
+        else:
+            qcio.autonc2xl(self.cf,'L2')
         self.do_progress(text='Finished L2 Data Export')              # tell the user we are done
         log.info(' Finished saving L2 data')
 
@@ -498,6 +507,14 @@ class qcgui(Tkinter.Frame):
                     Variables included in output file
             """
         self.do_progress(text='Exporting L3 NetCDF -> Xcel ...')                     # put up the progress message
+        if qcutils.incf(self.cf,'Output') and qcutils.haskey(self.cf,'Output','noDefaultXl'):
+            self.cf = qcio.loadcontrolfile('../controlfiles')
+            if len(self.cf)==0:
+                self.do_progress(text='Waiting for input ...')
+                return
+            InLevel = self.cf['General']['InputLevel']
+            qcio.autonc2xl(self.cf,InLevel)
+        else:
         qcio.autonc2xl(self.cf,'L3')
         self.do_progress(text='Finished L3 Data Export')              # tell the user we are done
         log.info(' Finished saving L3 data')
@@ -522,6 +539,14 @@ class qcgui(Tkinter.Frame):
                     Variables included in output file
             """
         self.do_progress(text='Exporting L4 NetCDF -> Xcel ...')                     # put up the progress message
+        if qcutils.incf(self.cf,'Output') and qcutils.haskey(self.cf,'Output','noDefaultXl'):
+            self.cf = qcio.loadcontrolfile('../controlfiles')
+            if len(self.cf)==0:
+                self.do_progress(text='Waiting for input ...')
+                return
+            InLevel = self.cf['General']['InputLevel']
+            qcio.autonc2xl(self.cf,InLevel)
+        else:
         qcio.autonc2xl(self.cf,'L4')
         self.do_progress(text='Finished L4 Data Export')              # tell the user we are done
         log.info(' Finished saving L4 data')
@@ -542,6 +567,27 @@ class qcgui(Tkinter.Frame):
                 ControlFile contents (see ControlFile/Templates/L1_xl2nc.txt for
                 example):
                     [General] (where available):
+                        Input (excel) and output (netCDF) level
+                    [Files]:
+                        Input file name and path
+                        Excel header and 1st data rows (first row = 0)
+                        Output netCDF file name and path
+                    [Global]:
+                        meta-data
+                    [Variables]:
+                        Variable name (in netCDF and excel files)
+                        Excel spreadsheet name
+                        Description
+                        Units
+            
+            Level 3:
+                Ingest excel database with QA/QC and corrected fluxes
+                Ingest flags generated in L3
+                Outputs L3 netCDF file to ncData folder
+                controlfile:
+                    L3a_xl2nc_corrected
+                controlfile contents:
+                    [General]:
                         Input (excel) and output (netCDF) level
                     [Files]:
                         Input file name and path
@@ -582,7 +628,7 @@ class qcgui(Tkinter.Frame):
             self.do_progress(text='Waiting for input ...')
             return
         self.do_progress(text='Importing Xcel file -> NetCDF v4 ...')
-        if 'InLevel' in self.cf['General']:
+        if qcutils.incf(self.cf,'General') and qcutils.haskey(self.cf,'General','InLevel'):
             InLevel = self.cf['General']['InLevel']
             OutLevel = self.cf['General']['OutLevel']
             qcio.autoxl2nc(self.cf,InLevel,OutLevel)
