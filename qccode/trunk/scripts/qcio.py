@@ -103,7 +103,7 @@ def get_datetime(ds):
     day, hour, minute and second series stored in the netCDF file.'''
     log.info(' Getting the date and time series')
     nRecs = len(ds.series['Year']['Data'])
-    ds.series['DateTime'] = {}
+    ds.series[unicode('DateTime')] = {}
     ds.series['DateTime']['Data'] = []
     for i in range(nRecs):
         ds.series['DateTime']['Data'].append(datetime.datetime(int(ds.series['Year']['Data'][i]),

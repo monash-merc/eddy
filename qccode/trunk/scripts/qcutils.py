@@ -10,7 +10,7 @@ import xlwt
 log = logging.getLogger('qc.utils')
 
 def CreateSeries(ds,Label,Data,FlagList,Description,Units):
-    ds.series[Label] = {}
+    ds.series[unicode(Label)] = {}
     ds.series[Label]['Data'] = numpy.ma.filled(Data,float(-9999))
     ds.series[Label]['Flag'] = MakeQCFlag(ds,FlagList)
     ds.series[Label]['Attr'] = {}
@@ -154,7 +154,7 @@ def GetSeriesStats(cf,ds):
     xlRow = xlRow + 1
     xlCol = 0
     dsVarNames = ds.series.keys()
-    dsVarNames.sort(key=str.lower)
+    dsVarNames.sort(key=unicode.lower)
     for ThisOne in dsVarNames:
         data,flag = GetSeries(ds, ThisOne)
         hist, bin_edges = numpy.histogram(flag, bins=bins)
