@@ -1,5 +1,8 @@
 import ast
 import qcutils
+import logging
+
+log = logging.getLogger('qc.cf')
 
 def GetMergeList(cf,ThisOne,default=""):
     if ThisOne in cf['Variables'].keys():
@@ -7,13 +10,13 @@ def GetMergeList(cf,ThisOne,default=""):
             if 'Source' in cf['Variables'][ThisOne]['MergeSeries'].keys():
                 mlist = ast.literal_eval(cf['Variables'][ThisOne]['MergeSeries']['Source'])
             else:
-                print '  GetMergeList: key "Source" not in control file MergeSeries section for '+ThisOne
+                log.error('  GetMergeList: key "Source" not in control file MergeSeries section for '+ThisOne)
                 mlist = default
         else:
-            #print '  GetMergeList: key "MergeSeries" not in control file for '+ThisOne
+            #log.error('  GetMergeList: key "MergeSeries" not in control file for '+ThisOne)
             mlist = default
     else:
-        print '  GetMergeList: '+ThisOne+' not in control file'
+        log.error('  GetMergeList: '+ThisOne+' not in control file')
         mlist = default
     return mlist
 
@@ -23,13 +26,13 @@ def GetAverageList(cf,ThisOne,default=""):
             alist = ast.literal_eval(cf['Variables'][ThisOne]['AverageSeries']['Source'])
         else:
             if len(str(default))==0:
-                print '  GetAverageList: key "Source" not in control file AverageSeries section for '+ThisOne
+                log.error('  GetAverageList: key "Source" not in control file AverageSeries section for '+ThisOne)
                 alist = ""
             else:
                 alist = str(default)
     else:
         if len(str(default))==0:
-            print '  GetAverageList: '+ThisOne+ ' not in control file or it does not have the "AverageSeries" key'
+            log.error('  GetAverageList: '+ThisOne+ ' not in control file or it does not have the "AverageSeries" key')
             alist = ""
         else:
             alist = str(default)
