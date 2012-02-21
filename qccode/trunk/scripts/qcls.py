@@ -1,5 +1,5 @@
 """
-    OzFlux QC v1.5 30 Nov 2011;
+    OzFlux QC v1.5.x 21 Feb 2012;
 
     Version History:
     <<v1.0: 21 July 2011, code diversion reconciliation, PIsaac & JCleverly>>
@@ -9,6 +9,7 @@
     <<v1.3 26 Sep 2011, intermediate editing at OzFlux Black Mountain data workshop, PIsaac & JCleverly>>
     <<v1.4 30 Sep 2011, final version arrising from OzFlux Black Mountain data workshop, PIsaac & JCleverly>>
     <<v1.5 30 Nov 2011, revised l4qc calls in qc.py & Wombat modifications integrated, JCleverly>>
+    <<v1.5.x 21 Feb 2012, code rationalisation and generalisation in progress, PIsaac & JCleverly>>
 """
 
 import sys
