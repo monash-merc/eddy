@@ -51,7 +51,7 @@ public class GlobalMetadata extends Domain {
 	@Column(name = "name", length = 200)
 	private String name;
 
-	@Column(name = "value")
+	@Column(name = "value" ,length = 4000)
 	private String value;
 
 	@ManyToOne(targetEntity = Dataset.class)

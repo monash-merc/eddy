@@ -22,8 +22,7 @@
     <br/>
     <div class="mcpop_field">
         <div class="mcpop_input_justify">
-            To add an associated researcher, please enter a researcher name or E-mail to find whether a researcher exists or not.
-            If not exist, you need to enter a researcher information manually. (Highly recommend using an E-mail address to find a researcher information)
+            To add an associated researcher, please enter the researcher name or E-mail address (preferred method).  If the researcher does not currently exist in Ozflux, you will need to enter a researcher information manually
         </div>
     </div>
     <br/>
