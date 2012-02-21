@@ -1,11 +1,14 @@
 """
-    OzFlux QC v1.2 23 Aug 2011;
+    OzFlux QC v1.5 30 Nov 2011;
 
     Version History:
     <<v1.0: 21 July 2011, code diversion reconciliation, PIsaac & JCleverly>>
     <<v1.0b 25 July 2011, with log capability, JCleverly>>
     <<v1.1b 26 July 2011, FhvtoFh output generalised and added to all sites qcl3, qcts functions modified to accept met constants or variables, JCleverly>>
     <<v1.2 23 Aug 2011, daily_sums functions moved to qcts module, JCleverly>>
+    <<v1.3 26 Sep 2011, intermediate editing at OzFlux Black Mountain data workshop, PIsaac & JCleverly>>
+    <<v1.4 30 Sep 2011, final version arrising from OzFlux Black Mountain data workshop, PIsaac & JCleverly>>
+    <<v1.5 30 Nov 2011, revised l4qc calls in qc.py & Wombat modifications integrated, JCleverly>>
 """
 
 import sys
@@ -174,15 +177,8 @@ def l3qc_AliceSpringsMulga(cf,ds2):
     ds3.globalattributes['Functions'] = 'AddMetVars, ApplyLinear, ApplyLinearDrift, ApplyLinearDriftLocal, CorrectSWC, CoordRotation, MassmanApprox, Massman, CalculateFluxesRM, FhvtoFh, Fe_WPLcov, Fc_WPLcov, CorrectFgForStorage, Average3SeriesByElements, do_qcchecks, gaps'
     # add relevant meteorological values to L3 data
     qcts.AddMetVars(ds3)
-    # apply linear corrections to the LI-7500 carbon data
-    qcts.ApplyLinear(cf,ds3,'Cc_7500_Av')
-    qcts.ApplyLinear(cf,ds3,'C_ppm')
-    qcts.ApplyLinear(cf,ds3,'Ah_7500_Av')
-    qcts.ApplyLinear(cf,ds3,'H_ppt')
-    qcts.ApplyLinearDrift(cf,ds3,'Cc_7500_Av')
-    qcts.ApplyLinearDrift(cf,ds3,'C_ppm')
-    qcts.ApplyLinearDriftLocal(cf,ds3,'Cc_7500_Av')
-    qcts.ApplyLinearDriftLocal(cf,ds3,'C_ppm')
+    # apply linear corrections to the data
+    qcck.do_linear(cf,ds3)
     # correct measured soil water content using empirical relationship to collected samples
     qcts.CorrectSWC(cf,ds3)
     # do the 2D coordinate rotation
