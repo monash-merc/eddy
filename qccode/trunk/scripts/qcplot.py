@@ -24,7 +24,7 @@ def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
     ts_XAxLen = 0.6
     hr_XAxLen = 0.1
     Month = dsa.series['Month']['Data'][0]
-    print time.strftime('%X')+' Plotting series: ',SeriesList
+    log.info(' Plotting series: '+str(SeriesList))
     nGraphs = len(SeriesList)
     ts_YAxLen = (0.85 - (nGraphs - 1)*0.02)/nGraphs
     yaxOrgOffset = (0.85 - ts_YAxLen)/(nGraphs - 1)
@@ -43,7 +43,6 @@ def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
     fig = plt.figure(int(nFig),figsize=(PlotWidth,PlotHeight))
     fig.clf()
     plt.figtext(0.5,0.95,SiteName+': '+PlotDescription,ha='center',size=16)
-    print time.strftime('%X')+' Generating the plot'
     for ThisOne, n in zip(SeriesList,range(nGraphs)):
         if ThisOne in dsa.series.keys() and ThisOne in dsb.series.keys():
             aflag = dsa.series[ThisOne]['Flag']
@@ -58,9 +57,9 @@ def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
             if numpy.ma.count(L1YArray)==0:
                 L1YArray = numpy.ma.zeros(numpy.size(L1YArray))
             # check the control file to see if the Y ax1s minima have been specified
-            if 'YLMin' in cf['Plots'][str(nFig)]:                               # Y axis minima specified
+            if qcutils.cfkeycheck(cf,'Plots',str(nFig),'YLMin'):                               # Y axis minima specified
                 minlist = ast.literal_eval(cf['Plots'][str(nFig)]['YLMin'])     # Evaluate the minima list
-                log.info(minlist)
+                log.info(minlist[SeriesList.index(ThisOne)])
                 if str(minlist[SeriesList.index(ThisOne)])=='Auto':             # This entry is 'Auto' ...
                     LYAxMin = numpy.ma.minimum(L1YArray)                       # ... so take the array minimum value
                 else:
@@ -68,7 +67,7 @@ def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
             else:
                 LYAxMin = numpy.ma.minimum(L1YArray)                           # Y axis minima not given, use auto
             # now do the same for the Y axis maxima
-            if 'YLMax' in cf['Plots'][str(nFig)]:
+            if 'YLMax' in cf['Plots'][str(nFig)].keys():
                 maxlist = ast.literal_eval(cf['Plots'][str(nFig)]['YLMax'])
                 if str(maxlist[SeriesList.index(ThisOne)])=='Auto':
                     LYAxMax = numpy.ma.maximum(L1YArray)
@@ -99,7 +98,7 @@ def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
             if numpy.ma.count(L2YArray)==0:
                 L2YArray = numpy.ma.zeros(numpy.size(L2YArray))
             # check the control file to see if the Y ax1s minima have been specified
-            if 'YRMin' in cf['Plots'][str(nFig)]:                               # Y axis minima specified
+            if 'YRMin' in cf['Plots'][str(nFig)].keys():                               # Y axis minima specified
                 minlist = ast.literal_eval(cf['Plots'][str(nFig)]['YRMin'])     # Evaluate the minima list
                 if str(minlist[SeriesList.index(ThisOne)])=='Auto':             # This entry is 'Auto' ...
                     RYAxMin = numpy.ma.minimum(L2YArray)                        # ... so take the array minimum value
@@ -108,7 +107,7 @@ def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
             else:
                 RYAxMin = numpy.ma.minimum(L2YArray)                            # Y axis minima not given, use auto
             # now do the same for the Y axis maxima
-            if 'YRMax' in cf['Plots'][str(nFig)]:
+            if 'YRMax' in cf['Plots'][str(nFig)].keys():
                 maxlist = ast.literal_eval(cf['Plots'][str(nFig)]['YRMax'])
                 if str(maxlist[SeriesList.index(ThisOne)])=='Auto':
                     RYAxMax = numpy.ma.maximum(L2YArray)
@@ -181,8 +180,7 @@ def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
                 plt.setp(bar_ax.get_xticklabels(), visible=False)
             #if n > 0: plt.setp(bar_ax.get_xticklabels(), visible=False)
         else:
-            txt = '  plttimeseries: series '+ThisOne+' not in data structure'
-            print txt
+            log.error('  plttimeseries: series '+ThisOne+' not in data structure')
     fig.show()
 
 def plotxy(nFig,plt_cf,dsa,dsb,si,ei):
