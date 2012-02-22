@@ -96,6 +96,8 @@ class qcgui(Tkinter.Frame):
         self.plotendEntry = Tkinter.Entry(self)
         self.plotendEntry.grid(row=6,column=5,columnspan=2)
         
+        self.closeplotwindowsButton = Tkinter.Button (self, text="Close plot windows", command=self.do_closeplotwindows )
+        self.closeplotwindowsButton.grid(row=7,column=0,columnspan=1)
         self.plotL1L2Button = Tkinter.Button (self, text="Plot L1 & L2 Data", command=self.do_plotL1L2 )
         self.plotL1L2Button.grid(row=7,column=2,columnspan=2)
         self.plotL3L3Button = Tkinter.Button (self, text="Plot L3 Data", command=self.do_plotL3L3 )
@@ -112,10 +114,8 @@ class qcgui(Tkinter.Frame):
         self.savexL4Button = Tkinter.Button (self, text="Save L4 Gap Filled data", command=self.do_savexL4 )
         self.savexL4Button.grid(row=8,column=6,columnspan=2)
         
-        #self.closeplotwindowsButton = Tkinter.Button (self, text="Close plot windows", command=self.do_closeplotwindows )
-        #self.closeplotwindowsButton.grid(row=9,column=0,columnspan=1)
         self.quitButton = Tkinter.Button (self, text="Quit", command=self.do_quit )
-        self.quitButton.grid(row=9,column=1,columnspan=1)
+        self.quitButton.grid(row=9,column=0,columnspan=1)
         self.progress = Tkinter.Label(self, text='Waiting for input ...')
         self.progress.grid(row=9,column=2,columnspan=6)
 
@@ -332,7 +332,7 @@ class qcgui(Tkinter.Frame):
         log.info(' Finished L4: '+sitename)
         self.do_progress(text='Saving L4 Gap Filled NetCDF data ...')                     # put up the progress message
         qcio.nc_write_series(self.cf,self.ds4,'L4')                   # save the L4 data
-        if qcutils.incf(self.cf,'Output') and qcutils.haskey(self.cf,'Output','OFL2'):
+        if qcutils.cfkeycheck(self.cf,'Output','OFL2'):
             qcio.nc_write_OzFlux_series(self.cf,self.ds4,'L4_GapFilled')                   # save the L4 data
         self.do_progress(text='Finished saving L4 gap filled NetCDF data')              # tell the user we are done
         log.info(' Finished saving L4 gap filled NetCDF data')
@@ -451,7 +451,7 @@ class qcgui(Tkinter.Frame):
         self.do_progress(text='Closing plot windows ...')             # tell the user what we're doing
         log.info(' Closing plot windows ...')
         fig_numbers = [n.num for n in matplotlib._pylab_helpers.Gcf.get_all_fig_managers()]
-        print fig_numbers
+        log.info('  Closing plot windows: '+fig_numbers)
         for n in fig_numbers:
             matplotlib.pyplot.close(n)
         self.do_progress(text='Waiting for input ...')             # tell the user what we're doing
@@ -475,7 +475,7 @@ class qcgui(Tkinter.Frame):
                     Variables included in output file
             """
         self.do_progress(text='Exporting L2 NetCDF -> Xcel ...')                     # put up the progress message
-        if qcutils.incf(self.cf,'Output') and qcutils.haskey(self.cf,'Output','noDefaultXl'):
+        if qcutils.cfkeycheck(self.cf,'Output','noDefaultXl'):
             self.cf = qcio.loadcontrolfile('../controlfiles')
             if len(self.cf)==0:
                 self.do_progress(text='Waiting for input ...')
@@ -507,7 +507,7 @@ class qcgui(Tkinter.Frame):
                     Variables included in output file
             """
         self.do_progress(text='Exporting L3 NetCDF -> Xcel ...')                     # put up the progress message
-        if qcutils.incf(self.cf,'Output') and qcutils.haskey(self.cf,'Output','noDefaultXl'):
+        if qcutils.cfkeycheck(self.cf,'Output','noDefaultXl'):
             self.cf = qcio.loadcontrolfile('../controlfiles')
             if len(self.cf)==0:
                 self.do_progress(text='Waiting for input ...')
@@ -539,7 +539,7 @@ class qcgui(Tkinter.Frame):
                     Variables included in output file
             """
         self.do_progress(text='Exporting L4 NetCDF -> Xcel ...')                     # put up the progress message
-        if qcutils.incf(self.cf,'Output') and qcutils.haskey(self.cf,'Output','noDefaultXl'):
+        if qcutils.cfkeycheck(self.cf,'Output','noDefaultXl'):
             self.cf = qcio.loadcontrolfile('../controlfiles')
             if len(self.cf)==0:
                 self.do_progress(text='Waiting for input ...')
@@ -628,7 +628,7 @@ class qcgui(Tkinter.Frame):
             self.do_progress(text='Waiting for input ...')
             return
         self.do_progress(text='Importing Xcel file -> NetCDF v4 ...')
-        if qcutils.incf(self.cf,'General') and qcutils.haskey(self.cf,'General','InLevel'):
+        if qcutils.cfkeycheck(self.cf,'General','InLevel'):
             InLevel = self.cf['General']['InLevel']
             OutLevel = self.cf['General']['OutLevel']
             qcio.autoxl2nc(self.cf,InLevel,OutLevel)

@@ -13,9 +13,15 @@ def cfkeycheck(cf,Base='Variables',ThisOne=[],key=[]):
     if len(ThisOne) == 0:
         return
     if len(key) == 0:
-        return ThisOne in cf[Base].keys()
+        if Base in cf.keys() and ThisOne in cf[Base].keys():
+            return ThisOne in cf[Base].keys()
+        else:
+            return
     else:
-        return key in cf[Base][ThisOne].keys()
+        if Base in cf.keys() and ThisOne in cf[Base].keys():
+            return key in cf[Base][ThisOne].keys()
+        else:
+            return
 
 def CreateSeries(ds,Label,Data,FlagList,Description,Units):
     ds.series[unicode(Label)] = {}
