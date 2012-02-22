@@ -515,7 +515,7 @@ class qcgui(Tkinter.Frame):
             InLevel = self.cf['General']['InputLevel']
             qcio.autonc2xl(self.cf,InLevel)
         else:
-        qcio.autonc2xl(self.cf,'L3')
+            qcio.autonc2xl(self.cf,'L3')
         self.do_progress(text='Finished L3 Data Export')              # tell the user we are done
         log.info(' Finished saving L3 data')
 
@@ -547,7 +547,7 @@ class qcgui(Tkinter.Frame):
             InLevel = self.cf['General']['InputLevel']
             qcio.autonc2xl(self.cf,InLevel)
         else:
-        qcio.autonc2xl(self.cf,'L4')
+            qcio.autonc2xl(self.cf,'L4')
         self.do_progress(text='Finished L4 Data Export')              # tell the user we are done
         log.info(' Finished saving L4 data')
 
