@@ -451,7 +451,7 @@ class qcgui(Tkinter.Frame):
         self.do_progress(text='Closing plot windows ...')             # tell the user what we're doing
         log.info(' Closing plot windows ...')
         fig_numbers = [n.num for n in matplotlib._pylab_helpers.Gcf.get_all_fig_managers()]
-        log.info('  Closing plot windows: '+fig_numbers)
+        log.info('  Closing plot windows: '+str(fig_numbers))
         for n in fig_numbers:
             matplotlib.pyplot.close(n)
         self.do_progress(text='Waiting for input ...')             # tell the user what we're doing
