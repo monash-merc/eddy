@@ -10,8 +10,12 @@ def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
     SiteName = dsa.globalattributes['SiteName']
     PlotDescription = cf['Plots'][str(nFig)]['Title']
     dt = int(dsa.globalattributes['TimeStep'])
-    PlotWidth = 13
-    PlotHeight = 9
+    if qcutils.cfkeycheck(cf,'PlotSpec','Width'):
+        PlotWidth = ast.literal_eval(cf['PlotSpec']['Width'])
+        PlotHeight = ast.literal_eval(cf['PlotSpec']['Height'])
+    else:
+        PlotWidth = 13
+        PlotHeight = 9
     ts_YAxOrg = 0.08
     ts_XAxOrg = 0.06
     ts_XAxLen = 0.6

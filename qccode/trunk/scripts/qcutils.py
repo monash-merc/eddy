@@ -9,6 +9,14 @@ import xlwt
 
 log = logging.getLogger('qc.utils')
 
+def cfkeycheck(cf,Base='Variables',ThisOne=[],key=[]):
+    if len(ThisOne) == 0:
+        return
+    if len(key) == 0:
+        return ThisOne in cf[Base].keys()
+    else:
+        return key in cf[Base][ThisOne].keys()
+
 def CreateSeries(ds,Label,Data,FlagList,Description,Units):
     ds.series[unicode(Label)] = {}
     ds.series[Label]['Data'] = numpy.ma.filled(Data,float(-9999))
