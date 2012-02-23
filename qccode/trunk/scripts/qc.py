@@ -15,6 +15,7 @@
         7:  Export excel dataset from NetCDF file
     """
 
+import ast
 import copy
 import datetime
 import logging
@@ -363,11 +364,11 @@ class qcgui(Tkinter.Frame):
                     qcplot.plotxy(nFig,plt_cf,self.ds1,self.ds2,si,ei)
                 else:
                     self.do_progress(text='Plotting L1 and L2 QC ...')
-                    SeriesList = eval(plt_cf['Variables'])
+                    SeriesList = ast.literal_eval(plt_cf['Variables'])
                     qcplot.plottimeseries(self.cf,nFig,SeriesList,self.ds1,self.ds2,si,ei)
             else:
                 self.do_progress(text='Plotting L1 and L2 QC ...')
-                SeriesList = eval(plt_cf['Variables'])
+                SeriesList = ast.literal_eval(plt_cf['Variables'])
                 qcplot.plottimeseries(self.cf,nFig,SeriesList,self.ds1,self.ds2,si,ei)
         self.do_progress(text='Finished plotting L1 and L2')
         log.info(' Finished plotting L1 and L2, check the GUI')
@@ -389,7 +390,7 @@ class qcgui(Tkinter.Frame):
                                      str(self.ds3.series['DateTime']['Data'][-1]))
         self.do_progress(text='Plotting L3 QC ...')
         for nFig in self.cf['Plots'].keys():
-            SeriesList = eval(self.cf['Plots'][str(nFig)]['Variables'])
+            SeriesList = ast.literal_eval(self.cf['Plots'][str(nFig)]['Variables'])
             si = qcutils.GetDateIndex(self.ds3.series['DateTime']['Data'],self.plotstartEntry.get(),0)
             ei = qcutils.GetDateIndex(self.ds3.series['DateTime']['Data'],self.plotendEntry.get(),-1)
             qcplot.plottimeseries(self.cf,nFig,SeriesList,self.ds3,self.ds3,si,ei)
@@ -415,7 +416,7 @@ class qcgui(Tkinter.Frame):
                                      str(self.ds3.series['DateTime']['Data'][-1]))
         self.do_progress(text='Plotting L3 and L4 QC ...')
         for nFig in self.cf['Plots'].keys():
-            SeriesList = eval(self.cf['Plots'][str(nFig)]['Variables'])
+            SeriesList = ast.literal_eval(self.cf['Plots'][str(nFig)]['Variables'])
             si = qcutils.GetDateIndex(self.ds3.series['DateTime']['Data'],self.plotstartEntry.get(),0)
             ei = qcutils.GetDateIndex(self.ds3.series['DateTime']['Data'],self.plotendEntry.get(),-1)
             qcplot.plottimeseries(self.cf,nFig,SeriesList,self.ds3,self.ds4,si,ei)

@@ -1,5 +1,5 @@
 """
-    OzFlux QC v1.5.x 21 Feb 2012;
+    OzFlux QC v1.5.1 21 Feb 2012;
 
     Version History:
     <<v1.0: 21 July 2011, code diversion reconciliation, PIsaac & JCleverly>>
@@ -9,7 +9,8 @@
     <<v1.3 26 Sep 2011, intermediate editing at OzFlux Black Mountain data workshop, PIsaac & JCleverly>>
     <<v1.4 30 Sep 2011, final version arrising from OzFlux Black Mountain data workshop, PIsaac & JCleverly>>
     <<v1.5 30 Nov 2011, revised l4qc calls in qc.py & Wombat modifications integrated, JCleverly>>
-    <<v1.5.x 21 Feb 2012, code rationalisation and generalisation in progress, PIsaac & JCleverly>>
+    <<v1.5.1 21 Feb 2012, code rationalisation and generalisation in progress, PIsaac & JCleverly>>
+    <<v1.5.2 24 Feb 2012, de-bugging completion for ASM, PIsaac & JCleverly>>
 """
 
 import sys
@@ -307,12 +308,12 @@ def l3qc_Standard(cf,ds2):
     # apply linear corrections to the data
     qcck.do_linear(cf,ds3)
     # merge the HMP and corrected 7500 data
-    srclist = qccf.GetMergeList(cf,'Ah_EC',default=['Ah_HMP_01'])
+    srclist = qcutils.GetMergeList(cf,'Ah_EC',default=['Ah_HMP_01'])
     qcts.MergeSeries(ds3,'Ah_EC',srclist,[0,10])
     # get the air temperature from the CSAT virtual temperature
     qcts.TaFromTv(ds3,'Ta_CSAT','Tv_CSAT','Ah_EC','ps')
     # merge the air temperature from the HMP with that derived from the CSAT
-    srclist = qccf.GetMergeList(cf,'Ta_EC',default=['Ta_HMP_01'])
+    srclist = qcutils.GetMergeList(cf,'Ta_EC',default=['Ta_HMP_01'])
     qcts.MergeSeries(ds3,'Ta_EC',srclist,[0,10])
     # do the 2D coordinate rotation
     qcts.CoordRotation2D(ds3)
@@ -326,12 +327,12 @@ def l3qc_Standard(cf,ds2):
     # correct the CO2 flux
     qcts.Fc_WPL(ds3,'Fc_wpl','Fc_raw','Fh_rv','Fe_wpl','Ta_EC','Ah_EC','Cc_7500_Av','ps')
     # merge the incoming shortwave radiation from the Kipp and Zonen CNR1 and any other pyranometers available
-    srclist = qccf.GetMergeList(cf,'Fsd',default=['Fsd'])
+    srclist = qcutils.GetMergeList(cf,'Fsd',default=['Fsd'])
     qcts.MergeSeries(ds3,'Fsd',srclist,[0,10])
     # calculate the net radiation from the Kipp and Zonen CNR1
     qcts.CalculateNetRadiation(ds3,'Fn_KZ','Fsd','Fsu','Fld','Flu')
     # combine the net radiation from the Kipp and Zonen CNR1 and the NRlite
-    srclist = qccf.GetMergeList(cf,'Fn',default=['Fn_KZ'])
+    srclist = qcutils.GetMergeList(cf,'Fn',default=['Fn_KZ'])
     qcts.MergeSeries(ds3,'Fn',srclist,[0,10])
     # average the soil heat flux data
     srclist = qccf.GetAverageList(cf,'Fg_01',default=['Fg_01a'])

@@ -185,8 +185,8 @@ def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
 def plotxy(nFig,plt_cf,dsa,dsb,si,ei):
     fig = plt.figure(int(nFig))
     fig.clf()
-    XSeries = eval(plt_cf['XSeries'])
-    YSeries = eval(plt_cf['YSeries'])
+    XSeries = ast.literal_eval(plt_cf['XSeries'])
+    YSeries = ast.literal_eval(plt_cf['YSeries'])
     for xname,yname in zip(XSeries,YSeries):
         xa,flag = qcutils.GetSeriesasMA(dsa,xname,si=si,ei=ei)
         ya,flag = qcutils.GetSeriesasMA(dsa,yname,si=si,ei=ei)

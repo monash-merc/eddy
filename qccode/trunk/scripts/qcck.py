@@ -1,3 +1,4 @@
+import ast
 import copy
 import constants as c
 import datetime
@@ -109,7 +110,7 @@ def do_excludedates(cf,ds,ThisOne):
             ExcludeList = cf['Variables'][ThisOne]['ExcludeDates'].keys()
             NumExclude = len(ExcludeList)
             for i in range(NumExclude):
-                ExcludeDateList = eval(cf['Variables'][ThisOne]['ExcludeDates'][str(i)])
+                ExcludeDateList = ast.literal_eval(cf['Variables'][ThisOne]['ExcludeDates'][str(i)])
                 try:
                     si = ldt.index(datetime.datetime.strptime(ExcludeDateList[0],'%Y-%m-%d %H:%M'))
                 except ValueError:
@@ -129,7 +130,7 @@ def do_excludehours(cf,ds,ThisOne):
             ExcludeList = cf['Variables'][ThisOne]['ExcludeHours'].keys()
             NumExclude = len(ExcludeList)
             for i in range(NumExclude):
-                ExcludeHourList = eval(cf['Variables'][ThisOne]['ExcludeHours'][str(i)])
+                ExcludeHourList = ast.literal_eval(cf['Variables'][ThisOne]['ExcludeHours'][str(i)])
                 try:
                     si = ldt.index(datetime.datetime.strptime(ExcludeHourList[0],'%Y-%m-%d %H:%M'))
                 except ValueError:

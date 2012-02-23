@@ -1,4 +1,5 @@
 from configobj import ConfigObj
+import ast
 import datetime
 import numpy
 import os
@@ -214,7 +215,7 @@ def xl_write_series(cf,ds,level):
     xlFlagSheet = xlFile.add_sheet('Flag')
     xlCol = 0
     VariablesInFile = ds.series.keys()
-    VariablesToOutput = eval(cf['Output'][level])
+    VariablesToOutput = ast.literal_eval(cf['Output'][level])
     # write the xl date/time value to the first column of the worksheets
     d_xf = xlwt.easyxf(num_format_str='dd/mm/yyyy hh:mm')
     for j in range(nRecs):
@@ -367,7 +368,7 @@ def nc_write_OzFlux_series(cf,ds,level):
     setattr(ncFile,'NumRecs',str(nRecs))
     setattr(ncFile,'Level',level)
     ncFile.createDimension('Time',nRecs)
-    SeriesList = eval(cf['Output']['OFL2'])
+    SeriesList = ast.literal_eval(cf['Output']['OFL2'])
     VariableList = ds.series.keys()
     for ThisOne in ds.series.keys():
         if ThisOne not in SeriesList:

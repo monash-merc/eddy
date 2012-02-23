@@ -109,7 +109,7 @@ def ApplyLinear(cf,ds,ThisOne):
         ldt = ds.series['DateTime']['Data']
         LinearList = cf['Variables'][ThisOne]['Linear'].keys()
         for i in range(len(LinearList)):
-            LinearItemList = eval(cf['Variables'][ThisOne]['Linear'][str(i)])
+            LinearItemList = ast.literal_eval(cf['Variables'][ThisOne]['Linear'][str(i)])
             try:
                 si = ldt.index(datetime.datetime.strptime(LinearItemList[0],'%Y-%m-%d %H:%M'))
             except ValueError:
@@ -147,7 +147,7 @@ def ApplyLinearDrift(cf,ds,ThisOne):
         ldt = ds.series['DateTime']['Data']
         DriftList = cf['Variables'][ThisOne]['Drift'].keys()
         for i in range(len(DriftList)):
-            DriftItemList = eval(cf['Variables'][ThisOne]['Drift'][str(i)])
+            DriftItemList = ast.literal_eval(cf['Variables'][ThisOne]['Drift'][str(i)])
             try:
                 si = ldt.index(datetime.datetime.strptime(DriftItemList[0],'%Y-%m-%d %H:%M'))
             except ValueError:
@@ -190,7 +190,7 @@ def ApplyLinearDriftLocal(cf,ds,ThisOne):
         ldt = ds.series['DateTime']['Data']
         DriftList = cf['Variables'][ThisOne]['LocalDrift'].keys()
         for i in range(len(DriftList)):
-            DriftItemList = eval(cf['Variables'][ThisOne]['LocalDrift'][str(i)])
+            DriftItemList = ast.literal_eval(cf['Variables'][ThisOne]['LocalDrift'][str(i)])
             try:
                 si = ldt.index(datetime.datetime.strptime(DriftItemList[0],'%Y-%m-%d %H:%M'))
             except ValueError:
@@ -1044,14 +1044,14 @@ def CorrectSWC(cf,ds):
             TDR_b1: parameter in exponential model, actual = b0 * exp(b1 * sensor)
             TDR_t: threshold parameter for switching from exponential to logarithmic model
         """
-    SWCempList = eval(cf['Soil']['empSWCin'])
-    SWCoutList = eval(cf['Soil']['empSWCout'])
-    SWCattr = eval(cf['Soil']['SWCattr'])
+    SWCempList = ast.literal_eval(cf['Soil']['empSWCin'])
+    SWCoutList = ast.literal_eval(cf['Soil']['empSWCout'])
+    SWCattr = ast.literal_eval(cf['Soil']['SWCattr'])
     if cf['General']['TDR']=='Yes':
-        TDRempList = eval(cf['Soil']['empTDRin'])
-        TDRoutList = eval(cf['Soil']['empTDRout'])
-        TDRlinList = eval(cf['Soil']['linTDRin'])
-        TDRattr = eval(cf['Soil']['TDRattr'])
+        TDRempList = ast.literal_eval(cf['Soil']['empTDRin'])
+        TDRoutList = ast.literal_eval(cf['Soil']['empTDRout'])
+        TDRlinList = ast.literal_eval(cf['Soil']['linTDRin'])
+        TDRattr = ast.literal_eval(cf['Soil']['TDRattr'])
         TDR_a0 = float(cf['Soil']['TDR_a0'])
         TDR_a1 = float(cf['Soil']['TDR_a1'])
         TDR_b0 = float(cf['Soil']['TDR_b0'])
@@ -1126,7 +1126,7 @@ def CorrectWindDirection(cf,ds,Wd_in):
     ldt = ds.series['DateTime']['Data']
     KeyList = cf['Variables'][Wd_in]['Correction'].keys()
     for i in range(len(KeyList)):
-        ItemList = eval(cf['Variables'][Wd_in]['Correction'][str(i)])
+        ItemList = ast.literal_eval(cf['Variables'][Wd_in]['Correction'][str(i)])
         try:
             si = ldt.index(datetime.datetime.strptime(ItemList[0],'%Y-%m-%d %H:%M'))
         except ValueError:
@@ -1186,8 +1186,8 @@ def do_functions(cf,ds):
             ds.series[ThisOne] = {}
             FunctionList = cf['Variables'][ThisOne]['Function'].keys()
             for i in range(len(FunctionList)):
-                ds.series[ThisOne]['Data'] = eval(cf['Variables'][ThisOne]['Function'][str(i)])
-                #ds.series[ThisOne]['Data'] = eval(cf['Variables'][ThisOne]['Function'][str(i)])
+                ds.series[ThisOne]['Data'] = ast.literal_eval(cf['Variables'][ThisOne]['Function'][str(i)])
+                #ds.series[ThisOne]['Data'] = ast.literal_eval(cf['Variables'][ThisOne]['Function'][str(i)])
                 nRecs = numpy.size(ds.series[ThisOne]['Data'])
                 if 'Flag' not in ds.series[ThisOne].keys():
                     ds.series[ThisOne]['Flag'] = numpy.zeros(nRecs,int)
@@ -1587,7 +1587,7 @@ def GapFillFromAlternate(cf,ds,series=''):
                     # get the data for the alternate site
                     AltSeriesData = ds_alt[n].series[alt_varname]['Data']
                     # evaluate the list of start dates, end dates and transform coefficients
-                    TList = eval(cf['Variables'][ThisOne]['GapFillFromAlternate'][Alt]['Transform'])
+                    TList = ast.literal_eval(cf['Variables'][ThisOne]['GapFillFromAlternate'][Alt]['Transform'])
                     # loop over the datetime ranges for the transform
                     for TListEntry in TList:
                         qcts.TransformAlternate(TListEntry,AltDateTime,AltSeriesData)
@@ -1897,7 +1897,7 @@ def LPFilter_SavGol(cf,ds,ThisOne):
         data,flag = qcutils.GetSeries(ds,ThisOne)
         ldt = ds.series['DateTime']['Data']
         for ThisOp in cf['Variables'][ThisOne]['SavGol'].keys():
-            OpList = eval(cf['Variables'][ThisOne]['SavGol'][ThisOp])
+            OpList = ast.literal_eval(cf['Variables'][ThisOne]['SavGol'][ThisOp])
             try:
                 si = ldt.index(datetime.datetime.strptime(OpList[0],'%Y-%m-%d %H:%M'))
             except ValueError:
@@ -2309,11 +2309,11 @@ def ReplaceOnDiff(cf,ds,series=''):
                         if 'Transform' in cf['Variables'][ThisOne]['ReplaceOnDiff'][Alt].keys():
                             AltDateTime = ds_alt[n].series['DateTime']['Data']
                             AltSeriesData = ds_alt[n].series[alt_varname]['Data']
-                            TList = eval(cf['Variables'][ThisOne]['ReplaceOnDiff'][Alt]['Transform'])
+                            TList = ast.literal_eval(cf['Variables'][ThisOne]['ReplaceOnDiff'][Alt]['Transform'])
                             for TListEntry in TList:
                                 qcts.TransformAlternate(TListEntry,AltDateTime,AltSeriesData)
                         if 'Range' in cf['Variables'][ThisOne]['ReplaceOnDiff'][Alt].keys():
-                            RList = eval(cf['Variables'][ThisOne]['ReplaceOnDiff'][Alt]['Range'])
+                            RList = ast.literal_eval(cf['Variables'][ThisOne]['ReplaceOnDiff'][Alt]['Range'])
                             for RListEntry in RList:
                                 qcts.ReplaceWhenDiffExceedsRange(ds.series['DateTime']['Data'],ds.series[ThisOne],
                                                                  ds.series[ThisOne],ds_alt[n].series[alt_varname],
@@ -2321,7 +2321,7 @@ def ReplaceOnDiff(cf,ds,series=''):
                     elif 'AltVarName' in cf['Variables'][ThisOne]['ReplaceOnDiff'][Alt].keys():
                         alt_varname = ThisOne
                         if 'Range' in cf['Variables'][ThisOne]['ReplaceOnDiff'][Alt].keys():
-                            RList = eval(cf['Variables'][ThisOne]['ReplaceOnDiff'][Alt]['Range'])
+                            RList = ast.literal_eval(cf['Variables'][ThisOne]['ReplaceOnDiff'][Alt]['Range'])
                             for RListEntry in RList:
                                 qcts.ReplaceWhenDiffExceedsRange(ds.series['DateTime']['Data'],ds.series[ThisOne],
                                                                  ds.series[ThisOne],ds.series[alt_varname],

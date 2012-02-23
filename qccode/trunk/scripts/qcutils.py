@@ -1,3 +1,4 @@
+import ast
 import constants as c
 import datetime
 import dateutil
@@ -72,6 +73,24 @@ def Fustar(T, Ah, p, Fh, u, z, z0, ustar):
     Fustar = u*c.k/(Fm(z, z0, MO))
     return Fustar
     
+def GetAverageList(cf,ThisOne,default=""):
+    if qcutils.incf(cf,ThisOne) and qcutils.haskey(cf,ThisOne,'AverageSeries'):
+        if 'Source' in cf['Variables'][ThisOne]['AverageSeries'].keys():
+            alist = ast.literal_eval(cf['Variables'][ThisOne]['AverageSeries']['Source'])
+        else:
+            if len(str(default))==0:
+                log.error('  GetAverageList: key "Source" not in control file AverageSeries section for '+ThisOne)
+                alist = ""
+            else:
+                alist = str(default)
+    else:
+        if len(str(default))==0:
+            log.error('  GetAverageList: '+ThisOne+ ' not in control file or it does not have the "AverageSeries" key')
+            alist = ""
+        else:
+            alist = str(default)
+    return alist
+
 def GetDateIndex(datetimeseries,date,default):
     # return the index of a date/datetime string in an array of datetime objects
     #  datetimeseries - array of datetime objects
@@ -82,6 +101,22 @@ def GetDateIndex(datetimeseries,date,default):
     except ValueError:
         dateindex = default
     return dateindex
+
+def GetMergeList(cf,ThisOne,default=""):
+    if ThisOne in cf['Variables'].keys():
+        if 'MergeSeries' in cf['Variables'][ThisOne].keys():
+            if 'Source' in cf['Variables'][ThisOne]['MergeSeries'].keys():
+                mlist = ast.literal_eval(cf['Variables'][ThisOne]['MergeSeries']['Source'])
+            else:
+                log.error('  GetMergeList: key "Source" not in control file MergeSeries section for '+ThisOne)
+                mlist = default
+        else:
+            #log.error('  GetMergeList: key "MergeSeries" not in control file for '+ThisOne)
+            mlist = default
+    else:
+        log.error('  GetMergeList: '+ThisOne+' not in control file')
+        mlist = default
+    return mlist
 
 def GetSeries(ds,ThisOne,si=0,ei=-1):
     Series = ds.series[ThisOne]['Data']
