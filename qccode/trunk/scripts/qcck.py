@@ -20,7 +20,7 @@ def do_7500check(cf,ds):
     LI75List = ['Ah_7500_Av','Cc_7500_Av','AhAh','CcCc',
                 'UzA','UxA','UyA','UzC','UxC','UyC']
     if 'Diag_7500' not in cf['Variables'].keys():
-        ds.series['Diag_7500'] = {}
+        ds.series[unicode('Diag_7500')] = {}
         nRecs = numpy.size(ds.series['xlDateTime']['Data'])
         ds.series['Diag_7500']['Flag'] = numpy.zeros(nRecs,dtype=int)
         for ThisOne in ['Ah_7500_Av','Cc_7500_Av']:

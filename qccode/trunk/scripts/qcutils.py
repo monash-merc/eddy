@@ -9,6 +9,9 @@ import xlwt
 
 log = logging.getLogger('qc.utils')
 
+<<<<<<< .mine
+def CreateSeries(ds,Label,Data,FList=None,Flag=None,Descr=None,Units=None):
+=======
 def cfkeycheck(cf,Base='Variables',ThisOne=[],key=[]):
     if len(ThisOne) == 0:
         return
@@ -24,11 +27,15 @@ def cfkeycheck(cf,Base='Variables',ThisOne=[],key=[]):
             return
 
 def CreateSeries(ds,Label,Data,FlagList,Description,Units):
+>>>>>>> .r77
     ds.series[unicode(Label)] = {}
     ds.series[Label]['Data'] = numpy.ma.filled(Data,float(-9999))
-    ds.series[Label]['Flag'] = MakeQCFlag(ds,FlagList)
+    if Flag == None:
+        ds.series[Label]['Flag'] = MakeQCFlag(ds,FList)
+    else:
+        ds.series[Label]['Flag'] = Flag
     ds.series[Label]['Attr'] = {}
-    ds.series[Label]['Attr']['Description'] = Description
+    ds.series[Label]['Attr']['Description'] = Descr
     ds.series[Label]['Attr']['Units'] = Units
 
 def Fm(z, z0, L):

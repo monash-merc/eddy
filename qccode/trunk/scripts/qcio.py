@@ -191,7 +191,7 @@ def xl_read_series(cf,level):
             LastDataRow = int(ActiveSheet.nrows)
             HeaderRow = ActiveSheet.row_values(int(cf['Files'][level]['xlHeaderRow'])-1)
             if cf['Variables'][ThisOne]['xl']['Name'] in HeaderRow:
-                ds.series[ThisOne] = {}
+                ds.series[unicode(ThisOne)] = {}
                 xlCol = HeaderRow.index(cf['Variables'][ThisOne]['xl']['Name'])
                 Values = ActiveSheet.col_values(xlCol)[FirstDataRow:LastDataRow]
                 Types = ActiveSheet.col_types(xlCol)[FirstDataRow:LastDataRow]
@@ -413,7 +413,7 @@ def nc_read_series(cf,level):
     for ThisOne in ncFile.variables.keys():
         if '_QCFlag' not in ThisOne:
             # create the series in the data structure
-            ds.series[ThisOne] = {}
+            ds.series[unicode(ThisOne)] = {}
             # get the data variable object
             ds.series[ThisOne]['Data'] = ncFile.variables[ThisOne][:]
             # check for a QC flag and if it exists, load it
@@ -444,7 +444,7 @@ def nc_read_series_file(ncFullName):
     for ThisOne in ncFile.variables.keys():
         if '_QCFlag' not in ThisOne:
             # create the series in the data structure
-            ds.series[ThisOne] = {}
+            ds.series[unicode(ThisOne)] = {}
             # get the data variable object
             ds.series[ThisOne]['Data'] = ncFile.variables[ThisOne][:]
             # check for a QC flag and if it exists, load it
