@@ -19,7 +19,6 @@ import ast
 import constants as c
 import copy
 import numpy
-import qccf
 import qcck
 import qcio
 import qcts
@@ -106,7 +105,7 @@ def l3qc_AdelaideRiver(cf,ds2):
     ds3.globalattributes['Level'] = 'L3'
     ds3.globalattributes['EPDversion'] = sys.version
     ds3.globalattributes['QCVersion'] = __doc__
-    ds3.globalattributes['Functions'] = 'ApplyLinear, MergeSeries, TaFromTv, CoordRotation2D, CalculateFluxes, Fe_WPL, Fc_WPL, CalculateNetRadiation, InterpolateOverMissing, AverageSeriesByElements, CorrectFgForStorage, CalculateAvailableEnergy, do_qcchecks'
+    ds3.globalattributes['Functions'] = 'ApplyLinear, MergeSeries, TaFromTv, CoordRotation2D, CalculateFluxes, FhvtoFh, Fe_WPL, Fc_WPL, CalculateNetRadiation, InterpolateOverMissing, AverageSeriesByElements, CorrectFgForStorage, CalculateAvailableEnergy, do_qcchecks'
     # apply linear corrections to the LI-7500 data
     qcts.ApplyLinear(cf,ds3,'Ah_7500_Av')
     qcts.ApplyLinear(cf,ds3,'Cc_7500_Av')
@@ -176,7 +175,7 @@ def l3qc_AliceSpringsMulga(cf,ds2):
     ds3.globalattributes['Level'] = 'L3'
     ds3.globalattributes['EPDversion'] = sys.version
     ds3.globalattributes['QCVersion'] = __doc__
-    ds3.globalattributes['Functions'] = 'AddMetVars, ApplyLinear, ApplyLinearDrift, ApplyLinearDriftLocal, CorrectSWC, CoordRotation, MassmanApprox, Massman, CalculateFluxesRM, FhvtoFh, Fe_WPLcov, Fc_WPLcov, CorrectFgForStorage, Average3SeriesByElements, do_qcchecks, gaps'
+    ds3.globalattributes['Functions'] = 'AddMetVars, ApplyLinear, ApplyLinearDrift, ApplyLinearDriftLocal, CorrectSWC, CoordRotation2D, MassmanApprox, Massman, CalculateFluxesRM, FhvtoFh, Fe_WPLcov, Fc_WPLcov, CorrectFgForStorage, Average3SeriesByElements, do_qcchecks, gaps'
     # add relevant meteorological values to L3 data
     qcts.AddMetVars(ds3)
     # correct measured soil water content using empirical relationship to collected samples
@@ -238,7 +237,7 @@ def l3qc_FoggDam(cf,ds2):
     ds3.globalattributes['Level'] = 'L3'
     ds3.globalattributes['EPDversion'] = sys.version
     ds3.globalattributes['QCVersion'] = __doc__
-    ds3.globalattributes['Functions'] = 'ApplyLinear, MergeSeries, TaFromTv, CoordRotation2D, CalculateFluxes, Fe_WPL, Fc_WPL, CalculateNetRadiation, InterpolateOverMissing, AverageSeriesByElements, CorrectFgForStorage, CalculateAvailableEnergy, do_qcchecks'
+    ds3.globalattributes['Functions'] = 'ApplyLinear, MergeSeries, TaFromTv, CoordRotation2D, CalculateFluxes, FhvtoFh, Fe_WPL, Fc_WPL, CalculateNetRadiation, InterpolateOverMissing, AverageSeriesByElements, CorrectFgForStorage, CalculateAvailableEnergy, do_qcchecks'
     # apply linear corrections to the LI-7500 Ah and Fe data
     qcts.ApplyLinear(cf,ds3,'Ah_7500_Av')
     qcts.ApplyLinear(cf,ds3,'Cc_7500_Av')
@@ -304,7 +303,7 @@ def l3qc_Standard(cf,ds2):
     ds3.globalattributes['Level'] = 'L3'
     ds3.globalattributes['EPDversion'] = sys.version
     ds3.globalattributes['QCVersion'] = __doc__
-    ds3.globalattributes['Functions'] = 'ApplyLinear, MergeSeries, TaFromTv, CoordRotation2D, CalculateFluxes, Fe_WPL, Fc_WPL, CalculateNetRadiation, AverageSeriesByElements, CorrectFgForStorage, CalculateAvailableEnergy, do_qcchecks'
+    ds3.globalattributes['Functions'] = 'ApplyLinear, MergeSeries, TaFromTv, CoordRotation2D, CalculateFluxes, FhvtoFh, Fe_WPL, Fc_WPL, CalculateNetRadiation, AverageSeriesByElements, CorrectFgForStorage, CalculateAvailableEnergy, do_qcchecks'
     # apply linear corrections to the data
     qcck.do_linear(cf,ds3)
     # merge the HMP and corrected 7500 data
