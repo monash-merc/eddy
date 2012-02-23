@@ -59,7 +59,6 @@ def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
             # check the control file to see if the Y ax1s minima have been specified
             if qcutils.cfkeycheck(cf,'Plots',str(nFig),'YLMin'):                               # Y axis minima specified
                 minlist = ast.literal_eval(cf['Plots'][str(nFig)]['YLMin'])     # Evaluate the minima list
-                log.info(minlist[SeriesList.index(ThisOne)])
                 if str(minlist[SeriesList.index(ThisOne)])=='Auto':             # This entry is 'Auto' ...
                     LYAxMin = numpy.ma.minimum(L1YArray)                       # ... so take the array minimum value
                 else:

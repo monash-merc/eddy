@@ -224,7 +224,7 @@ def Average3SeriesByElements(ds,Av_out,Series_in):
         Av_out: output variable to ds.  Example: 'Fg_Av'
         Series_in: input variable series in ds.  Example: ['Fg_1','Fg_2','Fg_3']
         """
-    log.info('Averaging series in ' + str(Series_in))
+    log.info(' Averaging series in ' + str(Series_in))
     nSeries = len(Series_in)
     TmpArr_data0 = ds.series[Series_in[0]]['Data'].copy()
     TmpArr_flag0 = ds.series[Series_in[0]]['Flag'].copy()
@@ -956,7 +956,7 @@ def CoordRotation2D(ds):
         #if ds.series['vw']['Flag'][i] > 0:
             #ds.series['vw']['Flag'][i] = 11
 
-def CorrectFgForStorage(cf,ds,Fg_out,Fg_in,Ts_in,slist):
+def CorrectFgForStorage(cf,ds,Fg_out,Fg_in,Ts_in,SWC_in=[]):
     """
         Correct ground heat flux for storage in the layer above the heat flux plate
         
@@ -981,19 +981,20 @@ def CorrectFgForStorage(cf,ds,Fg_out,Fg_in,Ts_in,slist):
     nRecs = len(Fg)                               # number of records in series
     Ts,f = qcutils.GetSeriesasMA(ds,Ts_in)        # soil temperature
     #Sws,f = qcutils.GetSeriesasMA(ds,Sws_in)      # volumetric soil moisture
-    if len(slist) == 0:
-        Sws_default = min(1.0,max(0.0,float(cf['Soil']['SwsDefault'])))
+    Sws_default = min(1.0,max(0.0,float(cf['Soil']['SwsDefault'])))
+    if len(SWC_in) == 0:
         slist = ast.literal_eval(cf['Soil']['SwsSeries'])
-    log.info('  CorrectForStorage: Sws_in is '+str(slist))
-    log.info(len(slist))
-    log.info(len(str(slist)))
-    if len(slist)==0:
-        Sws = numpy.ones(nRecs)*Sws_default
-    elif len(slist)==1:
-        Sws,f = qcutils.GetSeriesasMA(ds,slist[0])
+        if len(slist)==0:
+            Sws = numpy.ones(nRecs)*Sws_default
+        elif len(slist)==1:
+            Sws,f = qcutils.GetSeriesasMA(ds,slist[0])
+        else:
+            MergeSeries(ds,'Sws',slist,[0,10])
+            Sws,f = qcutils.GetSeriesasMA(ds,slist[0])
     else:
-        MergeSeries(ds,'Sws',slist,[0,10])
-        Sws,f = qcutils.GetSeriesasMA(ds,slist[0])
+        slist = SWC_in
+        Sws,f = qcutils.GetSeriesasMA(ds,SWC_in)
+    log.info('  CorrectForStorage: Sws_in is '+str(slist))
     iom = numpy.where(numpy.mod(f,10)!=0)[0]
     if len(iom)!=0:
         Sws[iom] = Sws_default
