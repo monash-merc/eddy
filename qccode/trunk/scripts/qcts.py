@@ -956,7 +956,7 @@ def CoordRotation2D(ds):
         #if ds.series['vw']['Flag'][i] > 0:
             #ds.series['vw']['Flag'][i] = 11
 
-def CorrectFgForStorage(cf,ds,Fg_out,Fg_in,Ts_in):
+def CorrectFgForStorage(cf,ds,Fg_out,Fg_in,Ts_in,slist):
     """
         Correct ground heat flux for storage in the layer above the heat flux plate
         
@@ -981,9 +981,12 @@ def CorrectFgForStorage(cf,ds,Fg_out,Fg_in,Ts_in):
     nRecs = len(Fg)                               # number of records in series
     Ts,f = qcutils.GetSeriesasMA(ds,Ts_in)        # soil temperature
     #Sws,f = qcutils.GetSeriesasMA(ds,Sws_in)      # volumetric soil moisture
-    Sws_default = min(1.0,max(0.0,float(cf['Soil']['SwsDefault'])))
-    slist = ast.literal_eval(cf['Soil']['SwsSeries'])
+    if len(slist) == 0:
+        Sws_default = min(1.0,max(0.0,float(cf['Soil']['SwsDefault'])))
+        slist = ast.literal_eval(cf['Soil']['SwsSeries'])
     log.info('  CorrectForStorage: Sws_in is '+str(slist))
+    log.info(len(slist))
+    log.info(len(str(slist)))
     if len(slist)==0:
         Sws = numpy.ones(nRecs)*Sws_default
     elif len(slist)==1:
@@ -1102,11 +1105,11 @@ def CorrectSWC(cf,ds):
             Sws_out[index_high] = (TDR_a1 * numpy.log(Sws[index_high])) + TDR_a0
             
             qcutils.CreateSeries(ds,outvar,Sws_out,FList=[invar],Descr=attr,Units='cm3 water/cm3 soil')
-        for ThisOne in TDRlinList:
-            flag_index = numpy.ma.where((ds.series[ThisOne]['Flag'] > 0))[0]
-            j = ds.series[ThisOne]['Flag'].copy()
-            ApplyLinear(cf,ds,ThisOne)
-            ds.series[ThisOne]['Flag'][flag_index] = j[flag_index]
+#        for ThisOne in TDRlinList:
+#            flag_index = numpy.ma.where((ds.series[ThisOne]['Flag'] > 0))[0]
+#            j = ds.series[ThisOne]['Flag'].copy()
+#            ApplyLinear(cf,ds,ThisOne)
+#            ds.series[ThisOne]['Flag'][flag_index] = j[flag_index]
 
 def CorrectWindDirection(cf,ds,Wd_in):
     """

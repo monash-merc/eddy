@@ -151,6 +151,10 @@ def do_linear(cf,ds):
     for ThisOne in cf['Variables'].keys():
         if qcutils.haskey(cf,ThisOne,'Linear'):
             qcts.ApplyLinear(cf,ds,ThisOne)
+        if qcutils.haskey(cf,ThisOne,'Drift'):
+            qcts.ApplyLinearDrift(cf,ds,ThisOne)
+        if qcutils.haskey(cf,ThisOne,'LocalDrift'):
+            qcts.ApplyLinearDriftLocal(cf,ds,ThisOne)
 
 def do_rangecheck(cf,ds,ThisOne,code=2):
     '''Applies a range check to data series listed in the control file.  Data values that
