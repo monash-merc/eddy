@@ -123,7 +123,7 @@ def get_ncdtype(Series):
 
 def xl_read_flags(cf,ds,level,VariablesInFile):
     # First data row in Excel worksheets.
-    FirstDataRow = int(cf['Files'][level]['xl1stDataRow'])
+    FirstDataRow = int(cf['Files'][level]['xl1stDataRow']) - 1
     # Get the full name of the Excel file from the control file.
     xlFullName = cf['Files'][level]['xlFilePath']+cf['Files'][level]['xlFileName']
     # Get the Excel workbook object.
@@ -133,7 +133,7 @@ def xl_read_flags(cf,ds,level,VariablesInFile):
         log.error(' Excel file '+xlFullName+' not found, choose another')
         xlFullName = get_xlfilename()
         if len(xlFullName)==0:
-            sys.exit()
+            return
         xlBook = xlrd.open_workbook(xlFullName)
     ds.globalattributes['xlFullName'] = xlFullName
     
@@ -142,7 +142,7 @@ def xl_read_flags(cf,ds,level,VariablesInFile):
             log.info(' Getting flags for '+ThisOne+' from spreadsheet')
             ActiveSheet = xlBook.sheet_by_name('Flag')
             LastDataRow = int(ActiveSheet.nrows)
-            HeaderRow = ActiveSheet.row_values(int(cf['Files'][level]['xlHeaderRow']))
+            HeaderRow = ActiveSheet.row_values(int(cf['Files'][level]['xlHeaderRow'])-1)
             if cf['Variables'][ThisOne]['xl']['Name'] in HeaderRow:
                 xlCol = HeaderRow.index(cf['Variables'][ThisOne]['xl']['Name'])
                 Values = ActiveSheet.col_values(xlCol)[FirstDataRow:LastDataRow]
@@ -171,7 +171,7 @@ def xl_read_series(cf,level):
         log.error(' Excel file '+xlFullName+' not found, choose another')
         xlFullName = get_xlfilename()
         if len(xlFullName)==0:
-            sys.exit()
+            return
         log.info(' Opening and reading Excel file '+xlFullName)
         xlBook = xlrd.open_workbook(xlFullName)
         log.info(' Opened and read Excel file '+xlFullName)
