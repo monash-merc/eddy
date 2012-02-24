@@ -239,52 +239,18 @@ class qcgui(Tkinter.Frame):
         self.ds2 = qcio.nc_read_series(self.cf,'L2')
         self.update_startenddate(str(self.ds2.series['DateTime']['Data'][0]),
                                  str(self.ds2.series['DateTime']['Data'][-1]))
-        if self.ds2.globalattributes['SiteName']=='AdelaideRiver':
-            self.do_progress(text='Doing L3 QC & Corrections: Adelaide River ...')
-            self.ds3 = qcls.l3qc_AdelaideRiver(self.cf,self.ds2)
-            self.do_progress(text='Finished L3: Adelaide River')
-            log.info(' Finished L3: Adelaide River')
-            self.do_progress(text='Saving L3 QC & Corrected NetCDF data ...')                     # put up the progress message
-            qcio.nc_write_series(self.cf,self.ds3,'L3')                   # save the L3 data
-            if 'OFL2' in self.cf['Output']:
-                qcio.nc_write_OzFlux_series(self.cf,self.ds3,'L3_Corrected')
-            self.do_progress(text='Finished saving L3 QC & Corrected NetCDF data')              # tell the user we are done
-            log.info(' Finished saving L3 QC & Corrected NetCDF data')
-        elif self.ds2.globalattributes['SiteName']=='AliceSpringsMulga':
-            self.do_progress(text='Doing L3 QC & Corrections: Alice Springs Mulga ...')
-            self.ds3 = qcls.l3qc_AliceSpringsMulga(self.cf,self.ds2)
-            self.do_progress(text='Finished L3 QC & Corrections: Alice Springs Mulga')
-            log.info(' Finished L3: Alice Springs Mulga')
-            self.do_progress(text='Saving L3 QC & Corrected NetCDF data ...')                     # put up the progress message
-            qcio.nc_write_series(self.cf,self.ds3,'L3')                   # save the L3 data
-            if 'OFL2' in self.cf['Output']:
-                qcio.nc_write_OzFlux_series(self.cf,self.ds3,'L3_Corrected')
-            self.do_progress(text='Finished saving L3 QC & Corrected NetCDF data')              # tell the user we are done
-            log.info(' Finished saving L3 QC & Corrected NetCDF data')
-        elif self.ds2.globalattributes['SiteName']=='FoggDam':
-            self.do_progress(text='Doing L3 QC & Corrections: Fogg Dam ...')
-            self.ds3 = qcls.l3qc_FoggDam(self.cf,self.ds2)
-            self.do_progress(text='Finished L3: Fogg Dam')
-            log.info(' Finished L3: Fogg Dam')
-            self.do_progress(text='Saving L3 QC & Corrected NetCDF data ...')                     # put up the progress message
-            qcio.nc_write_series(self.cf,self.ds3,'L3')                   # save the L3 data
-            if 'OFL2' in self.cf['Output']:
-                qcio.nc_write_OzFlux_series(self.cf,self.ds3,'L3_Corrected')
-            self.do_progress(text='Finished saving L3 QC & Corrected NetCDF data')              # tell the user we are done
-            log.info(' Finished saving L3 QC & Corrected NetCDF data')
-        else:
-            self.do_progress(text='Doing L3 QC & Corrections: Standard ...')
-            self.ds3 = qcls.l3qc_Standard(self.cf,self.ds2)
-            self.do_progress(text='Finished L3: Standard')
-            txtstr = ' Finished L3: Standard processing for site: '
-            txtstr = txtstr+self.ds3.globalattributes['SiteName']
-            log.info(txtstr)
-            self.do_progress(text='Saving L3 QC & Corrected NetCDF data ...')                     # put up the progress message
-            qcio.nc_write_series(self.cf,self.ds3,'L3')                   # save the L3 data
-            if 'OFL2' in self.cf['Variables']:
-                qcio.nc_write_OzFlux_series(self.cf,self.ds3,'L3_Corrected')
-            self.do_progress(text='Finished saving L3 QC & Corrected NetCDF data')              # tell the user we are done
-            log.info(' Finished saving L3 QC & Corrected NetCDF data')
+        self.do_progress(text='Doing L3 QC & Corrections ...')
+        self.ds3 = qcls.l3qc(self.cf,self.ds2)
+        self.do_progress(text='Finished L3')
+        txtstr = ' Finished L3: Standard processing for site: '
+        txtstr = txtstr+self.ds3.globalattributes['SiteName']
+        log.info(txtstr)
+        self.do_progress(text='Saving L3 QC & Corrected NetCDF data ...')                     # put up the progress message
+        qcio.nc_write_series(self.cf,self.ds3,'L3')                   # save the L3 data
+        if 'OFL2' in self.cf['Variables']:
+            qcio.nc_write_OzFlux_series(self.cf,self.ds3,'L3_Corrected')
+        self.do_progress(text='Finished saving L3 QC & Corrected NetCDF data')              # tell the user we are done
+        log.info(' Finished saving L3 QC & Corrected NetCDF data')
 
     def do_l4qc(self):
         """

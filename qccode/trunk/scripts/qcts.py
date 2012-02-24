@@ -865,7 +865,7 @@ def convert_energy(ds,InVar,OutVar):
     MJ = Wm2 * 1800 / 1e6
     qcutils.CreateSeries(ds,OutVar,MJ,FList=[InVar],Descr='Flux',Units='MJ/m2')
 
-def CoordRotation2D(ds):
+def CoordRotation2D(cf,ds):
     """
         2D coordinate rotation to force v = w = 0.  Based on Lee et al, Chapter
         3 of Handbook of Micrometeorology.  This routine does not do the third
@@ -934,27 +934,28 @@ def CoordRotation2D(ds):
                          Descr='Momentum flux X component, corrected to natural wind coordinates',Units='m2/s2')
     qcutils.CreateSeries(ds,'vw',vw,FList=['Ux','Uy','Uz','UyUz','UxUy','UyUy'],
                          Descr='Momentum flux Y component, corrected to natural wind coordinates',Units='m2/s2')
-    #for i in range(nRecs):
-        #if ds.series['eta']['Flag'][i] > 0:
-            #ds.series['eta']['Flag'][i] = 11
-        #if ds.series['theta']['Flag'][i] > 0:
-            #ds.series['theta']['Flag'][i] = 11
-        #if ds.series['u']['Flag'][i] > 0:
-            #ds.series['u']['Flag'][i] = 11
-        #if ds.series['v']['Flag'][i] > 0:
-            #ds.series['v']['Flag'][i] = 11
-        #if ds.series['w']['Flag'][i] > 0:
-            #ds.series['w']['Flag'][i] = 11
-        #if ds.series['wT']['Flag'][i] > 0:
-            #ds.series['wT']['Flag'][i] = 11
-        #if ds.series['wA']['Flag'][i] > 0:
-            #ds.series['wA']['Flag'][i] = 11
-        #if ds.series['wC']['Flag'][i] > 0:
-            #ds.series['wC']['Flag'][i] = 11
-        #if ds.series['uw']['Flag'][i] > 0:
-            #ds.series['uw']['Flag'][i] = 11
-        #if ds.series['vw']['Flag'][i] > 0:
-            #ds.series['vw']['Flag'][i] = 11
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='RotateFlag') and cf['General']['RotateFlag'] == 'Yes':
+        for i in range(nRecs):
+            if ds.series['eta']['Flag'][i] > 0:
+                ds.series['eta']['Flag'][i] = 11
+            if ds.series['theta']['Flag'][i] > 0:
+                ds.series['theta']['Flag'][i] = 11
+            if ds.series['u']['Flag'][i] > 0:
+                ds.series['u']['Flag'][i] = 11
+            if ds.series['v']['Flag'][i] > 0:
+                ds.series['v']['Flag'][i] = 11
+            if ds.series['w']['Flag'][i] > 0:
+                ds.series['w']['Flag'][i] = 11
+            if ds.series['wT']['Flag'][i] > 0:
+                ds.series['wT']['Flag'][i] = 11
+            if ds.series['wA']['Flag'][i] > 0:
+                ds.series['wA']['Flag'][i] = 11
+            if ds.series['wC']['Flag'][i] > 0:
+                ds.series['wC']['Flag'][i] = 11
+            if ds.series['uw']['Flag'][i] > 0:
+                ds.series['uw']['Flag'][i] = 11
+            if ds.series['vw']['Flag'][i] > 0:
+                ds.series['vw']['Flag'][i] = 11
 
 def CorrectFgForStorage(cf,ds,Fg_out,Fg_in,Ts_in,SWC_in=[]):
     """
@@ -1106,11 +1107,6 @@ def CorrectSWC(cf,ds):
             Sws_out[index_high] = (TDR_a1 * numpy.log(Sws[index_high])) + TDR_a0
             
             qcutils.CreateSeries(ds,outvar,Sws_out,FList=[invar],Descr=attr,Units='cm3 water/cm3 soil')
-#        for ThisOne in TDRlinList:
-#            flag_index = numpy.ma.where((ds.series[ThisOne]['Flag'] > 0))[0]
-#            j = ds.series[ThisOne]['Flag'].copy()
-#            ApplyLinear(cf,ds,ThisOne)
-#            ds.series[ThisOne]['Flag'][flag_index] = j[flag_index]
 
 def CorrectWindDirection(cf,ds,Wd_in):
     """
@@ -1191,14 +1187,6 @@ def do_functions(cf,ds):
                 nRecs = numpy.size(ds.series[ThisOne]['Data'])
                 if 'Flag' not in ds.series[ThisOne].keys():
                     ds.series[ThisOne]['Flag'] = numpy.zeros(nRecs,int)
-
-def do_linear(cf,ds):
-    log.info(' Applying linear corrections given in control file')
-    for ThisOne in cf['Variables'].keys():
-        if 'Linear' in cf['Variables'][ThisOne].keys():
-            if 'DateTime' not in ds.series.keys():
-                qcio.get_datetime(ds)
-            ApplyLinear(cf,ds,ThisOne)
 
 def Fc_WPL(ds,Fc_wpl_out,Fc_raw_in,Fh_in,Fe_wpl_in,Ta_in,Ah_in,Cc_in,ps_in):
     """
@@ -1924,9 +1912,9 @@ def Massman(cf,ds):
         
         Parameters loaded from control file:
             zmd: z-d
-            angle: CSAT-IRGA separation angle
-            CSATarm: CSAT sensor distance from CSAT mount
-            IRGAarm: IRGA sensor distance from CSAT mount
+            angle: CSAT-IRGA separation angle (x)
+            CSATarm: CSAT sensor distance from CSAT mount (C)
+            IRGAarm: IRGA sensor distance from CSAT mount (I, hypotenuse)
         
         Correct covariances for flux loss from spectral attenuation using 
         analytical expression in Eqn 4.3, Massman & Clement 2004.  z is referenced

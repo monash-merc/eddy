@@ -31,7 +31,7 @@ def do_7500check(cf,ds):
                 ds.series['Diag_7500']['Flag'] = ds.series['Diag_7500']['Flag'] + ds.series[ThisOne]['Flag']
     index = numpy.where(ds.series['Diag_7500']['Flag']!=0)
     log.info('  7500Check: Diag_7500 ' + str(numpy.size(index)))
-    for ThisOne in ['AGC_7500','Ah_7500_Sd','Cc_7500_Sd']:
+    for ThisOne in ['AGC_7500','Ah_7500_Sd','Cc_7500_Sd','AhAh','CcCc']:
         if ThisOne in ds.series.keys():
             index = numpy.where(ds.series[ThisOne]['Flag']!=0)
             log.info('  7500Check: ' + ThisOne + ' ' + str(numpy.size(index)))

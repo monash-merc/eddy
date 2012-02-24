@@ -51,9 +51,13 @@ def autoxl2nc(cf,InLevel,OutLevel):
     # write the data to the netCDF file
     nc_write_series(cf,ds,OutLevel)
 
-def loadcontrolfile(ControlFilePath):
-    ControlFileName = get_controlfilename(ControlFilePath)
-    cf = get_controlfilecontents(ControlFileName)
+def get_controlfilecontents(ControlFileName):
+    log.info(' Processing the control file ')
+    if len(ControlFileName)!=0:
+        cf = ConfigObj(ControlFileName)
+        cf['ControlFileName'] = ControlFileName
+    else:
+        cf = ConfigObj()
     return cf
 
 def get_controlfilename(ControlFilePath):
@@ -65,14 +69,28 @@ def get_controlfilename(ControlFilePath):
 #        sys.exit()
     return ControlFileName
 
-def get_controlfilecontents(ControlFileName):
-    log.info(' Processing the control file ')
-    if len(ControlFileName)!=0:
-        cf = ConfigObj(ControlFileName)
-        cf['ControlFileName'] = ControlFileName
-    else:
-        cf = ConfigObj()
-    return cf
+def get_datetime(ds):
+    ''' Creates a series of Python datetime objects from the year, month,
+    day, hour, minute and second series stored in the netCDF file.'''
+    log.info(' Getting the date and time series')
+    nRecs = len(ds.series['Year']['Data'])
+    ds.series[unicode('DateTime')] = {}
+    ds.series['DateTime']['Data'] = []
+    for i in range(nRecs):
+        ds.series['DateTime']['Data'].append(datetime.datetime(int(ds.series['Year']['Data'][i]),
+                                                       int(ds.series['Month']['Data'][i]),
+                                                       int(ds.series['Day']['Data'][i]),
+                                                       int(ds.series['Hour']['Data'][i]),
+                                                       int(ds.series['Minute']['Data'][i]),
+                                                       int(ds.series['Second']['Data'][i])))
+
+def get_ncdtype(Series):
+    sd = Series.dtype.name
+    dt = 'f'
+    if sd=='float64': dt = 'd'
+    if sd=='int32': dt = 'i'
+    if sd=='int64': dt = 'l'
+    return dt
 
 def get_ncfilename(path='.',title='Choose a netCDF file to open'):
     '''Get a netCDF file name'''
@@ -99,28 +117,156 @@ def get_xlfilename(path='.'):
     root.destroy
     return str(xlFileName)
 
-def get_datetime(ds):
-    ''' Creates a series of Python datetime objects from the year, month,
-    day, hour, minute and second series stored in the netCDF file.'''
-    log.info(' Getting the date and time series')
-    nRecs = len(ds.series['Year']['Data'])
-    ds.series[unicode('DateTime')] = {}
-    ds.series['DateTime']['Data'] = []
-    for i in range(nRecs):
-        ds.series['DateTime']['Data'].append(datetime.datetime(int(ds.series['Year']['Data'][i]),
-                                                       int(ds.series['Month']['Data'][i]),
-                                                       int(ds.series['Day']['Data'][i]),
-                                                       int(ds.series['Hour']['Data'][i]),
-                                                       int(ds.series['Minute']['Data'][i]),
-                                                       int(ds.series['Second']['Data'][i])))
+def loadcontrolfile(ControlFilePath):
+    ControlFileName = get_controlfilename(ControlFilePath)
+    cf = get_controlfilecontents(ControlFileName)
+    return cf
 
-def get_ncdtype(Series):
-    sd = Series.dtype.name
-    dt = 'f'
-    if sd=='float64': dt = 'd'
-    if sd=='int32': dt = 'i'
-    if sd=='int64': dt = 'l'
-    return dt
+def nc_read_series(cf,level):
+    ''' Read a netCDF file and put the data and meta-data into a DataStructure'''
+    ncFullName = cf['Files'][level]['ncFilePath']+cf['Files'][level]['ncFileName']
+    log.info(' Reading netCDF file '+ncFullName)
+    netCDF4.default_encoding = 'latin-1'
+    ncFile = netCDF4.Dataset(ncFullName,'r')
+    ds = DataStructure()
+    gattrlist = ncFile.ncattrs()
+    if len(gattrlist)!=0:
+        for gattr in gattrlist:
+            ds.globalattributes[gattr] = getattr(ncFile,gattr)
+    for ThisOne in ncFile.variables.keys():
+        if '_QCFlag' not in ThisOne:
+            # create the series in the data structure
+            ds.series[unicode(ThisOne)] = {}
+            # get the data variable object
+            ds.series[ThisOne]['Data'] = ncFile.variables[ThisOne][:]
+            # check for a QC flag and if it exists, load it
+            if ThisOne+'_QCFlag' in ncFile.variables.keys():
+                #ncVar = ncFile.variables[ThisOne+'_QCFlag']
+                ds.series[ThisOne]['Flag'] = ncFile.variables[ThisOne+'_QCFlag'][:]
+            # get the variable attributes
+            vattrlist = ncFile.variables[ThisOne].ncattrs()
+            if len(vattrlist)!=0:
+                ds.series[ThisOne]['Attr'] = {}
+                for vattr in vattrlist:
+                    ds.series[ThisOne]['Attr'][vattr] = getattr(ncFile.variables[ThisOne],vattr)
+    ncFile.close()
+    # get a series of Python datetime objects
+    get_datetime(ds)
+    return ds
+
+def nc_read_series_file(ncFullName):
+    ''' Read a netCDF file and put the data and meta-data into a DataStructure'''
+    log.info(' Reading netCDF file '+ncFullName)
+    netCDF4.default_encoding = 'latin-1'
+    ncFile = netCDF4.Dataset(ncFullName,'r')
+    ds = DataStructure()
+    gattrlist = ncFile.ncattrs()
+    if len(gattrlist)!=0:
+        for gattr in gattrlist:
+            ds.globalattributes[gattr] = getattr(ncFile,gattr)
+    for ThisOne in ncFile.variables.keys():
+        if '_QCFlag' not in ThisOne:
+            # create the series in the data structure
+            ds.series[unicode(ThisOne)] = {}
+            # get the data variable object
+            ds.series[ThisOne]['Data'] = ncFile.variables[ThisOne][:]
+            # check for a QC flag and if it exists, load it
+            if ThisOne+'_QCFlag' in ncFile.variables.keys():
+                ds.series[ThisOne]['Flag'] = ncFile.variables[ThisOne+'_QCFlag'][:]
+            # get the variable attributes
+            vattrlist = ncFile.variables[ThisOne].ncattrs()
+            if len(vattrlist)!=0:
+                ds.series[ThisOne]['Attr'] = {}
+                for vattr in vattrlist:
+                    ds.series[ThisOne]['Attr'][vattr] = getattr(ncFile.variables[ThisOne],vattr)
+    ncFile.close()
+    # get a series of Python datetime objects
+    get_datetime(ds)
+    return ds
+def nc_write_OzFlux_series(cf,ds,level):
+    ncFullName = cf['Files'][level]['ncFilePath']+cf['Files'][level]['ncFileName']
+    log.info(' Writing netCDF file '+ncFullName)
+    ncFile = netCDF4.Dataset(ncFullName,'w',format='NETCDF3_CLASSIC')
+    for ThisOne in ds.globalattributes.keys():
+        setattr(ncFile,ThisOne,ds.globalattributes[ThisOne])
+    t = time.localtime()
+    RunDateTime = str(datetime.datetime(t[0],t[1],t[2],t[3],t[4],t[5]))
+    setattr(ncFile,'RunDateTime',RunDateTime)
+    nRecs = len(ds.series['xlDateTime']['Data'])
+    setattr(ncFile,'NumRecs',str(nRecs))
+    setattr(ncFile,'Level',level)
+    ncFile.createDimension('Time',nRecs)
+    SeriesList = ast.literal_eval(cf['Output']['OFL2'])
+    VariableList = ds.series.keys()
+    for ThisOne in ds.series.keys():
+        if ThisOne not in SeriesList:
+            VariableList.remove(ThisOne)
+    SeriesList = VariableList
+    for ThisOne in ['xlDateTime','Year','Month','Day','Hour','Minute','Second','Hdh']:
+        if ThisOne in SeriesList:
+            dt = get_ncdtype(ds.series[ThisOne]['Data'])
+            ncVar = ncFile.createVariable(ThisOne,dt,('Time',))
+            ncVar[:] = ds.series[ThisOne]['Data'].tolist()
+            setattr(ncVar,'Description',ThisOne)
+            setattr(ncVar,'Units','none')
+            SeriesList.remove(ThisOne)
+    if 'DateTime' in SeriesList:
+        SeriesList.remove('DateTime')
+    for ThisOne in SeriesList:
+        if 'Data' in ds.series[ThisOne].keys():
+            dt = get_ncdtype(ds.series[ThisOne]['Data'])
+            ncVar = ncFile.createVariable(ThisOne,dt,('Time',))
+            ncVar[:] = ds.series[ThisOne]['Data'].tolist()
+        if 'Attr' in ds.series[ThisOne].keys():
+            for attr in ds.series[ThisOne]['Attr']:
+                setattr(ncVar,attr,ds.series[ThisOne]['Attr'][attr])
+        if 'Flag' in ds.series[ThisOne].keys():
+            dt = get_ncdtype(ds.series[ThisOne]['Flag'])
+            ncVar = ncFile.createVariable(ThisOne+'_QCFlag',dt,('Time',))
+            ncVar[:] = ds.series[ThisOne]['Flag'].tolist()
+            setattr(ncVar,'Description','QC flag')
+            setattr(ncVar,'Units','none')
+    ncFile.close()
+
+def nc_write_series(cf,ds,level):
+    ncFullName = cf['Files'][level]['ncFilePath']+cf['Files'][level]['ncFileName']
+    log.info(' Writing netCDF file '+ncFullName)
+    ncFile = netCDF4.Dataset(ncFullName,'w',format='NETCDF3_CLASSIC')
+    for ThisOne in ds.globalattributes.keys():
+        setattr(ncFile,ThisOne,ds.globalattributes[ThisOne])
+    t = time.localtime()
+    RunDateTime = str(datetime.datetime(t[0],t[1],t[2],t[3],t[4],t[5]))
+    setattr(ncFile,'RunDateTime',RunDateTime)
+    nRecs = len(ds.series['xlDateTime']['Data'])
+    setattr(ncFile,'NumRecs',str(nRecs))
+    setattr(ncFile,'Level',level)
+    ncFile.createDimension('Time',nRecs)
+    SeriesList = ds.series.keys()
+    for ThisOne in ['xlDateTime','Year','Month','Day','Hour','Minute','Second','Hdh']:
+        if ThisOne in SeriesList:
+            dt = get_ncdtype(ds.series[ThisOne]['Data'])
+            ncVar = ncFile.createVariable(ThisOne,dt,('Time',))
+            ncVar[:] = ds.series[ThisOne]['Data'].tolist()
+            setattr(ncVar,'Description',ThisOne)
+            setattr(ncVar,'Units','none')
+            SeriesList.remove(ThisOne)
+    if 'DateTime' in SeriesList:
+        SeriesList.remove('DateTime')
+    for ThisOne in SeriesList:
+        if 'Data' in ds.series[ThisOne].keys():
+            dt = get_ncdtype(ds.series[ThisOne]['Data'])
+            ncVar = ncFile.createVariable(ThisOne,dt,('Time',))
+            ncVar[:] = ds.series[ThisOne]['Data'].tolist()
+        if 'Attr' in ds.series[ThisOne].keys():
+            for attr in ds.series[ThisOne]['Attr']:
+                setattr(ncVar,attr,ds.series[ThisOne]['Attr'][attr])
+        if 'Flag' in ds.series[ThisOne].keys():
+            dt = get_ncdtype(ds.series[ThisOne]['Flag'])
+            ncVar = ncFile.createVariable(ThisOne+'_QCFlag',dt,('Time',))
+            ncVar[:] = ds.series[ThisOne]['Flag'].tolist()
+            setattr(ncVar,'Description','QC flag')
+            setattr(ncVar,'Units','none')
+    ncFile.close()
 
 def xl_read_flags(cf,ds,level,VariablesInFile):
     # First data row in Excel worksheets.
@@ -315,149 +461,3 @@ def xl_write_series(cf,ds,level):
     # save the xl file
     xlFile.save(xlFileName)
 
-def nc_write_series(cf,ds,level):
-    ncFullName = cf['Files'][level]['ncFilePath']+cf['Files'][level]['ncFileName']
-    log.info(' Writing netCDF file '+ncFullName)
-    ncFile = netCDF4.Dataset(ncFullName,'w',format='NETCDF3_CLASSIC')
-    for ThisOne in ds.globalattributes.keys():
-        setattr(ncFile,ThisOne,ds.globalattributes[ThisOne])
-    t = time.localtime()
-    RunDateTime = str(datetime.datetime(t[0],t[1],t[2],t[3],t[4],t[5]))
-    setattr(ncFile,'RunDateTime',RunDateTime)
-    nRecs = len(ds.series['xlDateTime']['Data'])
-    setattr(ncFile,'NumRecs',str(nRecs))
-    setattr(ncFile,'Level',level)
-    ncFile.createDimension('Time',nRecs)
-    SeriesList = ds.series.keys()
-    for ThisOne in ['xlDateTime','Year','Month','Day','Hour','Minute','Second','Hdh']:
-        if ThisOne in SeriesList:
-            dt = get_ncdtype(ds.series[ThisOne]['Data'])
-            ncVar = ncFile.createVariable(ThisOne,dt,('Time',))
-            ncVar[:] = ds.series[ThisOne]['Data'].tolist()
-            setattr(ncVar,'Description',ThisOne)
-            setattr(ncVar,'Units','none')
-            SeriesList.remove(ThisOne)
-    if 'DateTime' in SeriesList:
-        SeriesList.remove('DateTime')
-    for ThisOne in SeriesList:
-        if 'Data' in ds.series[ThisOne].keys():
-            dt = get_ncdtype(ds.series[ThisOne]['Data'])
-            ncVar = ncFile.createVariable(ThisOne,dt,('Time',))
-            ncVar[:] = ds.series[ThisOne]['Data'].tolist()
-        if 'Attr' in ds.series[ThisOne].keys():
-            for attr in ds.series[ThisOne]['Attr']:
-                setattr(ncVar,attr,ds.series[ThisOne]['Attr'][attr])
-        if 'Flag' in ds.series[ThisOne].keys():
-            dt = get_ncdtype(ds.series[ThisOne]['Flag'])
-            ncVar = ncFile.createVariable(ThisOne+'_QCFlag',dt,('Time',))
-            ncVar[:] = ds.series[ThisOne]['Flag'].tolist()
-            setattr(ncVar,'Description','QC flag')
-            setattr(ncVar,'Units','none')
-    ncFile.close()
-
-def nc_write_OzFlux_series(cf,ds,level):
-    ncFullName = cf['Files'][level]['ncFilePath']+cf['Files'][level]['ncFileName']
-    log.info(' Writing netCDF file '+ncFullName)
-    ncFile = netCDF4.Dataset(ncFullName,'w',format='NETCDF3_CLASSIC')
-    for ThisOne in ds.globalattributes.keys():
-        setattr(ncFile,ThisOne,ds.globalattributes[ThisOne])
-    t = time.localtime()
-    RunDateTime = str(datetime.datetime(t[0],t[1],t[2],t[3],t[4],t[5]))
-    setattr(ncFile,'RunDateTime',RunDateTime)
-    nRecs = len(ds.series['xlDateTime']['Data'])
-    setattr(ncFile,'NumRecs',str(nRecs))
-    setattr(ncFile,'Level',level)
-    ncFile.createDimension('Time',nRecs)
-    SeriesList = ast.literal_eval(cf['Output']['OFL2'])
-    VariableList = ds.series.keys()
-    for ThisOne in ds.series.keys():
-        if ThisOne not in SeriesList:
-            VariableList.remove(ThisOne)
-    SeriesList = VariableList
-    for ThisOne in ['xlDateTime','Year','Month','Day','Hour','Minute','Second','Hdh']:
-        if ThisOne in SeriesList:
-            dt = get_ncdtype(ds.series[ThisOne]['Data'])
-            ncVar = ncFile.createVariable(ThisOne,dt,('Time',))
-            ncVar[:] = ds.series[ThisOne]['Data'].tolist()
-            setattr(ncVar,'Description',ThisOne)
-            setattr(ncVar,'Units','none')
-            SeriesList.remove(ThisOne)
-    if 'DateTime' in SeriesList:
-        SeriesList.remove('DateTime')
-    for ThisOne in SeriesList:
-        if 'Data' in ds.series[ThisOne].keys():
-            dt = get_ncdtype(ds.series[ThisOne]['Data'])
-            ncVar = ncFile.createVariable(ThisOne,dt,('Time',))
-            ncVar[:] = ds.series[ThisOne]['Data'].tolist()
-        if 'Attr' in ds.series[ThisOne].keys():
-            for attr in ds.series[ThisOne]['Attr']:
-                setattr(ncVar,attr,ds.series[ThisOne]['Attr'][attr])
-        if 'Flag' in ds.series[ThisOne].keys():
-            dt = get_ncdtype(ds.series[ThisOne]['Flag'])
-            ncVar = ncFile.createVariable(ThisOne+'_QCFlag',dt,('Time',))
-            ncVar[:] = ds.series[ThisOne]['Flag'].tolist()
-            setattr(ncVar,'Description','QC flag')
-            setattr(ncVar,'Units','none')
-    ncFile.close()
-
-def nc_read_series(cf,level):
-    ''' Read a netCDF file and put the data and meta-data into a DataStructure'''
-    ncFullName = cf['Files'][level]['ncFilePath']+cf['Files'][level]['ncFileName']
-    log.info(' Reading netCDF file '+ncFullName)
-    netCDF4.default_encoding = 'latin-1'
-    ncFile = netCDF4.Dataset(ncFullName,'r')
-    ds = DataStructure()
-    gattrlist = ncFile.ncattrs()
-    if len(gattrlist)!=0:
-        for gattr in gattrlist:
-            ds.globalattributes[gattr] = getattr(ncFile,gattr)
-    for ThisOne in ncFile.variables.keys():
-        if '_QCFlag' not in ThisOne:
-            # create the series in the data structure
-            ds.series[unicode(ThisOne)] = {}
-            # get the data variable object
-            ds.series[ThisOne]['Data'] = ncFile.variables[ThisOne][:]
-            # check for a QC flag and if it exists, load it
-            if ThisOne+'_QCFlag' in ncFile.variables.keys():
-                #ncVar = ncFile.variables[ThisOne+'_QCFlag']
-                ds.series[ThisOne]['Flag'] = ncFile.variables[ThisOne+'_QCFlag'][:]
-            # get the variable attributes
-            vattrlist = ncFile.variables[ThisOne].ncattrs()
-            if len(vattrlist)!=0:
-                ds.series[ThisOne]['Attr'] = {}
-                for vattr in vattrlist:
-                    ds.series[ThisOne]['Attr'][vattr] = getattr(ncFile.variables[ThisOne],vattr)
-    ncFile.close()
-    # get a series of Python datetime objects
-    get_datetime(ds)
-    return ds
-
-def nc_read_series_file(ncFullName):
-    ''' Read a netCDF file and put the data and meta-data into a DataStructure'''
-    log.info(' Reading netCDF file '+ncFullName)
-    netCDF4.default_encoding = 'latin-1'
-    ncFile = netCDF4.Dataset(ncFullName,'r')
-    ds = DataStructure()
-    gattrlist = ncFile.ncattrs()
-    if len(gattrlist)!=0:
-        for gattr in gattrlist:
-            ds.globalattributes[gattr] = getattr(ncFile,gattr)
-    for ThisOne in ncFile.variables.keys():
-        if '_QCFlag' not in ThisOne:
-            # create the series in the data structure
-            ds.series[unicode(ThisOne)] = {}
-            # get the data variable object
-            ds.series[ThisOne]['Data'] = ncFile.variables[ThisOne][:]
-            # check for a QC flag and if it exists, load it
-            if ThisOne+'_QCFlag' in ncFile.variables.keys():
-                ds.series[ThisOne]['Flag'] = ncFile.variables[ThisOne+'_QCFlag'][:]
-            # get the variable attributes
-            vattrlist = ncFile.variables[ThisOne].ncattrs()
-            if len(vattrlist)!=0:
-                ds.series[ThisOne]['Attr'] = {}
-                for vattr in vattrlist:
-                    ds.series[ThisOne]['Attr'][vattr] = getattr(ncFile.variables[ThisOne],vattr)
-    ncFile.close()
-    # get a series of Python datetime objects
-    get_datetime(ds)
-    return ds

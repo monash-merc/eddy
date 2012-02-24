@@ -1,5 +1,5 @@
 """
-    OzFlux QC v1.5.1 21 Feb 2012;
+    OzFlux QC v1.6 24 Feb 2012;
 
     Version History:
     <<v1.0: 21 July 2011, code diversion reconciliation, PIsaac & JCleverly>>
@@ -11,6 +11,7 @@
     <<v1.5 30 Nov 2011, revised l4qc calls in qc.py & Wombat modifications integrated, JCleverly>>
     <<v1.5.1 21 Feb 2012, code rationalisation and generalisation in progress, PIsaac & JCleverly>>
     <<v1.5.2 24 Feb 2012, de-bugging completion for ASM, PIsaac & JCleverly>>
+    <<v1.6 24 Feb 2012, generalised qcls.l3qc, ASM tested ok L1-L4>>
 """
 
 import sys
@@ -79,280 +80,188 @@ def l2qc(cf,ds1):
     qcutils.GetSeriesStats(cf,ds2)
     return ds2
 
-def l3qc_AdelaideRiver(cf,ds2):
+def l3qc(cf,ds2):
     """
-        Corrections applied for Adelaide River site
+        Corrections
         Generates L3 from L2 data
         
         Functions performed:
-            qcts.ApplyLinear (Ah_7500_Av, Cc_7500_Av, UzA, UxA, UyA)
-            qcts.MergeSeries (Ah_EC, Ta_EC, Fn)
-            qcts.TaFromTv
-            qcts.CoordRotation2D
-            qcts.CalculateFluxes
-            qcts.FhvtoFh
-            qcts.Fe_WPL
-            qcts.Fc_WPL
-            qcts.CalculateNetRadiation
-            qcts.InterpolateOverMissing (Sws_5cm)
-            qcts.AverageSeriesByElements (Fg)
-            qcts.CorrectFgForStorage
-            qcts.CalculateAvailableEnergy
-            qcck.do_qcchecks
+            qcts.AddMetVars (optional)
+            qcts.CorrectSWC (optional*)
+            qcck.do_linear (all sites)
+            qcutils.GetMergeList + qcts.MergeSeries Ah_EC (optional)x
+            qcts.TaFromTv (optional)
+            qcutils.GetMergeList + qcts.MergeSeries Ta_EC (optional)x
+            qcts.CoordRotation2D (all sites)
+            qcts.MassmanApprox (optional*)y
+            qcts.Massman (optional*)y
+            qcts.CalculateFluxes (used if Massman not optioned)x
+            qcts.CalculateFluxesRM (used if Massman optioned)y
+            qcts.FhvtoFh (all sites)
+            qcts.Fe_WPL (WPL computed on fluxes, as with Campbell algorithm)+x
+            qcts.Fc_WPL (WPL computed on fluxes, as with Campbell algorithm)+x
+            qcts.Fe_WPLcov (WPL computed on kinematic fluxes (ie, covariances), as with WPL80)+y
+            qcts.Fc_WPLcov (WPL computed on kinematic fluxes (ie, covariances), as with WPL80)+y
+            qcts.CalculateNetRadiation (optional)
+            qcutils.GetMergeList + qcts.MergeSeries Fsd (optional)
+            qcutils.GetMergeList + qcts.MergeSeries Fn (optional*)
+            qcts.InterpolateOverMissing (optional)
+            AverageSeriesByElements (optional)
+            qcts.CorrectFgForStorage (all sites)
+            qcts.Average3SeriesByElements (optional)
+            qcts.CalculateAvailableEnergy (optional)
+            qcck.do_qcchecks (all sites)
+            qcck.gaps (optional)
+            
+            *:  requires ancillary measurements for paratmerisation
+            +:  each site requires one pair, either Fe_WPL & Fc_WPL (default) or Fe_WPLCov & FcWPLCov
+            x:  required together in option set
+            y:  required together in option set
         """
     # make a copy of the L2 data
     ds3 = copy.deepcopy(ds2)
     ds3.globalattributes['Level'] = 'L3'
     ds3.globalattributes['EPDversion'] = sys.version
     ds3.globalattributes['QCVersion'] = __doc__
-    ds3.globalattributes['Functions'] = 'ApplyLinear, MergeSeries, TaFromTv, CoordRotation2D, CalculateFluxes, FhvtoFh, Fe_WPL, Fc_WPL, CalculateNetRadiation, InterpolateOverMissing, AverageSeriesByElements, CorrectFgForStorage, CalculateAvailableEnergy, do_qcchecks'
-    # apply linear corrections to the LI-7500 data
-    qcts.ApplyLinear(cf,ds3,'Ah_7500_Av')
-    qcts.ApplyLinear(cf,ds3,'Cc_7500_Av')
-    qcts.ApplyLinear(cf,ds3,'UzA')
-    qcts.ApplyLinear(cf,ds3,'UxA')
-    qcts.ApplyLinear(cf,ds3,'UyA')
-    # merge the HMP and corrected 7500 data
-    SrcList = ast.liter_eval(cf['Variables']['Ah_EC']['MergeSeries']['Source'])
-    qcts.MergeSeries(ds3,'Ah_EC',SrcList,[0,10])
-    # get the air temperature from the CSAT virtual temperature
-    qcts.TaFromTv(ds3,'Ta_CSAT','Tv_CSAT','Ah_EC','ps')
-    # merge the air temperature from the HMP with that derived from the CSAT
-    SrcList = ast.liter_eval(cf['Variables']['Ta_EC']['MergeSeries']['Source'])
-    qcts.MergeSeries(ds3,'Ta_EC',SrcList,[0,10])
-    # do the 2D coordinate rotation
-    qcts.CoordRotation2D(ds3)
-    # calculate the fluxes from covariances
-    qcts.CalculateFluxes(ds3)
-    # approximate wT from virtual wT using wA (ref: Campbell OPECSystem manual)
-    attr = 'Fh rotated and converted from virtual heat flux'
-    qcts.FhvtoFh(ds3,'Ta_EC','Fh','Tv_CSAT','Fe_raw','ps','Ah_EC','Fh_rv',attr)
-    # correct the H2O flux
-    qcts.Fe_WPL(ds3,'Fe_wpl','Fe_raw','Fh_rv','Ta_EC','Ah_EC','ps')
-    # correct the CO2 flux
-    qcts.Fc_WPL(ds3,'Fc_wpl','Fc_raw','Fh_rv','Fe_wpl','Ta_EC','Ah_EC','Cc_7500_Av','ps')
-    # calculate the net radiation from the Kipp and Zonen CNR1
-    qcts.CalculateNetRadiation(ds3,'Fn_KZ','Fsd','Fsu','Fld','Flu')
-    # combine the net radiation from the NRlite and the Kipp and Zonen CNR1
-    qcts.MergeSeries(ds3,'Fn','Fn_KZ','Fn_NR',[0,10])
-    # interpolate over missing soil moisture values before using them to calculate soil heat capacity
-    qcts.InterpolateOverMissing(ds3,series=['Sws_5cm'])
-    # average the soil heat flux data
-    qcts.AverageSeriesByElements(ds3,'Fg_Av',['Fg_1','Fg_2'])
-    # correct the measured soil heat flux for storage in the soil layer above the sensor
-    qcts.CorrectFgForStorage(cf,ds3,'Fg','Fg_Av','Ts','Sws')
-    # calculate the available energy
-    qcts.CalculateAvailableEnergy(ds3,'Fa','Fn','Fg')
-    # re-apply the quality control checks (range, diurnal and rules)
-    qcck.do_qcchecks(cf,ds3)
-    return ds3
-
-def l3qc_AliceSpringsMulga(cf,ds2):
-    """
-        Corrections applied for Alice Springs Mulga site
-        Generates L3 from L2 data
-        
-        Functions performed:
-            qcts.AddMetVars
-            qcts.ApplyLinear (Cc_7500_Av, C_ppm, Ah_7500_Av, H_ppt, TDRlinList)
-            qcts.ApplyLinearDrift (Cc_7500_Av, C_ppm)
-            qcts.ApplyLinearDriftLocal (Cc_7500_Av, C_ppm)
-            qcts.CorrectSWC (SWCList, TDRList)
-            qcts.CoordRotation2D
-            qcts.MassmanApprox
-            qcts.Massman
-            qcts.CalculateFluxesRM
-            qcts.FhvtoFh
-            qcts.Fe_WPLcov
-            qcts.Fc_WPLcov
-            qcts.CorrectFgForStorage (Fgc_bs, Fgc_ms, Fgc_mu)
-            qcts.Average3SeriesByElements (Fg_av, Sws_Av, Ts_Av)
-            qcck.do_qcchecks
-            qcck.gaps
-        """
-    # make a copy of the L2 data
-    ds3 = copy.deepcopy(ds2)
-    ds3.globalattributes['Level'] = 'L3'
-    ds3.globalattributes['EPDversion'] = sys.version
-    ds3.globalattributes['QCVersion'] = __doc__
-    ds3.globalattributes['Functions'] = 'AddMetVars, ApplyLinear, ApplyLinearDrift, ApplyLinearDriftLocal, CorrectSWC, CoordRotation2D, MassmanApprox, Massman, CalculateFluxesRM, FhvtoFh, Fe_WPLcov, Fc_WPLcov, CorrectFgForStorage, Average3SeriesByElements, do_qcchecks, gaps'
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList'):
+        l3functions = ast.literal_eval(cf['General']['FunctionList'])
+    else:
+        l3functions = ['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'Fe_WPL', 'Fc_WPL', 'MergeSeriesFsd', 'CalculateNetRadiation', 'MergeSeriesFn', 'AverageSeriesByElements', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks']
+    ds3.globalattributes['Functions'] = l3functions
     # add relevant meteorological values to L3 data
-    qcts.AddMetVars(ds3)
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'AddMetVars' in cf['General']['FunctionList']:
+        qcts.AddMetVars(ds3)
+    
     # correct measured soil water content using empirical relationship to collected samples
-    qcts.CorrectSWC(cf,ds3)
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'CorrectSWC' in cf['General']['FunctionList']:
+        qcts.CorrectSWC(cf,ds3)
+    
     # apply linear corrections to the data
     qcck.do_linear(cf,ds3)
+    
+    # merge the HMP and corrected 7500 data
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'MergeSeriesAh' in cf['General']['FunctionList']:
+        srclist = qcutils.GetMergeList(cf,'Ah_EC',default=['Ah_HMP_01'])
+        qcts.MergeSeries(ds3,'Ah_EC',srclist,[0,10])
+    
+    # get the air temperature from the CSAT virtual temperature
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'TaFromTv' in cf['General']['FunctionList']:
+        qcts.TaFromTv(ds3,'Ta_CSAT','Tv_CSAT','Ah_EC','ps')
+    
     # do the 2D coordinate rotation
-    qcts.CoordRotation2D(ds3)
-    # do the Massman frequency attenuation correction to approximate L
-    qcts.MassmanApprox(cf,ds3)
-    # do the Massman frequency attenuation correction
-    qcts.Massman(cf,ds3)
+    qcts.CoordRotation2D(cf,ds3)
+    
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'Massman' in cf['General']['FunctionList']:
+        # do the Massman frequency attenuation correction to approximate L
+        qcts.MassmanApprox(cf,ds3)
+        
+        # do the Massman frequency attenuation correction
+        qcts.Massman(cf,ds3)
+    
+    # calculate the fluxes
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'Massman' not in cf['General']['FunctionList']:
+        qcts.CalculateFluxes(ds3)
+    
     # calculate the fluxes from covariances
-    qcts.CalculateFluxesRM(ds3)
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'Massman' in cf['General']['FunctionList']:
+        qcts.CalculateFluxesRM(ds3)
+    
     # approximate wT from virtual wT using wA (ref: Campbell OPECSystem manual)
-    attr = 'Fh rotated, massman corrected, and converted from virtual heat flux'
-    qcts.FhvtoFh(ds3,'Ta_HMP','Fh_rm','Tv_CSAT','Fe_rm','ps','Ah_HMP','Fh_rmv',attr)
-    # correct the H2O flux
-    qcts.Fe_WPLcov(ds3,'Fe_wpl','wAM','Fh_rmv','Ta_HMP','Ah_HMP','ps')
-    # correct the CO2 flux
-    qcts.Fc_WPLcov(ds3,'Fc_wpl','wCM','Fh_rmv','wAwpl','Ta_HMP','Ah_HMP','Cc_7500_Av','ps')
-    # correct the measured soil heat flux for storage in the soil layer above the sensor
-    qcts.CorrectFgForStorage(cf,ds3,'Fgc_bs','Fg_bs','Ts_bs','Sws_bs')
-    qcts.CorrectFgForStorage(cf,ds3,'Fgc_ms','Fg_ms','Ts_ms','Sws_ms')
-    qcts.CorrectFgForStorage(cf,ds3,'Fgc_mu','Fg_mu','Ts_mu','Sws_mu')
-    # average soil measurements
-    qcts.Average3SeriesByElements(ds3,'Fg_Av',['Fgc_bs','Fgc_ms','Fgc_mu'])
-    qcts.Average3SeriesByElements(ds3,'Sws_Av',['svwc_s_baresoil','svwc_s_mulga','svwc_s_understory'])
-    qcts.Average3SeriesByElements(ds3,'Ts_Av',['Ts_bs','Ts_ms','Ts_mu'])
-    # re-apply the quality control checks (range, diurnal and rules)
-    qcck.do_qcchecks(cf,ds3)
-    # coordinate gaps in the three main fluxes
-    qcck.gaps(cf,ds3)
-    return ds3
-
-def l3qc_FoggDam(cf,ds2):
-    """
-        Corrections applied for Fogg Dam site
-        Generates L3 from L2 data
-        
-        Functions performed:
-            qcts.ApplyLinear (Ah_7500_Av, Cc_7500_Av, UzA, UxA, UyA, Rain)
-            qcts.MergeSeries (Ah_EC, Ta_EC, Fn)
-            qcts.TaFromTv
-            qcts.CoordRotation2D
-            qcts.CalculateFluxes
-            qcts.FhvtoFh
-            qcts.Fe_WPL
-            qcts.Fc_WPL
-            qcts.CalculateNetRadiation
-            qcts.InterpolateOverMissing (Sws_5cm)
-            qcts.AverageSeriesByElements (Fg)
-            qcts.CorrectFgForStorage
-            qcts.CalculateAvailableEnergy
-            qcck.do_qcchecks
-        """
-    # make a copy of the L2 data
-    ds3 = copy.deepcopy(ds2)
-    ds3.globalattributes['Level'] = 'L3'
-    ds3.globalattributes['EPDversion'] = sys.version
-    ds3.globalattributes['QCVersion'] = __doc__
-    ds3.globalattributes['Functions'] = 'ApplyLinear, MergeSeries, TaFromTv, CoordRotation2D, CalculateFluxes, FhvtoFh, Fe_WPL, Fc_WPL, CalculateNetRadiation, InterpolateOverMissing, AverageSeriesByElements, CorrectFgForStorage, CalculateAvailableEnergy, do_qcchecks'
-    # apply linear corrections to the LI-7500 Ah and Fe data
-    qcts.ApplyLinear(cf,ds3,'Ah_7500_Av')
-    qcts.ApplyLinear(cf,ds3,'Cc_7500_Av')
-    qcts.ApplyLinear(cf,ds3,'UzA')
-    qcts.ApplyLinear(cf,ds3,'UxA')
-    qcts.ApplyLinear(cf,ds3,'UyA')
-    qcts.ApplyLinear(cf,ds3,'Rain')
-    # merge the HMP and corrected 7500 data
-    qcts.MergeSeries(ds3,'Ah_EC','Ah_HMP_5m','Ah_7500_Av',[0,10])
-    # get the air temperature from the CSAT virtual temperature
-    qcts.TaFromTv(ds3,'Ta_CSAT','Tv_CSAT','Ah_EC','ps')
-    # merge the air temperature from the HMP with that derived from the CSAT
-    qcts.MergeSeries(ds3,'Ta_EC','Ta_HMP_5m','Ta_CSAT',[0,10])
-    # do the 2D coordinate rotation
-    qcts.CoordRotation2D(ds3)
-    # calculate the fluxes
-    qcts.CalculateFluxes(ds3)
-    # approximate wT from virtual wT using wA (ref: Campbell OPECSystem manual)
-    attr = 'Fh rotated and converted from virtual heat flux'
-    qcts.FhvtoFh(ds3,'Ta_EC','Fh','Tv_CSAT','Fe_raw','ps','Ah_EC','Fh_rv',attr)
-    # correct the H2O flux
-    qcts.Fe_WPL(ds3,'Fe_wpl','Fe_raw','Fh_rv','Ta_EC','Ah_EC','ps')
-    # correct the CO2 flux
-    qcts.Fc_WPL(ds3,'Fc_wpl','Fc_raw','Fh_rv','Fe_wpl','Ta_EC','Ah_EC','Cc_7500_Av','ps')
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'FhvtoFh' in cf['General']['FunctionList']:
+        if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='FhvtoFhArgs'):
+            attr = ast.literal_eval(cf['FunctionArgs']['FhvtoFhattr'])
+            args = ast.literal_eval(cf['FunctionArgs']['FhvtoFhArgs'])
+            qcts.FhvtoFh(ds3,args[0],args[1],args[2],args[3],args[4],args[5],args[6],attr)
+        else:
+            attr = 'Fh rotated and converted from virtual heat flux'
+            qcts.FhvtoFh(ds3,'Ta_EC','Fh','Tv_CSAT','Fe_raw','ps','Ah_EC','Fh_rv',attr)
+    
+    # correct the H2O & CO2 flux due to effects of flux on density measurements
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'Massman' not in cf['General']['FunctionList']:
+        qcts.Fe_WPL(ds3,'Fe_wpl','Fe_raw','Fh_rv','Ta_EC','Ah_EC','ps')
+        qcts.Fc_WPL(ds3,'Fc_wpl','Fc_raw','Fh_rv','Fe_wpl','Ta_EC','Ah_EC','Cc_7500_Av','ps')
+    else:
+        qcts.Fe_WPLcov(ds3,'Fe_wpl','wAM','Fh_rmv','Ta_HMP','Ah_HMP','ps')
+        qcts.Fc_WPLcov(ds3,'Fc_wpl','wCM','Fh_rmv','wAwpl','Ta_HMP','Ah_HMP','Cc_7500_Av','ps')
+    
     # calculate the net radiation from the Kipp and Zonen CNR1
-    qcts.CalculateNetRadiation(ds3,'Fn_KZ','Fsd','Fsu','Fld','Flu')
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'CalculateNetRadiation' in cf['General']['FunctionList']:
+        srclist = qcutils.GetMergeList(cf,'Fsd',default=['Fsd'])
+        qcts.MergeSeries(ds3,'Fsd',srclist,[0,10])
+        qcts.CalculateNetRadiation(ds3,'Fn_KZ','Fsd','Fsu','Fld','Flu')
+    
     # combine the net radiation from the Kipp and Zonen CNR1 and the NRlite
-    qcts.MergeSeries(ds3,'Fn','Fn_KZ','Fn_NR',[0,10])
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'MergeSeriesFn' in cf['General']['FunctionList']:
+        srclist = qcutils.GetMergeList(cf,'Fn',default=['Fn_KZ'])
+        qcts.MergeSeries(ds3,'Fn',srclist,[0,10])
+    
     # interpolate over missing soil moisture values
-    qcts.InterpolateOverMissing(ds3,series=['Sws_10cm'])
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'InterpolateOverMissing' in cf['General']['FunctionList']:
+        if qcutils.cfkeycheck(cf,Base='FunctionArgs', ThisOne='IOM'):
+            qcts.InterpolateOverMissing(ds3,series=ast.literal_eval(cf,['FunctionArgs']['IOM']))
+        else:
+            qcts.InterpolateOverMissing(ds3,series=ast.literal_eval(cf,['FunctionArgs']['IOM']))
+    
     # average the soil heat flux data
-    qcts.AverageSeriesByElements(ds3,'Fg_Av',['Fg_1','Fg_2'])
-    # correct the measured soil heat flux for storage in the soil layer above the sensor
-    qcts.CorrectFgForStorage(cf,ds3,'Fg','Fg_Av','Ts','Sws')
-    # calculate the available energy
-    qcts.CalculateAvailableEnergy(ds3,'Fa','Fn','Fg')
-    # re-apply the quality control checks (range, diurnal and rules)
-    qcck.do_qcchecks(cf,ds3)
-    return ds3
-
-def l3qc_Standard(cf,ds2):
-    """
-        Corrections applied for Standard site
-        Generates L3 from L2 data
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'AverageSeriesByElements' in cf['General']['FunctionList']:
+        srclist = qccf.GetAverageList(cf,'Fg_01',default=['Fg_01a'])
+        qcts.AverageSeriesByElements(ds3,'Fg_01',srclist)
+        # average the soil temperature data
         
-        Functions performed:
-            qcts.ApplyLinear (Ah_7500_Av, Cc_7500_Av, UzA, UxA, UyA)
-            qcts.MergeSeries (Ah_EC, Ta_EC, Fsd, Fn)
-            qcts.TaFromTv
-            qcts.CoordRotation2D
-            qcts.CalculateFluxes
-            qcts.FhvtoFh
-            qcts.Fe_WPL
-            qcts.Fc_WPL
-            qcts.CalculateNetRadiation
-            qcts.AverageSeriesByElements (Fg_Av, Ts, Sws)
-            qcts.CorrectFgForStorage
-            qcts.CalculateAvailableEnergy
-            qcck.do_qcchecks
-        """
-    # make a copy of the L2 data
-    ds3 = copy.deepcopy(ds2)
-    ds3.globalattributes['Level'] = 'L3'
-    ds3.globalattributes['EPDversion'] = sys.version
-    ds3.globalattributes['QCVersion'] = __doc__
-    ds3.globalattributes['Functions'] = 'ApplyLinear, MergeSeries, TaFromTv, CoordRotation2D, CalculateFluxes, FhvtoFh, Fe_WPL, Fc_WPL, CalculateNetRadiation, AverageSeriesByElements, CorrectFgForStorage, CalculateAvailableEnergy, do_qcchecks'
-    # apply linear corrections to the data
-    qcck.do_linear(cf,ds3)
-    # merge the HMP and corrected 7500 data
-    srclist = qcutils.GetMergeList(cf,'Ah_EC',default=['Ah_HMP_01'])
-    qcts.MergeSeries(ds3,'Ah_EC',srclist,[0,10])
-    # get the air temperature from the CSAT virtual temperature
-    qcts.TaFromTv(ds3,'Ta_CSAT','Tv_CSAT','Ah_EC','ps')
-    # merge the air temperature from the HMP with that derived from the CSAT
-    srclist = qcutils.GetMergeList(cf,'Ta_EC',default=['Ta_HMP_01'])
-    qcts.MergeSeries(ds3,'Ta_EC',srclist,[0,10])
-    # do the 2D coordinate rotation
-    qcts.CoordRotation2D(ds3)
-    # calculate the fluxes
-    qcts.CalculateFluxes(ds3)
-    # approximate wT from virtual wT using wA (ref: Campbell OPECSystem manual)
-    attr = 'Fh rotated and converted from virtual heat flux'
-    qcts.FhvtoFh(ds3,'Ta_EC','Fh','Tv_CSAT','Fe_raw','ps','Ah_EC','Fh_rv',attr)
-    # correct the H2O flux
-    qcts.Fe_WPL(ds3,'Fe_wpl','Fe_raw','Fh_rv','Ta_EC','Ah_EC','ps')
-    # correct the CO2 flux
-    qcts.Fc_WPL(ds3,'Fc_wpl','Fc_raw','Fh_rv','Fe_wpl','Ta_EC','Ah_EC','Cc_7500_Av','ps')
-    # merge the incoming shortwave radiation from the Kipp and Zonen CNR1 and any other pyranometers available
-    srclist = qcutils.GetMergeList(cf,'Fsd',default=['Fsd'])
-    qcts.MergeSeries(ds3,'Fsd',srclist,[0,10])
-    # calculate the net radiation from the Kipp and Zonen CNR1
-    qcts.CalculateNetRadiation(ds3,'Fn_KZ','Fsd','Fsu','Fld','Flu')
-    # combine the net radiation from the Kipp and Zonen CNR1 and the NRlite
-    srclist = qcutils.GetMergeList(cf,'Fn',default=['Fn_KZ'])
-    qcts.MergeSeries(ds3,'Fn',srclist,[0,10])
-    # average the soil heat flux data
-    srclist = qccf.GetAverageList(cf,'Fg_01',default=['Fg_01a'])
-    qcts.AverageSeriesByElements(ds3,'Fg_01',srclist)
-    # average the soil temperature data
-    srclist = qccf.GetAverageList(cf,'Ts_01',default=['Ts_01a'])
-    qcts.AverageSeriesByElements(ds3,'Ts_01',srclist)
-    # average soil moisture
-    slist = [l for l in cf['Variables'].keys() if 'Sws_' in l]
-    for ThisOne in slist:
-        if ThisOne in cf['Variables'].keys() and 'AverageSeries' in cf['Variables'][ThisOne].keys():
-            srclist = qccf.GetAverageList(cf,ThisOne)
-            qcts.AverageSeriesByElements(ds3,ThisOne,srclist)
+        srclist = qccf.GetAverageList(cf,'Ts_01',default=['Ts_01a'])
+        qcts.AverageSeriesByElements(ds3,'Ts_01',srclist)
+        # average soil moisture
+        
+        slist = [l for l in cf['Variables'].keys() if 'Sws_' in l]
+        for ThisOne in slist:
+            if ThisOne in cf['Variables'].keys() and 'AverageSeries' in cf['Variables'][ThisOne].keys():
+                srclist = qccf.GetAverageList(cf,ThisOne)
+                qcts.AverageSeriesByElements(ds3,ThisOne,srclist)
+    
     # correct the measured soil heat flux for storage in the soil layer above the sensor
-    qcts.CorrectFgForStorage(cf,ds3,'Fg','Fg_01','Ts_01')
+    args = ast.literal_eval(cf['FunctionArgs']['CFg1Args'])
+    if len(args) == 4:
+        qcts.CorrectFgForStorage(cf,ds3,args[0],args[1],args[2],args[3])
+    else:
+        qcts.CorrectFgForStorage(cf,ds3,args[0],args[1],args[2])
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='CFg2Args'):
+        args = ast.literal_eval(cf['FunctionArgs']['CFg2Args'])
+        if len(args) == 4:
+            qcts.CorrectFgForStorage(cf,ds3,args[0],args[1],args[2],args[3])
+        else:
+            qcts.CorrectFgForStorage(cf,ds3,args[0],args[1],args[2])
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='CFg3Args'):
+        args = ast.literal_eval(cf['FunctionArgs']['CFg3Args'])
+        if len(args) == 4:
+            qcts.CorrectFgForStorage(cf,ds3,args[0],args[1],args[2],args[3])
+        else:
+            qcts.CorrectFgForStorage(cf,ds3,args[0],args[1],args[2])
+    
+    # average soil measurements
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='A3SBE_1_in'):
+        in1args = ast.literal_eval(cf['FunctionArgs']['A3SBE_1_in'])
+        out1arg = ast.literal_eval(cf['FunctionArgs']['A3SBE_1_out'])
+        qcts.Average3SeriesByElements(ds3,out1arg[0],in1args)
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='A3SBE_2_in'):
+        in2args = ast.literal_eval(cf['FunctionArgs']['A3SBE_2_in'])
+        out2arg = ast.literal_eval(cf['FunctionArgs']['A3SBE_2_out'])
+        qcts.Average3SeriesByElements(ds3,out2arg[0],in2args)
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='A3SBE_3_in'):
+        in3args = ast.literal_eval(cf['FunctionArgs']['A3SBE_3_in'])
+        out3arg = ast.literal_eval(cf['FunctionArgs']['A3SBE_3_out'])
+        qcts.Average3SeriesByElements(ds3,out3arg[0],in3args)
+    
     # calculate the available energy
-    qcts.CalculateAvailableEnergy(ds3,'Fa','Fn','Fg')
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'CalculateAvailableEnergy' in cf['General']['FunctionList']:
+        qcts.CalculateAvailableEnergy(ds3,'Fa','Fn','Fg')
+    
     # re-apply the quality control checks (range, diurnal and rules)
     qcck.do_qcchecks(cf,ds3)
-    # write series statistics to file
-    qcutils.GetSeriesStats(cf,ds3)
+    
+    # coordinate gaps in the three main fluxes
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='Functions') and 'gaps' in cf['General']['FunctionList']:
+        qcck.gaps(cf,ds3)
+    
     return ds3
 
 def l4qc_FillMetGaps(cf,ds3):
