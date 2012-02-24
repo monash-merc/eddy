@@ -1,0 +1,13 @@
+[General]
+InputLevel = L3
+Platfrom = PC    # Mac or PC
+
+[Files]
+    [[L3]]
+        ncFilePath = D:/TERN/Sites/Calperum/Data/Processed/2011/
+        ncFileName = Calperum_2011_L3.nc
+        xlFilePath = D:/TERN/Sites/Calperum/Data/Processed/2011/
+        xlFileName = Calperum_2011_L3.xls
+
+[Output]
+    L3 = "['Ah_EC','Cc_7500_Av','eta','Fc_wpl','Fe_wpl','Fg','Fh','Fld','Flu','Fm','Fn','Fsd','Fsu','ps','Sws_01','Sws_02','Ta_EC','theta','Ts','ustar','Ws_CSAT','Wd_CSAT']"
