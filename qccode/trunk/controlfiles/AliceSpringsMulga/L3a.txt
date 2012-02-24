@@ -15,13 +15,16 @@ RotateFlag   = Yes
         ncFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level3/
         ncFileName = ASM_EC_2012_1Jan-Mar_L3_Corrected.nc
 
-
 [FunctionArgs]
-#Default FhvtoFhArgs:  "['Ta_EC','Fh','Tv_CSAT','Fe_raw','ps','Ah_EC','Fh_rv']"
-#Default FhvtoFhattr:  "['Fh rotated and converted from virtual heat flux']"
+# Site- and process-specific variable and parameter lists
+# Flags are named as abbreviated forms of functions in FunctionList
+# CFg: CorrectFgForStorage, A3SBE: Average3SeriesByElements, IOM: IntegrateOverMissing
+#
+# Default FhvtoFhArgs:  "['Ta_EC','Fh','Tv_CSAT','Fe_raw','ps','Ah_EC','Fh_rv']"
+# Default FhvtoFhattr:  "['Fh rotated and converted from virtual heat flux']"
 FhvtoFhArgs = "['Ta_HMP','Fh_rm','Tv_CSAT','Fe_rm','ps','Ah_HMP','Fh_rmv']"
 FhvtoFhattr = "['Fh rotated, massman corrected, and converted from virtual heat flux']"
-MSAhArgs = "['Ah_HMP_01]"
+# Default CFg1Args = "['Fg','Fg_Av','Ts']"
 CFg1Args = "['Fgc_bs','Fg_bs','Ts_bs','Sws_bs']"
 CFg2Args = "['Fgc_ms','Fg_ms','Ts_ms','Sws_ms']"
 CFg3Args = "['Fgc_mu','Fg_mu','Ts_mu','Sws_mu']"
