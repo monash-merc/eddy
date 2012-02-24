@@ -1251,7 +1251,7 @@ def Fc_WPL(ds,Fc_wpl_out,Fc_raw_in,Fh_in,Fe_wpl_in,Ta_in,Ah_in,Cc_in,ps_in):
     Fc_wpl_data = Fc_raw+co2_wpl_Fe+co2_wpl_Fh
     mask = numpy.ma.getmask(Fc_wpl_data)
     index = numpy.where(mask.astype(int)==1)
-    Fc_wpl_flag[index] = 12
+    Fc_wpl_flag[index] = 14
     qcutils.CreateSeries(ds,Fc_wpl_out,Fc_wpl_data,Flag=Fc_wpl_flag,
                          Descr='WPL corrected Fc',Units='mg/m2/s')
     #ds.series[Fc_wpl_out]['Flag'] = Fc_wpl_flag
@@ -1399,7 +1399,7 @@ def Fe_WPL(ds,Fe_wpl_out,Fe_raw_in,Fh_in,Ta_in,Ah_in,ps_in):
     Fe_wpl_data = Fe_raw+h2o_wpl_Fe+h2o_wpl_Fh
     mask = numpy.ma.getmask(Fe_wpl_data)
     index = numpy.where(mask.astype(int)==1)
-    Fe_wpl_flag[index] = 12
+    Fe_wpl_flag[index] = 14
     qcutils.CreateSeries(ds,Fe_wpl_out,Fe_wpl_data,Flag=Fe_wpl_flag,
                          Descr='WPL corrected Fe',Units='W/m2')
     #ds.series[Fe_wpl_out]['Flag'] = Fe_wpl_flag
