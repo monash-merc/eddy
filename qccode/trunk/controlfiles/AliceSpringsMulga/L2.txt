@@ -607,6 +607,10 @@ Height = 11.5
     [[2]]
         Title = "Radiative fluxes"
         Variables = "['Fnr','Flu','Fld','Fsu','Fsd','albedo']"
+        YLMin = "['Auto','Auto','Auto','Auto','Auto','0']"
+        YLMax = "['Auto','Auto','Auto','Auto','Auto','0.5']"
+        YRMin = "['Auto','Auto','Auto','Auto','Auto','0']"
+        YRMax = "['Auto','Auto','Auto','Auto','Auto','0.5']"
     [[3]]
         Title = "Turbulent fluxes"
         Variables = "['Fm','Fh','Fe_raw','Fc_raw']"
@@ -634,12 +638,24 @@ Height = 11.5
     [[11]]
         Title = "Bare soil TDR arrays"
         Variables = "['TDR_bs1_10cm','TDR_bs1_60cm','TDR_bs1_100cm','TDR_bs2_10cm','TDR_bs2_60cm','TDR_bs2_100cm','TDR_bs2_143cm']"
+        YLMin = "['.01','.01','.01','.01','.01','.01','.01']"
+        YLMax = "['.4','.4','.4','.4','.4','.4','.4']"
+        YRMin = "['.01','.01','.01','.01','.01','.01','.01']"
+        YRMax = "['.4','.4','.4','.4','.4','.4','.4']"
     [[12]]
         Title = "Mulga TDR arrays"
         Variables = "['TDR_ms1_10cm','TDR_ms1_60cm','TDR_ms1_100cm','TDR_ms2_10cm_a','TDR_ms2_10cm_b','TDR_ms2_60cm','TDR_ms2_100cm']"
+        YLMin = "['.01','.01','.01','.01','.01','.01','.01']"
+        YLMax = "['.4','.4','.4','.4','.4','.4','.4']"
+        YRMin = "['.01','.01','.01','.01','.01','.01','.01']"
+        YRMax = "['.4','.4','.4','.4','.4','.4','.4']"
     [[13]]
         Title = "Understory TDR arrays"
         Variables = "['TDR_mu1_10cm','TDR_mu1_60cm','TDR_mu1_100cm','TDR_mu2_10cm_a','TDR_mu2_10cm_b','TDR_mu2_60cm','TDR_mu2_100cm']"
+        YLMin = "['.01','.01','.01','.01','.01','.01','.01']"
+        YLMax = "['.4','.4','.4','.4','.4','.4','.4']"
+        YRMin = "['.01','.01','.01','.01','.01','.01','.01']"
+        YRMax = "['.4','.4','.4','.4','.4','.4','.4']"
     [[14]]
         Title = "Vertical Wind Gradient"
         Variables = "['Ws_WS_200cm','Ws_WS_425cm','Ws_WS_662cm','Ws_WS_925cm','Ws_CSAT']"
@@ -649,7 +665,3 @@ Height = 11.5
     [[16]]
         Title = "Vertical Humidity Gradient"
         Variables = "['Ah_HMP_200cm','Ah_HMP_425cm','Ah_HMP_657cm','Ah_HMP']"
-        YLMin = "['0','0','0','0']"
-        YLMax = "['20','20','20','20']"
-        YRMin = "['0','0','0','0']"
-        YRMax = ""['21','21','21','21']""

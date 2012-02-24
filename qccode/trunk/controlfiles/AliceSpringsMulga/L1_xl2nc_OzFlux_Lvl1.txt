@@ -6,11 +6,11 @@ Platform = Mac    # Mac or PC
 [Files]
     [[L1]]
         xlFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level1/
-        xlFileName = ASM_EC_2011_3Jul-Sep.xls
-        xlHeaderRow  = 1
-        xl1stDataRow = 4
+        xlFileName = ASM_EC_2012_1Jan-Mar.xls
+        xlHeaderRow  = 2
+        xl1stDataRow = 5
         ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
-        ncFileName = ASM_EC_2011_3Jul-Sep_L1.nc
+        ncFileName = ASM_EC_2012_1Jan-Mar_L1.nc
 
 [Global]
     SiteName = AliceSpringsMulga
