@@ -167,14 +167,14 @@ def l3qc(cf,ds2):
         qcts.CalculateFluxesRM(ds3)
     
     # approximate wT from virtual wT using wA (ref: Campbell OPECSystem manual)
-    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'FhvtoFh' in cf['General']['FunctionList']:
-        if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='FhvtoFhArgs'):
-            attr = ast.literal_eval(cf['FunctionArgs']['FhvtoFhattr'])
-            args = ast.literal_eval(cf['FunctionArgs']['FhvtoFhArgs'])
-            qcts.FhvtoFh(ds3,args[0],args[1],args[2],args[3],args[4],args[5],args[6],attr)
-        else:
-            attr = 'Fh rotated and converted from virtual heat flux'
-            qcts.FhvtoFh(ds3,'Ta_EC','Fh','Tv_CSAT','Fe_raw','ps','Ah_EC','Fh_rv',attr)
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='FhvtoFhArgs'):
+        attr = ast.literal_eval(cf['FunctionArgs']['FhvtoFhattr'])
+        args = ast.literal_eval(cf['FunctionArgs']['FhvtoFhArgs'])
+        qcts.FhvtoFh(ds3,args[0],args[1],args[2],args[3],args[4],args[5],args[6],attr)
+    else:
+        attr = 'Fh rotated and converted from virtual heat flux'
+        args = ['Ta_EC','Fh','Tv_CSAT','Fe_raw','ps','Ah_EC','Fh_rv']
+    qcts.FhvtoFh(ds3,args[0],args[1],args[2],args[3],args[4],args[5],args[6],attr)
     
     # correct the H2O & CO2 flux due to effects of flux on density measurements
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'Massman' not in cf['General']['FunctionList']:
@@ -219,7 +219,10 @@ def l3qc(cf,ds2):
                 qcts.AverageSeriesByElements(ds3,ThisOne,srclist)
     
     # correct the measured soil heat flux for storage in the soil layer above the sensor
-    args = ast.literal_eval(cf['FunctionArgs']['CFg1Args'])
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='CFg1Args'):
+        args = ast.literal_eval(cf['FunctionArgs']['CFg1Args'])
+    else:
+        args = ['Fg','Fg_Av','Ts']
     if len(args) == 4:
         qcts.CorrectFgForStorage(cf,ds3,args[0],args[1],args[2],args[3])
     else:

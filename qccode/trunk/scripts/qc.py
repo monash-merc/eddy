@@ -120,6 +120,20 @@ class qcgui(Tkinter.Frame):
         self.progress = Tkinter.Label(self, text='Waiting for input ...')
         self.progress.grid(row=9,column=2,columnspan=6)
 
+    def do_closeplotwindows(self):
+        """
+            Close plot windows
+            """
+        import matplotlib
+        self.do_progress(text='Closing plot windows ...')             # tell the user what we're doing
+        log.info(' Closing plot windows ...')
+        fig_numbers = [n.num for n in matplotlib._pylab_helpers.Gcf.get_all_fig_managers()]
+        log.info('  Closing plot windows: '+str(fig_numbers))
+        for n in fig_numbers:
+            matplotlib.pyplot.close(n)
+        self.do_progress(text='Waiting for input ...')             # tell the user what we're doing
+        log.info(' Waiting for input ...')
+
     def do_l2qc(self):
         """
             Call qcls.l2qc function
@@ -132,6 +146,8 @@ class qcgui(Tkinter.Frame):
                 L2.txt
             
             ControlFile contents (see ControlFile/Templates/L2.txt for example):
+                [General]:
+                    Enter list of functions to be performed
                 [Files]:
                     L1 input file name and path
                     L2 output file name and path
@@ -191,7 +207,7 @@ class qcgui(Tkinter.Frame):
                 L3a.txt
             
             ControlFile contents (see ControlFile/Templates/L3.txt for example):
-                [General] (where available):
+                [General]:
                     Python control parameters
                 [Files]:
                     L2 input file name and path
@@ -208,7 +224,7 @@ class qcgui(Tkinter.Frame):
                             mid-path, m
                         IRGAarm: distance from CSAT mounting point to IRGA
                             mid-path, m
-                [Soil] (where available):
+                [Soil]:
                     Constants used in correcting Fg for storage and in empirical
                     corrections of soil water content 
                         FgDepth: Heat flux plate depth, m
@@ -410,20 +426,6 @@ class qcgui(Tkinter.Frame):
         log.info(' Quitting ...')
         self.quit()
 
-    def do_closeplotwindows(self):
-        """
-            Close plot windows
-            """
-        import matplotlib
-        self.do_progress(text='Closing plot windows ...')             # tell the user what we're doing
-        log.info(' Closing plot windows ...')
-        fig_numbers = [n.num for n in matplotlib._pylab_helpers.Gcf.get_all_fig_managers()]
-        log.info('  Closing plot windows: '+str(fig_numbers))
-        for n in fig_numbers:
-            matplotlib.pyplot.close(n)
-        self.do_progress(text='Waiting for input ...')             # tell the user what we're doing
-        log.info(' Waiting for input ...')
-
     def do_savexL2(self):
         """
             Call interior_nc2xl.autonc2xl function
@@ -520,7 +522,7 @@ class qcgui(Tkinter.Frame):
 
     def do_xl2ncCall(self):
         """
-            Call interior_xl2nc.autoxl2nc function
+            Call qcio.autoxl2nc
             Imports excel data and ingests to NetCDF file
             
             Level 1:
@@ -533,11 +535,12 @@ class qcgui(Tkinter.Frame):
                     L1_xl2nc_OzFlux_Lvl1
                 ControlFile contents (see ControlFile/Templates/L1_xl2nc.txt for
                 example):
-                    [General] (where available):
-                        Input (excel) and output (netCDF) level
+                    [General]:
+                        Input (excel) and output (netCDF) level *optional
+                        Platform where the excel file was created (Mac or PC) for date matching
                     [Files]:
                         Input file name and path
-                        Excel header and 1st data rows (first row = 0)
+                        Excel header and 1st data rows
                         Output netCDF file name and path
                     [Global]:
                         meta-data
@@ -555,10 +558,11 @@ class qcgui(Tkinter.Frame):
                     L3a_xl2nc_corrected
                 controlfile contents:
                     [General]:
-                        Input (excel) and output (netCDF) level
+                        Input (excel) and output (netCDF) level *required
+                        Platform where the excel file was created (Mac or PC) for date matching
                     [Files]:
                         Input file name and path
-                        Excel header and 1st data rows (first row = 0)
+                        Excel header and 1st data rows
                         Output netCDF file name and path
                     [Global]:
                         meta-data
@@ -570,16 +574,17 @@ class qcgui(Tkinter.Frame):
             
             Level 4:
                 Ingest excel database with Gap Filled fluxes
-                Ingest flags generated in L3
-                Outputs L4int netCDF file to ncData folder
+                Ingest flags generated in L3 & L4
+                Outputs L4 netCDF file to ncData folder
                 ControlFile:
                     L4a_xl2nc_gapfilled
                 ControlFile contents:
                     [General]:
-                        Input (excel) and output (netCDF) level
+                        Input (excel) and output (netCDF) level *required
+                        Platform where the excel file was created (Mac or PC) for date matching
                     [Files]:
                         Input file name and path
-                        Excel header and 1st data rows (first row = 0)
+                        Excel header and 1st data rows
                         Output netCDF file name and path
                     [Global]:
                         meta-data
