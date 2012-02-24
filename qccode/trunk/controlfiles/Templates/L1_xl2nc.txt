@@ -25,7 +25,7 @@ Platform = PC    # Mac or PC
     Site = "Alice Springs Mulga, Northern Territory, Australia"                # Site description *required
     Location = "Latitude: -30, Longitude: 135"                                 # Latitude and Longitude *required
     Institute = "University of Adelaide"                                       # Institute running site
-    Contact  = timothy.lubcke@                                                 # email address for contact *required
+    Contact  = timothy.lubcke@nowhere.com.au                                   # email address for contact *required
     TimeStep = 30                                                              # Timestep in minutes
 
 [Variables]
@@ -247,7 +247,7 @@ Platform = PC    # Mac or PC
         [[[Attr]]]
             Description = "CO2 concentration (7500)"
             Units    = "mg/m3"
-    [[Ah_7500_Vr]]
+    [[AhAh]]
         [[[xl]]]
             Sheet    = slow_flux
             Name     = covAhAh
@@ -261,7 +261,7 @@ Platform = PC    # Mac or PC
         [[[Attr]]]
             Description = "Absolute humidity (7500), standard deviation"
             Units    = "g/m3"
-    [[Cc_7500_Vr]]
+    [[CcCc]]
         [[[xl]]]
             Sheet    = slow_flux
             Name     = covCcCc

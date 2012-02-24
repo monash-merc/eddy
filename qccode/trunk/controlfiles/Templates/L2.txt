@@ -1,6 +1,7 @@
 # AAHYWEH
 # Control file for L1 (input) to L2 (output) quality control.
 #
+# [General]   - Contains general flags and information
 # [Files]     - Contains paths and file names.
 # [Variables] - Variable names and quality control sections.
 #               Valid quality control sections are:
@@ -26,6 +27,13 @@
 #                        eg "['2008-04-22 00:00','2008-07-26 23:30',['09:30','10:00','10:30']]"
 # [Plots]     - Definition of time series plots
 #
+[General]
+Platform = PC    # Mac or PC
+
+[Output]
+#noDefaultXl = True   # uncomment to load controlfile for excel output
+L2 = "['Ah_7500_Av','Ah_HMP_01','Cc_7500_Av','Tv_CSAT','Ta_HMP_01']"  # comment to load controlfile for excel output
+
 [Files]
     [[L1]]
         ncFilePath = D:/TERN/Sites/Calperum/Data/Processed/2011/
@@ -257,10 +265,19 @@
             Lower      = "[0]*12"
             Upper      = "[60]*12"
 
+
+#[PlotSpec]      # Specify the height and width of plot windows by uncommenting all three lines.  Defaults are PlotWidth = 13 and PlotHeight = 9
+#Width = 23.5
+#Height = 11.5
+
 [Plots]
     [[1]]
         Title = "Radiative fluxes"
         Variables = "['Fsd_Li','Fsd','Fsu','Fld','Flu']"
+#        YLMin = "['Auto','Auto','Auto','Auto','0']"     # dimensions of the individual plots
+#        YLMax = "['Auto','Auto','Auto','Auto','500']"
+#        YRMin = "['Auto','Auto','Auto','Auto','0']"
+#        YRMax = "['Auto','Auto','Auto','Auto','500']"
     [[2]]
         Title = "Covariances (CSAT)"
         Variables = "['UzT','UxT','UyT','UxUz','UyUz','UxUy','UxUx','UyUy']"
