@@ -11,6 +11,11 @@ Platform = Mac    # Mac or PC
         xlFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level2/
         xlFileName = ASM_EC_2012_1Jan-Mar_L2.xls
 
+
+[Output]
+noDefaultXl = True   # uncomment to load controlfile for excel output
+#L2 = "['Ah_7500_Av','Ah_HMP_01','Cc_7500_Av','Tv_CSAT','Ta_HMP_01']"  #comment to load controlfile for excel output
+
 [Variables]
 # Figure 1: Variables are in the order they appear in the plot.
     [[Fnr]]
