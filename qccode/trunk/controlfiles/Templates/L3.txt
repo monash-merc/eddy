@@ -1,9 +1,13 @@
 # AAHYWEH
-# Control file for L2 (input) to L3 (output) quality control.
+# Control file for L2 (input) to L3 (output) quality control and corrections.
 #
+# [General]   - Contains general flags and information
 # [Files]     - contains paths and file names
+# [FunctionArgs] - contains variable lists and parameters used in correction functions
 # [Massman]   - constants used in correcting covariances for spectral attenuation via the Massman analytic solution
 # [Soil]      - constants used in correcting Fg for storage
+# [Output]    - define optional variable lists for OzFluxL3 output data
+#             - define variable list for output to excel
 # [Variables] - variable names and quality control keys, only those variables
 #               corrected or calculated at this level need to be specified in
 #               this control file.
@@ -38,8 +42,15 @@
 #                               lines must be numbered sequentially from 0 (eg 0, 1, 2, etc)
 #                 NOTE: The date range and correction are specified as follows:
 #                        eg "['2009-1-1 00:00','2010-1-1 00:00',180]"
+# [PlotSpec]  - Definition of plot window size.  Adjust until the plots fit comfortably in your display. Optional
 # [Plots]     - definition of time series plots
 #
+[General]
+FunctionList = "['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'Fe_WPL', 'Fc_WPL', 'MergeSeriesFsd', 'CalculateNetRadiation', 'MergeSeriesFn', 'AverageSeriesByElements', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks']"
+# AdelaideRiver:  "['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'Fe_WPL', 'Fc_WPL', 'CalculateNetRadiation', 'MergeSeriesFn', 'InterpolateOverMissing', 'AverageSeriesByElements', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks']"
+# AliceSpringsMulga:  "['AddMetVars', 'CorrectSWC', 'do_linear', 'CoordRotation2D', 'MassmanApprox', 'Massman', 'CalculateFluxesRM', 'FhvtoFh', 'Fe_WPLcov', 'Fc_WPLcov', 'CorrectFgForStorage', 'Average3SeriesByElements', 'do_qcchecks', 'gaps']"
+# FoggDam:  "['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'Fe_WPL', 'Fc_WPL', 'CalculateNetRadiation', 'MergeSeriesFn', 'InterpolateOverMissing', 'AverageSeriesByElements', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks']"
+
 [Files]
     [[L2]]
         ncFilePath = D:/TERN/Sites/Calperum/Data/Processed/2011/
@@ -47,6 +58,17 @@
     [[L3]]
         ncFilePath = D:/TERN/Sites/Calperum/Data/Processed/2011/
         ncFileName = Calperum_2011_L3.nc
+
+[FunctionArgs]
+# Site- and process-specific variable and parameter lists
+# Flags are named as abbreviated forms of functions in FunctionList
+# CFg: CorrectFgForStorage, A3SBE: Average3SeriesByElements, IOM: IntegrateOverMissing
+#
+# Default FhvtoFhArgs:  "['Ta_EC','Fh','Tv_CSAT','Fe_raw','ps','Ah_EC','Fh_rv']"
+# Default FhvtoFhattr:  "['Fh rotated and converted from virtual heat flux']"
+# Default CFg1Args = "['Fg','Fg_Av','Ts']"
+#IOM = "['Sws_10cm']"  # uncomment for FoggDam
+#IOM = "['Sws_5cm']"   # uncomment for AdelaideRiver
 
 [Massman]
     zmd = 7.3  # instrument height above displacement plane, d = 2 / 3 * h = 4.3, h = 6.5, z = 11.635 m
@@ -61,6 +83,11 @@
     OrganicContent = 0.01  # fraction  (% divided by 100)
     SwsDefault = 0.15
     SwsSeries = "['Sws_01']"	
+
+[Output]
+#noDefaultXl = True   # uncomment to load controlfile for additional excel output files
+L3 = "['Fm_rm', 'Fc_wpl', 'Fe_wpl', 'Fh_rmv', 'Fg_Av', 'Fnr', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustarM', 'LM', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Vbat_TopPanel', 'Vbat_BotPanel', 'Tpanel', 'Tpanel_CR3000b', 'theta', 'eta', 'Ux', 'u', 'Uy', 'v', 'Uz', 'w', 'UxUx', 'UxUy', 'uwM', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'vwM', 'AhAh', 'CcCc', 'UxUz', 'UyUz', 'UzT', 'UzA', 'UzC', 'wAwpl', 'wCM', 'wTM', 'Ts_Av', 'Sws_Av', 'Ah_HMP', 'q', 'e_HMP', 'RH_HMP', 'rho_a', 'rho_d', 'es_HMP', 'Ta_HMP', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Rain']"  # comment to load controlfile for additional excel output files
+#OFL2 = "['Fm_rm', 'Fc_wpl', 'Fe_wpl', 'Fh_rmv', 'Fg_Av', 'Fnr', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustarM', 'LM', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Vbat_TopPanel', 'Vbat_BotPanel', 'Tpanel', 'Tpanel_CR3000b', 'theta', 'eta', 'Ux', 'u', 'Uy', 'v', 'Uz', 'w', 'UxUx', 'UxUy', 'uwM', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'vwM', 'AhAh', 'CcCc', 'UxUz', 'UyUz', 'UzT', 'UzA', 'UzC', 'wAwpl', 'wCM', 'wTM', 'Ts_Av', 'Sws_Av', 'Ah_HMP', 'q', 'e_HMP', 'RH_HMP', 'rho_a', 'rho_d', 'es_HMP', 'Ta_HMP', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Rain']"  # uncomment to specify an optional variable list for submission of netCDF at L3 to OzFlux
 
 [Variables]
 # Radiation
@@ -153,10 +180,18 @@
 	    [[[AverageSeries]]]
 		    Source = "['Sws_01']"
 
+#[PlotSpec]      # Specify the height and width of plot windows by uncommenting all three lines.  Defaults are PlotWidth = 13 and PlotHeight = 9
+#Width = 23.5
+#Height = 11.5
+
 [Plots]
     [[1]]
         Title = "Radiative fluxes"
         Variables = "['Fsd','Fsu','Fld','Flu','Fn']"
+#        YLMin = "['Auto','Auto','Auto','0','Auto']"     # dimensions of the individual plots
+#        YLMax = "['Auto','Auto','Auto','500','Auto']"   # all four lines must be uncommented to use
+#        YRMin = "['Auto','Auto','Auto','0','Auto']"     # the number of items in these four lists must be equal
+#        YRMax = "['Auto','Auto','Auto','500','Auto']"   #     to the number of items in the Variables list
     [[2]]
         Title = "Turbulent fluxes"
         Variables = "['Fh','Fe_wpl','Fc_wpl','ustar','Fm']"

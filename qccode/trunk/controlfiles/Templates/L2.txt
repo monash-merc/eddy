@@ -3,6 +3,7 @@
 #
 # [General]   - Contains general flags and information
 # [Files]     - Contains paths and file names.
+# [Output]    - define variable list for output to excel
 # [Variables] - Variable names and quality control sections.
 #               Valid quality control sections are:
 #                RangeCheck   - reject data less than "Lower" or greater than "Upper"
@@ -25,14 +26,11 @@
 #                               lines must be numbered sequentially from 0 (eg 0, 1, 2, etc)
 #                 NOTE: The date range and hours to be rejected are specified as:
 #                        eg "['2008-04-22 00:00','2008-07-26 23:30',['09:30','10:00','10:30']]"
+# [PlotSpec]  - Definition of plot window size.  Adjust until the plots fit comfortably in your display. Optional
 # [Plots]     - Definition of time series plots
 #
 [General]
 Platform = PC    # Mac or PC
-
-[Output]
-#noDefaultXl = True   # uncomment to load controlfile for excel output
-L2 = "['Ah_7500_Av','Ah_HMP_01','Cc_7500_Av','Tv_CSAT','Ta_HMP_01']"  # comment to load controlfile for excel output
 
 [Files]
     [[L1]]
@@ -41,6 +39,10 @@ L2 = "['Ah_7500_Av','Ah_HMP_01','Cc_7500_Av','Tv_CSAT','Ta_HMP_01']"  # comment 
     [[L2]]
         ncFilePath = D:/TERN/Sites/Calperum/Data/Processed/2011/
         ncFileName = Calperum_2011_L2.nc
+
+[Output]
+#noDefaultXl = True   # uncomment to load controlfile for additional excel output files
+L2 = "['Ah_7500_Av','Ah_HMP_01','Cc_7500_Av','Tv_CSAT','Ta_HMP_01']"  # comment to load controlfile for additional excel output files
 
 [Variables]
 # Radiation
@@ -275,9 +277,9 @@ L2 = "['Ah_7500_Av','Ah_HMP_01','Cc_7500_Av','Tv_CSAT','Ta_HMP_01']"  # comment 
         Title = "Radiative fluxes"
         Variables = "['Fsd_Li','Fsd','Fsu','Fld','Flu']"
 #        YLMin = "['Auto','Auto','Auto','Auto','0']"     # dimensions of the individual plots
-#        YLMax = "['Auto','Auto','Auto','Auto','500']"
-#        YRMin = "['Auto','Auto','Auto','Auto','0']"
-#        YRMax = "['Auto','Auto','Auto','Auto','500']"
+#        YLMax = "['Auto','Auto','Auto','Auto','500']"   # all four lines must be uncommented to use
+#        YRMin = "['Auto','Auto','Auto','Auto','0']"     # the number of items in these four lists must be equal
+#        YRMax = "['Auto','Auto','Auto','Auto','500']"   #     to the number of items in the Variables list
     [[2]]
         Title = "Covariances (CSAT)"
         Variables = "['UzT','UxT','UyT','UxUz','UyUz','UxUy','UxUx','UyUy']"

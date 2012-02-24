@@ -1,13 +1,24 @@
+# AAHYWEH
+# Control file for output of L3 data to excel.
+#
+# THIS FILE IS NOT USED EXCEPT WHEN noDefaultXl = True IN controlfile L3.txt
+#
+# [General]   - Contains general flags and information
+# [Files]     - contains paths and file names
+# [FunctionArgs] - contains 
+# [Massman]   - constants used in correcting covariances for spectral attenuation via the Massman analytic solution
+# [Soil]      - constants used in correcting Fg for storage
+# [Output]    - define optional variable lists for OzFluxL3 output data
 [General]
-InputLevel = L3
+InputLevel = L3_Corrected
 Platfrom = PC    # Mac or PC
 
 [Files]
-    [[L3]]
+    [[L3_Corrected]]
         ncFilePath = D:/TERN/Sites/Calperum/Data/Processed/2011/
         ncFileName = Calperum_2011_L3.nc
         xlFilePath = D:/TERN/Sites/Calperum/Data/Processed/2011/
         xlFileName = Calperum_2011_L3.xls
 
 [Output]
-    L3 = "['Ah_EC','Cc_7500_Av','eta','Fc_wpl','Fe_wpl','Fg','Fh','Fld','Flu','Fm','Fn','Fsd','Fsu','ps','Sws_01','Sws_02','Ta_EC','theta','Ts','ustar','Ws_CSAT','Wd_CSAT']"
+    L3_Corrected = "['Ah_EC','Cc_7500_Av','eta','Fc_wpl','Fe_wpl','Fg','Fh','Fld','Flu','Fm','Fn','Fsd','Fsu','ps','Sws_01','Sws_02','Ta_EC','theta','Ts','ustar','Ws_CSAT','Wd_CSAT']"

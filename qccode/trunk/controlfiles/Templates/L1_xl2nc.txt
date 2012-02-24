@@ -7,8 +7,8 @@
 # [Variables] - data to extract from Excel spreadsheet and write to netCDF file
 #
 [General]
-InLevel = L1
-OutLevel = L1
+#InLevel = L1
+#OutLevel = L1
 Platform = PC    # Mac or PC
 
 [Files]
