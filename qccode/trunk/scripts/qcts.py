@@ -566,286 +566,171 @@ def ComputeDailySums(cf,ds):
         Parameters loaded from control file:
             M1st: dataset start month
             M2nd: dataset end month
+            SumList: list of variables to be summed
+            SubSumList: list of variables to sum positive and negative observations separately
+            MinMaxList: list of variables to compute daily min & max
+            SoilList: list of soil moisture measurements groups
+            SW0, SW10, etc: list of soil moisture sensors at a common level (e.g., surface, 10cm, etc)
         
-        List of sums:
+        Default List of sums:
             Rain, ET, Fe_MJ, Fh_MJ, Fg_MJ, Fld_MJ, Flu_MJ, Fnr_MJ, Fsd_MJ,
             Fsu_MJ, Fc_g, Fc_mmol
-        List of sub-sums (sums split between positive and negative observations)
+        Default List of sub-sums (sums split between positive and negative observations)
             Fe_MJ, Fh_MJ, Fg_MJ
-        List of min/max:
+        Default List of min/max:
             VPD, Ta_HMP, Vbat, Tpanel, Fc_mg, Fc_umol
+        Default List of soil moisture measurements:
         """
-    monthabr = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-    M1st = int(cf['General']['firstMonth'])
-    M2nd = int(cf['General']['secondMonth'])
+    OutList = []
+    SumOutList = []
+    SubOutList = []
+    MinMaxOutList = []
+    SoilOutList = []
     
-    Fe,f = qcutils.GetSeriesasMA(ds,'Fe_gapfilled')
-    Fh,f = qcutils.GetSeriesasMA(ds,'Fh_gapfilled')
-    Fg,f = qcutils.GetSeriesasMA(ds,'Fg_Av')
-    Fld,f = qcutils.GetSeriesasMA(ds,'Fld')
-    Flu,f = qcutils.GetSeriesasMA(ds,'Flu')
-    Fnr,f = qcutils.GetSeriesasMA(ds,'Fnr')
-    Fsd,f = qcutils.GetSeriesasMA(ds,'Fsd')
-    Fsu,f = qcutils.GetSeriesasMA(ds,'Fsu')
-    Fc,f = qcutils.GetSeriesasMA(ds,'Fc_gapfilled')
-    Rain,f = qcutils.GetSeriesasMA(ds,'Rain')
-    VPD,f = qcutils.GetSeriesasMA(ds,'VPD')
-    Ta_HMP,f = qcutils.GetSeriesasMA(ds,'Ta_HMP')
-    Vbat,f = qcutils.GetSeriesasMA(ds,'Vbat')
-    Tpanel,f = qcutils.GetSeriesasMA(ds,'Tpanel')
-    Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
+    if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SumList'):
+        SumList = ast.literal_eval(cf['Sums']['SumList'])
+    else:
+        SumList = ['Rain','ET','Energy','Radiation','Carbon']
     
-    ET = Fe * 60 * 30 * 1000 / (Lv * c.rho_water)  # mm/30min for summing
-    Fc_umol = Fc * 1e6 / (1000 * 44)               # umol/m2-s for min/max
-    Fc_mmol = Fc_umol * 1800 / 1000                # mmol/m2-30min for summing
-    Fc_g = Fc * 1800 / 1000                        # g/m2-30min for summing
+    if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SubSumList'):
+        SubSumList = ast.literal_eval(cf['Sums']['SubSumList'])
+    else:
+        SubSumList = ['Energy']
     
-    InList = ['Fe_gapfilled','Fh_gapfilled','Fg_Av','Fld','Flu','Fnr','Fsd','Fsu']
-    OutList = ['Fe_MJ','Fh_MJ','Fg_MJ','Fld_MJ','Flu_MJ','Fnr_MJ','Fsd_MJ','Fsu_MJ']
-    for index in range(0,8):
-        convert_energy(ds,InList[index],OutList[index])
+    if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='MinMaxList'):
+        MinMaxList = ast.literal_eval(cf['Sums']['MinMaxList'])
+    else:
+        MinMaxList = ['VPD','Ta_HMP','Vbat','Tpanel','Carbon']
     
-    FeMJ,f = qcutils.GetSeriesasMA(ds,'Fe_MJ')
-    FhMJ,f = qcutils.GetSeriesasMA(ds,'Fh_MJ')
-    FgMJ,f = qcutils.GetSeriesasMA(ds,'Fg_MJ')
-    FldMJ,f = qcutils.GetSeriesasMA(ds,'Fld_MJ')
-    FluMJ,f = qcutils.GetSeriesasMA(ds,'Flu_MJ')
-    FnrMJ,f = qcutils.GetSeriesasMA(ds,'Fnr_MJ')
-    FsdMJ,f = qcutils.GetSeriesasMA(ds,'Fsd_MJ')
-    FsuMJ,f = qcutils.GetSeriesasMA(ds,'Fsu_MJ')
-    qcutils.CreateSeries(ds,'ET',ET,FList=['Fe_gapfilled'],Descr='Flux',Units='mm')
-    qcutils.CreateSeries(ds,'Fc_umol',Fc_umol,FList=['Fc_gapfilled'],Descr='Flux',Units='umol/(m2 s)')
-    qcutils.CreateSeries(ds,'Fc_mmol',Fc_mmol,FList=['Fc_gapfilled'],Descr='Flux',Units='mmol/m2')
-    qcutils.CreateSeries(ds,'Fc_mg',Fc,FList=['Fc_gapfilled'],Descr='Flux',Units='mg/(m2 s)')
-    qcutils.CreateSeries(ds,'Fc_g',Fc_g,FList=['Fc_gapfilled'],Descr='Flux',Units='g/m2')
+    if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SoilList'):
+        SoilList = ast.literal_eval(cf['Sums']['SoilList'])
+    else:
+        SoilList = ['SWCsurface','SWC10cm','SWC60cm','SWC100cm']
 
+    for ThisOne in SumList:
+        if ThisOne == 'ET':
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='ETin'):
+                Invar = ast.literal_eval(cf['Sums']['ETin'][0])
+            else:
+                Invar = 'Fe_gapfilled'
+            Fe,f = qcutils.GetSeriesasMA(ds,Invar)
+            if 'Lv' in ds.series.keys():
+                Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
+            else:
+                Lv = c.Lv
+            ET = Fe * 60 * 30 * 1000 / (Lv * c.rho_water)  # mm/30min for summing
+            qcutils.CreateSeries(ds,'ET',ET,FList=[Invar],Descr='Evapotranspiration Flux',Units='mm')
+            SumOutList.append('ET')
+            OutList.append('ET')
+        elif ThisOne == 'Energy':
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='Energyin'):
+                EnergyIn = ast.literal_eval(cf['Sums']['Energyin'])
+            else:
+                EnergyIn = ['Fe_gapfilled', 'Fh_gapfilled', 'Fg_Av']
+            Fe,f = qcutils.GetSeriesasMA(ds,EnergyIn[0])
+            Fh,f = qcutils.GetSeriesasMA(ds,EnergyIn[1])
+            Fg,f = qcutils.GetSeriesasMA(ds,EnergyIn[2])
+            EnergyOut = ['Fe_MJ','Fh_MJ','Fg_MJ']
+            for index in range(0,3):
+                convert_energy(ds,EnergyIn[index],EnergyOut[index])
+                OutList.append(EnergyOut[index])
+                SumOutList.append(EnergyOut[index])
+        elif ThisOne == 'Radiation':
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='Radin'):
+                RadiationIn = ast.literal_eval(cf['Sums']['Radin'])
+            else:
+                RadiationIn = ['Fld','Flu','Fnr','Fsd','Fsu']
+            Fld,f = qcutils.GetSeriesasMA(ds,RadiationIn[0])
+            Flu,f = qcutils.GetSeriesasMA(ds,RadiationIn[1])
+            Fnr,f = qcutils.GetSeriesasMA(ds,RadiationIn[2])
+            Fsd,f = qcutils.GetSeriesasMA(ds,RadiationIn[3])
+            Fsu,f = qcutils.GetSeriesasMA(ds,RadiationIn[4])
+            RadiationOut = ['Fld_MJ','Flu_MJ','Fnr_MJ','Fsd_MJ','Fsu_MJ']
+            for index in range(0,5):
+                convert_energy(ds,RadiationIn[index],RadiationOut[index])
+                OutList.append(RadiationOut[index])
+                SumOutList.append(RadiationOut[index])
+        elif ThisOne == 'Carbon':
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='Cin'):
+                CIn = ast.literal_eval(cf['Sums']['Cin'])
+            else:
+                CIn = ['Fc_gapfilled']
+            Fc,f = qcutils.GetSeriesasMA(ds,CIn[0])
+            Fc_umol = Fc * 1e6 / (1000 * 44)               # umol/m2-s for min/max
+            Fc_mmol = Fc_umol * 1800 / 1000                # mmol/m2-30min for summing
+            Fc_g = Fc * 1800 / 1000                        # g/m2-30min for summing
+            qcutils.CreateSeries(ds,'Fc_mmol',Fc_mmol,FList=CIn,Descr='Cumulative 30-min Flux',Units='mmol/m2')
+            qcutils.CreateSeries(ds,'Fc_g',Fc_g,FList=CIn,Descr='Cumulative 30-min Flux',Units='g/m2')
+            COut = ['Fc_g','Fc_mmol']
+            for listindex in range(0,2):
+                OutList.append(COut[listindex])
+                SumOutList.append(COut[listindex])
+        else:
+            OutList.append(ThisOne)
+            SumOutList.append(ThisOne)
+    
+    for ThisOne in SubSumList:
+        if ThisOne == 'Energy':
+            EOut = ['Fe_MJ','Fh_MJ','Fg_MJ']
+            for listindex in range(0,3):
+                SubOutList.append(EOut[listindex])
+                if EOut[listindex] not in OutList:
+                    OutList.append(EOut[listindex])
+        else:
+            SubOutList.append(ThisOne)
+            if ThisOne not in OutList:
+                OutList.append(ThisOne)
+
+    for ThisOne in MinMaxList:
+        if ThisOne == 'Carbon':
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='Cin'):
+                CIn = ast.literal_eval(cf['Sums']['Cin'])
+            else:
+                CIn = ['Fc_gapfilled']
+            Fc,f = qcutils.GetSeriesasMA(ds,CIn[0])
+            Fc_umol = Fc * 1e6 / (1000 * 44)               # umol/m2-s for min/max
+            qcutils.CreateSeries(ds,'Fc_umol',Fc_umol,FList=CIn,Descr='Average Flux',Units='umol/(m2 s)')
+            qcutils.CreateSeries(ds,'Fc_mg',Fc,FList=CIn,Descr='Average Flux',Units='mg/(m2 s)')
+            COut = ['Fc_mg','Fc_umol']
+            for listindex in range(0,2):
+                OutList.append(COut[listindex])
+                MinMaxOutList.append(COut[listindex])
+        else:
+            if ThisOne not in OutList:
+                OutList.append(ThisOne)
+            MinMaxOutList.append(ThisOne)
+    
+    for ThisOne in SoilList:
+        if qcutils.cfkeycheck(cf,Base='Sums',ThisOne=ThisOne):
+            vars = ast.literal_eval(cf['Sums'][ThisOne])
+            for index in range(0,len(vars)):
+                SoilOutList.append(vars[index])
+            OutList.append(ThisOne)
+    
     xlFileName = cf['Files']['L4']['xlFilePath']+cf['Files']['L4']['xlFileName']
-
     xlFile = xlwt.Workbook()
-
-    SumList = ['Rain','ET','Fe_MJ','Fh_MJ','Fg_MJ','Fld_MJ','Flu_MJ','Fnr_MJ','Fsd_MJ','Fsu_MJ','Fc_g','Fc_mmol']     # output series
-    SubSumList = ['Fe_MJ','Fh_MJ','Fg_MJ']     # output series
-    MinMaxList = ['VPD','Ta_HMP','Vbat','Tpanel','Fc_mg','Fc_umol']     # output series
-    FullList = SumList + MinMaxList
-    SWC0list = ['svwc_s_baresoil','svwc_s_mulga','svwc_s_understory','svwc_s_raingage']
-    SWC10list = ['svwc_10cm_baresoil_a1','svwc_10cm_mulga_a1','svwc_10cm_understory_a1','svwc_10cm_baresoil_a2','svwc_10cm_a_mulga_a2','svwc_10cm_b_mulga_a2','svwc_10cm_a_understory_a2','svwc_10cm_b_understory_a2']
-    SWC60list = ['svwc_60cm_baresoil_a1','svwc_60cm_mulga_a1','svwc_60cm_understory_a1','svwc_60cm_baresoil_a2','svwc_60cm_mulga_a2','svwc_60cm_understory_a2']
-    SWC100list = ['svwc_100cm_baresoil_a1','svwc_100cm_mulga_a1','svwc_100cm_understory_a1','svwc_100cm_baresoil_a2','svwc_143cm_baresoil_a2','svwc_100cm_mulga_a2','svwc_100cm_understory_a2']
     
-    for ThisOne in FullList:
-        log.info(' Doing daily sums for '+ThisOne)
+    for ThisOne in OutList:
         xlSheet = xlFile.add_sheet(ThisOne)
-        xlRow = 0
-        xlSheet.write(xlRow,0,'Month')
-        xlSheet.write(xlRow,1,'Day')
-        xlSheet.write(xlRow,2,'n')
-        if ThisOne in SumList:
-            xlSheet.write(xlRow,3,ThisOne)
-        if ThisOne in MinMaxList:
-            xlSheet.write(xlRow,3,ThisOne+'_min')
-            xlSheet.write(xlRow,4,ThisOne+'_max')
-            if ThisOne == 'VPD' or ThisOne == 'Ta_HMP':
-                xlSheet.write(xlRow,5,ThisOne+'_mean')
-        if ThisOne in SubSumList:
-            xlSheet.write(xlRow,4,'Pos n')
-            xlSheet.write(xlRow,5,ThisOne+'_pos')
-            xlSheet.write(xlRow,6,'Neg n')
-            xlSheet.write(xlRow,7,ThisOne+'_neg')
-        Units = ds.series[ThisOne]['Attr']['Units']
-        xlRow = xlRow + 1
-        xlSheet.write(xlRow,3,Units)
-        if ThisOne in MinMaxList:
-            xlSheet.write(xlRow,4,Units)
-            if ThisOne == 'VPD' or ThisOne == 'Ta_HMP':
-                xlSheet.write(xlRow,5,Units)
-        if ThisOne in SubSumList:
-            xlSheet.write(xlRow,5,Units)
-            xlSheet.write(xlRow,7,Units)
-        data = numpy.ma.masked_where(abs(ds.series[ThisOne]['Data']-float(-9999))<c.eps,ds.series[ThisOne]['Data'])
-        for month in range(M1st,M2nd+1):
-            if month == 1 or month == 3 or month == 5 or month == 7 or month == 8 or month == 10 or month == 12:
-                dRan = 31
-            if month == 2:
-                dRan = 28
-            if month == 4 or month == 6 or month == 9 or month == 11:
-                dRan = 30
-            
-            for day in range(1,dRan+1):
-                xlRow = xlRow + 1
-                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day))[0]
-                if ThisOne in SumList:
-                    Num,Sum = get_sums(data[di])
-                    xlSheet.write(xlRow,0,monthabr[month-1])
-                    xlSheet.write(xlRow,1,day)
-                    xlSheet.write(xlRow,2,Num)
-                    xlSheet.write(xlRow,3,Sum)
-                if ThisOne in SubSumList:
-                    PosNum,NegNum,SumPos,SumNeg = get_subsums(data[di])
-                    xlSheet.write(xlRow,4,PosNum)
-                    xlSheet.write(xlRow,5,SumPos)
-                    xlSheet.write(xlRow,6,NegNum)
-                    xlSheet.write(xlRow,7,SumNeg)
-                if ThisOne in MinMaxList:
-                    Num,Min,Max = get_minmax(data[di])
-                    if ThisOne == 'VPD' or ThisOne == 'Ta_HMP':
-                        Num2,Av = get_averages(data[di])
-                    xlSheet.write(xlRow,0,monthabr[month-1])
-                    xlSheet.write(xlRow,1,day)
-                    xlSheet.write(xlRow,2,Num)
-                    xlSheet.write(xlRow,3,Min)
-                    xlSheet.write(xlRow,4,Max)
-                    if ThisOne == 'VPD' or ThisOne == 'Ta_HMP':
-                        xlSheet.write(xlRow,5,Av)
-    
-    xlSheet = xlFile.add_sheet('SWCsurface')
-    xlRow = 0
-    xlCol = 0
-    xlSheet.write(xlRow,xlCol,'Month')
-    xlCol = xlCol + 1
-    xlSheet.write(xlRow,xlCol,'Day')
-    
-    for ThisOne in SWC0list:
-        log.info(' Doing daily sums for '+ThisOne)
-        xlRow = 0
-        xlCol = xlCol + 1
-        xlSheet.write(xlRow,xlCol,'n')
-        xlCol = xlCol + 1
-        xlSheet.write(xlRow,xlCol,ThisOne)
-        Units = ds.series[ThisOne]['Attr']['Units']
-        xlRow = xlRow + 1
-        xlSheet.write(xlRow,xlCol,Units)
-        data = numpy.ma.masked_where(abs(ds.series[ThisOne]['Data']-float(-9999))<c.eps,ds.series[ThisOne]['Data'])
-        for month in range(M1st,M2nd+1):
-            if month == 1 or month == 3 or month == 5 or month == 7 or month == 8 or month == 10 or month == 12:
-                dRan = 31
-            if month == 2:
-                dRan = 28
-            if month == 4 or month == 6 or month == 9 or month == 11:
-                dRan = 30
-            
-            for day in range(1,dRan+1):
-                xlRow = xlRow + 1
-                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day))[0]
-                Num,Av = get_soilaverages(data[di])
-                if xlCol == 3:
-                    xlSheet.write(xlRow,0,monthabr[month-1])
-                    xlSheet.write(xlRow,1,day)
-                
-                xlSheet.write(xlRow,xlCol-1,Num)
-                xlSheet.write(xlRow,xlCol,Av)
-    
-    xlSheet = xlFile.add_sheet('SWC10cm')
-    xlRow = 0
-    xlCol = 0
-    xlSheet.write(xlRow,xlCol,'Month')
-    xlCol = xlCol + 1
-    xlSheet.write(xlRow,xlCol,'Day')
-    
-    for ThisOne in SWC10list:
-        log.info(' Doing daily sums for '+ThisOne)
-        xlRow = 0
-        xlCol = xlCol + 1
-        xlSheet.write(xlRow,xlCol,'n')
-        xlCol = xlCol + 1
-        xlSheet.write(xlRow,xlCol,ThisOne)
-        Units = ds.series[ThisOne]['Attr']['Units']
-        xlRow = xlRow + 1
-        xlSheet.write(xlRow,xlCol,Units)
-        data = numpy.ma.masked_where(abs(ds.series[ThisOne]['Data']-float(-9999))<c.eps,ds.series[ThisOne]['Data'])
-        for month in range(M1st,M2nd+1):
-            if month == 1 or month == 3 or month == 5 or month == 7 or month == 8 or month == 10 or month == 12:
-                dRan = 31
-            if month == 2:
-                dRan = 28
-            if month == 4 or month == 6 or month == 9 or month == 11:
-                dRan = 30
-            
-            for day in range(1,dRan+1):
-                xlRow = xlRow + 1
-                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day))[0]
-                Num,Av = get_soilaverages(data[di])
-                if xlCol == 3:
-                    xlSheet.write(xlRow,0,monthabr[month-1])
-                    xlSheet.write(xlRow,1,day)
-                
-                xlSheet.write(xlRow,xlCol-1,Num)
-                xlSheet.write(xlRow,xlCol,Av)
-    
-    xlSheet = xlFile.add_sheet('SWC60cm')
-    xlRow = 0
-    xlCol = 0
-    xlSheet.write(xlRow,xlCol,'Month')
-    xlCol = xlCol + 1
-    xlSheet.write(xlRow,xlCol,'Day')
-    
-    for ThisOne in SWC60list:
-        log.info(' Doing daily sums for '+ThisOne)
-        xlRow = 0
-        xlCol = xlCol + 1
-        xlSheet.write(xlRow,xlCol,'n')
-        xlCol = xlCol + 1
-        xlSheet.write(xlRow,xlCol,ThisOne)
-        Units = ds.series[ThisOne]['Attr']['Units']
-        xlRow = xlRow + 1
-        xlSheet.write(xlRow,xlCol,Units)
-        data = numpy.ma.masked_where(abs(ds.series[ThisOne]['Data']-float(-9999))<c.eps,ds.series[ThisOne]['Data'])
-        for month in range(M1st,M2nd+1):
-            if month == 1 or month == 3 or month == 5 or month == 7 or month == 8 or month == 10 or month == 12:
-                dRan = 31
-            if month == 2:
-                dRan = 28
-            if month == 4 or month == 6 or month == 9 or month == 11:
-                dRan = 30
-            
-            for day in range(1,dRan+1):
-                xlRow = xlRow + 1
-                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day))[0]
-                Num,Av = get_soilaverages(data[di])
-                if xlCol == 3:
-                    xlSheet.write(xlRow,0,monthabr[month-1])
-                    xlSheet.write(xlRow,1,day)
-                
-                xlSheet.write(xlRow,xlCol-1,Num)
-                xlSheet.write(xlRow,xlCol,Av)
-    
-    xlSheet = xlFile.add_sheet('SWC100cm')
-    xlRow = 0
-    xlCol = 0
-    xlSheet.write(xlRow,xlCol,'Month')
-    xlCol = xlCol + 1
-    xlSheet.write(xlRow,xlCol,'Day')
-    
-    for ThisOne in SWC100list:
-        log.info(' Doing daily sums for '+ThisOne)
-        xlRow = 0
-        xlCol = xlCol + 1
-        xlSheet.write(xlRow,xlCol,'n')
-        xlCol = xlCol + 1
-        xlSheet.write(xlRow,xlCol,ThisOne)
-        Units = ds.series[ThisOne]['Attr']['Units']
-        xlRow = xlRow + 1
-        xlSheet.write(xlRow,xlCol,Units)
-        data = numpy.ma.masked_where(abs(ds.series[ThisOne]['Data']-float(-9999))<c.eps,ds.series[ThisOne]['Data'])
-        for month in range(M1st,M2nd+1):
-            if month == 1 or month == 3 or month == 5 or month == 7 or month == 8 or month == 10 or month == 12:
-                dRan = 31
-            if month == 2:
-                dRan = 28
-            if month == 4 or month == 6 or month == 9 or month == 11:
-                dRan = 30
-            
-            for day in range(1,dRan+1):
-                xlRow = xlRow + 1
-                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day))[0]
-                Num,Av = get_soilaverages(data[di])
-                if xlCol == 3:
-                    xlSheet.write(xlRow,0,monthabr[month-1])
-                    xlSheet.write(xlRow,1,day)
-                
-                xlSheet.write(xlRow,xlCol-1,Num)
-                xlSheet.write(xlRow,xlCol,Av)
-    
-    
+        xlCol = 0
+        if ThisOne in SumOutList:
+            if ThisOne in SubOutList:
+                write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='True',DoSubSum='True')
+            else:
+                write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='True')
+        
+        if ThisOne in MinMaxOutList:
+            write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoMinMax='True')
+        
+        if ThisOne in SoilList:
+            soilvars = ast.literal_eval(cf['Sums'][ThisOne])
+            for n in soilvars:
+                if n == soilvars[0]:
+                    xC,xS = write_sums(cf,ds,n,xlCol,xlSheet,DoSoil='True')
+                else:
+                    xC,xS = write_sums(cf,ds,n,xlCol,xS,DoSoil='True')
+                xlCol = xC + 1
+        
     log.info(' Saving Excel file '+xlFileName)
     xlFile.save(xlFileName)
 
@@ -2478,3 +2363,109 @@ def UstarFromFh(ds,us_out,T_in, Ah_in, p_in, Fh_in, u_in, z, z0):
     #ds.series[us_out]['Attr'] = {}
     #ds.series[us_out]['Attr']['Description'] = 'u* calculated from (Fh,Ta,Ah,P,u)'
     #ds.series[us_out]['Attr']['Units'] = 'm/s'
+
+def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoSubSum='False',DoSoil='False'):
+    monthabr = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+    M1st = int(cf['General']['firstMonth'])
+    M2nd = int(cf['General']['secondMonth'])
+    log.info(' Doing daily sums for '+ThisOne)
+    Units = ds.series[ThisOne]['Attr']['Units']
+    
+    xlRow = 1
+    if xlCol == 0:
+        xlSheet.write(xlRow,xlCol,'Month')
+        xlCol = xlCol + 1
+        xlSheet.write(xlRow,xlCol,'Day')
+        xlCol = xlCol + 1
+    xlSheet.write(xlRow,xlCol,'n')
+    xlCol = xlCol + 1
+    if DoMinMax == 'True':
+        xlSheet.write(xlRow,xlCol,ThisOne+'_min')
+        xlSheet.write(xlRow-1,xlCol,Units)
+        xlCol = xlCol + 1
+        xlSheet.write(xlRow,xlCol,ThisOne+'_max')
+        if ThisOne == 'VPD' or ThisOne == 'Ta_HMP':
+            xlSheet.write(xlRow-1,xlCol,Units)
+            xlCol = xlCol + 1
+            xlSheet.write(xlRow,xlCol,'n')
+            xlCol = xlCol + 1
+            xlSheet.write(xlRow,xlCol,ThisOne+'_mean')
+    else:
+        xlSheet.write(xlRow,xlCol,ThisOne)
+        
+    xlSheet.write(xlRow-1,xlCol,Units)
+
+    if DoSubSum == 'True':
+        xlCol = xlCol + 1
+        xlSheet.write(xlRow,xlCol,'Pos n')
+        xlCol = xlCol + 1
+        xlSheet.write(xlRow,xlCol,ThisOne+'_pos')
+        xlSheet.write(xlRow-1,xlCol,Units)
+        xlCol = xlCol + 1
+        xlSheet.write(xlRow,xlCol,'Neg n')
+        xlCol = xlCol + 1
+        xlSheet.write(xlRow,xlCol,ThisOne+'_neg')
+        xlSheet.write(xlRow-1,xlCol,Units)
+    
+    data = numpy.ma.masked_where(abs(ds.series[ThisOne]['Data']-float(-9999))<c.eps,ds.series[ThisOne]['Data'])
+    for month in range(M1st,M2nd+1):
+        if month == 1 or month == 3 or month == 5 or month == 7 or month == 8 or month == 10 or month == 12:
+            dRan = 31
+        if month == 2:
+            dRan = 28
+        if month == 4 or month == 6 or month == 9 or month == 11:
+            dRan = 30
+            
+        for day in range(1,dRan+1):
+            xlRow = xlRow + 1
+            di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day))[0]
+            if DoSoil == 'True':
+                Num,Av = get_soilaverages(data[di])
+                if xlCol == 3:
+                    xlCol = 2
+                    xlSheet.write(xlRow,xlCol-2,monthabr[month-1])
+                    xlSheet.write(xlRow,xlCol-1,day)
+                else:
+                    xlCol = xlCol - 1
+            else:
+                if DoSum == 'True':
+                    Num,Sum = get_sums(data[di])
+                if DoMinMax == 'True':
+                    Num,Min,Max = get_minmax(data[di])
+                    if ThisOne == 'VPD' or ThisOne == 'Ta_HMP':
+                        Num2,Av = get_averages(data[di])
+                if DoSubSum == 'True':
+                    PosNum,NegNum,SumPos,SumNeg = get_subsums(data[di])
+                xlCol = 2
+                xlSheet.write(xlRow,xlCol-2,monthabr[month-1])
+                xlSheet.write(xlRow,xlCol-1,day)
+            
+            xlSheet.write(xlRow,xlCol,Num)
+            xlCol = xlCol + 1
+            if DoSoil == 'True':
+                xlSheet.write(xlRow,xlCol,Av)
+            elif DoMinMax == 'True':
+                xlSheet.write(xlRow,xlCol,Min)
+                xlCol = xlCol + 1
+                xlSheet.write(xlRow,xlCol,Max)
+                if ThisOne == 'VPD' or ThisOne == 'Ta_HMP':
+                    xlCol = xlCol + 1
+                    xlSheet.write(xlRow,xlCol,Num2)
+                    xlCol = xlCol + 1
+                    xlSheet.write(xlRow,xlCol,Av)
+            elif DoSum == 'True':
+                xlSheet.write(xlRow,xlCol,Sum)
+                if DoSubSum == 'True':
+                    xlCol = xlCol + 1
+                    xlSheet.write(xlRow,xlCol,PosNum)
+                    xlCol = xlCol + 1
+                    xlSheet.write(xlRow,xlCol,SumPos)
+                    xlCol = xlCol + 1
+                    xlSheet.write(xlRow,xlCol,NegNum)
+                    xlCol = xlCol + 1
+                    xlSheet.write(xlRow,xlCol,SumNeg)
+    
+    if DoSoil == 'True': 
+        return xlCol,xlSheet
+    else:
+        return

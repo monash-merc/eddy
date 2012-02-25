@@ -235,7 +235,7 @@ def MakeQCFlag(ds,SeriesList):
         if SeriesList[0] in ds.series.keys():
             flag = ds.series[SeriesList[0]]['Flag'].copy()
         else:
-            log.error('  MakeQCFlag: series '+SeriesList[i]+' not in ds.series')
+            log.error('  MakeQCFlag: series '+str(SeriesList[0])+' not in ds.series')
     if len(SeriesList)>1:
         for ThisOne in SeriesList:
             if ThisOne in ds.series.keys():
