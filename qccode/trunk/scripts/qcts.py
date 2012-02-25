@@ -605,7 +605,7 @@ def ComputeDailySums(cf,ds):
     if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SoilList'):
         SoilList = ast.literal_eval(cf['Sums']['SoilList'])
     else:
-        SoilList = ['SWCsurface','SWC10cm','SWC60cm','SWC100cm']
+        SoilList = []
 
     for ThisOne in SumList:
         if ThisOne == 'ET':
@@ -700,12 +700,13 @@ def ComputeDailySums(cf,ds):
                 OutList.append(ThisOne)
             MinMaxOutList.append(ThisOne)
     
-    for ThisOne in SoilList:
-        if qcutils.cfkeycheck(cf,Base='Sums',ThisOne=ThisOne):
-            vars = ast.literal_eval(cf['Sums'][ThisOne])
-            for index in range(0,len(vars)):
-                SoilOutList.append(vars[index])
-            OutList.append(ThisOne)
+    if len(SoilList) > 0:
+        for ThisOne in SoilList:
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne=ThisOne):
+                vars = ast.literal_eval(cf['Sums'][ThisOne])
+                for index in range(0,len(vars)):
+                    SoilOutList.append(vars[index])
+                OutList.append(ThisOne)
     
     xlFileName = cf['Files']['L4']['xlFilePath']+cf['Files']['L4']['xlFileName']
     xlFile = xlwt.Workbook()
