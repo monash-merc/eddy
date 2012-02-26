@@ -3,12 +3,12 @@ Platform = Mac    # Mac or PC
 
 [Files]
     [[L1]]
-        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
+        ncFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/qc_py/ncData/ASM/
         ncFileName = ASM_EC_2012_1Jan-Mar_L1.nc
     [[L2]]
-        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
+        ncFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/qc_py/ncData/ASM/
         ncFileName = ASM_EC_2012_1Jan-Mar_L2.nc
-        xlFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level2/
+        xlFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/AliceSpringsMulga/level2/
         xlFileName = ASM_EC_2012_1Jan-Mar_L2.xls
 
 
@@ -602,8 +602,12 @@ noDefaultXl = True   # uncomment to load controlfile for excel output
 
 
 [PlotSpec]
-Width = 23.5
-Height = 11.5
+#Width = 23.5    # office
+#Height = 11.5   # office
+Width = 19.5    # home
+Height = 11.4   # home
+#Width = 17      # field
+#Height = 9.5    # field
 
 [Plots]
     [[1]]
@@ -670,3 +674,13 @@ Height = 11.5
     [[16]]
         Title = "Vertical Humidity Gradient"
         Variables = "['Ah_HMP_200cm','Ah_HMP_425cm','Ah_HMP_657cm','Ah_HMP']"
+    [[17]]
+        Type = xy
+        Title = "xy plots:  Ah"
+        XSeries = "['Ah_HMP']"
+        YSeries = "['Ah_7500_Av']"
+    [[18]]
+        Type = xy
+        Title = "xy plots:  T"
+        XSeries = "['Ta_HMP']"
+        YSeries = "['Tv_CSAT']"

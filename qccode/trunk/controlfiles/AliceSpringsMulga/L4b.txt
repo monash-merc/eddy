@@ -22,13 +22,18 @@ noDefaultXl = True
 [Sums]
 #
 # Default SumList = "['Rain','ET','Energy','Radiation','Carbon']"
-# Default SubSumList = "['Energy']"
-# Default MinMaxList = "['VPD','Ta_HMP','Vbat','Tpanel','Carbon']"
+# Default SubSumList = "[]"
+# Default MinMaxList = "['VPD','Ta_EC','Vbat','Tpanel','Carbon']"
+# Default MeanList = "['VPD','Ta_EC','Tpanel']"
 #
 # Default ETin = "['Fe_gapfilled']"
 # Default Energyin = "['Fe_gapfilled', 'Fh_gapfilled', 'Fg_Av']"
 # Default Radin = "['Fld','Flu','Fnr','Fsd','Fsu']"
 # Default Cin = "['Fc_gapfilled']"
+#
+SubSumList = "['Energy']"
+MinMaxList = "['VPD','Ta_HMP','Vbat','Tpanel','Carbon']"
+MeanList = "['VPD','Ta_HMP','Tpanel']"
 #
 SoilList = "['SWCsurface','SWC10cm','SWC60cm','SWC100cm']"
 SWCsurface = "['svwc_s_baresoil', 'svwc_s_mulga', 'svwc_s_understory']"
@@ -36,17 +41,26 @@ SWC10cm = "['svwc_10cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_10cm_understory
 SWC60cm = "['svwc_60cm_baresoil_a1', 'svwc_60cm_mulga_a1', 'svwc_60cm_understory_a1', 'svwc_60cm_baresoil_a2', 'svwc_60cm_mulga_a2', 'svwc_60cm_understory_a2']"
 SWC100cm = "['svwc_100cm_baresoil_a1', 'svwc_100cm_mulga_a1', 'svwc_100cm_understory_a1', 'svwc_100cm_baresoil_a2', 'svwc_100cm_mulga_a2', 'svwc_100cm_understory_a2']"
 
+
 [Variables]
     [[Fh_rmv]]
     [[Fe_wpl]]
     [[Fc_wpl]]
 
-[PlotSpec]
-Width = 23.5
-Height = 11.5
 
+[PlotSpec]
+#Width = 23.5    # office
+#Height = 11.5   # office
+Width = 19.5    # home
+Height = 11.4   # home
+#Width = 17      # field
+#Height = 9.5    # field
 
 [Plots]
     [[31]]
         Title = "Fluxes"
         Variables = "['Fh_rmv','Fe_wpl','Fc_wpl']"
+        YLMin = "['-50','-50','-1']"     # dimensions of the individual plots
+        YLMax = "['750','500','1']"      # all four lines must be uncommented to use
+        YRMin = "['-50','-50','-1']"     # the number of items in these four lists must be equal
+        YRMax = "['750','500','1']"      #     to the number of items in the Variables list

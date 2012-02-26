@@ -6,13 +6,13 @@ RotateFlag   = Yes
 
 [Files]
     [[L2]]
-        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
+        ncFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/qc_py/ncData/ASM/
         ncFileName = ASM_EC_2012_1Jan-Mar_L2.nc
     [[L3]]
-        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
+        ncFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/qc_py/ncData/ASM/
         ncFileName = ASM_EC_2012_1Jan-Mar_L3.nc
     [[L3_Corrected]]
-        ncFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level3/
+        ncFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/AliceSpringsMulga/level3/
         ncFileName = ASM_EC_2012_1Jan-Mar_L3_Corrected.nc
 
 [FunctionArgs]
@@ -315,8 +315,12 @@ noDefaultXl = True
 
 
 [PlotSpec]
-Width = 23.5
-Height = 11.5
+#Width = 23.5    # office
+#Height = 11.5   # office
+Width = 19.5    # home
+Height = 11.4   # home
+#Width = 17      # field
+#Height = 9.5    # field
 
 [Plots]
     [[21]]
@@ -359,3 +363,8 @@ Height = 11.5
         YLMax = "['.4','.4','.4','.4','.4','.4','.4']"
         YRMin = "['.01','.01','.01','.01','.01','.01','.01']"
         YRMax = "['.4','.4','.4','.4','.4','.4','.4']"
+    [[29]]
+        Type = xy
+        Title = "xy plots:  Ah"
+        XSeries = "['Ah_HMP']"
+        YSeries = "['Ah_7500_Av']"
