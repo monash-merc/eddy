@@ -1,4 +1,5 @@
 [General]
+SOLO = True
 firstMonth = 1
 secondMonth = 3
 
@@ -7,8 +8,8 @@ secondMonth = 3
         ncFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/qc_py/ncData/ASM/
         ncFileName = ASM_EC_2012_1Jan-Mar_L3.nc
     [[L4]]
-        xlFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/AliceSpringsMulga/level5_summaries/
-        xlFileName = ASM_EC_2012_1Jan-Mar_Daily_sums.xls
+        xlSumFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/AliceSpringsMulga/level5_summaries/
+        xlSumFileName = ASM_EC_2012_1Jan-Mar_Daily_sums.xls
         ncFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/qc_py/ncData/ASM/
         ncFileName = ASM_EC_2012_1Jan-Mar_L4.nc
     [[L4_GapFilled]]
