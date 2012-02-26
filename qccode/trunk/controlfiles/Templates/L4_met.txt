@@ -23,6 +23,7 @@
 # [Plots]     - definition of time series plots
 #
 [General]
+Met = True
 zmd = 5           # instrument height above displacement plane
 z0 = 1            # roughness length
 
@@ -35,8 +36,23 @@ z0 = 1            # roughness length
     [[L4]]
         ncFilePath = D:/ARCSpatial/Sites/AdelaideRiver/Data/Processed/2009/
         ncFileName = AdelaideRiver_2009_L4.nc
+        xlSumFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level5_summaries/
+        xlSumFileName = ASM_EC_2012_1Jan-Mar_Daily_sums.xls
         xlFilePath = D:/ARCSpatial/Sites/AdelaideRiver/Data/Processed/2009/
         xlFileName = AdelaideRiver_2009_L4.xls
+
+[Sums]
+#
+# Default SumList = "['Rain','ET','Energy','Radiation','Carbon']"
+# Default SubSumList = "[]"
+# Default MinMaxList = "['VPD','Ta_EC','Vbat','Tpanel','Carbon']"
+# Default MinMaxMeanList = "['VPD','Ta_EC','Tpanel']"
+#
+# Default ETin = "['Fe']"
+# Default Energyin = "['Fe', 'Fh', 'Fg']"
+# Default Radin = "['Fld','Flu','Fn','Fsd','Fsu']"
+# Default Cin = "['Fc']"
+#
 
 [Variables]
     [[Ah_EC]]

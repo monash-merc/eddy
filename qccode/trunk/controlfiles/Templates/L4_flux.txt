@@ -12,6 +12,7 @@
 # [PlotSpec]  - Definition of plot window size.  Adjust until the plots fit comfortably in your display. Optional
 # [Plots]     - definition of time series plots
 [General]
+SOLO = True
 firstMonth = 1
 secondMonth = 3
 
@@ -20,8 +21,8 @@ secondMonth = 3
         ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
         ncFileName = ASM_EC_2012_1Jan-Mar_L3.nc
     [[L4]]
-        xlFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level5_summaries/
-        xlFileName = ASM_EC_2012_1Jan-Mar_Daily_sums.xls
+        xlSumFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level5_summaries/
+        xlSumFileName = ASM_EC_2012_1Jan-Mar_Daily_sums.xls
         ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
         ncFileName = ASM_EC_2012_1Jan-Mar_L4.nc
     [[L4_GapFilled]]
@@ -36,8 +37,8 @@ L4 = "['Fm', 'Fc_gapfilled', 'Fe_gapfilled', 'Fh_gapfilled', 'Fg_Av', 'Fnr', 'Fs
 [Sums]
 #
 # Default SumList = "['Rain','ET','Energy','Radiation','Carbon']"
-# Default SubSumList = "['Energy']"
-# Default MinMaxList = "['VPD','Ta_HMP','Vbat','Tpanel','Carbon']"
+# Default SubSumList = "[]"
+# Default MinMaxList = "['VPD','Ta_EC','Vbat','Tpanel','Carbon']"
 # Default MinMaxMeanList = "['VPD','Ta_EC','Tpanel']"
 #
 # Default ETin = "['Fe_gapfilled']"
