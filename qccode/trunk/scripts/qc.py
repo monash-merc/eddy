@@ -306,11 +306,11 @@ class qcgui(Tkinter.Frame):
                                  str(self.ds3.series['DateTime']['Data'][-1]))
         sitename = self.ds3.globalattributes['SiteName']
         self.do_progress(text='Doing L4 QC: '+sitename+' ...')
-        if 'firstMonth' in self.cf['General']:
-            self.ds3b = qcio.nc_read_series(self.cf,'L4')
-            self.ds4 = qcls.l4qc_GapFilledFluxes(self.cf,self.ds3b)
-        elif 'zmd' in self.cf['General']:
-            self.ds4 = qcls.l4qc_FillMetGaps(self.cf,self.ds3)
+#        if 'firstMonth' in self.cf['General']:
+#            self.ds3b = qcio.nc_read_series(self.cf,'L4')
+#            self.ds4 = qcls.l4qc(self.cf,self.ds3b)
+#        elif 'zmd' in self.cf['General']:
+        self.ds4 = qcls.l4qc(self.cf,self.ds3)
         self.do_progress(text='Finished L4: '+sitename)
         log.info(' Finished L4: '+sitename)
         self.do_progress(text='Saving L4 Gap Filled NetCDF data ...')                     # put up the progress message

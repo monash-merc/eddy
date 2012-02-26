@@ -267,10 +267,12 @@ def l3qc(cf,ds2):
     
     return ds3
 
-def l4qc_FillMetGaps(cf,ds3):
+def l4qc(cf,ds3):
     """
         Fill gaps in met data from other sources
+        Integrate SOLO-ANN gap filled fluxes performed externally
         Generates L4 from L3 data
+        Generates daily sums excel workbook
         
         Variable Series:
             Meteorological (MList): Ah_EC, Cc_7500_Av, ps, Ta_EC, Ws_CSAT, Wd_CSAT
@@ -285,6 +287,8 @@ def l4qc_FillMetGaps(cf,ds3):
             z0: roughness height
         
         Functions performed:
+            qcts.AddMetVars
+            qcts.ComputeDailySums
             qcts.InterpolateOverMissing (OList for gaps shorter than 3 observations, OList gaps shorter than 7 observations)
             qcts.GapFillFromAlternate (MList, RList)
             qcts.GapFillFromClimatology (Ah_EC, Fn, Fg, ps, Ta_EC, Ws_CSAT, OList)
@@ -296,74 +300,119 @@ def l4qc_FillMetGaps(cf,ds3):
         """
     level = 'L4'    # level of processing
     # get z-d (measurement height minus displacement height) and z0 from the control file
-    zmd = float(cf['General']['zmd'])   # z-d for site
-    z0 = float(cf['General']['z0'])     # z0 for site
-    # make a copy of the L4 data, data from the alternate sites will be merged with this copy
-    ds4 = copy.deepcopy(ds3)
-    ds4.globalattributes['Level'] = level
-    ds4.globalattributes['EPDversion'] = sys.version
-    ds4.globalattributes['QCVersion'] = __doc__
-    ds4.globalattributes['Functions'] = 'InterpolateOverMissing, GapFillFromAlternate, GapFillFromClimatology, GapFillFromRatios, ReplaceOnDiff, UstarFromFh, ReplaceWhereMissing, do_qcchecks'
-    # linear interpolation to fill missing values over gaps of 1 hour
-    qcts.InterpolateOverMissing(cf,ds4,maxlen=2)
-    # gap fill meteorological and radiation data from the alternate site(s)
-    log.info(' Gap filling using data from alternate sites')
-    qcts.GapFillFromAlternate(cf,ds4)
-    # gap fill meteorological, radiation and soil data using climatology
-    log.info(' Gap filling using site climatology')
-    qcts.GapFillFromClimatology(cf,ds4)
-    # gap fill using neural networks
-    # qcts.GapFillFluxesUsingNN(cf,ds4)
-    # gap fill using "match and replace"
-    # qcts.GapFillFluxesUsingMR(cf,ds4)
-    # gap fill using evaporative fraction (Fe/Fa), Bowen ratio (Fh/Fe) and ecosystem water use efficiency (Fc/Fe)
-    log.info(' Gap filling Fe, Fh and Fc using ratios')
-    qcts.GapFillFromRatios(cf,ds4)
-    # !!! this section required for Daly Uncleared 2009 to deal with bad CSAT from 14/4/2009 to 22/10/2009 !!!
-    # replace wind speed at Daly Uncleared when it differs from alternate site by more than threshold
-    log.info(' Replacing Ws_CSAT when difference with alternate data exceeds threshold')
-    qcts.ReplaceOnDiff(cf,ds4,series=['Ws_CSAT'])
-    # calculate u* from Fh and corrected wind speed
-    qcts.UstarFromFh(ds4,'uscalc','Ta_EC', 'Ah_EC', 'ps', 'Fh', 'Ws_CSAT', zmd, z0)
-    qcts.ReplaceWhereMissing(ds4.series['ustar'],ds4.series['ustar'],ds4.series['uscalc'],0)
-    # !!! this section required for Daly Uncleared 2009 to deal with bad CSAT from 14/4/2009 to 22/10/2009 !!!
-    # replace measured u* with calculated u* when difference exceeds threshold
-    log.info(' Replacing ustar when difference with alternate data exceeds threshold')
-    qcts.ReplaceOnDiff(cf,ds4,series=['ustar'])
-    # re-apply the quality control checks (range, diurnal and rules)
-    log.info(' Doing QC checks on L4 data')
-    qcck.do_qcchecks(cf,ds4)
-    # interpolate over any ramaining gaps up to 3 hours in length
-    qcts.InterpolateOverMissing(cf,ds4,maxlen=6)
-    # fill any remaining gaps climatology
-    qcts.GapFillFromClimatology(cf,ds4)
-    return ds4
-
-def l4qc_GapFilledFluxes(cf,ds3):
-    """
-        Integrate SOLO-ANN gap filled fluxes performed externally
-        Generates L4 from L3 data
-        Generates daily sums excel workbook
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='Met'):
+        if str(ast.literal_eval(cf['General']['Met'])) == 'True':
+            zmd = float(cf['General']['zmd'])   # z-d for site
+            z0 = float(cf['General']['z0'])     # z0 for site
+            ds4 = copy.deepcopy(ds3)
+            ds4.globalattributes['Level'] = level
+            ds4.globalattributes['EPDversion'] = sys.version
+            ds4.globalattributes['QCVersion'] = __doc__
+            ds4.globalattributes['Functions'] = 'InterpolateOverMissing, GapFillFromAlternate, GapFillFromClimatology, GapFillFromRatios, ReplaceOnDiff, UstarFromFh, ReplaceWhereMissing, do_qcchecks'
+            # make a copy of the L4 data, data from the alternate sites will be merged with this copy
+            # linear interpolation to fill missing values over gaps of 1 hour
+            qcts.InterpolateOverMissing(cf,ds4,maxlen=2)
+            # gap fill meteorological and radiation data from the alternate site(s)
+            log.info(' Gap filling using data from alternate sites')
+            qcts.GapFillFromAlternate(cf,ds4)
+            # gap fill meteorological, radiation and soil data using climatology
+            log.info(' Gap filling using site climatology')
+            qcts.GapFillFromClimatology(cf,ds4)
+            # gap fill using neural networks
+            # qcts.GapFillFluxesUsingNN(cf,ds4)
+            # gap fill using "match and replace"
+            # qcts.GapFillFluxesUsingMR(cf,ds4)
+            # gap fill using evaporative fraction (Fe/Fa), Bowen ratio (Fh/Fe) and ecosystem water use efficiency (Fc/Fe)
+            log.info(' Gap filling Fe, Fh and Fc using ratios')
+            qcts.GapFillFromRatios(cf,ds4)
+            # !!! this section required for Daly Uncleared 2009 to deal with bad CSAT from 14/4/2009 to 22/10/2009 !!!
+            # replace wind speed at Daly Uncleared when it differs from alternate site by more than threshold
+            log.info(' Replacing Ws_CSAT when difference with alternate data exceeds threshold')
+            qcts.ReplaceOnDiff(cf,ds4,series=['Ws_CSAT'])
+            # calculate u* from Fh and corrected wind speed
+            qcts.UstarFromFh(ds4,'uscalc','Ta_EC', 'Ah_EC', 'ps', 'Fh', 'Ws_CSAT', zmd, z0)
+            qcts.ReplaceWhereMissing(ds4.series['ustar'],ds4.series['ustar'],ds4.series['uscalc'],0)
+            # !!! this section required for Daly Uncleared 2009 to deal with bad CSAT from 14/4/2009 to 22/10/2009 !!!
+            # replace measured u* with calculated u* when difference exceeds threshold
+            log.info(' Replacing ustar when difference with alternate data exceeds threshold')
+            qcts.ReplaceOnDiff(cf,ds4,series=['ustar'])
+            # re-apply the quality control checks (range, diurnal and rules)
+            log.info(' Doing QC checks on L4 data')
+            qcck.do_qcchecks(cf,ds4)
+            # interpolate over any ramaining gaps up to 3 hours in length
+            qcts.InterpolateOverMissing(cf,ds4,maxlen=6)
+            # fill any remaining gaps climatology
+            qcts.GapFillFromClimatology(cf,ds4)
+            # compute daily statistics
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SumList'):
+                SumList = ast.literal_eval(cf['Sums']['SumList'])
+            else:
+                SumList = ['Rain','ET','Energy','Radiation','Carbon']
+            
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SubSumList'):
+                SubSumList = ast.literal_eval(cf['Sums']['SubSumList'])
+            else:
+                SubSumList = []
+            
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='MinMaxList'):
+                MinMaxList = ast.literal_eval(cf['Sums']['MinMaxList'])
+            else:
+                MinMaxList = ['VPD','Ta_EC','Vbat','Tpanel','Carbon']
+            
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='MeanList'):
+                MeanList = ast.literal_eval(cf['Sums']['MeanList'])
+            else:
+                MeanList = ['VPD','Ta_EC','Tpanel']
+            
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SoilList'):
+                SoilList = ast.literal_eval(cf['Sums']['SoilList'])
+            else:
+                SoilList = []
         
-        Functions performed:
-            qcts.AddMetVars
-            qcts.ComputeDailySums
-        """
-    # make a copy of the L4 data
-    ds4 = copy.deepcopy(ds3)
-    ds4.globalattributes['Level'] = 'L4'
-    ds4.globalattributes['EPDversion'] = sys.version
-    ds4.globalattributes['QCVersion'] = __doc__
-    ds4.globalattributes['Functions'] = 'SOLO ANN GapFilling 10-day window, AddMetVars, ComputeDailySums (not included)'
-    # duplicate gapfilled fluxes for graphing comparison
-    Fe,flag = qcutils.GetSeriesasMA(ds4,'Fe_gapfilled')
-    qcutils.CreateSeries(ds4,'Fe_wpl',Fe,Flag=flag,Descr='ANN gapfilled Fe',Units='W/m2')
-    Fc,flag = qcutils.GetSeriesasMA(ds4,'Fc_gapfilled')
-    qcutils.CreateSeries(ds4,'Fc_wpl',Fc,Flag=flag,Descr='ANN gapfilled Fc',Units='mg/m2/s')
-    Fh,flag = qcutils.GetSeriesasMA(ds4,'Fh_gapfilled')
-    qcutils.CreateSeries(ds4,'Fh_rmv',Fh,Flag=flag,Descr='ANN gapfilled Fh',Units='W/m2')
-    # add relevant meteorological values to L3 data
-    qcts.AddMetVars(ds4)
-    # compute daily statistics
-    qcts.ComputeDailySums(cf,ds4)
+            qcts.ComputeDailySums(cf,ds4,SumList,SubSumList,MinMaxList,MeanList,SoilList)
+    
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='SOLO'):
+        if str(ast.literal_eval(cf['General']['SOLO'])) == 'True':
+            ds4 = qcio.nc_read_series(cf,level)
+            ds4.globalattributes['Level'] = 'L4'
+            ds4.globalattributes['EPDversion'] = sys.version
+            ds4.globalattributes['QCVersion'] = __doc__
+            ds4.globalattributes['Functions'] = 'SOLO ANN GapFilling 10-day window, AddMetVars, ComputeDailySums (not included)'
+            # duplicate gapfilled fluxes for graphing comparison
+            Fe,flag = qcutils.GetSeriesasMA(ds4,'Fe_gapfilled')
+            qcutils.CreateSeries(ds4,'Fe_wpl',Fe,Flag=flag,Descr='ANN gapfilled Fe',Units='W/m2')
+            Fc,flag = qcutils.GetSeriesasMA(ds4,'Fc_gapfilled')
+            qcutils.CreateSeries(ds4,'Fc_wpl',Fc,Flag=flag,Descr='ANN gapfilled Fc',Units='mg/m2/s')
+            Fh,flag = qcutils.GetSeriesasMA(ds4,'Fh_gapfilled')
+            qcutils.CreateSeries(ds4,'Fh_rmv',Fh,Flag=flag,Descr='ANN gapfilled Fh',Units='W/m2')
+            # add relevant meteorological values to L3 data
+            qcts.AddMetVars(ds4)
+            # compute daily statistics
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SumList'):
+                SumList = ast.literal_eval(cf['Sums']['SumList'])
+            else:
+                SumList = ['Rain','ET','Energy','Radiation','Carbon']
+            
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SubSumList'):
+                SubSumList = ast.literal_eval(cf['Sums']['SubSumList'])
+            else:
+                SubSumList = []
+            
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='MinMaxList'):
+                MinMaxList = ast.literal_eval(cf['Sums']['MinMaxList'])
+            else:
+                MinMaxList = ['VPD','Ta_EC','Vbat','Tpanel','Carbon']
+            
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='MeanList'):
+                MeanList = ast.literal_eval(cf['Sums']['MeanList'])
+            else:
+                MeanList = ['VPD','Ta_EC','Tpanel']
+            
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SoilList'):
+                SoilList = ast.literal_eval(cf['Sums']['SoilList'])
+            else:
+                SoilList = []
+            
+            qcts.ComputeDailySums(cf,ds4,SumList,SubSumList,MinMaxList,MeanList,SoilList)
+    
     return ds4
