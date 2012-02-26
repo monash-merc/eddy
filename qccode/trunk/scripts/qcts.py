@@ -585,6 +585,7 @@ def ComputeDailySums(cf,ds):
     SumOutList = []
     SubOutList = []
     MinMaxOutList = []
+    MeanOutList = []
     SoilOutList = []
     
     if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SumList'):
@@ -595,12 +596,17 @@ def ComputeDailySums(cf,ds):
     if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SubSumList'):
         SubSumList = ast.literal_eval(cf['Sums']['SubSumList'])
     else:
-        SubSumList = ['Energy']
+        SubSumList = []
     
     if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='MinMaxList'):
         MinMaxList = ast.literal_eval(cf['Sums']['MinMaxList'])
     else:
-        MinMaxList = ['VPD','Ta_HMP','Vbat','Tpanel','Carbon']
+        MinMaxList = ['VPD','Ta_EC','Vbat','Tpanel','Carbon']
+    
+    if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='MeanList'):
+        MeanList = ast.literal_eval(cf['Sums']['MeanList'])
+    else:
+        MeanList = ['VPD','Ta_EC','Tpanel']
     
     if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SoilList'):
         SoilList = ast.literal_eval(cf['Sums']['SoilList'])
@@ -676,6 +682,8 @@ def ComputeDailySums(cf,ds):
                 SubOutList.append(EOut[listindex])
                 if EOut[listindex] not in OutList:
                     OutList.append(EOut[listindex])
+                if EOut[listindex] not in SumOutList:
+                    SumOutList.append(EOut[listindex])
         else:
             SubOutList.append(ThisOne)
             if ThisOne not in OutList:
@@ -700,6 +708,15 @@ def ComputeDailySums(cf,ds):
                 OutList.append(ThisOne)
             MinMaxOutList.append(ThisOne)
     
+    for ThisOne in MeanList:
+        if ThisOne == 'Energy' or ThisOne == 'Carbon' or ThisOne == 'Radiation':
+            log.error(' Mean error: '+ThisOne+' to be placed in SumList')
+        else:
+            MeanOutList.append(ThisOne)
+            if ThisOne not in OutList:
+                OutList.append(ThisOne)
+
+
     if len(SoilList) > 0:
         for ThisOne in SoilList:
             if qcutils.cfkeycheck(cf,Base='Sums',ThisOne=ThisOne):
@@ -721,7 +738,14 @@ def ComputeDailySums(cf,ds):
                 write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='True')
         
         if ThisOne in MinMaxOutList:
-            write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoMinMax='True')
+            if ThisOne in MeanOutList:
+                write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoMinMax='True',DoMean='True')
+            else:
+                write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoMinMax='True')
+        
+        if ThisOne in MeanOutList:
+            if ThisOne not in MinMaxOutList:
+                write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoMean='True')
         
         if ThisOne in SoilList:
             soilvars = ast.literal_eval(cf['Sums'][ThisOne])
@@ -2365,7 +2389,7 @@ def UstarFromFh(ds,us_out,T_in, Ah_in, p_in, Fh_in, u_in, z, z0):
     #ds.series[us_out]['Attr']['Description'] = 'u* calculated from (Fh,Ta,Ah,P,u)'
     #ds.series[us_out]['Attr']['Units'] = 'm/s'
 
-def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoSubSum='False',DoSoil='False'):
+def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoMean='False',DoSubSum='False',DoSoil='False'):
     monthabr = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
     M1st = int(cf['General']['firstMonth'])
     M2nd = int(cf['General']['secondMonth'])
@@ -2385,13 +2409,13 @@ def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoSubS
         xlSheet.write(xlRow-1,xlCol,Units)
         xlCol = xlCol + 1
         xlSheet.write(xlRow,xlCol,ThisOne+'_max')
-        if ThisOne == 'VPD' or ThisOne == 'Ta_HMP':
+        if DoMean == 'True':
             xlSheet.write(xlRow-1,xlCol,Units)
             xlCol = xlCol + 1
-            xlSheet.write(xlRow,xlCol,'n')
-            xlCol = xlCol + 1
             xlSheet.write(xlRow,xlCol,ThisOne+'_mean')
-    else:
+    elif DoMinMax == 'False' and DoMean == 'True':
+        xlSheet.write(xlRow,xlCol,ThisOne+'_mean')
+    elif DoMinMax == 'False' and DoMean == 'False':
         xlSheet.write(xlRow,xlCol,ThisOne)
         
     xlSheet.write(xlRow-1,xlCol,Units)
@@ -2433,8 +2457,11 @@ def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoSubS
                     Num,Sum = get_sums(data[di])
                 if DoMinMax == 'True':
                     Num,Min,Max = get_minmax(data[di])
-                    if ThisOne == 'VPD' or ThisOne == 'Ta_HMP':
+                if DoMean == 'True':
+                    if DoMinMax == 'True':
                         Num2,Av = get_averages(data[di])
+                    else:
+                        Num,Av = get_averages(data[di])
                 if DoSubSum == 'True':
                     PosNum,NegNum,SumPos,SumNeg = get_subsums(data[di])
                 xlCol = 2
@@ -2449,11 +2476,11 @@ def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoSubS
                 xlSheet.write(xlRow,xlCol,Min)
                 xlCol = xlCol + 1
                 xlSheet.write(xlRow,xlCol,Max)
-                if ThisOne == 'VPD' or ThisOne == 'Ta_HMP':
-                    xlCol = xlCol + 1
-                    xlSheet.write(xlRow,xlCol,Num2)
+                if DoMean == 'True':
                     xlCol = xlCol + 1
                     xlSheet.write(xlRow,xlCol,Av)
+            elif DoMinMax == 'False' and DoMean == 'True':
+                xlSheet.write(xlRow,xlCol,Av)
             elif DoSum == 'True':
                 xlSheet.write(xlRow,xlCol,Sum)
                 if DoSubSum == 'True':

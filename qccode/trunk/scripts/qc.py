@@ -343,15 +343,15 @@ class qcgui(Tkinter.Frame):
             if 'Type' in plt_cf.keys():
                 if str(plt_cf['Type']).lower() =='xy':
                     self.do_progress(text='Plotting L1 and L2 XY ...')
-                    qcplot.plotxy(nFig,plt_cf,self.ds1,self.ds2,si,ei)
+                    qcplot.plotxy(self.cf,nFig,plt_cf,self.ds3,self.ds3,si,ei)
                 else:
                     self.do_progress(text='Plotting L1 and L2 QC ...')
                     SeriesList = ast.literal_eval(plt_cf['Variables'])
-                    qcplot.plottimeseries(self.cf,nFig,SeriesList,self.ds1,self.ds2,si,ei)
+                    qcplot.plottimeseries(self.cf,nFig,SeriesList,self.ds3,self.ds3,si,ei)
             else:
                 self.do_progress(text='Plotting L1 and L2 QC ...')
                 SeriesList = ast.literal_eval(plt_cf['Variables'])
-                qcplot.plottimeseries(self.cf,nFig,SeriesList,self.ds1,self.ds2,si,ei)
+                qcplot.plottimeseries(self.cf,nFig,SeriesList,self.ds3,self.ds3,si,ei)
         self.do_progress(text='Finished plotting L1 and L2')
         log.info(' Finished plotting L1 and L2, check the GUI')
 
@@ -370,12 +370,22 @@ class qcgui(Tkinter.Frame):
             self.ds3 = qcio.nc_read_series(self.cf,'L3')
             self.update_startenddate(str(self.ds3.series['DateTime']['Data'][0]),
                                      str(self.ds3.series['DateTime']['Data'][-1]))
-        self.do_progress(text='Plotting L3 QC ...')
         for nFig in self.cf['Plots'].keys():
-            SeriesList = ast.literal_eval(self.cf['Plots'][str(nFig)]['Variables'])
             si = qcutils.GetDateIndex(self.ds3.series['DateTime']['Data'],self.plotstartEntry.get(),0)
             ei = qcutils.GetDateIndex(self.ds3.series['DateTime']['Data'],self.plotendEntry.get(),-1)
-            qcplot.plottimeseries(self.cf,nFig,SeriesList,self.ds3,self.ds3,si,ei)
+            plt_cf = self.cf['Plots'][str(nFig)]
+            if 'Type' in plt_cf.keys():
+                if str(plt_cf['Type']).lower() =='xy':
+                    self.do_progress(text='Plotting L3 XY ...')
+                    qcplot.plotxy(self.cf,nFig,plt_cf,self.ds3,self.ds3,si,ei)
+                else:
+                    self.do_progress(text='Plotting L3 QC ...')
+                    SeriesList = ast.literal_eval(plt_cf['Variables'])
+                    qcplot.plottimeseries(self.cf,nFig,SeriesList,self.ds3,self.ds3,si,ei)
+            else:
+                self.do_progress(text='Plotting L3 QC ...')
+                SeriesList = ast.literal_eval(plt_cf['Variables'])
+                qcplot.plottimeseries(self.cf,nFig,SeriesList,self.ds3,self.ds3,si,ei)
         self.do_progress(text='Finished plotting L3')
         log.info(' Finished plotting L3, check the GUI')
 

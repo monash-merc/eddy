@@ -182,18 +182,29 @@ def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
             log.error('  plttimeseries: series '+ThisOne+' not in data structure')
     fig.show()
 
-def plotxy(nFig,plt_cf,dsa,dsb,si,ei):
+def plotxy(cf,nFig,plt_cf,dsa,dsb,si,ei):
+    SiteName = dsa.globalattributes['SiteName']
+    PlotDescription = cf['Plots'][str(nFig)]['Title']
     fig = plt.figure(int(nFig))
+    
     fig.clf()
+    plt.figtext(0.5,0.95,SiteName+': '+PlotDescription,ha='center',size=16)
     XSeries = ast.literal_eval(plt_cf['XSeries'])
     YSeries = ast.literal_eval(plt_cf['YSeries'])
-    for xname,yname in zip(XSeries,YSeries):
-        xa,flag = qcutils.GetSeriesasMA(dsa,xname,si=si,ei=ei)
-        ya,flag = qcutils.GetSeriesasMA(dsa,yname,si=si,ei=ei)
-        xb,flag = qcutils.GetSeriesasMA(dsb,xname,si=si,ei=ei)
-        yb,flag = qcutils.GetSeriesasMA(dsb,yname,si=si,ei=ei)
-        xyplot(xa,ya,sub=[1,2,1],xlabel=xname,ylabel=yname)
-        xyplot(xb,yb,sub=[1,2,2],regr=1,xlabel=xname,ylabel=yname)
+    log.info(' Plotting xy: '+str(XSeries)+' v '+str(YSeries))
+    if dsa == dsb:
+        for xname,yname in zip(XSeries,YSeries):
+            xa,flag = qcutils.GetSeriesasMA(dsa,xname,si=si,ei=ei)
+            ya,flag = qcutils.GetSeriesasMA(dsa,yname,si=si,ei=ei)
+            xyplot(xa,ya,sub=[1,1,1],regr=1,xlabel=xname,ylabel=yname)
+    else:
+        for xname,yname in zip(XSeries,YSeries):
+            xa,flag = qcutils.GetSeriesasMA(dsa,xname,si=si,ei=ei)
+            ya,flag = qcutils.GetSeriesasMA(dsa,yname,si=si,ei=ei)
+            xb,flag = qcutils.GetSeriesasMA(dsb,xname,si=si,ei=ei)
+            yb,flag = qcutils.GetSeriesasMA(dsb,yname,si=si,ei=ei)
+            xyplot(xa,ya,sub=[1,2,1],xlabel=xname,ylabel=yname)
+            xyplot(xb,yb,sub=[1,2,2],regr=1,xlabel=xname,ylabel=yname)
     fig.show()
 
 def xyplot(x,y,sub=[1,1,1],regr=0,title=None,xlabel=None,ylabel=None):
