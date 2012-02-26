@@ -86,8 +86,8 @@ FunctionList = "['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'Coo
 
 [Output]
 #noDefaultXl = True   # uncomment to load controlfile for additional excel output files
-L3 = "['Fm_rm', 'Fc_wpl', 'Fe_wpl', 'Fh_rmv', 'Fg_Av', 'Fnr', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustarM', 'LM', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Vbat_TopPanel', 'Vbat_BotPanel', 'Tpanel', 'Tpanel_CR3000b', 'theta', 'eta', 'Ux', 'u', 'Uy', 'v', 'Uz', 'w', 'UxUx', 'UxUy', 'uwM', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'vwM', 'AhAh', 'CcCc', 'UxUz', 'UyUz', 'UzT', 'UzA', 'UzC', 'wAwpl', 'wCM', 'wTM', 'Ts_Av', 'Sws_Av', 'Ah_HMP', 'q', 'e_HMP', 'RH_HMP', 'rho_a', 'rho_d', 'es_HMP', 'Ta_HMP', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Rain']"  # comment to load controlfile for additional excel output files
-#OFL2 = "['Fm_rm', 'Fc_wpl', 'Fe_wpl', 'Fh_rmv', 'Fg_Av', 'Fnr', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustarM', 'LM', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Vbat_TopPanel', 'Vbat_BotPanel', 'Tpanel', 'Tpanel_CR3000b', 'theta', 'eta', 'Ux', 'u', 'Uy', 'v', 'Uz', 'w', 'UxUx', 'UxUy', 'uwM', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'vwM', 'AhAh', 'CcCc', 'UxUz', 'UyUz', 'UzT', 'UzA', 'UzC', 'wAwpl', 'wCM', 'wTM', 'Ts_Av', 'Sws_Av', 'Ah_HMP', 'q', 'e_HMP', 'RH_HMP', 'rho_a', 'rho_d', 'es_HMP', 'Ta_HMP', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Rain']"  # uncomment to specify an optional variable list for submission of netCDF at L3 to OzFlux
+L3 = "['Fm', 'Fc_wpl', 'Fe_wpl', 'Fh_rv', 'Fg_Av', 'Fnr', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustarM', 'LM', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'theta', 'eta', 'Ux', 'u', 'Uy', 'v', 'Uz', 'w', 'UxUx', 'UxUy', 'uw', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'vw', 'AhAh', 'CcCc', 'UxUz', 'UyUz', 'UzT', 'UzA', 'UzC', 'wA', 'wC', 'wT', 'Ts_Av', 'Sws_Av', 'Ah_EC', 'q', 'e_HMP', 'RH_HMP', 'rho_a', 'rho_d', 'es_HMP', 'Ta_EC', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Rain']"  # comment to load controlfile for additional excel output files
+#OFL2 = "['Fm', 'Fc_wpl', 'Fe_wpl', 'Fh_rv', 'Fg_Av', 'Fnr', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustarM', 'LM', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'theta', 'eta', 'Ux', 'u', 'Uy', 'v', 'Uz', 'w', 'UxUx', 'UxUy', 'uw', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'vw', 'AhAh', 'CcCc', 'UxUz', 'UyUz', 'UzT', 'UzA', 'UzC', 'wA', 'wC', 'wT', 'Ts_Av', 'Sws_Av', 'Ah_EC', 'q', 'e_HMP', 'RH_HMP', 'rho_a', 'rho_d', 'es_HMP', 'Ta_EC', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Rain']"  # uncomment to specify an optional variable list for submission of netCDF at L3 to OzFlux
 
 [Variables]
 # Radiation
@@ -204,3 +204,8 @@ L3 = "['Fm_rm', 'Fc_wpl', 'Fe_wpl', 'Fh_rmv', 'Fg_Av', 'Fnr', 'Fsd', 'Fsu', 'Flu
     [[5]]
         Title = "Pressure, wind speed and direction"
         Variables = "['ps','Ws_CSAT','Ux','Uy','Uz','Wd_CSAT']"
+    [[6]]
+        Type = xy
+        Title = "xy plots:  Ah"
+        XSeries = "['Ah_EC']"
+        YSeries = "['Ah_7500_Av']"

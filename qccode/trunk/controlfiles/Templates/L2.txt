@@ -301,3 +301,8 @@ L2 = "['Ah_7500_Av','Ah_HMP_01','Cc_7500_Av','Tv_CSAT','Ta_HMP_01']"  # comment 
     [[8]]
         Title = "Wind speed and direction"
         Variables = "['Ws_CSAT','Ws_RMY_2m','Ws_RMY_10m','Wd_CSAT','Wd_RMY_2m','Wd_RMY_10m']"
+    [[9]]
+        Type = xy
+        Title = "xy plots:  Ah"
+        XSeries = "['Ah_HMP_01']"
+        YSeries = "['Ah_7500_Av']"

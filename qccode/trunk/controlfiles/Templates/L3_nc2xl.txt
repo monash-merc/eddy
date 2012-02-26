@@ -21,4 +21,4 @@ Platfrom = PC    # Mac or PC
         xlFileName = Calperum_2011_L3.xls
 
 [Output]
-    L3_Corrected = "['Ah_EC','Cc_7500_Av','eta','Fc_wpl','Fe_wpl','Fg','Fh','Fld','Flu','Fm','Fn','Fsd','Fsu','ps','Sws_01','Sws_02','Ta_EC','theta','Ts','ustar','Ws_CSAT','Wd_CSAT']"
+    L3_Corrected = "['Fm', 'Fc_wpl', 'Fe_wpl', 'Fh_rv', 'Fg_Av', 'Fnr', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustarM', 'LM', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'theta', 'eta', 'Ux', 'u', 'Uy', 'v', 'Uz', 'w', 'UxUx', 'UxUy', 'uw', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'vw', 'AhAh', 'CcCc', 'UxUz', 'UyUz', 'UzT', 'UzA', 'UzC', 'wA', 'wC', 'wT', 'Ts_Av', 'Sws_Av', 'Ah_EC', 'q', 'e_HMP', 'RH_HMP', 'rho_a', 'rho_d', 'es_HMP', 'Ta_EC', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Rain']"
