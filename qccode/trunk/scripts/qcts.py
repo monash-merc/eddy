@@ -591,25 +591,21 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
     for ThisOne in SumList:
         if ThisOne == 'ET':
             if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='ETin'):
-                Invar = ast.literal_eval(cf['Sums']['ETin'][0])
-            elif 'Fe_gapfilled' in ds.series.keys():
-                Invar = 'Fe_gapfilled'
+                Invar = ast.literal_eval(cf['Sums']['ETin'])
             else:
-                Invar = 'Fe'
-            Fe,f = qcutils.GetSeriesasMA(ds,Invar)
+                Invar = ['Fe']
+            Fe,f = qcutils.GetSeriesasMA(ds,Invar[0])
             if 'Lv' in ds.series.keys():
                 Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
             else:
                 Lv = c.Lv
             ET = Fe * 60 * 30 * 1000 / (Lv * c.rho_water)  # mm/30min for summing
-            qcutils.CreateSeries(ds,'ET',ET,FList=[Invar],Descr='Evapotranspiration Flux',Units='mm')
+            qcutils.CreateSeries(ds,'ET',ET,FList=Invar,Descr='Evapotranspiration Flux',Units='mm')
             SumOutList.append('ET')
             OutList.append('ET')
         elif ThisOne == 'Energy':
             if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='Energyin'):
                 EnergyIn = ast.literal_eval(cf['Sums']['Energyin'])
-            elif 'Fe_gapfilled' in ds.series.keys():
-                EnergyIn = ['Fe_gapfilled', 'Fh_gapfilled', 'Fg_Av']
             else:
                 EnergyIn = ['Fe', 'Fh', 'Fg']
             Fe,f = qcutils.GetSeriesasMA(ds,EnergyIn[0])
@@ -623,8 +619,6 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
         elif ThisOne == 'Radiation':
             if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='Radin'):
                 RadiationIn = ast.literal_eval(cf['Sums']['Radin'])
-            elif 'Fn' not in ds.series.keys():
-                RadiationIn = ['Fld','Flu','Fnr','Fsd','Fsu']
             else:
                 RadiationIn = ['Fld','Flu','Fn','Fsd','Fsu']
             Fld,f = qcutils.GetSeriesasMA(ds,RadiationIn[0])
@@ -640,10 +634,8 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
         elif ThisOne == 'Carbon':
             if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='Cin'):
                 CIn = ast.literal_eval(cf['Sums']['Cin'])
-            elif 'Fc_gapfilled' in ds.series.keys():
-                CIn = ['Fc_gapfilled']
             else:
-                CIn = ['Fc_gapfilled']
+                CIn = ['Fc']
             Fc,f = qcutils.GetSeriesasMA(ds,CIn[0])
             Fc_umol = Fc * 1e6 / (1000 * 44)               # umol/m2-s for min/max
             Fc_mmol = Fc_umol * 1800 / 1000                # mmol/m2-30min for summing
@@ -676,8 +668,6 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
         if ThisOne == 'Carbon':
             if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='Cin'):
                 CIn = ast.literal_eval(cf['Sums']['Cin'])
-            elif 'Fc_gapfilled' in ds.series.keys():
-                CIn = ['Fc_gapfilled']
             else:
                 CIn = ['Fc']
             Fc,f = qcutils.GetSeriesasMA(ds,CIn[0])

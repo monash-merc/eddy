@@ -53,6 +53,11 @@ z0 = 1            # roughness length
 # Default Radin = "['Fld','Flu','Fn','Fsd','Fsu']"
 # Default Cin = "['Fc']"
 #
+#SoilList = "['SWCsurface','SWC10cm','SWC60cm','SWC100cm']"
+#SWCsurface = "['svwc_s_baresoil', 'svwc_s_mulga', 'svwc_s_understory']"
+#SWC10cm = "['svwc_10cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_10cm_understory_a1', 'svwc_10cm_baresoil_a2', 'svwc_10cm_a_mulga_a2', 'svwc_10cm_b_mulga_a2', 'svwc_10cm_a_understory_a2', 'svwc_10cm_b_understory_a2']"
+#SWC60cm = "['svwc_60cm_baresoil_a1', 'svwc_60cm_mulga_a1', 'svwc_60cm_understory_a1', 'svwc_60cm_baresoil_a2', 'svwc_60cm_mulga_a2', 'svwc_60cm_understory_a2']"
+#SWC100cm = "['svwc_100cm_baresoil_a1', 'svwc_100cm_mulga_a1', 'svwc_100cm_understory_a1', 'svwc_100cm_baresoil_a2', 'svwc_100cm_mulga_a2', 'svwc_100cm_understory_a2']"
 
 [Variables]
     [[Ah_EC]]

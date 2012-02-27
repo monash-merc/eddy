@@ -70,12 +70,12 @@ FunctionList = "['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'Coo
 #IOM = "['Sws_10cm']"  # uncomment for FoggDam
 #IOM = "['Sws_5cm']"   # uncomment for AdelaideRiver
 
-[Massman]
-    zmd = 7.3  # instrument height above displacement plane, d = 2 / 3 * h = 4.3, h = 6.5, z = 11.635 m
-    z0 = 0.8  # roughness length from Brutseart 1982, eqn 5.7: h / z = 3 * e
-    angle = 16  # angle between CSAT3 mounting point and IRGA sensor head mid-path
-    CSATarm = 0.475  # distance from CSAT mounting point to CSAT sensor
-    IRGAarm = 0.315  # distance from CSAT mounting point to IRGA sensor
+#[Massman]
+#    zmd = 7.3  # instrument height above displacement plane, d = 2 / 3 * h = 4.3, h = 6.5, z = 11.635 m
+#    z0 = 0.8  # roughness length from Brutseart 1982, eqn 5.7: h / z = 3 * e
+#    angle = 16  # angle between CSAT3 mounting point and IRGA sensor head mid-path
+#    CSATarm = 0.475  # distance from CSAT mounting point to CSAT sensor
+#    IRGAarm = 0.315  # distance from CSAT mounting point to IRGA sensor
 
 [Soil]
     FgDepth = 0.08  # Depth of ground heat flux plates, m

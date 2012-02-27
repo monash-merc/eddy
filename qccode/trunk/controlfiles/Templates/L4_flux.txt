@@ -41,10 +41,19 @@ L4 = "['Fm', 'Fc_gapfilled', 'Fe_gapfilled', 'Fh_gapfilled', 'Fg_Av', 'Fnr', 'Fs
 # Default MinMaxList = "['VPD','Ta_EC','Vbat','Tpanel','Carbon']"
 # Default MinMaxMeanList = "['VPD','Ta_EC','Tpanel']"
 #
-# Default ETin = "['Fe_gapfilled']"
-# Default Energyin = "['Fe_gapfilled', 'Fh_gapfilled', 'Fg_Av']"
-# Default Radin = "['Fld','Flu','Fnr','Fsd','Fsu']"
-# Default Cin = "['Fc_gapfilled']"
+# Default ETin = "['Fe']"
+# Default Energyin = "['Fe', 'Fh', 'Fg']"
+# Default Radin = "['Fld','Flu','Fn','Fsd','Fsu']"
+# Default Cin = "['Fc']"
+#
+#SubSumList = "['Energy']"
+#MinMaxList = "['VPD','Ta_HMP','Vbat','Tpanel','Carbon']"
+#MeanList = "['VPD','Ta_HMP','Tpanel']"
+#
+#ETin = "['Fe_gapfilled']"
+#Energyin = "['Fe_gapfilled', 'Fh_gapfilled', 'Fg_Av']"
+#Radin = "['Fld','Flu','Fnr','Fsd','Fsu']"
+#Cin = "['Fc_gapfilled']"
 #
 #SoilList = "['SWCsurface','SWC10cm','SWC60cm','SWC100cm']"
 #SWCsurface = "['svwc_s_baresoil', 'svwc_s_mulga', 'svwc_s_understory']"

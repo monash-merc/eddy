@@ -343,33 +343,6 @@ def l4qc(cf,ds3):
             qcts.InterpolateOverMissing(cf,ds4,maxlen=6)
             # fill any remaining gaps climatology
             qcts.GapFillFromClimatology(cf,ds4)
-            # compute daily statistics
-            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SumList'):
-                SumList = ast.literal_eval(cf['Sums']['SumList'])
-            else:
-                SumList = ['Rain','ET','Energy','Radiation','Carbon']
-            
-            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SubSumList'):
-                SubSumList = ast.literal_eval(cf['Sums']['SubSumList'])
-            else:
-                SubSumList = []
-            
-            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='MinMaxList'):
-                MinMaxList = ast.literal_eval(cf['Sums']['MinMaxList'])
-            else:
-                MinMaxList = ['VPD','Ta_EC','Vbat','Tpanel','Carbon']
-            
-            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='MeanList'):
-                MeanList = ast.literal_eval(cf['Sums']['MeanList'])
-            else:
-                MeanList = ['VPD','Ta_EC','Tpanel']
-            
-            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SoilList'):
-                SoilList = ast.literal_eval(cf['Sums']['SoilList'])
-            else:
-                SoilList = []
-        
-            qcts.ComputeDailySums(cf,ds4,SumList,SubSumList,MinMaxList,MeanList,SoilList)
     
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='SOLO'):
         if str(ast.literal_eval(cf['General']['SOLO'])) == 'True':
@@ -387,32 +360,35 @@ def l4qc(cf,ds3):
             qcutils.CreateSeries(ds4,'Fh_rmv',Fh,Flag=flag,Descr='ANN gapfilled Fh',Units='W/m2')
             # add relevant meteorological values to L3 data
             qcts.AddMetVars(ds4)
-            # compute daily statistics
-            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SumList'):
-                SumList = ast.literal_eval(cf['Sums']['SumList'])
-            else:
-                SumList = ['Rain','ET','Energy','Radiation','Carbon']
-            
-            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SubSumList'):
-                SubSumList = ast.literal_eval(cf['Sums']['SubSumList'])
-            else:
-                SubSumList = []
-            
-            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='MinMaxList'):
-                MinMaxList = ast.literal_eval(cf['Sums']['MinMaxList'])
-            else:
-                MinMaxList = ['VPD','Ta_EC','Vbat','Tpanel','Carbon']
-            
-            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='MeanList'):
-                MeanList = ast.literal_eval(cf['Sums']['MeanList'])
-            else:
-                MeanList = ['VPD','Ta_EC','Tpanel']
-            
-            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SoilList'):
-                SoilList = ast.literal_eval(cf['Sums']['SoilList'])
-            else:
-                SoilList = []
-            
-            qcts.ComputeDailySums(cf,ds4,SumList,SubSumList,MinMaxList,MeanList,SoilList)
+    
+    # compute daily statistics
+    if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SumList'):
+        SumList = ast.literal_eval(cf['Sums']['SumList'])
+    else:
+        SumList = ['Rain','ET','Energy','Radiation','Carbon']
+    
+    if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SubSumList'):
+        SubSumList = ast.literal_eval(cf['Sums']['SubSumList'])
+    else:
+        SubSumList = []
+    
+    if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='MinMaxList'):
+        MinMaxList = ast.literal_eval(cf['Sums']['MinMaxList'])
+    else:
+        MinMaxList = ['VPD','Ta_EC','Vbat','Tpanel','Carbon']
+    
+    if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='MeanList'):
+        MeanList = ast.literal_eval(cf['Sums']['MeanList'])
+    else:
+        MeanList = ['VPD','Ta_EC','Tpanel']
+    
+    if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SoilList'):
+        SoilList = ast.literal_eval(cf['Sums']['SoilList'])
+    else:
+        SoilList = []
+    
+    StatsList = SumList + MinMaxList + MeanList + SoilList
+    if len(StatsList) > 0:
+        qcts.ComputeDailySums(cf,ds4,SumList,SubSumList,MinMaxList,MeanList,SoilList)
     
     return ds4

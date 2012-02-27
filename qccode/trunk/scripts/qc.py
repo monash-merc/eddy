@@ -343,15 +343,15 @@ class qcgui(Tkinter.Frame):
             if 'Type' in plt_cf.keys():
                 if str(plt_cf['Type']).lower() =='xy':
                     self.do_progress(text='Plotting L1 and L2 XY ...')
-                    qcplot.plotxy(self.cf,nFig,plt_cf,self.ds3,self.ds3,si,ei)
+                    qcplot.plotxy(self.cf,nFig,plt_cf,self.ds1,self.ds2,si,ei)
                 else:
                     self.do_progress(text='Plotting L1 and L2 QC ...')
                     SeriesList = ast.literal_eval(plt_cf['Variables'])
-                    qcplot.plottimeseries(self.cf,nFig,SeriesList,self.ds3,self.ds3,si,ei)
+                    qcplot.plottimeseries(self.cf,nFig,SeriesList,self.ds1,self.ds2,si,ei)
             else:
                 self.do_progress(text='Plotting L1 and L2 QC ...')
                 SeriesList = ast.literal_eval(plt_cf['Variables'])
-                qcplot.plottimeseries(self.cf,nFig,SeriesList,self.ds3,self.ds3,si,ei)
+                qcplot.plottimeseries(self.cf,nFig,SeriesList,self.ds1,self.ds2,si,ei)
         self.do_progress(text='Finished plotting L1 and L2')
         log.info(' Finished plotting L1 and L2, check the GUI')
 
