@@ -1,5 +1,5 @@
 """
-    OzFlux QC v1.6 24 Feb 2012;
+    OzFlux QC v1.7 27 Feb 2012;
 
     Version History:
     <<v1.0: 21 July 2011, code diversion reconciliation, PIsaac & JCleverly>>
@@ -12,6 +12,7 @@
     <<v1.5.1 21 Feb 2012, code rationalisation and generalisation in progress, PIsaac & JCleverly>>
     <<v1.5.2 24 Feb 2012, de-bugging completion for ASM, PIsaac & JCleverly>>
     <<v1.6 24 Feb 2012, generalised qcls.l3qc, ASM tested ok L1-L4>>
+    <<v1.7 27 Feb 2012, generalised qcls.l4qc, ASM tested ok L1-L4>>
 """
 
 import sys
