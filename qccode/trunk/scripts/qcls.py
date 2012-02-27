@@ -175,7 +175,7 @@ def l3qc(cf,ds2):
     else:
         attr = 'Fh rotated and converted from virtual heat flux'
         args = ['Ta_EC','Fh','Tv_CSAT','Fe_raw','ps','Ah_EC','Fh_rv']
-    qcts.FhvtoFh(ds3,args[0],args[1],args[2],args[3],args[4],args[5],args[6],attr)
+        qcts.FhvtoFh(ds3,args[0],args[1],args[2],args[3],args[4],args[5],args[6],attr)
     
     # correct the H2O & CO2 flux due to effects of flux on density measurements
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'Massman' not in cf['General']['FunctionList']:
