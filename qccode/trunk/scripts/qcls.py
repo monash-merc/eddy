@@ -303,8 +303,9 @@ def l4qc(cf,ds3):
     # get z-d (measurement height minus displacement height) and z0 from the control file
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='Met'):
         if str(ast.literal_eval(cf['General']['Met'])) == 'True':
-            zmd = float(cf['General']['zmd'])   # z-d for site
-            z0 = float(cf['General']['z0'])     # z0 for site
+            if qcutils.cfkeycheck(cf,Base='Params',ThisOne='zmd') and qcutils.cfkeycheck(cf,Base='Params',ThisOne='z0'):
+                zmd = float(cf['Params']['zmd'])   # z-d for site
+                z0 = float(cf['Params']['z0'])     # z0 for site
             ds4 = copy.deepcopy(ds3)
             ds4.globalattributes['Level'] = level
             ds4.globalattributes['EPDversion'] = sys.version

@@ -933,7 +933,7 @@ def CorrectSWC(cf,ds):
     SWCempList = ast.literal_eval(cf['Soil']['empSWCin'])
     SWCoutList = ast.literal_eval(cf['Soil']['empSWCout'])
     SWCattr = ast.literal_eval(cf['Soil']['SWCattr'])
-    if cf['General']['TDR']=='Yes':
+    if cf['Soil']['TDR']=='Yes':
         TDRempList = ast.literal_eval(cf['Soil']['empTDRin'])
         TDRoutList = ast.literal_eval(cf['Soil']['empTDRout'])
         TDRlinList = ast.literal_eval(cf['Soil']['linTDRin'])
@@ -970,7 +970,7 @@ def CorrectSWC(cf,ds):
         Sws_out[index_high] = (SWC_a1 * numpy.log(Sws[index_high])) + SWC_a0
         
         qcutils.CreateSeries(ds,outvar,Sws_out,FList=[invar],Descr=attr,Units='cm3 water/cm3 soil')
-    if cf['General']['TDR']=='Yes':
+    if cf['Soil']['TDR']=='Yes':
         for i in range(len(TDRempList)):
             log.info(' Applying empirical correction to '+TDRempList[i])
             invar = TDRempList[i]
@@ -2366,8 +2366,14 @@ def UstarFromFh(ds,us_out,T_in, Ah_in, p_in, Fh_in, u_in, z, z0):
 
 def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoMean='False',DoSubSum='False',DoSoil='False'):
     monthabr = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-    M1st = int(cf['General']['firstMonth'])
-    M2nd = int(cf['General']['secondMonth'])
+    if qcutils.cfkeycheck(cf,Base='Params',ThisOne='M1st'):
+        M1st = int(cf['General']['firstMonth'])
+    else:
+        M1st = 1
+    if qcutils.cfkeycheck(cf,Base='Params',ThisOne='secondMonth'):
+        M2nd = int(cf['General']['secondMonth'])
+    else:
+        M2nd = 12
     log.info(' Doing daily sums for '+ThisOne)
     Units = ds.series[ThisOne]['Attr']['Units']
     

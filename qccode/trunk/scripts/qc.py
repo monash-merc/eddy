@@ -263,7 +263,7 @@ class qcgui(Tkinter.Frame):
         log.info(txtstr)
         self.do_progress(text='Saving L3 QC & Corrected NetCDF data ...')                     # put up the progress message
         qcio.nc_write_series(self.cf,self.ds3,'L3')                   # save the L3 data
-        if 'OFL2' in self.cf['Variables']:
+        if qcutils.cfkeycheck(cf,Base='Output',ThisOne='OFL2'):
             qcio.nc_write_OzFlux_series(self.cf,self.ds3,'L3_Corrected')
         self.do_progress(text='Finished saving L3 QC & Corrected NetCDF data')              # tell the user we are done
         log.info(' Finished saving L3 QC & Corrected NetCDF data')
@@ -306,10 +306,6 @@ class qcgui(Tkinter.Frame):
                                  str(self.ds3.series['DateTime']['Data'][-1]))
         sitename = self.ds3.globalattributes['SiteName']
         self.do_progress(text='Doing L4 QC: '+sitename+' ...')
-#        if 'firstMonth' in self.cf['General']:
-#            self.ds3b = qcio.nc_read_series(self.cf,'L4')
-#            self.ds4 = qcls.l4qc(self.cf,self.ds3b)
-#        elif 'zmd' in self.cf['General']:
         self.ds4 = qcls.l4qc(self.cf,self.ds3)
         self.do_progress(text='Finished L4: '+sitename)
         log.info(' Finished L4: '+sitename)
@@ -459,10 +455,11 @@ class qcgui(Tkinter.Frame):
             if len(self.cf)==0:
                 self.do_progress(text='Waiting for input ...')
                 return
+        if qcutils.cfkeycheck(self.cf,Base='General',ThisOne='InputLevel'):
             InLevel = self.cf['General']['InputLevel']
-            qcio.autonc2xl(self.cf,InLevel)
         else:
-            qcio.autonc2xl(self.cf,'L2')
+            InLevel = 'L2'
+        qcio.autonc2xl(self.cf,InLevel)
         self.do_progress(text='Finished L2 Data Export')              # tell the user we are done
         log.info(' Finished saving L2 data')
 
@@ -491,10 +488,11 @@ class qcgui(Tkinter.Frame):
             if len(self.cf)==0:
                 self.do_progress(text='Waiting for input ...')
                 return
+        if qcutils.cfkeycheck(self.cf,Base='General',ThisOne='InputLevel'):
             InLevel = self.cf['General']['InputLevel']
-            qcio.autonc2xl(self.cf,InLevel)
         else:
-            qcio.autonc2xl(self.cf,'L3')
+            InLevel = 'L3'
+        qcio.autonc2xl(self.cf,InLevel)
         self.do_progress(text='Finished L3 Data Export')              # tell the user we are done
         log.info(' Finished saving L3 data')
 
@@ -523,10 +521,11 @@ class qcgui(Tkinter.Frame):
             if len(self.cf)==0:
                 self.do_progress(text='Waiting for input ...')
                 return
+        if qcutils.cfkeycheck(self.cf,Base='General',ThisOne='InputLevel'):
             InLevel = self.cf['General']['InputLevel']
-            qcio.autonc2xl(self.cf,InLevel)
         else:
-            qcio.autonc2xl(self.cf,'L4')
+            InLevel = 'L4'
+        qcio.autonc2xl(self.cf,InLevel)
         self.do_progress(text='Finished L4 Data Export')              # tell the user we are done
         log.info(' Finished saving L4 data')
 
@@ -610,12 +609,13 @@ class qcgui(Tkinter.Frame):
             self.do_progress(text='Waiting for input ...')
             return
         self.do_progress(text='Importing Xcel file -> NetCDF v4 ...')
-        if qcutils.cfkeycheck(self.cf,'General','InLevel'):
+        if qcutils.cfkeycheck(self.cf,'General','InLevel') and qcutils.cfkeycheck(self.cf,'General','OutLevel'):
             InLevel = self.cf['General']['InLevel']
             OutLevel = self.cf['General']['OutLevel']
-            qcio.autoxl2nc(self.cf,InLevel,OutLevel)
         else:
-            qcio.autoxl2nc(self.cf,'L1','L1')
+            InLevel = 'L1'
+            OutLevel = 'L1'
+        qcio.autoxl2nc(self.cf,InLevel,OutLevel)
         self.do_progress(text='Finished Data Ingest')
         log.info(' Finished Data Ingest')
 

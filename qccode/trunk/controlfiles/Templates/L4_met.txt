@@ -5,6 +5,8 @@
 # [Files]     - contains paths and file names
 # [Output]    - define optional variable lists for OzFluxL3 output data
 #             - define variable list for output to excel
+# [Params]    - define parameter values for daily sums stats
+# [Sums]      - lists for sorting daily sums
 # [Variables] - variable names and quality control keys, only those variables
 #               corrected or calculated at this level need to be specified in
 #               this control file.
@@ -24,8 +26,6 @@
 #
 [General]
 Met = True
-zmd = 5           # instrument height above displacement plane
-z0 = 1            # roughness length
 
 [Files]
     [[L3]]
@@ -40,6 +40,12 @@ z0 = 1            # roughness length
         xlSumFileName = ASM_EC_2012_1Jan-Mar_Daily_sums.xls
         xlFilePath = D:/ARCSpatial/Sites/AdelaideRiver/Data/Processed/2009/
         xlFileName = AdelaideRiver_2009_L4.xls
+
+[Params]
+zmd = 5           # instrument height above displacement plane
+z0 = 1            # roughness length
+# default firstMonth = 1
+# default secondMonth = 12
 
 [Sums]
 #
