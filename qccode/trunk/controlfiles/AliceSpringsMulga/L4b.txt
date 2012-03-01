@@ -1,6 +1,7 @@
 [General]
 SOLO = True
 netCDFv3 = False
+Platform = Mac    # Mac or PC
 
 [Files]
     [[L3]]
@@ -11,6 +12,8 @@ netCDFv3 = False
         xlSumFileName = ASM_EC_2012_1Jan-Mar_Daily_sums.xls
         ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
         ncFileName = ASM_EC_2012_1Jan-Mar_L4.nc
+        xlFlagFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level4/
+        xlFlagFileName = ASM_EC_2012_1Jan-Mar_flagstats_L4.xls
     [[L4_GapFilled]]
         ncFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level4/
         ncFileName = ASM_EC_2012_1Jan-Mar_L4_GapFilled.nc

@@ -50,6 +50,7 @@ FunctionList = "['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'Coo
 # AdelaideRiver:  "['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'Fe_WPL', 'Fc_WPL', 'CalculateNetRadiation', 'MergeSeriesFn', 'InterpolateOverMissing', 'AverageSeriesByElements', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks']"
 # AliceSpringsMulga:  "['AddMetVars', 'CorrectSWC', 'do_linear', 'CoordRotation2D', 'MassmanApprox', 'Massman', 'CalculateFluxesRM', 'FhvtoFh', 'Fe_WPLcov', 'Fc_WPLcov', 'CorrectFgForStorage', 'Average3SeriesByElements', 'do_qcchecks', 'gaps']"
 # FoggDam:  "['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'Fe_WPL', 'Fc_WPL', 'CalculateNetRadiation', 'MergeSeriesFn', 'InterpolateOverMissing', 'AverageSeriesByElements', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks']"
+Platform = PC    # Mac or PC
 
 [Files]
     [[L2]]
@@ -58,6 +59,8 @@ FunctionList = "['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'Coo
     [[L3]]
         ncFilePath = D:/TERN/Sites/Calperum/Data/Processed/2011/
         ncFileName = Calperum_2011_L3.nc
+        xlFlagFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level3/
+        xlFlagFileName = ASM_EC_2012_1Jan-Mar_flagstats_L3.xls
 
 [FunctionArgs]
 # Site- and process-specific variable and parameter lists

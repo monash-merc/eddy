@@ -11,6 +11,8 @@ netCDFv3 = False
         ncFileName = ASM_EC_2012_1Jan-Mar_L2.nc
         xlFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level2/
         xlFileName = ASM_EC_2012_1Jan-Mar_L2.xls
+        xlFlagFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level2/
+        xlFlagFileName = ASM_EC_2012_1Jan-Mar_flagstats_L2.xls
 
 
 [Output]

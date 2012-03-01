@@ -39,6 +39,8 @@ Platform = PC    # Mac or PC
     [[L2]]
         ncFilePath = D:/TERN/Sites/Calperum/Data/Processed/2011/
         ncFileName = Calperum_2011_L2.nc
+        xlFlagFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level2/
+        xlFlagFileName = ASM_EC_2012_1Jan-Mar_flagstats_L2.xls
 
 [Output]
 #noDefaultXl = True   # uncomment to load controlfile for additional excel output files

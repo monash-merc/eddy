@@ -26,6 +26,7 @@
 #
 [General]
 Met = True
+Platform = PC    # Mac or PC
 
 [Files]
     [[L3]]
@@ -40,6 +41,8 @@ Met = True
         xlSumFileName = ASM_EC_2012_1Jan-Mar_Daily_sums.xls
         xlFilePath = D:/ARCSpatial/Sites/AdelaideRiver/Data/Processed/2009/
         xlFileName = AdelaideRiver_2009_L4.xls
+        xlFlagFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level4/
+        xlFlagFileName = ASM_EC_2012_1Jan-Mar_flagstats_L4.xls
 
 [Params]
 zmd = 5           # instrument height above displacement plane

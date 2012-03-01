@@ -270,6 +270,7 @@ def l3qc(cf,ds2):
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'gaps' in cf['General']['FunctionList']:
         qcck.gaps(cf,ds3)
     
+    qcutils.GetSeriesStats(cf,ds3)
     return ds3
 
 def l4qc(cf,ds3):
@@ -397,4 +398,5 @@ def l4qc(cf,ds3):
     if len(StatsList) > 0:
         qcts.ComputeDailySums(cf,ds4,SumList,SubSumList,MinMaxList,MeanList,SoilList)
     
+    qcutils.GetSeriesStats(cf,ds4)
     return ds4

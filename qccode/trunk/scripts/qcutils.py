@@ -151,7 +151,7 @@ def GetSeriesasMA(ds,ThisOne,si=0,ei=-1):
 def GetSeriesStats(cf,ds):
     # open an Excel file for the flag statistics
     level = ds.globalattributes['Level']
-    xlFileName = cf['Files'][level]['xlFilePath']+'flagstats_'+level+'.xls'
+    xlFileName = cf['Files'][level]['xlFlagFilePath']+cf['Files'][level]['xlFlagFileName']
     log.info(' Writing flag stats to Excel file '+xlFileName)
     xlFile = xlwt.Workbook()
     if cf['General']['Platform'] == 'Mac':
