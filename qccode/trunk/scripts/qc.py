@@ -263,7 +263,7 @@ class qcgui(Tkinter.Frame):
         log.info(txtstr)
         self.do_progress(text='Saving L3 QC & Corrected NetCDF data ...')                     # put up the progress message
         qcio.nc_write_series(self.cf,self.ds3,'L3')                   # save the L3 data
-        if qcutils.cfkeycheck(cf,Base='Output',ThisOne='OFL2'):
+        if qcutils.cfkeycheck(self.cf,Base='Output',ThisOne='OFL2'):
             qcio.nc_write_OzFlux_series(self.cf,self.ds3,'L3_Corrected')
         self.do_progress(text='Finished saving L3 QC & Corrected NetCDF data')              # tell the user we are done
         log.info(' Finished saving L3 QC & Corrected NetCDF data')

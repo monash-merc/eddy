@@ -11,6 +11,7 @@ import xlwt
 import netCDF4
 import logging
 import qcts
+import qcutils
 
 log = logging.getLogger('qc.io')
 
@@ -231,7 +232,10 @@ def nc_write_OzFlux_series(cf,ds,level):
 def nc_write_series(cf,ds,level):
     ncFullName = cf['Files'][level]['ncFilePath']+cf['Files'][level]['ncFileName']
     log.info(' Writing netCDF file '+ncFullName)
-    ncFile = netCDF4.Dataset(ncFullName,'w',format='NETCDF3_CLASSIC')
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='netCDFv3') and cf['General']['netCDFv3'] == 'False':
+        ncFile = netCDF4.Dataset(ncFullName,'w')
+    else:
+        ncFile = netCDF4.Dataset(ncFullName,'w',format='NETCDF3_CLASSIC')
     for ThisOne in ds.globalattributes.keys():
         setattr(ncFile,ThisOne,ds.globalattributes[ThisOne])
     t = time.localtime()

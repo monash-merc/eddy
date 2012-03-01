@@ -2,6 +2,7 @@
 InLevel = L4
 OutLevel = L4
 Platform = Mac    # Mac or PC
+netCDFv3 = False
 
 [Files]
     [[L4]]

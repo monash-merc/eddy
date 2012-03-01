@@ -2,6 +2,7 @@
 #Standard (Default) FunctionList = "['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'Fe_WPL', 'Fc_WPL', 'MergeSeriesFsd', 'CalculateNetRadiation', 'MergeSeriesFn', 'AverageSeriesByElements', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks']"
 FunctionList   = "['AddMetVars', 'CorrectSWC', 'do_linear', 'CoordRotation2D', 'MassmanApprox', 'Massman', 'CalculateFluxesRM', 'FhvtoFh', 'Fe_WPLcov', 'Fc_WPLcov', 'CorrectFgForStorage', 'Average3SeriesByElements', 'do_qcchecks', 'gaps']"
 RotateFlag   = Yes
+netCDFv3 = False
 
 [Files]
     [[L2]]
@@ -207,7 +208,7 @@ noDefaultXl = True
             Lower      = "[.01]*12"
             Upper      = "[.45]*12"
         [[[DiurnalCheck]]]
-            NumSd      = "[10]*12"
+            NumSd      = "[10,17,10,10,10,10,10,10,10,10,10,10]"
         [[[Linear]]]
             0      = "['2012-1-1 0:00','2012-3-31 23:30',0.772100810789,0]"
     [[svwc_10cm_b_understory_a2]]
@@ -315,10 +316,10 @@ noDefaultXl = True
 
 
 [PlotSpec]
-#Width = 23.5    # office
-#Height = 11.5   # office
-Width = 19.5    # home
-Height = 11.4   # home
+Width = 23.5    # office
+Height = 11.5   # office
+#Width = 19.5    # home
+#Height = 11.4   # home
 #Width = 17      # field
 #Height = 9.5    # field
 
@@ -368,3 +369,48 @@ Height = 11.4   # home
         Title = "xy plots:  Ah"
         XSeries = "['Ah_HMP']"
         YSeries = "['Ah_7500_Av']"
+#    [[21]]
+#        Title = "Fluxes"
+#        Variables = "['Fh_rmv','ustarM','Fm_rm','Fg_Av','Fe_wpl','Fc_wpl']"
+#    [[22]]
+#        Title = "Radiation"
+#        Variables = "['Fsd','Fsu','Fld','Flu','Fnr','albedo']"
+#    [[23]]
+#        Title = "Meteorology"
+#        Variables = "['Ta_HMP','Ah_HMP','Rain','ps','Sws_Av','Ts_Av']"
+#    [[24]]
+#        Title = "Diagnostics"
+#        Variables = "['Ux','Tpanel','Tpanel_CR1000','Tpanel_CR3000b','Vbat','C_ppm','H_ppt']"
+#    [[25]]
+#        Title = "Surface soil water content"
+#        Variables = "['svwc_s_baresoil','svwc_s_mulga','svwc_s_understory','svwc_s_raingage']"
+#        YLMin = "['.01','.01','.01','.01']"
+#        YLMax = "['.4','.4','.4','.4']"
+#        YRMin = "['.01','.01','.01','.01']"
+#        YRMax = "['.4','.4','.4','.4']"
+#    [[26]]
+#        Title = "10-30 cm soil water content"
+#        Variables = "['svwc_10cm_baresoil_a1','svwc_10cm_mulga_a1','svwc_10cm_understory_a1','svwc_10cm_baresoil_a2','svwc_10cm_a_mulga_a2','svwc_10cm_b_mulga_a2','svwc_10cm_a_understory_a2','svwc_10cm_b_understory_a2']"
+#        YLMin = "['.01','.01','.01','.01','.01','.01','.01','.01']"
+#        YLMax = "['.4','.4','.4','.4','.4','.4','.4','.4']"
+#        YRMin = "['.01','.01','.01','.01','.01','.01','.01','.01']"
+#        YRMax = "['.4','.4','.4','.4','.4','.4','.4','.4']"
+#    [[27]]
+#        Title = "60-80 cm soil water content"
+#        Variables = "['svwc_60cm_baresoil_a1','svwc_60cm_mulga_a1','svwc_60cm_understory_a1','svwc_60cm_baresoil_a2','svwc_60cm_mulga_a2','svwc_60cm_understory_a2']"
+#        YLMin = "['.01','.01','.01','.01','.01','.01']"
+#        YLMax = "['.4','.4','.4','.4','.4','.4']"
+#        YRMin = "['.01','.01','.01','.01','.01','.01']"
+#        YRMax = "['.4','.4','.4','.4','.4','.4']"
+#    [[28]]
+#        Title = "deeper than 99 cm soil water content"
+#        Variables = "['svwc_100cm_baresoil_a1','svwc_100cm_mulga_a1','svwc_100cm_understory_a1','svwc_100cm_baresoil_a2','svwc_143cm_baresoil_a2','svwc_100cm_mulga_a2','svwc_100cm_understory_a2']"
+#        YLMin = "['.01','.01','.01','.01','.01','.01','.01']"
+#        YLMax = "['.4','.4','.4','.4','.4','.4','.4']"
+#        YRMin = "['.01','.01','.01','.01','.01','.01','.01']"
+#        YRMax = "['.4','.4','.4','.4','.4','.4','.4']"
+#    [[29]]
+#        Type = xy
+#        Title = "xy plots:  Ah"
+#        XSeries = "['Ah_HMP']"
+#        YSeries = "['Ah_7500_Av']"

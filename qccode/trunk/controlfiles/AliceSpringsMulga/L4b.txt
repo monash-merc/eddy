@@ -1,5 +1,6 @@
 [General]
 SOLO = True
+netCDFv3 = False
 
 [Files]
     [[L3]]
@@ -59,10 +60,10 @@ SWC100cm = "['svwc_100cm_baresoil_a1', 'svwc_100cm_mulga_a1', 'svwc_100cm_unders
 
 
 [PlotSpec]
-#Width = 23.5    # office
-#Height = 11.5   # office
-Width = 19.5    # home
-Height = 11.4   # home
+Width = 23.5    # office
+Height = 11.5   # office
+#Width = 19.5    # home
+#Height = 11.4   # home
 #Width = 17      # field
 #Height = 9.5    # field
 

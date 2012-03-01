@@ -102,7 +102,7 @@ def ApplyLinear(cf,ds,ThisOne):
         ds: data structure
         x: input/output variable in ds.  Example: 'Cc_7500_Av'
         """
-    log.info(' Applying linear correction to '+ThisOne)
+    log.info('  Applying linear correction to '+ThisOne)
     if qcutils.incf(cf,ThisOne) and qcutils.haskey(cf,ThisOne,'Linear'):
         data = numpy.ma.masked_where(ds.series[ThisOne]['Data']==float(-9999),ds.series[ThisOne]['Data'])
         flag = ds.series[ThisOne]['Flag'].copy()
@@ -140,7 +140,7 @@ def ApplyLinearDrift(cf,ds,ThisOne):
         ds: data structure
         x: input/output variable in ds.  Example: 'Cc_7500_Av'
         """
-    log.info(' Applying linear drift correction to '+ThisOne)
+    log.info('  Applying linear drift correction to '+ThisOne)
     if qcutils.incf(cf,ThisOne) and qcutils.haskey(cf,ThisOne,'Drift'):
         data = numpy.ma.masked_where(ds.series[ThisOne]['Data']==float(-9999),ds.series[ThisOne]['Data'])
         flag = ds.series[ThisOne]['Flag']
@@ -183,7 +183,7 @@ def ApplyLinearDriftLocal(cf,ds,ThisOne):
         ds: data structure
         x: input/output variable in ds.  Example: 'Cc_7500_Av'
         """
-    log.info(' Applying linear drift correction to '+ThisOne)
+    log.info('  Applying linear drift correction to '+ThisOne)
     if qcutils.incf(cf,ThisOne) and qcutils.haskey(cf,ThisOne,'LocalDrift'):
         data = numpy.ma.masked_where(ds.series[ThisOne]['Data']==float(-9999),ds.series[ThisOne]['Data'])
         flag = ds.series[ThisOne]['Flag']
@@ -950,7 +950,7 @@ def CorrectSWC(cf,ds):
     SWC_t = float(cf['Soil']['SWC_t'])
     
     for i in range(len(SWCempList)):
-        log.info(' Applying empirical correction to '+SWCempList[i])
+        log.info('  Applying empirical correction to '+SWCempList[i])
         invar = SWCempList[i]
         outvar = SWCoutList[i]
         attr = SWCattr[i]
@@ -972,7 +972,7 @@ def CorrectSWC(cf,ds):
         qcutils.CreateSeries(ds,outvar,Sws_out,FList=[invar],Descr=attr,Units='cm3 water/cm3 soil')
     if cf['Soil']['TDR']=='Yes':
         for i in range(len(TDRempList)):
-            log.info(' Applying empirical correction to '+TDRempList[i])
+            log.info('  Applying empirical correction to '+TDRempList[i])
             invar = TDRempList[i]
             outvar = TDRoutList[i]
             attr = TDRattr[i]
@@ -2367,11 +2367,11 @@ def UstarFromFh(ds,us_out,T_in, Ah_in, p_in, Fh_in, u_in, z, z0):
 def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoMean='False',DoSubSum='False',DoSoil='False'):
     monthabr = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
     if qcutils.cfkeycheck(cf,Base='Params',ThisOne='M1st'):
-        M1st = int(cf['General']['firstMonth'])
+        M1st = int(cf['Params']['firstMonth'])
     else:
         M1st = 1
     if qcutils.cfkeycheck(cf,Base='Params',ThisOne='secondMonth'):
-        M2nd = int(cf['General']['secondMonth'])
+        M2nd = int(cf['Params']['secondMonth'])
     else:
         M2nd = 12
     log.info(' Doing daily sums for '+ThisOne)

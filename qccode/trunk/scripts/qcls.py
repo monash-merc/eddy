@@ -76,6 +76,7 @@ def l2qc(cf,ds1):
     qcts.albedo(ds2)
     log.info(' Finished the albedo constraints')
     # apply linear corrections to the data
+    log.info('Applying linear corrections ...')
     qcck.do_linear(cf,ds2)
     # write series statistics to file
     qcutils.GetSeriesStats(cf,ds2)
@@ -131,13 +132,16 @@ def l3qc(cf,ds2):
     ds3.globalattributes['Functions'] = l3functions
     # add relevant meteorological values to L3 data
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'AddMetVars' in cf['General']['FunctionList']:
+        log.info(' Adding standard met variables to database')
         qcts.AddMetVars(ds3)
     
     # correct measured soil water content using empirical relationship to collected samples
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'CorrectSWC' in cf['General']['FunctionList']:
+        log.info(' Correcting soil moisture data ...')
         qcts.CorrectSWC(cf,ds3)
     
     # apply linear corrections to the data
+    log.info('Applying linear corrections ...')
     qcck.do_linear(cf,ds3)
     
     # merge the HMP and corrected 7500 data
@@ -263,7 +267,7 @@ def l3qc(cf,ds2):
     qcck.do_qcchecks(cf,ds3)
     
     # coordinate gaps in the three main fluxes
-    if qcutils.cfkeycheck(cf,Base='General',ThisOne='Functions') and 'gaps' in cf['General']['FunctionList']:
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'gaps' in cf['General']['FunctionList']:
         qcck.gaps(cf,ds3)
     
     return ds3

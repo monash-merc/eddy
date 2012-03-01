@@ -1,5 +1,6 @@
 [General]
 Platform = Mac    # Mac or PC
+netCDFv3 = False
 
 [Files]
     [[L1]]
@@ -461,20 +462,20 @@ noDefaultXl = True   # uncomment to load controlfile for excel output
 # Figure 13: Variables are in the order they appear in the plot.
     [[TDR_bs1_10cm]]
         [[[RangeCheck]]]
-            Lower      = [0.1]*12
-            Upper      = [0.24]*12
+            Lower      = [0]*12
+            Upper      = [1]*12
         [[[DiurnalCheck]]]
             NumSd      = "[10]*12"
     [[TDR_bs1_60cm]]
         [[[RangeCheck]]]
-            Lower      = [0.1]*12
-            Upper      = [0.24]*12
+            Lower      = [0]*12
+            Upper      = [1]*12
         [[[DiurnalCheck]]]
             NumSd      = "[5]*12"
     [[TDR_bs1_100cm]]
         [[[RangeCheck]]]
-            Lower      = [0.1]*12
-            Upper      = [0.24]*12
+            Lower      = [0]*12
+            Upper      = [1]*12
         [[[DiurnalCheck]]]
             NumSd      = "[5]*12"
     [[TDR_bs2_10cm]]
@@ -507,22 +508,22 @@ noDefaultXl = True   # uncomment to load controlfile for excel output
             0          = "['2012-1-1 0:00','2012-3-31 23:30']"
     [[TDR_ms1_10cm]]
         [[[RangeCheck]]]
-            Lower      = [0.05]*12
-            Upper      = [0.24]*12
+            Lower      = [0]*12
+            Upper      = [1]*12
         [[[DiurnalCheck]]]
-            NumSd      = "[10]*12"
+            NumSd      = "[10,11,10,10,10,10,10,10,10,10,10,10]"
     [[TDR_ms1_60cm]]
         [[[RangeCheck]]]
-            Lower      = [0.08]*12
-            Upper      = [0.24]*12
+            Lower      = [0]*12
+            Upper      = [1]*12
         [[[DiurnalCheck]]]
             NumSd      = "[5]*12"
         [[[ExcludeDates]]]
             0          = "['2012-1-1 0:00','2012-3-31 23:30']"
     [[TDR_ms1_100cm]]
         [[[RangeCheck]]]
-            Lower      = [0.1]*12
-            Upper      = [0.24]*12
+            Lower      = [0]*12
+            Upper      = [1]*12
         [[[DiurnalCheck]]]
             NumSd      = "[5]*12"
     [[TDR_ms2_10cm_a]]
@@ -538,7 +539,7 @@ noDefaultXl = True   # uncomment to load controlfile for excel output
             Lower      = [0]*12
             Upper      = [1]*12
         [[[DiurnalCheck]]]
-            NumSd      = "[10]*12"
+            NumSd      = "[10,13,10,10,10,10,10,10,10,10,10,10]"
     [[TDR_ms2_60cm]]
         [[[RangeCheck]]]
             Lower      = [0]*12
@@ -574,7 +575,7 @@ noDefaultXl = True   # uncomment to load controlfile for excel output
             Lower      = [0]*12
             Upper      = [1]*12
         [[[DiurnalCheck]]]
-            NumSd      = "[10]*12"
+            NumSd      = "[10,14.7,10,10,10,10,10,10,10,10,10,10]"
     [[TDR_mu2_10cm_b]]
         [[[RangeCheck]]]
             Lower      = [0]*12
@@ -602,10 +603,10 @@ noDefaultXl = True   # uncomment to load controlfile for excel output
 
 
 [PlotSpec]
-#Width = 23.5    # office
-#Height = 11.5   # office
-Width = 19.5    # home
-Height = 11.4   # home
+Width = 23.5    # office
+Height = 11.5   # office
+#Width = 19.5    # home
+#Height = 11.4   # home
 #Width = 17      # field
 #Height = 9.5    # field
 
@@ -684,3 +685,77 @@ Height = 11.4   # home
         Title = "xy plots:  T"
         XSeries = "['Ta_HMP']"
         YSeries = "['Tv_CSAT']"
+#    [[1]]
+#        Title = "Datalogger temperature and battery voltage"
+#        Variables = "['Tpanel_CR3000b','Tpanel_CR1000','Tpanel','Vbat','Vbat_TopPanel','Vbat_BotPanel']"
+#    [[2]]
+#        Title = "Radiative fluxes"
+#        Variables = "['Fnr','Flu','Fld','Fsu','Fsd','albedo']"
+#        YLMin = "['Auto','Auto','Auto','Auto','Auto','0']"
+#        YLMax = "['Auto','Auto','Auto','Auto','Auto','0.5']"
+#        YRMin = "['Auto','Auto','Auto','Auto','Auto','0']"
+#        YRMax = "['Auto','Auto','Auto','Auto','Auto','0.5']"
+#    [[3]]
+#        Title = "Turbulent fluxes"
+#        Variables = "['Fm','Fh','Fe_raw','Fc_raw']"
+#    [[4]]
+#        Title = "Pressure, wind speed and direction"
+#        Variables = "['Ux','Uy','Uz']"
+#    [[5]]
+#        Title = "Air temperature, humidity and CO2"
+#        Variables = "['Ta_HMP','Tv_CSAT','Ah_HMP','Ah_7500_Av','Cc_7500_Av']"
+#    [[6]]
+#        Title = "Atmospheric carbon and humidity stats"
+#        Variables = "['C_ppm','RH_HMP','H_ppt','es_HMP','e_HMP']"
+#    [[7]]
+#        Title = "Pressure, wind speed and direction"
+#        Variables = "['TDR_rain_0cm','Rain','ps','Ws_CSAT','Ws_WS_925cm','Wd_CSAT_Compass','Wd_WS_925cm']"
+#    [[8]]
+#        Title = "Bare soil temperature, water content and heat flux"
+#        Variables = "['Ts_bs','Sws_bs','Fg_bs']"
+#    [[9]]
+#        Title = "Beneath mulga soil temperature, water content and heat flux"
+#        Variables = "['Ts_ms','Sws_ms','Fg_ms']"
+#    [[10]]
+#        Title = "Beneath mulga and understory soil temperature, water content and heat flux"
+#        Variables = "['Ts_mu','Sws_mu','Fg_mu']"
+#    [[11]]
+#        Title = "Bare soil TDR arrays"
+#        Variables = "['TDR_bs1_10cm','TDR_bs1_60cm','TDR_bs1_100cm','TDR_bs2_10cm','TDR_bs2_60cm','TDR_bs2_100cm','TDR_bs2_143cm']"
+#        YLMin = "['.01','.01','.01','.01','.01','.01','.01']"
+#        YLMax = "['.4','.4','.4','.4','.4','.4','.4']"
+#        YRMin = "['.01','.01','.01','.01','.01','.01','.01']"
+#        YRMax = "['.4','.4','.4','.4','.4','.4','.4']"
+#    [[12]]
+#        Title = "Mulga TDR arrays"
+#        Variables = "['TDR_ms1_10cm','TDR_ms1_60cm','TDR_ms1_100cm','TDR_ms2_10cm_a','TDR_ms2_10cm_b','TDR_ms2_60cm','TDR_ms2_100cm']"
+#        YLMin = "['.01','.01','.01','.01','.01','.01','.01']"
+#        YLMax = "['.4','.4','.4','.4','.4','.4','.4']"
+#        YRMin = "['.01','.01','.01','.01','.01','.01','.01']"
+#        YRMax = "['.4','.4','.4','.4','.4','.4','.4']"
+#    [[13]]
+#        Title = "Understory TDR arrays"
+#        Variables = "['TDR_mu1_10cm','TDR_mu1_60cm','TDR_mu1_100cm','TDR_mu2_10cm_a','TDR_mu2_10cm_b','TDR_mu2_60cm','TDR_mu2_100cm']"
+#        YLMin = "['.01','.01','.01','.01','.01','.01','.01']"
+#        YLMax = "['.4','.4','.4','.4','.4','.4','.4']"
+#        YRMin = "['.01','.01','.01','.01','.01','.01','.01']"
+#        YRMax = "['.4','.4','.4','.4','.4','.4','.4']"
+#    [[14]]
+#        Title = "Vertical Wind Gradient"
+#        Variables = "['Ws_WS_200cm','Ws_WS_425cm','Ws_WS_662cm','Ws_WS_925cm','Ws_CSAT']"
+#    [[15]]
+#        Title = "Vertical Temperature Gradient"
+#        Variables = "['Ta_HMP_200cm','Ta_HMP_425cm','Ta_HMP_657cm','Ta_HMP']"
+#    [[16]]
+#        Title = "Vertical Humidity Gradient"
+#        Variables = "['Ah_HMP_200cm','Ah_HMP_425cm','Ah_HMP_657cm','Ah_HMP']"
+#    [[17]]
+#        Type = xy
+#        Title = "xy plots:  Ah"
+#        XSeries = "['Ah_HMP']"
+#        YSeries = "['Ah_7500_Av']"
+#    [[18]]
+#        Type = xy
+#        Title = "xy plots:  T"
+#        XSeries = "['Ta_HMP']"
+#        YSeries = "['Tv_CSAT']"
