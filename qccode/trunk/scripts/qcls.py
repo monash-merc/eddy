@@ -76,7 +76,7 @@ def l2qc(cf,ds1):
     qcts.albedo(ds2)
     log.info(' Finished the albedo constraints')
     # apply linear corrections to the data
-    log.info('Applying linear corrections ...')
+    log.info(' Applying linear corrections ...')
     qcck.do_linear(cf,ds2)
     # write series statistics to file
     qcutils.GetSeriesStats(cf,ds2)
@@ -141,7 +141,7 @@ def l3qc(cf,ds2):
         qcts.CorrectSWC(cf,ds3)
     
     # apply linear corrections to the data
-    log.info('Applying linear corrections ...')
+    log.info(' Applying linear corrections ...')
     qcck.do_linear(cf,ds3)
     
     # merge the HMP and corrected 7500 data
