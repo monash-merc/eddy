@@ -1,0 +1,308 @@
+# AAHYWEH
+# Control file for L1 (input) to L2 (output) quality control.
+#
+# [General]   - Contains general flags and information
+# [Files]     - Contains paths and file names.
+# [Output]    - define variable list for output to excel
+# [Variables] - Variable names and quality control sections.
+#               Valid quality control sections are:
+#                RangeCheck   - reject data less than "Lower" or greater than "Upper"
+#                DiurnalCheck - reject data outside Avg(H.h)+/-NumSd*Stdev(H.h) where
+#                                Avg(H.h) is the average of all data at time H.h and
+#                                Stdev(H.h) is the standard deviation of all data at time H.h
+#                                 eg H.h = 8.5 is 0830
+#                 NOTE: The "Lower", "Upper" and "NumSd" keywords require a value for each
+#                       month of the year (12).  This can be written in shorthand as:
+#                        eg "[100]*12" (same value for each month)
+#                       or in longhand as:
+#                        eg "[100,110,120,130,140,150,150,140,130,120,110,100]" (different each month)
+#                ExcludeDates - reject data between specified dates, multiple date ranges can be
+#                               specified on separate lines but the lines must be numbered
+#                               sequentially from 0 (eg 0, 1, 2 etc)
+#                 NOTE: The date range is specified as:
+#                        eg "['2010-1-1 00:00','2010-9-16 00:00']"
+#                ExcludeHours - reject data at specified times between the specified date range,
+#                               multiple ranges can be specified on separate lines but the
+#                               lines must be numbered sequentially from 0 (eg 0, 1, 2, etc)
+#                 NOTE: The date range and hours to be rejected are specified as:
+#                        eg "['2008-04-22 00:00','2008-07-26 23:30',['09:30','10:00','10:30']]"
+# [PlotSpec]  - Definition of plot window size.  Adjust until the plots fit comfortably in your display. Optional
+# [Plots]     - Definition of time series plots
+#
+[General]
+Platform = PC    # Mac or PC
+
+[Files]
+    [[L1]]
+        ncFilePath = /Volumes/EcoHydro/TERN-OzFlux/Craig Macfarlane/
+        ncFileName = Gingin_0332012_L1.nc
+    [[L2]]
+        ncFilePath = /Volumes/EcoHydro/TERN-OzFlux/Craig Macfarlane/
+        ncFileName = Gingin_0332012_L2.nc
+        xlFilePath = /Volumes/EcoHydro/TERN-OzFlux/Craig Macfarlane/
+        xlFileName = Gingin_0332012_L2.xls
+        xlFlagFilePath = /Volumes/EcoHydro/TERN-OzFlux/Craig Macfarlane/
+        xlFlagFileName = Gingin_0332012_flagstats_L2.xls
+
+[Output]
+#noDefaultXl = True   # uncomment to load controlfile for additional excel output files
+L2 = "['Fsd','Fsu','Fld','Flu','Ta_HMP_01','Tv_CSAT','Ah_HMP_01','Ah_7500_Av','Cc_7500_Av','Rain','Ts_01','Ts_02','Sws_01','Sws_02','Fg_01','Fg_02','Fg_03','ps','Vbat','Tpanel','Ws_CSAT','Ws_RMY_10m','Wd_CSAT_Compass','Wd_RMY_10m']"
+
+[Variables]
+# Radiation
+    [[Flu]]
+        [[[RangeCheck]]]
+            Lower      = "[250]*12"
+            Upper      = "[625]*12"
+    [[Fld]]
+        [[[RangeCheck]]]
+            Lower      = "[250]*12"
+            Upper      = "[500]*12"
+    [[Fsu]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[500]*12"
+    [[Fsd]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[1500]*12"
+    [[Fsd_Li]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[1500]*12"
+# Covariances: Temperature
+    [[UzT]]
+        [[[RangeCheck]]]
+            Lower      = "[-0.2]*12"
+            Upper      = "[1]*12"
+#        [[[DiurnalCheck]]]
+#            NumSd      = "[5]*12"
+    [[UxT]]
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+    [[UyT]]
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+# Covariances: H2O
+    [[UzA]]
+        [[[RangeCheck]]]
+            Lower      = "[-0.01]*12"
+            Upper      = "[0.5]*12"
+#        [[[DiurnalCheck]]]
+#            NumSd      = "[5]*12"
+    [[UxA]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+    [[UyA]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+# Covariances: CO2
+    [[UzC]]
+        [[[RangeCheck]]]
+            Lower      = "[-2]*12"
+            Upper      = "[2]*12"
+#        [[[DiurnalCheck]]]
+#            NumSd      = "[5]*12"
+    [[UxC]]
+        [[[RangeCheck]]]
+            Lower      = "[-4]*12"
+            Upper      = "[4]*12"
+    [[UyC]]
+        [[[RangeCheck]]]
+            Lower      = "[-4]*12"
+            Upper      = "[4]*12"
+# Covariances and variances: Momentum
+    [[UxUz]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+#        [[[DiurnalCheck]]]
+#            NumSd      = "[5]*12"
+    [[UyUz]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+#        [[[DiurnalCheck]]]
+#            NumSd      = "[5]*12"
+    [[UxUy]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+#        [[[DiurnalCheck]]]
+#            NumSd      = "[5]*12"
+    [[UxUx]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+#        [[[DiurnalCheck]]]
+#            NumSd      = "[5]*12"
+    [[UyUy]]
+        [[[RangeCheck]]]
+            Lower      = "[-10]*12"
+            Upper      = "[10]*12"
+#        [[[DiurnalCheck]]]
+#            NumSd      = "[5]*12"
+# Meteorology: CSAT
+    [[Tv_CSAT]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[50]*12"
+    [[Wd_CSAT_Compass]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[360]*12"
+    [[Ws_CSAT]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[20]*12"
+    [[Ux]]
+        [[[RangeCheck]]]
+            Lower      = "[-20]*12"
+            Upper      = "[20]*12"
+    [[Uy]]
+        [[[RangeCheck]]]
+            Lower      = "[-20]*12"
+            Upper      = "[20]*12"
+    [[Uz]]
+        [[[RangeCheck]]]
+            Lower      = "[-1]*12"
+            Upper      = "[1]*12"
+    [[Diag_CSAT]]
+        [[[RangeCheck]]]
+            Lower      = "[-0.5]*12"
+            Upper      = "[10.5]*12"
+# Meteorology: LI-7500
+    [[Ah_7500_Av]]
+        [[[RangeCheck]]]
+            Lower      = "[5]*12"
+            Upper      = "[35]*12"
+    [[Cc_7500_Av]]
+        [[[RangeCheck]]]
+            Lower      = "[500]*12"
+            Upper      = "[1200]*12"
+    [[Ah_7500_Sd]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[3]*12"
+    [[Cc_7500_Sd]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[20]*12"
+    [[ps]]
+        [[[RangeCheck]]]
+            Lower      = "[95]*12"
+            Upper      = "[105]*12"
+    [[Diag_7500]]
+        [[[RangeCheck]]]
+            Lower      = "[-0.5]*12"
+            Upper      = "[10.5]*12"
+    [[AGC_7500]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[65]*12"
+# Meteorology: HMP45c
+    [[Ah_HMP_01]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[25]*12"
+#        [[[ExcludeDates]]]
+#            0      = "['2010-1-1 00:00','2010-9-16 00:00']"
+    [[Ta_HMP_01]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[50]*12"
+#        [[[ExcludeDates]]]
+#            0      = "['2010-1-1 00:00','2010-9-16 00:00']"
+# Meteorology: RMYoung
+    [[Ws_RMY_10m]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[20]*12"
+    [[Wd_RMY_10m]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[360]*12"
+# Meteorology: Rain
+    [[Rain]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[20]*12"
+# Soil: Ground heat flux
+    [[Fg_01]]
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[100]*12"
+    [[Fg_02]]
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[100]*12"
+    [[Fg_03]]
+        [[[RangeCheck]]]
+            Lower      = "[-100]*12"
+            Upper      = "[100]*12"
+# Soil: Soil moisture
+    [[Sws_01]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[0.5]*12"
+    [[Sws_02]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[0.5]*12"
+# Soil: Soil temperature
+    [[Ts_01]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[60]*12"
+    [[Ts_02]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[60]*12"
+    [[Ts_03]]
+        [[[RangeCheck]]]
+            Lower      = "[0]*12"
+            Upper      = "[60]*12"
+
+
+#[PlotSpec]      # Specify the height and width of plot windows by uncommenting all three lines.  Defaults are PlotWidth = 13 and PlotHeight = 9
+#Width = 23.5
+#Height = 11.5
+
+[Plots]
+    [[1]]
+        Title = "Radiative fluxes"
+        Variables = "['Fsd_Li','Fsd','Fsu','Fld','Flu']"
+#        YLMin = "['Auto','Auto','Auto','Auto','0']"     # dimensions of the individual plots
+#        YLMax = "['Auto','Auto','Auto','Auto','500']"   # all four lines must be uncommented to use
+#        YRMin = "['Auto','Auto','Auto','Auto','0']"     # the number of items in these four lists must be equal
+#        YRMax = "['Auto','Auto','Auto','Auto','500']"   #     to the number of items in the Variables list
+    [[2]]
+        Title = "Covariances (CSAT)"
+        Variables = "['UzT','UxT','UyT','UxUz','UyUz','UxUy','UxUx','UyUy']"
+    [[3]]
+        Title = "Covariances (CSAT/7500)"
+        Variables = "['UzA','UxA','UyA','UzC','UxC','UyC']"
+    [[4]]
+        Title = "Air temperature, humidity and CO2"
+        Variables = "['Ta_HMP_01','Tv_CSAT','Ah_HMP_01','Ah_7500_Av','Cc_7500_Av']"
+    [[5]]
+        Title = "Rainfall and diagnostics"
+        Variables = "['Rain','Ah_7500_Sd','Cc_7500_Sd','AGC_7500','Diag_7500','Diag_CSAT']"
+    [[6]]
+        Title = "Soil temperature, water content and heat flux"
+        Variables = "['Ts_01','Ts_02','Sws_01','Sws_02','Fg_01','Fg_02','Fg_03']"
+    [[7]]
+        Title = "Pressure, wind components and rainfall"
+        Variables = "['ps','Ux','Uy','Uz','Rain','Vbat','Tpanel']"
+    [[8]]
+        Title = "Wind speed and direction"
+        Variables = "['Ws_CSAT','Ws_RMY_2m','Ws_RMY_10m','Wd_CSAT','Wd_RMY_2m','Wd_RMY_10m']"
+    [[9]]
+        Type = xy
+        Title = "xy plots:  Ah"
+        XSeries = "['Ah_HMP_01']"
+        YSeries = "['Ah_7500_Av']"
