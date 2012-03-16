@@ -1,5 +1,5 @@
 """
-    OzFlux QC v1.7 27 Feb 2012;
+    OzFlux QC v1.8 16 Mar 2012;
 
     Version History:
     <<v1.0: 21 July 2011, code diversion reconciliation, PIsaac & JCleverly>>
@@ -13,6 +13,7 @@
     <<v1.5.2 24 Feb 2012, de-bugging completion for ASM, PIsaac & JCleverly>>
     <<v1.6 24 Feb 2012, generalised qcls.l3qc, ASM tested ok L1-L4>>
     <<v1.7 27 Feb 2012, generalised qcls.l4qc, ASM tested ok L1-L4>>
+    <<v1.8 16 Mar 2012, ASM and Standard (Gingin) tested ok L1-L3>>
 """
 
 import sys
@@ -465,8 +466,7 @@ def l4qc(cf,ds3):
             qcts.InterpolateOverMissing(cf,ds4,maxlen=6)
             # fill any remaining gaps climatology
             qcts.GapFillFromClimatology(cf,ds4)
-    
-    if qcutils.cfkeycheck(cf,Base='General',ThisOne='SOLO'):
+    elif qcutils.cfkeycheck(cf,Base='General',ThisOne='SOLO'):
         if str(ast.literal_eval(cf['General']['SOLO'])) == 'True':
             ds4 = qcio.nc_read_series(cf,level)
             ds4.globalattributes['Level'] = 'L4'
@@ -482,6 +482,12 @@ def l4qc(cf,ds3):
             qcutils.CreateSeries(ds4,'Fh_rmv',Fh,Flag=flag,Descr='ANN gapfilled Fh',Units='W/m2')
             # add relevant meteorological values to L3 data
             qcts.AddMetVars(ds4)
+    else:
+            ds4 = copy.deepcopy(ds3)
+            ds4.globalattributes['Level'] = level
+            ds4.globalattributes['EPDversion'] = sys.version
+            ds4.globalattributes['QCVersion'] = __doc__
+            ds4.globalattributes['Functions'] = 'Sums'
     
     # compute daily statistics
     if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SumList'):
