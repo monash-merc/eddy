@@ -3,7 +3,7 @@
 #
 # [General]   - Contains general flags and information
 # [Files]     - contains paths and file names
-# [Output]    - define optional variable lists for OzFluxL3 output data
+# [Output]    - define optional variable lists for OzFluxL4 output data
 #             - define variable list for output to excel
 # [Params]    - define parameter values for daily sums stats
 # [Sums]      - lists for sorting daily sums
@@ -54,13 +54,22 @@ z0 = 1            # roughness length
 #
 # Default SumList = "['Rain','ET','Energy','Radiation','Carbon']"
 # Default SubSumList = "[]"
-# Default MinMaxList = "['VPD','Ta_EC','Vbat','Tpanel','Carbon']"
-# Default MinMaxMeanList = "['VPD','Ta_EC','Tpanel']"
+# Default MinMaxList = "['Ta_EC','Vbat','Tpanel','Carbon']"
+# Default MinMaxMeanList = "['Ta_EC','Tpanel']"
 #
-# Default ETin = "['Fe']"
-# Default Energyin = "['Fe', 'Fh', 'Fg']"
+# Default ETin = "['Fe_wpl']"
+# Default Energyin = "['Fe_wpl', 'Fh', 'Fg']"
 # Default Radin = "['Fld','Flu','Fn','Fsd','Fsu']"
-# Default Cin = "['Fc']"
+# Default Cin = "['Fc_wpl']"
+#
+#SubSumList = "['Energy']"
+#MinMaxList = "['VPD','Ta_HMP','Vbat','Tpanel','Carbon']"
+#MeanList = "['VPD','Ta_HMP','Tpanel']"
+#
+#ETin = "['Fe_gapfilled']"
+#Energyin = "['Fe_gapfilled', 'Fh_gapfilled', 'Fg_Av']"
+#Radin = "['Fld','Flu','Fnr','Fsd','Fsu']"
+#Cin = "['Fc_gapfilled']"
 #
 #SoilList = "['SWCsurface','SWC10cm','SWC60cm','SWC100cm']"
 #SWCsurface = "['svwc_s_baresoil', 'svwc_s_mulga', 'svwc_s_understory']"
