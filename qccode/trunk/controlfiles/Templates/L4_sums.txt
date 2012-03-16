@@ -1,0 +1,83 @@
+# AAHYWEH
+# Control file for L4 (input) to L5 (daily sums) ingestion of SOLO (ANN) gap filling of fluxes.
+#
+# [General]   - Contains general flags and information
+# [Files]     - contains paths and file names
+# [Output]    - define optional variable lists for OzFluxL3 output data
+#             - define variable list for output to excel
+# [Params]    - define parameter values for daily sums stats
+# [Sums]      - lists for sorting daily sums
+# [Variables] - variable names and quality control keys, only those variables
+#               corrected or calculated at this level need to be specified in
+#               this control file.
+# [PlotSpec]  - Definition of plot window size.  Adjust until the plots fit comfortably in your display. Optional
+# [Plots]     - definition of time series plots
+[General]
+Platform = PC    # Mac or PC
+
+[Files]
+    [[L3]]
+        ncFilePath = /Volumes/EcoHydro/TERN-OzFlux/Craig Macfarlane/
+        ncFileName = Gingin_0332012_L3.nc
+    [[L4]]
+        xlSumFilePath = /Volumes/EcoHydro/TERN-OzFlux/Craig Macfarlane/
+        xlSumFileName = Gingin_0332012_Daily_sums.xls
+        ncFilePath = /Volumes/EcoHydro/TERN-OzFlux/Craig Macfarlane/
+        ncFileName = Gingin_0332012_L4.nc
+        xlFlagFilePath = /Volumes/EcoHydro/TERN-OzFlux/Craig Macfarlane/
+        xlFlagFileName = Gingin_0332012_flagstats_L4.xls
+
+[Output]
+#noDefaultXl = True   # uncomment to load controlfile for additional excel output files
+L4 = "['Fm', 'Fc_gapfilled', 'Fe_gapfilled', 'Fh_gapfilled', 'Fg_Av', 'Fnr', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustarM', 'LM', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'theta', 'eta', 'Ux', 'u', 'Uy', 'v', 'Uz', 'w', 'UxUx', 'UxUy', 'uw', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'vw', 'AhAh', 'CcCc', 'UxUz', 'UyUz', 'UzT', 'UzA', 'UzC', 'wA', 'wC', 'wT', 'Ts_Av', 'Sws_Av', 'Ah_EC', 'q', 'e_HMP', 'RH_HMP', 'rho_a', 'rho_d', 'es_HMP', 'Ta_EC', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Rain']"  # comment to load controlfile for additional excel output files
+#OFL2 = "['Fm', 'Fc_gapfilled', 'Fe_gapfilled', 'Fh_gapfilled', 'Fg_Av', 'Fnr', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustarM', 'LM', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'theta', 'eta', 'Ux', 'u', 'Uy', 'v', 'Uz', 'w', 'UxUx', 'UxUy', 'uw', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'vw', 'AhAh', 'CcCc', 'UxUz', 'UyUz', 'UzT', 'UzA', 'UzC', 'wA', 'wC', 'wT', 'Ts_Av', 'Sws_Av', 'Ah_EC', 'q', 'e_HMP', 'RH_HMP', 'rho_a', 'rho_d', 'es_HMP', 'Ta_EC', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Rain']"  # uncomment to specify an optional variable list for submission of netCDF at L3 to OzFlux
+
+[Params]
+# default firstMonth = 1
+# default secondMonth = 12
+
+[Sums]
+#
+# Default SumList = "['Rain','ET','Energy','Radiation','Carbon']"
+# Default SubSumList = "[]"
+# Default MinMaxList = "['VPD','Ta_EC','Vbat','Tpanel','Carbon']"
+# Default MinMaxMeanList = "['VPD','Ta_EC','Tpanel']"
+#
+# Default ETin = "['Fe']"
+# Default Energyin = "['Fe_wpl', 'Fh', 'Fg']"
+# Default Radin = "['Fld','Flu','Fn','Fsd','Fsu']"
+# Default Cin = "['Fc']"
+#
+#SubSumList = "['Energy']"
+#MinMaxList = "['VPD','Ta_HMP','Vbat','Tpanel','Carbon']"
+#MeanList = "['VPD','Ta_HMP','Tpanel']"
+#
+#ETin = "['Fe_gapfilled']"
+#Energyin = "['Fe_gapfilled', 'Fh_gapfilled', 'Fg_Av']"
+#Radin = "['Fld','Flu','Fnr','Fsd','Fsu']"
+#Cin = "['Fc_gapfilled']"
+#
+#SoilList = "['SWCsurface','SWC10cm','SWC60cm','SWC100cm']"
+#SWCsurface = "['svwc_s_baresoil', 'svwc_s_mulga', 'svwc_s_understory']"
+#SWC10cm = "['svwc_10cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_10cm_understory_a1', 'svwc_10cm_baresoil_a2', 'svwc_10cm_a_mulga_a2', 'svwc_10cm_b_mulga_a2', 'svwc_10cm_a_understory_a2', 'svwc_10cm_b_understory_a2']"
+#SWC60cm = "['svwc_60cm_baresoil_a1', 'svwc_60cm_mulga_a1', 'svwc_60cm_understory_a1', 'svwc_60cm_baresoil_a2', 'svwc_60cm_mulga_a2', 'svwc_60cm_understory_a2']"
+#SWC100cm = "['svwc_100cm_baresoil_a1', 'svwc_100cm_mulga_a1', 'svwc_100cm_understory_a1', 'svwc_100cm_baresoil_a2', 'svwc_100cm_mulga_a2', 'svwc_100cm_understory_a2']"
+
+[Variables]
+    [[Fh_rmv]]
+    [[Fe_wpl]]
+    [[Fc_wpl]]
+
+
+#[PlotSpec]      # Specify the height and width of plot windows by uncommenting all three lines.  Defaults are PlotWidth = 13 and PlotHeight = 9
+#Width = 23.5
+#Height = 11.5
+
+[Plots]
+    [[31]]
+        Title = "Fluxes"
+        Variables = "['Fh_rv','Fe_wpl','Fc_wpl']"
+#        YLMin = "['-50','-50','-1']"     # dimensions of the individual plots
+#        YLMax = "['750','500','1']"      # all four lines must be uncommented to use
+#        YRMin = "['-50','-50','-1']"     # the number of items in these four lists must be equal
+#        YRMax = "['750','500','1']"      #     to the number of items in the Variables list
