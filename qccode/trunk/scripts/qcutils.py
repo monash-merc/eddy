@@ -74,21 +74,15 @@ def Fustar(T, Ah, p, Fh, u, z, z0, ustar):
     return Fustar
     
 def GetAverageList(cf,ThisOne,default=""):
-    if qcutils.incf(cf,ThisOne) and qcutils.haskey(cf,ThisOne,'AverageSeries'):
-        if 'Source' in cf['Variables'][ThisOne]['AverageSeries'].keys():
-            alist = ast.literal_eval(cf['Variables'][ThisOne]['AverageSeries']['Source'])
-        else:
-            if len(str(default))==0:
-                log.error('  GetAverageList: key "Source" not in control file AverageSeries section for '+ThisOne)
-                alist = ""
-            else:
-                alist = str(default)
+    if cfkeycheck(cf,ThisOne=ThisOne):
+        if default == "":
+            log.error(' GetAverageList: no "Source" series provided for '+ThisOne)
+        
+        alist = default
     else:
-        if len(str(default))==0:
-            log.error('  GetAverageList: '+ThisOne+ ' not in control file or it does not have the "AverageSeries" key')
-            alist = ""
-        else:
-            alist = str(default)
+        log.error('  GetAverageList: '+ThisOne+' not in control file')
+        alist = ""
+    
     return alist
 
 def GetDateIndex(datetimeseries,date,default):
@@ -103,19 +97,15 @@ def GetDateIndex(datetimeseries,date,default):
     return dateindex
 
 def GetMergeList(cf,ThisOne,default=""):
-    if ThisOne in cf['Variables'].keys():
-        if 'MergeSeries' in cf['Variables'][ThisOne].keys():
-            if 'Source' in cf['Variables'][ThisOne]['MergeSeries'].keys():
-                mlist = ast.literal_eval(cf['Variables'][ThisOne]['MergeSeries']['Source'])
-            else:
-                log.error('  GetMergeList: key "Source" not in control file MergeSeries section for '+ThisOne)
-                mlist = default
-        else:
-            #log.error('  GetMergeList: key "MergeSeries" not in control file for '+ThisOne)
-            mlist = default
+    if cfkeycheck(cf,ThisOne=ThisOne):
+        if default == "":
+            log.error(' GetMergeList: no "Source" series provided for '+ThisOne)
+        
+        mlist = default
     else:
         log.error('  GetMergeList: '+ThisOne+' not in control file')
-        mlist = default
+        mlist = ""
+    
     return mlist
 
 def GetSeries(ds,ThisOne,si=0,ei=-1):

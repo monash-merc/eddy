@@ -146,12 +146,40 @@ def l3qc(cf,ds2):
     
     # merge the HMP and corrected 7500 data
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'MergeSeriesAh' in cf['General']['FunctionList']:
-        srclist = qcutils.GetMergeList(cf,'Ah_EC',default=['Ah_HMP_01'])
-        qcts.MergeSeries(ds3,'Ah_EC',srclist,[0,10])
+        if qcutils.cfkeycheck(cf,ThisOne='Ah_EC',key='MergeSeries') and 'Source' in cf['Variables']['Ah_EC']['MergeSeries'].keys():
+            arg = ast.literal_eval(cf['Variables']['Ah_EC']['MergeSeries']['Source'])
+            if len(arg) == 0:
+                srclist = qcutils.GetMergeList(cf,'Ah_EC')
+            else:
+                srclist = qcutils.GetMergeList(cf,'Ah_EC',default=arg)
+        else:
+            srclist = qcutils.GetMergeList(cf,'Ah_EC',default="['Ah_HMP_01']")
+        
+        if len(srclist) > 0:
+            qcts.MergeSeries(ds3,'Ah_EC',srclist,[0,10])
     
     # get the air temperature from the CSAT virtual temperature
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'TaFromTv' in cf['General']['FunctionList']:
-        qcts.TaFromTv(ds3,'Ta_CSAT','Tv_CSAT','Ah_EC','ps')
+        if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='Ta2Tv'):
+            args = ast.literal_eval(cf['FunctionArgs']['Ta2Tv'])
+        else:
+            args = ['Ta_CSAT','Tv_CSAT','Ah_EC','ps']
+        
+        qcts.TaFromTv(ds3,args[0],args[1],args[2],args[3])
+    
+    # merge the HMP and corrected CSAT data
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'MergeSeriesTa' in cf['General']['FunctionList']:
+        if qcutils.cfkeycheck(cf,ThisOne='Ta_EC',key='MergeSeries') and 'Source' in cf['Variables']['Ta_EC']['MergeSeries'].keys():
+            arg = ast.literal_eval(cf['Variables']['Ta_EC']['MergeSeries']['Source'])
+            if len(arg) == 0:
+                srclist = qcutils.GetMergeList(cf,'Ta_EC')
+            else:
+                srclist = qcutils.GetMergeList(cf,'Ta_EC',default=arg)
+        else:
+            srclist = qcutils.GetMergeList(cf,'Ta_EC',default="['Ta_HMP_01']")
+        
+        if len(srclist) > 0:
+            qcts.MergeSeries(ds3,'Ta_EC',srclist,[0,10])
     
     # do the 2D coordinate rotation
     qcts.CoordRotation2D(cf,ds3)
@@ -165,7 +193,12 @@ def l3qc(cf,ds2):
     
     # calculate the fluxes
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'Massman' not in cf['General']['FunctionList']:
-        qcts.CalculateFluxes(ds3)
+        if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='CF'):
+            args = ast.literal_eval(cf['FunctionArgs']['CF'])
+        else:
+            args = ['Ta_EC','Ah_EC','ps']
+        
+        qcts.CalculateFluxes(ds3,args[0],args[1],args[2])
     
     # calculate the fluxes from covariances
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'Massman' in cf['General']['FunctionList']:
@@ -207,27 +240,67 @@ def l3qc(cf,ds2):
         else:
             qcts.InterpolateOverMissing(ds3,series=ast.literal_eval(cf,['FunctionArgs']['IOM']))
     
+    # average soil measurements before correcting for storage above sensors
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'PreCorrectSoilAverage' in cf['General']['FunctionList']:
     # average the soil heat flux data
-    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'AverageSeriesByElements' in cf['General']['FunctionList']:
-        srclist = qccf.GetAverageList(cf,'Fg_01',default=['Fg_01a'])
-        qcts.AverageSeriesByElements(ds3,'Fg_01',srclist)
-        # average the soil temperature data
+        if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='ASBEFg'):
+            outvar = ast.literal_eval(cf['FunctionArgs']['ASBEFg'])
+        else:
+            outvar = 'Fg_Av'
         
-        srclist = qccf.GetAverageList(cf,'Ts_01',default=['Ts_01a'])
-        qcts.AverageSeriesByElements(ds3,'Ts_01',srclist)
-        # average soil moisture
+        if qcutils.cfkeycheck(cf,ThisOne=outvar,key='AverageSeries') and 'Source' in cf['Variables'][outvar]['AverageSeries'].keys():
+            arg = ast.literal_eval(cf['Variables'][outvar]['AverageSeries']['Source'])
+            if len(arg) == 0:
+                srclist = qcutils.GetAverageList(cf,outvar)
+            else:
+                srclist = qcutils.GetAverageList(cf,outvar,default=arg)
+        else:
+            srclist = qcutils.GetAverageList(cf,outvar,default=['Fg_01'])
         
-        slist = [l for l in cf['Variables'].keys() if 'Sws_' in l]
-        for ThisOne in slist:
-            if ThisOne in cf['Variables'].keys() and 'AverageSeries' in cf['Variables'][ThisOne].keys():
-                srclist = qccf.GetAverageList(cf,ThisOne)
-                qcts.AverageSeriesByElements(ds3,ThisOne,srclist)
-    
+        if len(srclist) > 0:
+            qcts.AverageSeriesByElements(ds3,outvar,srclist)
+        
+    # average the soil temperature data
+        if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='ASBETs'):
+            outvar = ast.literal_eval(cf['FunctionArgs']['ASBETs'])
+        else:
+            outvar = 'Ts_Av'
+        
+        if qcutils.cfkeycheck(cf,ThisOne=outvar,key='AverageSeries') and 'Source' in cf['Variables'][outvar]['AverageSeries'].keys():
+            arg = ast.literal_eval(cf['Variables'][outvar]['AverageSeries']['Source'])
+            if len(arg) == 0:
+                srclist = qcutils.GetAverageList(cf,outvar)
+            else:
+                srclist = qcutils.GetAverageList(cf,outvar,default=arg)
+        else:
+            srclist = qcutils.GetAverageList(cf,outvar,default=['Ts_01'])
+        
+        if len(srclist) > 0:
+            qcts.AverageSeriesByElements(ds3,outvar,srclist)
+        
+    # average soil moisture
+        if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='ASBEswc'):
+            outvar = cf['FunctionArgs']['ASBEswc']
+        else:
+            outvar = 'Sws_Av'
+        
+        if qcutils.cfkeycheck(cf,ThisOne=outvar,key='AverageSeries') and 'Source' in cf['Variables'][outvar]['AverageSeries'].keys():
+            arg = ast.literal_eval(cf['Variables'][outvar]['AverageSeries']['Source'])
+            if len(arg) == 0:
+                srclist = qcutils.GetAverageList(cf,outvar)
+            else:
+                srclist = qcutils.GetAverageList(cf,outvar,default=arg)
+        else:
+            srclist = qcutils.GetAverageList(cf,outvar,default=['Sws_01'])
+        
+        if len(srclist) > 0:
+            qcts.AverageSeriesByElements(ds3,outvar,srclist)
+        
     # correct the measured soil heat flux for storage in the soil layer above the sensor
     if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='CFg1Args'):
         args = ast.literal_eval(cf['FunctionArgs']['CFg1Args'])
     else:
-        args = ['Fg','Fg_Av','Ts']
+        args = ['Fg','Fg_Av','Ts_Av']
     if len(args) == 4:
         qcts.CorrectFgForStorage(cf,ds3,args[0],args[1],args[2],args[3])
     else:
@@ -245,19 +318,61 @@ def l3qc(cf,ds2):
         else:
             qcts.CorrectFgForStorage(cf,ds3,args[0],args[1],args[2])
     
-    # average soil measurements
-    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='A3SBE_1_in'):
-        in1args = ast.literal_eval(cf['FunctionArgs']['A3SBE_1_in'])
-        out1arg = ast.literal_eval(cf['FunctionArgs']['A3SBE_1_out'])
-        qcts.Average3SeriesByElements(ds3,out1arg[0],in1args)
-    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='A3SBE_2_in'):
-        in2args = ast.literal_eval(cf['FunctionArgs']['A3SBE_2_in'])
-        out2arg = ast.literal_eval(cf['FunctionArgs']['A3SBE_2_out'])
-        qcts.Average3SeriesByElements(ds3,out2arg[0],in2args)
-    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='A3SBE_3_in'):
-        in3args = ast.literal_eval(cf['FunctionArgs']['A3SBE_3_in'])
-        out3arg = ast.literal_eval(cf['FunctionArgs']['A3SBE_3_out'])
-        qcts.Average3SeriesByElements(ds3,out3arg[0],in3args)
+    # average soil measurements after correcting for storage above sensors
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'PostCorrectSoilAverage' in cf['General']['FunctionList']:
+        if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='ASBEFg'):
+            outvar = ast.literal_eval(cf['FunctionArgs']['ASBEFg'])
+        else:
+            outvar = 'Fg_Av'
+        
+        if qcutils.cfkeycheck(cf,ThisOne=outvar,key='AverageSeries') and 'Source' in cf['Variables'][outvar]['AverageSeries'].keys():
+            arg = ast.literal_eval(cf['Variables'][outvar]['AverageSeries']['Source'])
+            if len(arg) == 0:
+                srclist = qcutils.GetAverageList(cf,outvar)
+            else:
+                srclist = qcutils.GetAverageList(cf,outvar,default=arg)
+        else:
+            srclist = qcutils.GetAverageList(cf,outvar,default=['Fg_01'])
+        
+        if len(srclist) > 0:
+            qcts.AverageSeriesByElements(ds3,outvar,srclist)
+        
+    # average the soil temperature data
+        if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='ASBETs'):
+            outvar = ast.literal_eval(cf['FunctionArgs']['ASBETs'])
+        else:
+            outvar = 'Ts_Av'
+        
+        if qcutils.cfkeycheck(cf,ThisOne=outvar,key='AverageSeries') and 'Source' in cf['Variables'][outvar]['AverageSeries'].keys():
+            arg = ast.literal_eval(cf['Variables'][outvar]['AverageSeries']['Source'])
+            if len(arg) == 0:
+                srclist = qcutils.GetAverageList(cf,outvar)
+            else:
+                srclist = qcutils.GetAverageList(cf,outvar,default=arg)
+        else:
+            srclist = qcutils.GetAverageList(cf,outvar,default=['Ts_01'])
+        
+        if len(srclist) > 0:
+            qcts.AverageSeriesByElements(ds3,outvar,srclist)
+        
+    # average soil moisture
+        if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='ASBEswc'):
+            outvar = cf['FunctionArgs']['ASBEswc']
+        else:
+            outvar = 'Sws_Av'
+        
+        if qcutils.cfkeycheck(cf,ThisOne=outvar,key='AverageSeries') and 'Source' in cf['Variables'][outvar]['AverageSeries'].keys():
+            arg = ast.literal_eval(cf['Variables'][outvar]['AverageSeries']['Source'])
+            if len(arg) == 0:
+                srclist = qcutils.GetAverageList(cf,outvar)
+            else:
+                srclist = qcutils.GetAverageList(cf,outvar,default=arg)
+        else:
+            srclist = qcutils.GetAverageList(cf,outvar,default=['Sws_01'])
+        
+        if len(srclist) > 0:
+            qcts.AverageSeriesByElements(ds3,outvar,srclist)
+        
     
     # calculate the available energy
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'CalculateAvailableEnergy' in cf['General']['FunctionList']:

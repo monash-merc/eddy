@@ -168,20 +168,40 @@ Platform = PC    # Mac or PC
         [[[Attr]]]
             Description = "Covariance of Ux and Uz"
             Units    = "m2/s2"
-    [[UxUx]]
+    [[Ux_Sd]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = covUxUx
+            Sheet    = Data
+            Name     = stdev_Ux
+        [[[Attr]]]
+            Description = "Std dev of Ux"
+            Units    = "m/s"
+
+    [[UxUx]]
+        [[[Function]]]
+            [[[[0]]]]
+                [[[[[Square]]]]]
+                    Parent = Ux_Sd
         [[[Attr]]]
             Description = "Variance of Ux"
             Units    = "m2/s2"
-    [[UyUy]]
+
+    [[Uy_Sd]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = covUyUy
+            Sheet    = Data
+            Name     = stdev_Uy
+        [[[Attr]]]
+            Description = "Std dev of Uy"
+            Units    = "m/s"
+
+    [[UyUy]]
+        [[[Function]]]
+            [[[[0]]]]
+                [[[[[Square]]]]]
+                    Parent = Uy_Sd
         [[[Attr]]]
             Description = "Variance of Uy"
             Units    = "m2/s2"
+
 # Meteorology: CSAT
     [[Tv_CSAT]]
         [[[xl]]]
@@ -190,7 +210,7 @@ Platform = PC    # Mac or PC
         [[[Attr]]]
             Description = "Virtual air temperature (CSAT)"
             Units    = "C"
-    [[Wd_CSAT]]
+    [[Wd_CSAT_Compass]]
         [[[xl]]]
             Sheet    = slow_met
             Name     = WD_CSAT_Compass_Avg
@@ -247,34 +267,36 @@ Platform = PC    # Mac or PC
         [[[Attr]]]
             Description = "CO2 concentration (7500)"
             Units    = "mg/m3"
-    [[AhAh]]
-        [[[xl]]]
-            Sheet    = slow_flux
-            Name     = covAhAh
-        [[[Attr]]]
-            Description = "Absolute humidity (7500), variance"
-            Units    = "(g/m3)2"
     [[Ah_7500_Sd]]
-        # Variance logged, need standard deviation for QC
-        [[[Function]]]
-            0          = "SquareRoot(ds.series['Ah_7500_Vr']['Data'])"
+        [[[xl]]]
+            Sheet    = Data
+            Name     = stdev_h2o
         [[[Attr]]]
             Description = "Absolute humidity (7500), standard deviation"
             Units    = "g/m3"
-    [[CcCc]]
-        [[[xl]]]
-            Sheet    = slow_flux
-            Name     = covCcCc
-        [[[Attr]]]
-            Description = "CO2 concentration (7500), variance"
-            Units    = "(mg/m3)2"
-    [[Cc_7500_Sd]]
-        # Variance logged, need standard deviation for QC
+    [[AhAh]]
         [[[Function]]]
-            0          = "SquareRoot(ds.series['Cc_7500_Vr']['Data'])"
+            [[[[0]]]]
+                [[[[[Square]]]]]
+                    Parent = Ah_7500_Sd
+        [[[Attr]]]
+            Description = "Absolute humidity (7500), variance"
+            Units    = "(g/m3)2"
+    [[Cc_7500_Sd]]
+        [[[xl]]]
+            Sheet    = Data
+            Name     = stdev_co2
         [[[Attr]]]
             Description = "CO2 concentration (7500), standard deviation"
             Units    = "mg/m3"
+    [[CcCc]]
+        [[[Function]]]
+            [[[[0]]]]
+                [[[[[Square]]]]]
+                    Parent = Cc_7500_Sd
+        [[[Attr]]]
+            Description = "CO2 concentration (7500), variance"
+            Units    = "(mg/m3)2"
     [[ps]]
         [[[xl]]]
             Sheet    = slow_met

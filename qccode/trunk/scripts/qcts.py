@@ -212,44 +212,6 @@ def ApplyLinearDriftLocal(cf,ds,ThisOne):
             ds.series[ThisOne]['Data'] = numpy.ma.filled(data,float(-9999))
             ds.series[ThisOne]['Flag'] = flag
 
-def Average3SeriesByElements(ds,Av_out,Series_in):
-    """
-        Calculates the average of three time series.  Three time series are
-        entered and a single time series representing the average at each
-        observational period is returned.  This function is included to error in
-        numpy.vstack that occurs when arrays of different dimension are stacked.
-        
-        Usage qcts.Average3SeriesByElements(ds,Av_out,Series_in)
-        ds: data structure
-        Av_out: output variable to ds.  Example: 'Fg_Av'
-        Series_in: input variable series in ds.  Example: ['Fg_1','Fg_2','Fg_3']
-        """
-    log.info(' Averaging series in ' + str(Series_in))
-    nSeries = len(Series_in)
-    TmpArr_data0 = ds.series[Series_in[0]]['Data'].copy()
-    TmpArr_flag0 = ds.series[Series_in[0]]['Flag'].copy()
-    SeriesNameString = Series_in[0]
-    TmpArr_data1 = ds.series[Series_in[1]]['Data'].copy()
-    TmpArr_flag1 = ds.series[Series_in[1]]['Flag'].copy()
-    SeriesNameString = SeriesNameString+', '+Series_in[1]
-    TmpArr_data2 = ds.series[Series_in[2]]['Data'].copy()
-    TmpArr_flag2 = ds.series[Series_in[2]]['Flag'].copy()
-    SeriesNameString = SeriesNameString+', '+Series_in[2]
-    TmpArr_data = numpy.array([TmpArr_data0,TmpArr_data1,TmpArr_data2])
-    TmpArr_flag = numpy.array([TmpArr_flag0,TmpArr_flag1,TmpArr_flag2])
-    TmpArr_data = numpy.ma.masked_where(TmpArr_data==float(-9999),TmpArr_data)
-    Av_data = numpy.ma.average(TmpArr_data,axis=0)
-    Mx_flag = numpy.max(TmpArr_flag,axis=0)
-    DStr = 'Element-wise average of series '+SeriesNameString
-    UStr = ds.series[Series_in[0]]['Attr']['Units']
-    qcutils.CreateSeries(ds,Av_out,Av_data,FList=Series_in,Descr=DStr,Units=UStr)
-    #ds.series[Av_out] = {}
-    #ds.series[Av_out]['Data'] = numpy.ma.filled(Av_data,float(-9999))
-    #ds.series[Av_out]['Flag'] = Mx_flag
-    #ds.series[Av_out]['Attr'] = {}
-    #ds.series[Av_out]['Attr']['Description'] = 'Element-wise average of series '+SeriesNameString
-    #ds.series[Av_out]['Attr']['Units'] = ds.series[Series_in[0]]['Attr']['Units']
-
 def AverageSeriesByElements(ds,Av_out,Series_in):
     """
         Calculates the average of multiple time series.  Multiple time series
@@ -261,7 +223,7 @@ def AverageSeriesByElements(ds,Av_out,Series_in):
         Av_out: output variable to ds.  Example: 'Fg_Av'
         Series_in: input variable series in ds.  Example: ['Fg_1','Fg_2']
         """
-    log.info(' Averaging series in '+str(Series_in))
+    log.info(' Averaging series in '+str(Series_in)+' into '+str(Av_out))
     nSeries = len(Series_in)
     if nSeries==0:
         log.error('  AverageSeriesByElements: no input series specified')
@@ -313,7 +275,7 @@ def CalculateAvailableEnergy(ds,Fa_out,Fn_in,Fg_in):
                          Descr='Available energy using '+Fn_in+','+Fg_in,
                          Units='W/m2')
 
-def CalculateFluxes(ds):
+def CalculateFluxes(ds,Ta_in,Ah_in,ps_in):
     """
         Calculate the fluxes from the rotated covariances.
         
@@ -327,9 +289,9 @@ def CalculateFluxes(ds):
     log.info(' Calculating fluxes from covariances')
     if 'wT' in ds.series.keys():
         wT,f = qcutils.GetSeriesasMA(ds,'wT')
-        Ta,f = qcutils.GetSeriesasMA(ds,'Ta_EC')
-        ps,f = qcutils.GetSeriesasMA(ds,'ps')
-        Ah,f = qcutils.GetSeriesasMA(ds,'Ah_EC')
+        Ta,f = qcutils.GetSeriesasMA(ds,Ta_in)
+        ps,f = qcutils.GetSeriesasMA(ds,ps_in)
+        Ah,f = qcutils.GetSeriesasMA(ds,Ah_in)
         if 'rhom' in ds.series.keys():
             rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
             Cpm,f = qcutils.GetSeriesasMA(ds,'Cpm')
@@ -1066,12 +1028,56 @@ def do_functions(cf,ds):
         if 'Function' in cf['Variables'][ThisOne].keys():
             ds.series[ThisOne] = {}
             FunctionList = cf['Variables'][ThisOne]['Function'].keys()
-            for i in range(len(FunctionList)):
-                ds.series[ThisOne]['Data'] = ast.literal_eval(cf['Variables'][ThisOne]['Function'][str(i)])
-                #ds.series[ThisOne]['Data'] = ast.literal_eval(cf['Variables'][ThisOne]['Function'][str(i)])
-                nRecs = numpy.size(ds.series[ThisOne]['Data'])
-                if 'Flag' not in ds.series[ThisOne].keys():
-                    ds.series[ThisOne]['Flag'] = numpy.zeros(nRecs,int)
+            if len(FunctionList) == 1:
+                i = 0
+                if 'Square' in cf['Variables'][ThisOne]['Function'][str(i)].keys() and 'Parent' in cf['Variables'][ThisOne]['Function'][str(i)]['Square'].keys():
+                    Parent = cf['Variables'][ThisOne]['Function'][str(i)]['Square']['Parent']
+                    ds.series[ThisOne]['Data'] = qcts.Square(ds.series[Parent]['Data'])
+                    nRecs = numpy.size(ds.series[ThisOne]['Data'])
+                    if 'Flag' not in ds.series[ThisOne].keys():
+                        ds.series[ThisOne]['Flag'] = numpy.zeros(nRecs,int)
+                        if 'Flag' in ds.series[Parent]:
+                            ds.series[ThisOne]['Flag'] = ds.series[Parent]['Flag']
+                        else:
+                            ds.series[ThisOne]['Flag'] = numpy.zeros(nRecs,int)
+                elif 'SquareRoot' in cf['Variables'][ThisOne]['Function'][str(i)].keys() and 'Parent' in cf['Variables'][ThisOne]['Function'][str(i)]['Square'].keys():
+                    Parent = cf['Variables'][ThisOne]['Function'][str(i)]['Square']['Parent']
+                    ds.series[ThisOne]['Data'] = qcts.SquareRoot(ds.series[Parent]['Data'])
+                    nRecs = numpy.size(ds.series[ThisOne]['Data'])
+                    if 'Flag' not in ds.series[ThisOne].keys():
+                        ds.series[ThisOne]['Flag'] = numpy.zeros(nRecs,int)
+                        if 'Flag' in ds.series[Parent]:
+                            ds.series[ThisOne]['Flag'] = ds.series[Parent]['Flag']
+                        else:
+                            ds.series[ThisOne]['Flag'] = numpy.zeros(nRecs,int)
+                else:
+                    log.error ('Function missing or unknown for variable'+ThisOne)
+                    return
+            else:
+                for i in range(len(FunctionList)):
+                    if 'Square' in cf['Variables'][ThisOne]['Function'][str(i)].keys() and 'Parent' in cf['Variables'][ThisOne]['Function'][str(i)]['Square'].keys():
+                        Parent = cf['Variables'][ThisOne]['Function'][str(i)]['Square']['Parent']
+                        ds.series[ThisOne]['Data'] = qcts.Square(ds.series[Parent]['Data'])
+                        nRecs = numpy.size(ds.series[ThisOne]['Data'])
+                        if 'Flag' not in ds.series[ThisOne].keys():
+                            ds.series[ThisOne]['Flag'] = numpy.zeros(nRecs,int)
+                            if 'Flag' in ds.series[Parent]:
+                                ds.series[ThisOne]['Flag'] = ds.series[Parent]['Flag']
+                            else:
+                                ds.series[ThisOne]['Flag'] = numpy.zeros(nRecs,int)
+                    elif 'SquareRoot' in cf['Variables'][ThisOne]['Function'][str(i)].keys() and 'Parent' in cf['Variables'][ThisOne]['Function'][str(i)]['Square'].keys():
+                        Parent = cf['Variables'][ThisOne]['Function'][str(i)]['Square']['Parent']
+                        ds.series[ThisOne]['Data'] = qcts.SquareRoot(ds.series[Parent]['Data'])
+                        nRecs = numpy.size(ds.series[ThisOne]['Data'])
+                        if 'Flag' not in ds.series[ThisOne].keys():
+                            ds.series[ThisOne]['Flag'] = numpy.zeros(nRecs,int)
+                            if 'Flag' in ds.series[Parent]:
+                                ds.series[ThisOne]['Flag'] = ds.series[Parent]['Flag']
+                            else:
+                                ds.series[ThisOne]['Flag'] = numpy.zeros(nRecs,int)
+                    else:
+                        log.error ('Function missing or unknown for variable'+ThisOne)
+                        return
 
 def Fc_WPL(ds,Fc_wpl_out,Fc_raw_in,Fh_in,Fe_wpl_in,Ta_in,Ah_in,Cc_in,ps_in):
     """

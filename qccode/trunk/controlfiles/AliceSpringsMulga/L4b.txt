@@ -41,8 +41,8 @@ secondMonth = 3
 # Default Cin = "['Fc']"
 #
 SubSumList = "['Energy']"
-MinMaxList = "['VPD','Ta_HMP','Vbat','Tpanel','Carbon']"
-MeanList = "['VPD','Ta_HMP','Tpanel']"
+MinMaxList = "['VPD','Ta_HMP','Ta_HMP_200cm','Vbat','Tpanel','Carbon']"
+MeanList = "['VPD','Ta_HMP','Ta_HMP_200cm','Tpanel']"
 #
 ETin = "['Fe_gapfilled']"
 Energyin = "['Fe_gapfilled', 'Fh_gapfilled', 'Fg_Av']"
