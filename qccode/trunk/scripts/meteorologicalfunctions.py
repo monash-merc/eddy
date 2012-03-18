@@ -1,6 +1,28 @@
 import constants as c
 import numpy
 
+def aerodynamicresistance(Uavg,Ce):
+    # Calculate the aerodynamic resistance, Stull 1988
+    #  U - wind speed
+    #  Ce - bulk transfer coefficient
+    # Returns
+    #  rav, s/m
+    rav = 1 / (Uavg * Ce)
+    return rav
+
+def bulktransfercoefficient(Fe,Lv,Uavg,q,qsat):
+    # Calculate the bulk transfer coefficient to be used in aerodynamic resistance, Stull 1988
+    Ce = (0 - (Fe / (Lv / 1000))) / (Uavg * (q - qsat))
+    return Ce
+
+def delta(Ta):
+    # Calculate the slope of the saturation vapour pressure curve
+    #  Ta - air temperature
+    # Returns
+    #  delta, kPa/K
+    delta = (2503 / ((Ta + 237.3) ** 2 )) * numpy.ma.exp((17.27 * Ta) / (Ta + 237.3))
+    return delta
+
 def densitydryair(Ta,ps):
     # Calculate density of dry air from absolute humidity and temperature
     #  Ta - air temperature, C
@@ -27,6 +49,14 @@ def es(T):
     #  es is the saturation vapour pressure in kPa
     es = 0.6106 * numpy.exp(17.27 * T / (T + 237.3))
     return es
+
+def gamma(ps,Cpm,Lv):
+    # Calculate the approximate psychrometric coefficient
+    #  ps - atmopsheric pressure, kPa
+    # Returns
+    #  gamma, kPa/K
+    gamma = (Cpm * ps) / (0.622 * (Lv / 1000))
+    return gamma
 
 def Lv(Ta):
     # Calculate Lv as a function of temperature, from Stull 1988
@@ -63,6 +93,10 @@ def qfromrh(RH, T, p):
     #  p is the atmospheric pressure, kPa
     qRH = (c.Mv / c.Md) * (0.01 * RH * es(T) / p)
     return qRH
+
+def qsat(esat,ps):
+    qsat = 0.622 * (esat / ps)
+    return qsat
 
 def specificheatmoistair(q):
     # Calculate Cp of moist air, from Stull 1988

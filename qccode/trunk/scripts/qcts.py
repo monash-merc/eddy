@@ -540,7 +540,7 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
         Default List of sub-sums (sums split between positive and negative observations)
             Fe_MJ, Fh_MJ, Fg_MJ
         Default List of min/max:
-            VPD, Ta_HMP, Vbat, Tpanel, Fc_mg, Fc_umol
+            Ta_HMP, Vbat, Tpanel, Fc_mg, Fc_umol
         Default List of soil moisture measurements:
         """
     OutList = []
@@ -549,6 +549,10 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
     MinMaxOutList = []
     MeanOutList = []
     SoilOutList = []
+    
+    for ThisOne in SubSumList:
+        if ThisOne not in SumList:
+            SumList.append(ThisOne)
     
     for ThisOne in SumList:
         if ThisOne == 'ET':
@@ -565,6 +569,8 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
             qcutils.CreateSeries(ds,'ET',ET,FList=Invar,Descr='Evapotranspiration Flux',Units='mm')
             SumOutList.append('ET')
             OutList.append('ET')
+            if ThisOne in SubSumList:
+                SubOutList.append('ET')
         elif ThisOne == 'Energy':
             if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='Energyin'):
                 EnergyIn = ast.literal_eval(cf['Sums']['Energyin'])
@@ -578,6 +584,8 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
                 convert_energy(ds,EnergyIn[index],EnergyOut[index])
                 OutList.append(EnergyOut[index])
                 SumOutList.append(EnergyOut[index])
+                if ThisOne in SubSumList:
+                    SubOutList.append(EnergyOut[index])
         elif ThisOne == 'Radiation':
             if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='Radin'):
                 RadiationIn = ast.literal_eval(cf['Sums']['Radin'])
@@ -593,6 +601,8 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
                 convert_energy(ds,RadiationIn[index],RadiationOut[index])
                 OutList.append(RadiationOut[index])
                 SumOutList.append(RadiationOut[index])
+                if ThisOne in SubSumList:
+                    log.error('  Subsum: Negative radiation flux not defined')
         elif ThisOne == 'Carbon':
             if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='Cin'):
                 CIn = ast.literal_eval(cf['Sums']['Cin'])
@@ -608,24 +618,14 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
             for listindex in range(0,2):
                 OutList.append(COut[listindex])
                 SumOutList.append(COut[listindex])
+                if ThisOne in SubSumList:
+                    SubOutList.append(COut[listindex])
         else:
             OutList.append(ThisOne)
             SumOutList.append(ThisOne)
+            if ThisOne in SubSumList:
+                log.error('  Subsum: Negative stomatal resistance not defined')
     
-    for ThisOne in SubSumList:
-        if ThisOne == 'Energy':
-            EOut = ['Fe_MJ','Fh_MJ','Fg_MJ']
-            for listindex in range(0,3):
-                SubOutList.append(EOut[listindex])
-                if EOut[listindex] not in OutList:
-                    OutList.append(EOut[listindex])
-                if EOut[listindex] not in SumOutList:
-                    SumOutList.append(EOut[listindex])
-        else:
-            SubOutList.append(ThisOne)
-            if ThisOne not in OutList:
-                OutList.append(ThisOne)
-
     for ThisOne in MinMaxList:
         if ThisOne == 'Carbon':
             if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='Cin'):
@@ -640,6 +640,20 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
             for listindex in range(0,2):
                 OutList.append(COut[listindex])
                 MinMaxOutList.append(COut[listindex])
+        elif ThisOne == 'PM':
+            if 'rst' not in ds.series.keys():
+                if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
+                    get_stomatalresistance(cf,ds,'L4')
+                    if 'rst' not in OutList:
+                        OutList.append('rst')
+                    MinMaxOutList.append('rst')
+                else:
+                    info.error('  Penman-Monteith Daily min/max: input Source not defined')
+            else:
+                if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
+                    if 'rst' not in OutList:
+                        OutList.append('rst')
+                    MinMaxOutList.append('rst')
         else:
             if ThisOne not in OutList:
                 OutList.append(ThisOne)
@@ -648,6 +662,20 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
     for ThisOne in MeanList:
         if ThisOne == 'Energy' or ThisOne == 'Carbon' or ThisOne == 'Radiation':
             log.error(' Mean error: '+ThisOne+' to be placed in SumList')
+        elif ThisOne == 'PM':
+            if 'rst' not in ds.series.keys():
+                if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
+                    get_stomatalresistance(cf,ds,'L4')
+                    if 'rst' not in OutList:
+                        OutList.append('rst')
+                    MeanOutList.append('rst')
+                else:
+                    info.error('  Penman-Monteith Daily mean: input Source not defined')
+            else:
+                if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
+                    if 'rst' not in OutList:
+                        OutList.append('rst')
+                    MeanOutList.append('rst')
         else:
             MeanOutList.append(ThisOne)
             if ThisOne not in OutList:
@@ -1012,9 +1040,11 @@ def do_attributes(cf,ds):
         ds.globalattributes['Flag14'] = 'Corrections/Combinations: WPL correction for flux effects on density measurements (Coord Rotation, Massman, Fhv to Fh, Cc_7500_Av)'
         ds.globalattributes['Flag16'] = 'Corrections/Combinations: Post-correction Range Check'
         ds.globalattributes['Flag17'] = 'Corrections/Combinations: Post-correction Diurnal SD Check'
+        ds.globalattributes['Flag18'] = 'Corrections/Combinations: Penman-Monteith Daytime/Positive Flux criteria'
         ds.globalattributes['Flag20'] = 'GapFilling (L3_Corrected): Gap coordination'
         ds.globalattributes['Flag21'] = 'GapFilling (L4_GapFilled): Gap Filled'
         ds.globalattributes['Flag22'] = 'GapFilling (L4_GapFilled): Gap not Filled'
+        ds.globalattributes['Flag23'] = 'GapFilling (L4_GapFilled): Penman-Monteith Daytime/Positive Flux criteria'
     for ThisOne in ds.series.keys():
         if ThisOne in cf['Variables']:
             if 'Attr' in cf['Variables'][ThisOne].keys():
@@ -1614,6 +1644,50 @@ def get_nightsums(Data):
             Av = -9999
     
     return Num, Sum, Av
+
+def get_stomatalresistance(cf,ds,Level):
+        PMIn = ast.literal_eval(cf['FunctionArgs']['PMin'])
+        if 'Lv' not in ds.series.keys():
+            AddMetVars(ds)
+        Fe,f = qcutils.GetSeriesasMA(ds,PMin[0])
+        Ta,f = qcutils.GetSeriesasMA(ds,PMin[1])
+        ps,f = qcutils.GetSeriesasMA(ds,PMin[2])
+        RH,f = qcutils.GetSeriesasMA(ds,PMin[3])
+        Uavg,f = qcutils.GetSeriesasMA(ds,PMin[4])
+        Fnr,f = qcutils.GetSeriesasMA(ds,PMin[5])
+        Fsd,f = qcutils.GetSeriesasMA(ds,PMin[6])
+        VPD,f = qcutils.GetSeriesasMA(ds,'VPD')
+        Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
+        q,f = qcutils.GetSeriesasMA(ds,'q')
+        Cpm,f = qcutils.GetSeriesasMA(ds,'Cpm')
+        
+        esat = mf.es(Ta)
+        qsat = mf.qsat(esat,ps)
+        gamma = mf.gamma(ps,Cpm,Lv)
+        delta = mf.delta(Ta)
+        Ce = mf.bulktransfercoefficient(Fe,Lv,Uavg,q,qsat)
+        rav = mf.aerodynamicresistance(Uavg,Ce)
+        rst = ((((((delta * Fnr) + (c.rho_water * Cpm * (VPD / ((Lv / 1000) * rav)))) / (Fe / (Lv / 1000))) - delta) / gamma) - 1) * rav
+        
+        qcutils.CreateSeries(ds,'rst',rst,FList=PMin,Descr='Bulk stomatal resistance from Penman-Monteith inversion, Brutseart/Stull formulation of bulk transfer coefficient',Units='s/m')
+        
+        if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMcritFsd'):
+            critFsd = cf['Sums']['PMcritFsd']
+        else:
+            critFsd = 10
+        
+        if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMcritFe'):
+            critFe = cf['Sums']['PMcritFe']
+        else:
+            critFe = 0
+        
+        index = numpy.ma.where((Fsd < critFsd) | (Fe < critFe))[0]
+        rst[index] = numpy.float64(-9999)
+        if Level == 'L3':
+            ds.series['rst']['Flag'][index] = 23
+        elif Level == 'L4':
+            ds.series['rst']['Flag'][index] = 18
+        ds.series['rst']['Data']=numpy.ma.filled(rst,float(-9999))
 
 def get_soilaverages(Data):
     """
@@ -2434,6 +2508,19 @@ def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoMean
         for day in range(1,dRan+1):
             xlRow = xlRow + 1
             di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day))[0]
+            if ThisOne == 'rst':
+                if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMcritFsd'):
+                    critFsd = cf['Sums']['PMcritFsd']
+                else:
+                    critFsd = 10
+                
+                if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMcritFe'):
+                    critFe = cf['Sums']['PMcritFe']
+                else:
+                    critFe = 0
+                
+                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day) & (Fsd > critFsd) & ((Fe > critFe) | (Fe.mask == True)))[0]
+            
             if DoSoil == 'True':
                 Num,Av = get_soilaverages(data[di])
                 if xlCol == 3:

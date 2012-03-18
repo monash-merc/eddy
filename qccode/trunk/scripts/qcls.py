@@ -1,5 +1,5 @@
 """
-    OzFlux QC v1.8 16 Mar 2012;
+    OzFlux QC v1.8.1 19 Mar 2012;
 
     Version History:
     <<v1.0: 21 July 2011, code diversion reconciliation, PIsaac & JCleverly>>
@@ -14,6 +14,7 @@
     <<v1.6 24 Feb 2012, generalised qcls.l3qc, ASM tested ok L1-L4>>
     <<v1.7 27 Feb 2012, generalised qcls.l4qc, ASM tested ok L1-L4>>
     <<v1.8 16 Mar 2012, ASM and Standard (Gingin) tested ok L1-L3>>
+    <<v1.8.1 19 Mar 2012, rst from Penman-Monteith inversion added to L3 & L4>>
 """
 
 import sys
@@ -378,6 +379,11 @@ def l3qc(cf,ds2):
     # calculate the available energy
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'CalculateAvailableEnergy' in cf['General']['FunctionList']:
         qcts.CalculateAvailableEnergy(ds3,'Fa','Fn','Fg')
+    
+    # calculate bulk stomatal resistance from Penman-Monteith inversion using bulk transfer coefficient (Stull 1988)
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'rstFromPenmanMonteith' in cf['General']['FunctionList']:
+        Level = ds3.globalattributes['Level']
+        qcts.get_stomatalresistance(cf,ds3,Level)
     
     # re-apply the quality control checks (range, diurnal and rules)
     qcck.do_qcchecks(cf,ds3)
