@@ -1,0 +1,13 @@
+[General]
+InputLevel = GapFilling
+Platform = Mac    # Mac or PC
+
+[Files]
+    [[GapFilling]]
+        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
+        ncFileName = ASM_EC_2012_1Jan-Mar_L3.nc
+        xlFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level3_intermediates/
+        xlFileName = ASM_EC_2012_1Jan-Mar_GapFilling.xls
+
+[Output]
+    GapFilling = "['Fc_wpl', 'Fe_wpl', 'Fh_rmv', 'Fg_Av', 'Fnr', 'Ts_Av', 'Sws_Av', 'q', 'Ta_HMP', 'VPD']"
