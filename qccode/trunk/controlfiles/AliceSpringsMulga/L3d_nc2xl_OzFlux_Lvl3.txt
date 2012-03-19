@@ -4,9 +4,9 @@ Platform = Mac    # Mac or PC
 
 [Files]
     [[L3_Corrected]]
-        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
+        ncFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/qc_py/ncData/ASM/
         ncFileName = ASM_EC_2012_1Jan-Mar_L3.nc
-        xlFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level3/
+        xlFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/AliceSpringsMulga/level3/
         xlFileName = ASM_EC_2012_1Jan-Mar_L3_Corrected.xls
 
 [Output]

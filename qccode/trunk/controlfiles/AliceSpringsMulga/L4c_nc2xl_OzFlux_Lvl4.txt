@@ -4,12 +4,12 @@ Platform = Mac    # Mac or PC
 
 [Files]
     [[L4]]
-        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
+        ncFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/qc_py/ncData/ASM/
         ncFileName = ASM_EC_2012_1Jan-Mar_L4.nc
     [[L4_GapFilled]]
-        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
+        ncFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/qc_py/ncData/ASM/
         ncFileName = ASM_EC_2012_1Jan-Mar_L4.nc
-        xlFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level4/
+        xlFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/AliceSpringsMulga/level4/
         xlFileName = ASM_EC_2012_1Jan-Mar_L4_GapFilled.xls
 
 [Output]

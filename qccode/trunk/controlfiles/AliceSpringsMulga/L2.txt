@@ -4,14 +4,14 @@ netCDFv3 = False
 
 [Files]
     [[L1]]
-        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
+        ncFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/qc_py/ncData/ASM/
         ncFileName = ASM_EC_2012_1Jan-Mar_L1.nc
     [[L2]]
-        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
+        ncFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/qc_py/ncData/ASM/
         ncFileName = ASM_EC_2012_1Jan-Mar_L2.nc
-        xlFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level2/
+        xlFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/AliceSpringsMulga/level2/
         xlFileName = ASM_EC_2012_1Jan-Mar_L2.xls
-        xlFlagFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level2/
+        xlFlagFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/AliceSpringsMulga/level2/
         xlFlagFileName = ASM_EC_2012_1Jan-Mar_flagstats_L2.xls
 
 

@@ -1590,10 +1590,24 @@ def get_averages(Data):
         """
     li = numpy.ma.where(abs(Data-float(-9999))>c.eps)
     Num = numpy.size(li)
-    if Num == 48:
+    if Num == 0:
+        Av = -9999
+    elif Num == 48:
         Av = numpy.ma.mean(Data[li])
     else:
-        Av = -9999
+        x = 0
+        index = numpy.ma.where(Data.mask == True)[0]
+        if len(index) == 1:
+            x = 1
+        elif len(index) > 1:
+            for i in range(len(Data)):
+                if Data.mask[i] == True:
+                    x = x + 1
+        
+        if x == 0:
+            Av = numpy.ma.mean(Data[li])
+        else:
+            Av = -9999
     return Num, Av
 
 def get_minmax(Data):
@@ -1691,16 +1705,16 @@ def get_stomatalresistance(cf,ds,Level):
     Gst = (1 / rst) * (Ah * 1000) / 18
     
     if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMcritFsd'):
-        critFsd = ast.literal_eval(cf['FunctionArgs']['PMcritFsd'])
+        critFsd = float(cf['FunctionArgs']['PMcritFsd'])
     else:
-        critFsd = 10
+        critFsd = 10.
     
     if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMcritFe'):
-        critFe = ast.literal_eval(cf['FunctionArgs']['PMcritFe'])
+        critFe = float(cf['FunctionArgs']['PMcritFe'])
     else:
-        critFe = 0
+        critFe = 0.
     
-    index = numpy.ma.where((Fsd < critFsd) | (Fe < critFe))[0]
+    index = numpy.ma.where((Fsd < critFsd) | (Fe < critFe) | (rst < 0))[0]
     rst[index] = numpy.float64(-9999)
     Gst[index] = numpy.float64(-9999)
     
@@ -2534,14 +2548,14 @@ def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoMean
             xlRow = xlRow + 1
             if ThisOne == 'rst' or ThisOne == 'Gst':
                 if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMcritFsd'):
-                    critFsd = cf['FunctionArgs']['PMcritFsd']
+                    critFsd = float(cf['FunctionArgs']['PMcritFsd'])
                 else:
-                    critFsd = 10
+                    critFsd = 10.
                 
                 if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMcritFe'):
-                    critFe = cf['FunctionArgs']['PMcritFe']
+                    critFe = float(cf['FunctionArgs']['PMcritFe'])
                 else:
-                    critFe = 0
+                    critFe = 0.
                 
                 if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
                     PMin = ast.literal_eval(cf['FunctionArgs']['PMin'])
@@ -2550,13 +2564,24 @@ def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoMean
                 
                 PMin1 = PMin[6]
                 PMin2 = PMin[0]
-                log.info(ds.series['Month']['Data'])
-                log.info(ds.series[PMin1].keys())
-                log.info(ds.series[PMin2].keys())
-                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day) & (ds.series[PMin1]['Data'] > critFsd) & (ds.series[PMin2]['Data'] > critFe))[0]
-                log.info(di)
+                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day) & (ds.series[PMin1]['Data'] > critFsd) & (ds.series[PMin2]['Data'] > critFe) & (ds.series['rst']['Data'] > 0))[0]
+                ti = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day))[0]
+                nRecs = len(ti)
+                check = numpy.ma.empty(nRecs,str)
+                for i in range(nRecs):
+                    index = ti[i]
+                    check[i] = ds.series['Day']['Data'][index]
+                if len(check) < 48:
+                    di = []
             else:
                 di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day))[0]
+                nRecs = len(di)
+                check = numpy.ma.empty(nRecs,str)
+                for i in range(nRecs):
+                    index = di[i]
+                    check[i] = ds.series['Day']['Data'][index]
+                if len(check) < 48:
+                    di = []
             
             if DoSoil == 'True':
                 Num,Av = get_soilaverages(data[di])

@@ -7,15 +7,15 @@ Platform = Mac    # Mac or PC
 
 [Files]
     [[L2]]
-        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
+        ncFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/qc_py/ncData/ASM/
         ncFileName = ASM_EC_2012_1Jan-Mar_L2.nc
     [[L3]]
-        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
+        ncFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/qc_py/ncData/ASM/
         ncFileName = ASM_EC_2012_1Jan-Mar_L3.nc
-        xlFlagFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level3/
+        xlFlagFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/AliceSpringsMulga/level3/
         xlFlagFileName = ASM_EC_2012_1Jan-Mar_flagstats_L3.xls
     [[L3_Corrected]]
-        ncFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level3/
+        ncFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/AliceSpringsMulga/level3/
         ncFileName = ASM_EC_2012_1Jan-Mar_L3_Corrected.nc
 
 
