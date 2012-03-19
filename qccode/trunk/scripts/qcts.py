@@ -641,19 +641,15 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
                 OutList.append(COut[listindex])
                 MinMaxOutList.append(COut[listindex])
         elif ThisOne == 'PM':
-            if 'rst' not in ds.series.keys():
-                if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
-                    get_stomatalresistance(cf,ds,'L4')
-                    if 'rst' not in OutList:
-                        OutList.append('rst')
-                    MinMaxOutList.append('rst')
-                else:
-                    info.error('  Penman-Monteith Daily min/max: input Source not defined')
+            if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
+                get_stomatalresistance(cf,ds,'L4')
+                PMout = ['rst','Gst']
+                for listindex in range(0,2):
+                    if PMout[listindex] not in OutList:
+                        OutList.append(PMout[listindex])
+                    MinMaxOutList.append(PMout[listindex])
             else:
-                if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
-                    if 'rst' not in OutList:
-                        OutList.append('rst')
-                    MinMaxOutList.append('rst')
+                info.error('  Penman-Monteith Daily min/max: input Source not defined')
         else:
             if ThisOne not in OutList:
                 OutList.append(ThisOne)
@@ -663,19 +659,22 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
         if ThisOne == 'Energy' or ThisOne == 'Carbon' or ThisOne == 'Radiation':
             log.error(' Mean error: '+ThisOne+' to be placed in SumList')
         elif ThisOne == 'PM':
-            if 'rst' not in ds.series.keys():
+            if ThisOne not in MinMaxList:
                 if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
                     get_stomatalresistance(cf,ds,'L4')
-                    if 'rst' not in OutList:
-                        OutList.append('rst')
-                    MeanOutList.append('rst')
+                    PMout = ['rst','Gst']
+                    for listindex in range(0,2):
+                        if PMout[listindex] not in OutList:
+                            OutList.append(PMout[listindex])
+                        MeanOutList.append(PMout[listindex])
                 else:
                     info.error('  Penman-Monteith Daily mean: input Source not defined')
             else:
-                if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
-                    if 'rst' not in OutList:
-                        OutList.append('rst')
-                    MeanOutList.append('rst')
+                PMout = ['rst','Gst']
+                for listindex in range(0,2):
+                    if PMout[listindex] not in OutList:
+                        OutList.append(PMout[listindex])
+                    MeanOutList.append(PMout[listindex])
         else:
             MeanOutList.append(ThisOne)
             if ThisOne not in OutList:
@@ -1608,12 +1607,28 @@ def get_minmax(Data):
         """
     li = numpy.ma.where(abs(Data-float(-9999))>c.eps)
     Num = numpy.size(li)
-    if Num == 48:
+    if Num == 0:
+        Min = -9999
+        Max = -9999
+    elif Num == 48:
         Min = numpy.ma.min(Data[li])
         Max = numpy.ma.max(Data[li])
     else:
-        Min = -9999
-        Max = -9999
+        x = 0
+        index = numpy.ma.where(Data.mask == True)[0]
+        if len(index) == 1:
+            x = 1
+        elif len(index) > 1:
+            for i in range(len(Data)):
+                if Data.mask[i] == True:
+                    x = x + 1
+        
+        if x == 0:
+            Min = numpy.ma.min(Data[li])
+            Max = numpy.ma.max(Data[li])
+        else:
+            Min = -9999
+            Max = -9999
     return Num, Min, Max
 
 def get_nightsums(Data):
@@ -1646,48 +1661,58 @@ def get_nightsums(Data):
     return Num, Sum, Av
 
 def get_stomatalresistance(cf,ds,Level):
-        PMIn = ast.literal_eval(cf['FunctionArgs']['PMin'])
-        if 'Lv' not in ds.series.keys():
-            AddMetVars(ds)
-        Fe,f = qcutils.GetSeriesasMA(ds,PMin[0])
-        Ta,f = qcutils.GetSeriesasMA(ds,PMin[1])
-        ps,f = qcutils.GetSeriesasMA(ds,PMin[2])
-        RH,f = qcutils.GetSeriesasMA(ds,PMin[3])
-        Uavg,f = qcutils.GetSeriesasMA(ds,PMin[4])
-        Fnr,f = qcutils.GetSeriesasMA(ds,PMin[5])
-        Fsd,f = qcutils.GetSeriesasMA(ds,PMin[6])
-        VPD,f = qcutils.GetSeriesasMA(ds,'VPD')
-        Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
-        q,f = qcutils.GetSeriesasMA(ds,'q')
-        Cpm,f = qcutils.GetSeriesasMA(ds,'Cpm')
-        
-        esat = mf.es(Ta)
-        qsat = mf.qsat(esat,ps)
-        gamma = mf.gamma(ps,Cpm,Lv)
-        delta = mf.delta(Ta)
-        Ce = mf.bulktransfercoefficient(Fe,Lv,Uavg,q,qsat)
-        rav = mf.aerodynamicresistance(Uavg,Ce)
-        rst = ((((((delta * Fnr) + (c.rho_water * Cpm * (VPD / ((Lv / 1000) * rav)))) / (Fe / (Lv / 1000))) - delta) / gamma) - 1) * rav
-        
-        qcutils.CreateSeries(ds,'rst',rst,FList=PMin,Descr='Bulk stomatal resistance from Penman-Monteith inversion, Brutseart/Stull formulation of bulk transfer coefficient',Units='s/m')
-        
-        if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMcritFsd'):
-            critFsd = cf['Sums']['PMcritFsd']
-        else:
-            critFsd = 10
-        
-        if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMcritFe'):
-            critFe = cf['Sums']['PMcritFe']
-        else:
-            critFe = 0
-        
-        index = numpy.ma.where((Fsd < critFsd) | (Fe < critFe))[0]
-        rst[index] = numpy.float64(-9999)
-        if Level == 'L3':
-            ds.series['rst']['Flag'][index] = 23
-        elif Level == 'L4':
-            ds.series['rst']['Flag'][index] = 18
-        ds.series['rst']['Data']=numpy.ma.filled(rst,float(-9999))
+    log.info(' Computing Penman-Monteith bulk stomatal resistance at level '+Level)
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
+        PMin = ast.literal_eval(cf['FunctionArgs']['PMin'])
+    else:
+        PMin = ['Fe_wpl', 'Ta_EC', 'Ah_EC', 'ps', 'Ws_CSAT', 'Fnr', 'Fsd']
+    
+    if 'Lv' not in ds.series.keys():
+        AddMetVars(ds)
+    Fe,f = qcutils.GetSeriesasMA(ds,PMin[0])
+    Ta,f = qcutils.GetSeriesasMA(ds,PMin[1])
+    Ah,f = qcutils.GetSeriesasMA(ds,PMin[2])
+    ps,f = qcutils.GetSeriesasMA(ds,PMin[3])
+    Uavg,f = qcutils.GetSeriesasMA(ds,PMin[4])
+    Fnr,f = qcutils.GetSeriesasMA(ds,PMin[5])
+    Fsd,f = qcutils.GetSeriesasMA(ds,PMin[6])
+    VPD,f = qcutils.GetSeriesasMA(ds,'VPD')
+    Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
+    q,f = qcutils.GetSeriesasMA(ds,'q')
+    Cpm,f = qcutils.GetSeriesasMA(ds,'Cpm')
+    
+    esat = mf.es(Ta)
+    qsat = mf.qsat(esat,ps)
+    gamma = mf.gamma(ps,Cpm,Lv)
+    delta = mf.delta(Ta)
+    Ce = mf.bulktransfercoefficient(Fe,Lv,Uavg,q,qsat)
+    rav = mf.aerodynamicresistance(Uavg,Ce)
+    rst = ((((((delta * Fnr) + (c.rho_water * Cpm * (VPD / ((Lv / 1000) * rav)))) / (Fe / (Lv / 1000))) - delta) / gamma) - 1) * rav
+    Gst = (1 / rst) * (Ah * 1000) / 18
+    
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMcritFsd'):
+        critFsd = ast.literal_eval(cf['FunctionArgs']['PMcritFsd'])
+    else:
+        critFsd = 10
+    
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMcritFe'):
+        critFe = ast.literal_eval(cf['FunctionArgs']['PMcritFe'])
+    else:
+        critFe = 0
+    
+    index = numpy.ma.where((Fsd < critFsd) | (Fe < critFe))[0]
+    rst[index] = numpy.float64(-9999)
+    Gst[index] = numpy.float64(-9999)
+    
+    qcutils.CreateSeries(ds,'rst',rst,FList=PMin,Descr='Bulk stomatal resistance from Penman-Monteith inversion, Brutseart/Stull formulation of bulk transfer coefficient, '+Level,Units='s/m')
+    qcutils.CreateSeries(ds,'Gst',Gst,FList=PMin,Descr='Bulk stomatal conductance from Penman-Monteith inversion, Brutseart/Stull formulation of bulk transfer coefficient, '+Level,Units='mmolH2O/(m2ground s)')
+    
+    if Level == 'L3':
+        ds.series['rst']['Flag'][index] = 18
+        ds.series['Gst']['Flag'][index] = 18
+    elif Level == 'L4':
+        ds.series['rst']['Flag'][index] = 23
+        ds.series['Gst']['Flag'][index] = 23
 
 def get_soilaverages(Data):
     """
@@ -2507,19 +2532,31 @@ def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoMean
             
         for day in range(1,dRan+1):
             xlRow = xlRow + 1
-            di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day))[0]
-            if ThisOne == 'rst':
+            if ThisOne == 'rst' or ThisOne == 'Gst':
                 if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMcritFsd'):
-                    critFsd = cf['Sums']['PMcritFsd']
+                    critFsd = cf['FunctionArgs']['PMcritFsd']
                 else:
                     critFsd = 10
                 
                 if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMcritFe'):
-                    critFe = cf['Sums']['PMcritFe']
+                    critFe = cf['FunctionArgs']['PMcritFe']
                 else:
                     critFe = 0
                 
-                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day) & (Fsd > critFsd) & ((Fe > critFe) | (Fe.mask == True)))[0]
+                if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
+                    PMin = ast.literal_eval(cf['FunctionArgs']['PMin'])
+                else:
+                    PMin = ['Fe_wpl', 'Ta_EC', 'Ah_EC', 'ps', 'Ws_CSAT', 'Fnr', 'Fsd']
+                
+                PMin1 = PMin[6]
+                PMin2 = PMin[0]
+                log.info(ds.series['Month']['Data'])
+                log.info(ds.series[PMin1].keys())
+                log.info(ds.series[PMin2].keys())
+                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day) & (ds.series[PMin1]['Data'] > critFsd) & (ds.series[PMin2]['Data'] > critFe))[0]
+                log.info(di)
+            else:
+                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day))[0]
             
             if DoSoil == 'True':
                 Num,Av = get_soilaverages(data[di])

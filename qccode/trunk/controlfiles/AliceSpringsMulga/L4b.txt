@@ -59,7 +59,7 @@ SWC60cm = "['svwc_60cm_baresoil_a1', 'svwc_60cm_mulga_a1', 'svwc_60cm_understory
 SWC100cm = "['svwc_100cm_baresoil_a1', 'svwc_100cm_mulga_a1', 'svwc_100cm_understory_a1', 'svwc_100cm_baresoil_a2', 'svwc_100cm_mulga_a2', 'svwc_100cm_understory_a2']"
 
 [FunctionArgs]
-PMin = "['Fe_gapfilled', 'Ta_HMP', 'ps', 'RH_HMP', 'Ws_CSAT', 'Fnr', 'Fsd']"
+PMin = "['Fe_gapfilled', 'Ta_HMP', 'Ah_HMP', 'ps', 'Ws_CSAT', 'Fnr', 'Fsd']"
 PMcritFe = 0  # Fe flux greater than or equal to this value to keep rst
 PMcritFsd = 10  # Fsd flux greater than or equal to this value to keep rst
 # Default PMcritFe = 0  # Fe flux greater than or equal to this value to keep rst

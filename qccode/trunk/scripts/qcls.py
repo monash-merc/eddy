@@ -509,12 +509,12 @@ def l4qc(cf,ds3):
     if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='MinMaxList'):
         MinMaxList = ast.literal_eval(cf['Sums']['MinMaxList'])
     else:
-        MinMaxList = ['VPD','Ta_EC','Vbat','Tpanel','Carbon']
+        MinMaxList = ['Ta_EC','Vbat','Tpanel','Carbon']
     
     if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='MeanList'):
         MeanList = ast.literal_eval(cf['Sums']['MeanList'])
     else:
-        MeanList = ['VPD','Ta_EC','Tpanel']
+        MeanList = ['Ta_EC','Tpanel']
     
     if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SoilList'):
         SoilList = ast.literal_eval(cf['Sums']['SoilList'])

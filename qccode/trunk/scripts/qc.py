@@ -74,7 +74,7 @@ class qcgui(Tkinter.Frame):
         self.doL1Button.grid(row=2,column=2,columnspan=2)
         self.doL2Button = Tkinter.Button (self, text="Corrections, QC & Visualisation", command=self.do_l3qc )
         self.doL2Button.grid(row=2,column=4,columnspan=2)
-        self.doL3Button = Tkinter.Button (self, text="Gap Fill", command=self.do_l4qc )
+        self.doL3Button = Tkinter.Button (self, text="Gap Fill & Daily Stats", command=self.do_l4qc )
         self.doL3Button.grid(row=2,column=6,columnspan=2)
         
         self.filestartLabel = Tkinter.Label(self,text='File start date')

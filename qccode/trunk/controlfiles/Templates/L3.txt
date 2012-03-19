@@ -48,7 +48,7 @@
 [General]
 FunctionList = "['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'Fe_WPL', 'Fc_WPL', 'MergeSeriesFsd', 'CalculateNetRadiation', 'MergeSeriesFn', 'PreCorrectSoilAverage', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks']"
 # AdelaideRiver:  "['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'Fe_WPL', 'Fc_WPL', 'CalculateNetRadiation', 'MergeSeriesFn', 'InterpolateOverMissing', 'PreCorrectSoilAverage', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks']"
-# AliceSpringsMulga:  "['AddMetVars', 'CorrectSWC', 'do_linear', 'CoordRotation2D', 'MassmanApprox', 'Massman', 'CalculateFluxesRM', 'FhvtoFh', 'Fe_WPLcov', 'Fc_WPLcov', 'CorrectFgForStorage', 'PostCorrectSoilAverage', 'do_qcchecks', 'gaps']"
+# AliceSpringsMulga:  "['AddMetVars', 'CorrectSWC', 'do_linear', 'CoordRotation2D', 'MassmanApprox', 'Massman', 'CalculateFluxesRM', 'FhvtoFh', 'Fe_WPLcov', 'Fc_WPLcov', 'CorrectFgForStorage', 'PostCorrectSoilAverage', 'rstFromPenmanMonteith', 'do_qcchecks', 'gaps']"
 # FoggDam:  "['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'Fe_WPL', 'Fc_WPL', 'CalculateNetRadiation', 'MergeSeriesFn', 'InterpolateOverMissing', 'PreCorrectSoilAverage', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks']"
 Platform = PC    # Mac or PC
 

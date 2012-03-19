@@ -37,9 +37,10 @@ CFg3Args = "['Fgc_mu','Fg_mu','Ts_mu','Sws_mu']"
 # Default ASBEswc = Sws_Av
 #IOM = "['Sws_10cm']"  # for FoggDam
 #IOM = "['Sws_5cm']"   # for AdelaideRiver
-PMin = "['Fe_gapfilled', 'Ta_HMP', 'ps', 'RH_HMP', 'Ws_CSAT', 'Fnr', 'Fsd']"
+PMin = "['Fe_wpl', 'Ta_HMP', 'Ah_HMP', 'ps', 'Ws_CSAT', 'Fnr', 'Fsd']"
 PMcritFe = 0  # Fe flux greater than or equal to this value to keep rst
 PMcritFsd = 10  # Fsd flux greater than or equal to this value to keep rst
+# Default PMin = "['Fe_wpl', 'Ta_EC', 'Ah_EC', 'ps', 'Ws_CSAT', 'Fnr', 'Fsd']"
 # Default PMcritFe = 0  # Fe flux greater than or equal to this value to keep rst
 # Default PMcritFsd = 10  # Fsd flux greater than or equal to this value to keep rst
 
