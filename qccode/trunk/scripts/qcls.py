@@ -76,7 +76,7 @@ def l2qc(cf,ds1):
     # do the LI-7500 diagnostic check
     qcck.do_7500check(cf,ds2)
     # constrain albedo estimates to full sun angles
-    qcts.albedo(ds2)
+    qcts.albedo(cf,ds2)
     log.info(' Finished the albedo constraints')
     # apply linear corrections to the data
     log.info(' Applying linear corrections ...')

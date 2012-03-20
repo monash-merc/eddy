@@ -4,12 +4,12 @@ Platform = Mac    # Mac or PC
 
 [Files]
     [[L4]]
-        ncFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/qc_py/ncData/ASM/
+        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
         ncFileName = ASM_EC_2012_1Jan-Mar_L4.nc
     [[L4_PenmanMonteith]]
-        ncFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/qc_py/ncData/ASM/
+        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
         ncFileName = ASM_EC_2012_1Jan-Mar_L4.nc
-        xlFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/AliceSpringsMulga/level5_summaries/
+        xlFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level5_summaries/
         xlFileName = ASM_EC_2012_1Jan-Mar_L4_PM.xls
 
 [Output]

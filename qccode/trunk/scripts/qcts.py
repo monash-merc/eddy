@@ -59,7 +59,7 @@ def AddMetVars(ds):
     qcutils.CreateSeries(ds,'Cpm',Cpm,FList=['ps','Ah_HMP','Ta_HMP'],Descr='Specific heat of moist air',Units='J/kg-K')
     qcutils.CreateSeries(ds,'VPD',VPD,FList=['es_HMP','e_HMP'],Descr='Vapour pressure deficit',Units='kPa')
 
-def albedo(ds):
+def albedo(cf,ds):
     """
         Filter albedo measurements to:
             high solar angle specified by periods between 10.00 and 14.00, inclusive
@@ -86,9 +86,17 @@ def albedo(ds):
         else:
             Fsd,f = qcutils.GetSeriesasMA(ds,'Fn')
     
-    index = numpy.ma.where((Fsd < 290) | (ds.series['Hdh']['Data'] < 10) | (ds.series['Hdh']['Data'] > 14))[0]
+    if qcutils.cfkeycheck(cf,ThisOne='albedo',key='Threshold'):
+        Fsdbase = float(cf['Variables']['albedo']['Threshold']['Fsd'])
+        ds.series['albedo']['Attr']['FsdCutoff'] = Fsdbase
+    else:
+        Fsdbase = 290.
+    index = numpy.ma.where((Fsd < Fsdbase) | (ds.series['Hdh']['Data'] < 10) | (ds.series['Hdh']['Data'] > 14))[0]
+    index1 = numpy.ma.where(Fsd < Fsdbase)[0]
+    index2 = numpy.ma.where((ds.series['Hdh']['Data'] < 10) | (ds.series['Hdh']['Data'] > 14))[0]
     albedo[index] = numpy.float64(-9999)
-    ds.series['albedo']['Flag'][index] = 7
+    ds.series['albedo']['Flag'][index1] = 30     # bad Fsd flag only if bad time flag not set
+    ds.series['albedo']['Flag'][index2] = 31     # bad time flag
     ds.series['albedo']['Data']=numpy.ma.filled(albedo,float(-9999))
 
 def ApplyLinear(cf,ds,ThisOne):
@@ -620,11 +628,23 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
                 SumOutList.append(COut[listindex])
                 if ThisOne in SubSumList:
                     SubOutList.append(COut[listindex])
+        elif ThisOne == 'PM':
+            if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
+                get_stomatalresistance(cf,ds,'L4')
+                Gst_mmol,f = qcutils.GetSeriesasMA(ds,'Gst')   # mmol/m2-s
+                Gst_mol =  Gst_mmol * 1800 / 1000                 # mol/m2-30min for summing
+                qcutils.CreateSeries(ds,'Gst_mol',Gst_mol,FList=['Gst'],Descr='Cumulative 30-min Bulk Stomatal Conductance',Units='mol/m2')
+                PMout = 'Gst_mol'
+                if PMout not in OutList:
+                    OutList.append(PMout)
+                if ThisOne in SubSumList:
+                    log.error('  Subsum: Negative bulk stomatal conductance not defined')
+                SumOutList.append(PMout)
+            else:
+                info.error('  Penman-Monteith Daily sums: input Source not defined')
         else:
             OutList.append(ThisOne)
             SumOutList.append(ThisOne)
-            if ThisOne in SubSumList:
-                log.error('  Subsum: Negative stomatal resistance not defined')
     
     for ThisOne in MinMaxList:
         if ThisOne == 'Carbon':
@@ -641,15 +661,17 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
                 OutList.append(COut[listindex])
                 MinMaxOutList.append(COut[listindex])
         elif ThisOne == 'PM':
-            if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
-                get_stomatalresistance(cf,ds,'L4')
+            if ThisOne not in SumList:
+                if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
+                        get_stomatalresistance(cf,ds,'L4')
+                else:
+                    info.error('  Penman-Monteith Daily min/max: input Source not defined')
+            else:
                 PMout = ['rst','Gst']
                 for listindex in range(0,2):
                     if PMout[listindex] not in OutList:
                         OutList.append(PMout[listindex])
                     MinMaxOutList.append(PMout[listindex])
-            else:
-                info.error('  Penman-Monteith Daily min/max: input Source not defined')
         else:
             if ThisOne not in OutList:
                 OutList.append(ThisOne)
@@ -1031,7 +1053,7 @@ def do_attributes(cf,ds):
         ds.globalattributes['Flag4'] = 'QA/QC: LI7500 Diagnostic'
         ds.globalattributes['Flag5'] = 'QA/QC: Diurnal SD Check'
         ds.globalattributes['Flag6'] = 'QA/QC: Excluded Dates'
-        ds.globalattributes['Flag7'] = 'QA/QC: Solar albedo constraint'
+        ds.globalattributes['Flag7'] = 'QA/QC: Excluded Hours'
         ds.globalattributes['Flag10'] = 'Corrections: Apply Linear'
         ds.globalattributes['Flag11'] = 'Corrections/Combinations: Coordinate Rotation (Ux, Uy, Uz, UxT, UyT, UzT, UxA, UyA, UzA, UxC, UyC, UzC, UxUz, UxUx, UxUy, UyUz, UxUy, UyUy)'
         ds.globalattributes['Flag12'] = 'Corrections/Combinations: Massman Frequency Attenuation Correction (Coord Rotation, Tv_CSAT, Ah_HMP, ps)'
@@ -1039,11 +1061,15 @@ def do_attributes(cf,ds):
         ds.globalattributes['Flag14'] = 'Corrections/Combinations: WPL correction for flux effects on density measurements (Coord Rotation, Massman, Fhv to Fh, Cc_7500_Av)'
         ds.globalattributes['Flag16'] = 'Corrections/Combinations: Post-correction Range Check'
         ds.globalattributes['Flag17'] = 'Corrections/Combinations: Post-correction Diurnal SD Check'
-        ds.globalattributes['Flag18'] = 'Corrections/Combinations: Penman-Monteith Daytime/Positive Flux criteria'
         ds.globalattributes['Flag20'] = 'GapFilling (L3_Corrected): Gap coordination'
         ds.globalattributes['Flag21'] = 'GapFilling (L4_GapFilled): Gap Filled'
         ds.globalattributes['Flag22'] = 'GapFilling (L4_GapFilled): Gap not Filled'
         ds.globalattributes['Flag23'] = 'GapFilling (L4_GapFilled): Penman-Monteith Daytime/Positive Flux criteria'
+        ds.globalattributes['Flag30'] = 'albedo: bad Fsd flag (Fsd < 290 W/m2) only if bad time flag (31) not set'
+        ds.globalattributes['Flag31'] = 'albedo: bad time flag (not midday 10.00 to 14.00)'
+        ds.globalattributes['Flag32'] = 'Penman-Monteith: bad rst (rst < 0) only if bad Fsd (33) and bad Fe (34) flags not set'
+        ds.globalattributes['Flag33'] = 'Penman-Monteith: bad Fe < threshold (0 W/m2 default) only if bad Fe (34) flag not set'
+        ds.globalattributes['Flag34'] = 'Penman-Monteith: bad Fsd < threshold (10 W/m2 default)'
     for ThisOne in ds.series.keys():
         if ThisOne in cf['Variables']:
             if 'Attr' in cf['Variables'][ThisOne].keys():
@@ -1715,18 +1741,27 @@ def get_stomatalresistance(cf,ds,Level):
         critFe = 0.
     
     index = numpy.ma.where((Fsd < critFsd) | (Fe < critFe) | (rst < 0))[0]
+    index1 = numpy.ma.where(rst < 0)[0]
+    index2 = numpy.ma.where(Fe < critFe)[0]
+    index3 = numpy.ma.where(Fsd < critFsd)[0]
     rst[index] = numpy.float64(-9999)
     Gst[index] = numpy.float64(-9999)
     
     qcutils.CreateSeries(ds,'rst',rst,FList=PMin,Descr='Bulk stomatal resistance from Penman-Monteith inversion, Brutseart/Stull formulation of bulk transfer coefficient, '+Level,Units='s/m')
     qcutils.CreateSeries(ds,'Gst',Gst,FList=PMin,Descr='Bulk stomatal conductance from Penman-Monteith inversion, Brutseart/Stull formulation of bulk transfer coefficient, '+Level,Units='mmolH2O/(m2ground s)')
     
-    if Level == 'L3':
-        ds.series['rst']['Flag'][index] = 18
-        ds.series['Gst']['Flag'][index] = 18
-    elif Level == 'L4':
-        ds.series['rst']['Flag'][index] = 23
-        ds.series['Gst']['Flag'][index] = 23
+    Label = ['rst','Gst']
+    for listindex in range(0,2):
+        ds.series[Label[listindex]]['Attr']['InputSeries'] = PMin
+        ds.series[Label[listindex]]['Attr']['FsdCutoff'] = critFsd
+        ds.series[Label[listindex]]['Attr']['FeCutoff'] = critFe
+    
+    ds.series['rst']['Flag'][index1] = 32
+    ds.series['Gst']['Flag'][index1] = 32
+    ds.series['rst']['Flag'][index2] = 33
+    ds.series['Gst']['Flag'][index2] = 33
+    ds.series['rst']['Flag'][index2] = 34
+    ds.series['Gst']['Flag'][index2] = 34
 
 def get_soilaverages(Data):
     """
@@ -1789,10 +1824,24 @@ def get_sums(Data):
         """
     li = numpy.ma.where(abs(Data-float(-9999))>c.eps)
     Num = numpy.size(li)
-    if Num == 48:
+    if Num == 0:
+        Sum = -9999
+    elif Num == 48:
         Sum = numpy.ma.sum(Data[li])
     else:
-        Sum = -9999
+        x = 0
+        index = numpy.ma.where(Data.mask == True)[0]
+        if len(index) == 1:
+            x = 1
+        elif len(index) > 1:
+            for i in range(len(Data)):
+                if Data.mask[i] == True:
+                    x = x + 1
+        
+        if x == 0:
+            Sum = numpy.ma.sum(Data[li])
+        else:
+            Sum = -9999
     return Num, Sum
 
 def get_qcflag(ds):
@@ -2546,7 +2595,7 @@ def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoMean
             
         for day in range(1,dRan+1):
             xlRow = xlRow + 1
-            if ThisOne == 'rst' or ThisOne == 'Gst':
+            if ThisOne == 'rst' or ThisOne == 'Gst' or ThisOne == 'Gst_mol':
                 if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMcritFsd'):
                     critFsd = float(cf['FunctionArgs']['PMcritFsd'])
                 else:

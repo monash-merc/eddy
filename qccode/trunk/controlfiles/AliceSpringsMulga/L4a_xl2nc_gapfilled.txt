@@ -6,11 +6,11 @@ netCDFv3 = False
 
 [Files]
     [[L4]]
-        xlFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/AliceSpringsMulga/level3_intermediates/
+        xlFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level3_intermediates/
         xlFileName = ASM_EC_2012_1Jan-Mar_FullPreFilled.xls
         xlHeaderRow  = 6
         xl1stDataRow = 7
-        ncFilePath = /Volumes/Yggdrasil/work/z_TERG_data/EC/qc_py/ncData/ASM/
+        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
         ncFileName = ASM_EC_2012_1Jan-Mar_L4.nc
 
 [Global]
