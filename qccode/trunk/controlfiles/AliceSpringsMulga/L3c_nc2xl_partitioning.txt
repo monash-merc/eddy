@@ -11,3 +11,4 @@ Platform = Mac    # Mac or PC
 
 [Output]
     Partitioning = "['Fc_wpl', 'Fsd', 'Ts_Av', 'Sws_Av', 'Ta_HMP']"
+noDefaultXl = True

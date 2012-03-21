@@ -11,4 +11,5 @@ Platform = Mac    # Mac or PC
 
 [Output]
     L3_PenmanMonteith = "['VPD', 'Fc_wpl', 'Fe_wpl', 'Fh_rmv', 'Fg_Av', 'Fnr', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'rst']"
+noDefaultXl = True
 

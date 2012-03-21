@@ -414,8 +414,6 @@ def xl_write_series(cf,ds,level):
     xlFlagSheet.write(2,xlCol+3,ds.globalattributes['Flag21'])
     xlFlagSheet.write(2,xlCol+4,'22:')
     xlFlagSheet.write(2,xlCol+5,ds.globalattributes['Flag22'])
-    xlFlagSheet.write(2,xlCol+6,'23:')
-    xlFlagSheet.write(2,xlCol+7,ds.globalattributes['Flag23'])
     xlFlagSheet.write(3,xlCol,'30:')
     xlFlagSheet.write(3,xlCol+1,ds.globalattributes['Flag30'])
     xlFlagSheet.write(3,xlCol+2,'31:')

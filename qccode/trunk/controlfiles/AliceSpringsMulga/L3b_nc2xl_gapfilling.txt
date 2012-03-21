@@ -11,3 +11,4 @@ Platform = Mac    # Mac or PC
 
 [Output]
     GapFilling = "['Fc_wpl', 'Fe_wpl', 'Fh_rmv', 'Fg_Av', 'Fnr', 'Ts_Av', 'Sws_Av', 'q', 'Ta_HMP', 'VPD']"
+noDefaultXl = True

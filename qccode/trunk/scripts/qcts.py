@@ -1066,8 +1066,8 @@ def do_attributes(cf,ds):
         ds.globalattributes['Flag22'] = 'GapFilling (L4_GapFilled): Gap not Filled'
         ds.globalattributes['Flag30'] = 'albedo: bad Fsd < threshold (290 W/m2 default) only if bad time flag (31) not set'
         ds.globalattributes['Flag31'] = 'albedo: bad time flag (not midday 10.00 to 14.00)'
-        ds.globalattributes['Flag32'] = 'Penman-Monteith: bad rst (rst < 0) only if bad Fsd (33) and bad Fe (34) flags not set'
-        ds.globalattributes['Flag33'] = 'Penman-Monteith: bad Fe < threshold (0 W/m2 default) only if bad Fe (34) flag not set'
+        ds.globalattributes['Flag32'] = 'Penman-Monteith: bad rst (rst < 0) only if bad Fe (33) and bad Fsd (34) flags not set'
+        ds.globalattributes['Flag33'] = 'Penman-Monteith: bad Fe < threshold (0 W/m2 default) only if bad Fsd (34) flag not set'
         ds.globalattributes['Flag34'] = 'Penman-Monteith: bad Fsd < threshold (10 W/m2 default)'
     for ThisOne in ds.series.keys():
         if ThisOne in cf['Variables']:
@@ -1759,8 +1759,8 @@ def get_stomatalresistance(cf,ds,Level):
     ds.series['Gst']['Flag'][index1] = 32
     ds.series['rst']['Flag'][index2] = 33
     ds.series['Gst']['Flag'][index2] = 33
-    ds.series['rst']['Flag'][index2] = 34
-    ds.series['Gst']['Flag'][index2] = 34
+    ds.series['rst']['Flag'][index3] = 34
+    ds.series['Gst']['Flag'][index3] = 34
 
 def get_soilaverages(Data):
     """

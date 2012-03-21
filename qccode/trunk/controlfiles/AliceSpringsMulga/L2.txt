@@ -517,7 +517,7 @@ noDefaultXl = True   # uncomment to load controlfile for excel output
         [[[DiurnalCheck]]]
             NumSd      = "[10,11,10,10,10,10,10,10,10,10,10,10]"
         [[[ExcludeDates]]]
-            0          = "['2012-2-29 2:00','2012-3-31 23:30']"
+            0          = "['2012-2-29 2:00','2012-3-14 23:30']"
     [[TDR_ms1_60cm]]
         [[[RangeCheck]]]
             Lower      = [0]*12

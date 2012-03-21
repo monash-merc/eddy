@@ -626,9 +626,9 @@ class qcgui(Tkinter.Frame):
         self.filestartValue.destroy()
         self.fileendValue.destroy()
         self.filestartValue = Tkinter.Label(self,text=startstr)
-        self.filestartValue.grid(row=4,column=2,columnspan=2)
+        self.filestartValue.grid(row=4,column=3,columnspan=2)
         self.fileendValue = Tkinter.Label(self,text=endstr)
-        self.fileendValue.grid(row=4,column=4,columnspan=2)
+        self.fileendValue.grid(row=4,column=5,columnspan=2)
         self.update()
 
 
