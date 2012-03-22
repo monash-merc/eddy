@@ -252,7 +252,8 @@ public class CaptureUtil {
 		Date day = CaptureUtil.formatDate("2010-12-06 23:59:59");
 
 		System.out.println(" Format the date: 2010-12-06 23:59:59 " + day);
-
+        Date anotherDay = CaptureUtil.formatDate("1901-01-01 12:51:22");
+        System.out.println(" UTC another date format: " + CaptureUtil.formatDateToUTC(anotherDay));
 		System.out.println("is today? " + CaptureUtil.isToday(day));
 
 		System.out.println("==date to string: " + dateToYYYYMMDDStr(day));

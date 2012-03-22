@@ -91,12 +91,23 @@ function doAfterImport(success) {
 							</span>
 						</td>
 					</tr>
+
                     <tr>
                         <td>
-                            <div class="status_name_div">Metadata Registered: </div>
-                            <div class="status_value_div"><@s.property value="collection.published" /></div>
+                            <div class="status_tname_div">Temporal Coverage: </div>
+                            <div class="status_tvalue_div">
+                                <@s.date name="collection.dateFrom" format="yyyy-MM-dd" />&nbsp;-&nbsp;<@s.date name="collection.dateTo" format="yyyy-MM-dd" />
+                            </div>
                         </td>
                     </tr>
+
+                    <tr>
+                       <td>
+                           <div class="status_name_div">Metadata Registered: </div>
+                           <div class="status_value_div"><@s.property value="collection.published" /></div>
+                       </td>
+                   </tr>
+
 
 					<tr>
 						<td>
@@ -125,7 +136,7 @@ function doAfterImport(success) {
 					 				<@s.if test="%{permissionBean.changePermAllowed}">
 					 					<a href="${base}/${permissionLink}?collection.id=${collection.id}&collection.owner.id=${collection.owner.id}&viewType=${viewType}">&nbsp;Permissions&nbsp;</a>
 					 				</@s.if>
-					 				<@s.if test="%{mdRegEnabled}"> 
+					 				<@s.if test="%{mdRegEnabled == true && mdRegNonLdapEnabled == true}">
 						 				<@s.if test="%{collection.owner.id == user.id || user.userType == 1 || user.userType ==2}">
 						 					<!-- modal window for register with ands -->
 						 					<a href="${base}/${andsMdRegLink}?collection.id=${collection.id}&collection.owner.id=${collection.owner.id}&viewType=${viewType}" id="wait_modal" name='wait_modal' title="Public registration of the metadata associated with this collection with the Research Data Australia website">

@@ -44,6 +44,8 @@ public class ViewColDetailsAction extends DMCoreAction {
 
 	private boolean mdRegEnabled;
 
+    private boolean mdRegNonLdapEnabled;
+
 	private String redActionName;
 
 	private String redNamespace;
@@ -117,6 +119,11 @@ public class ViewColDetailsAction extends DMCoreAction {
 				// populate the rifcs registration if enabled
 				String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
 				mdRegEnabled = Boolean.valueOf(mdRegEnabledStr).booleanValue();
+                //populate if the rifcs registration is enabled for non-ldap user
+
+                String mdRegNonLdapEnabledStr  = configSetting.getPropValue(ConfigSettings.ANDS_MD_REGISTER_FOR_NON_LDAP_USER_SUPPORTED);
+                mdRegNonLdapEnabled = Boolean.valueOf(mdRegNonLdapEnabledStr).booleanValue();
+
 
 				// set page title and nav label
 				setNavAfterSuccess();
@@ -238,7 +245,15 @@ public class ViewColDetailsAction extends DMCoreAction {
 		this.mdRegEnabled = mdRegEnabled;
 	}
 
-	public String getRedActionName() {
+    public boolean isMdRegNonLdapEnabled() {
+        return mdRegNonLdapEnabled;
+    }
+
+    public void setMdRegNonLdapEnabled(boolean mdRegNonLdapEnabled) {
+        this.mdRegNonLdapEnabled = mdRegNonLdapEnabled;
+    }
+
+    public String getRedActionName() {
 		return redActionName;
 	}
 
