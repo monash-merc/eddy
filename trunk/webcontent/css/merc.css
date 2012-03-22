@@ -1,6 +1,7 @@
 body {
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;
+	/** font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px; */
+    font: 400 12px/16px Arial, Helvetica, sans-serif;
 	color: black;
 	width: 982px;
 	margin: 0 auto;
@@ -660,11 +661,22 @@ a.main_menu_link:hover {
 	font-size: 11px;
 }
 .status_name_div{
-    color: #667a96;
+    color: #666666;
 	font-size: 11px;
     display:inline;
 }
 .status_value_div{
+    display: inline;
+	color: #c5a463;
+	font-size: 11px;
+}
+
+.status_tname_div{
+    color: #666666;
+	font-size: 11px;
+    display:inline;
+}
+.status_tvalue_div{
     display: inline;
 	color: #c5a463;
 	font-size: 11px;
