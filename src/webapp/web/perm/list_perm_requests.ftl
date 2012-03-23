@@ -91,7 +91,7 @@
 										 	 <td>
 										 	 	<center> 
 										 	 	<div class="inline_td_div"> 
-										 	 		<a href="${base}/perm/rejectPermReq.jspx?permRequest.id=${pRequest.id}&permRequest.collection.name=${pRequest.collection.name}">&nbsp; Reject &nbsp; </a>
+										 	 		<a href="${base}/perm/rejectPermReq.jspx?permRequest.id=<@s.property value='#pRequest.id' />&permRequest.collection.name=${pRequest.collection.name}">&nbsp; Reject &nbsp; </a>
 										 	 	</div>
 										 	 	</center>
 										 	 </td>
