@@ -41,7 +41,7 @@
 					<div class="record_data">
 						<div class="record_data_inline"><font color="#0E774A"><@s.date name="#eventResult.createdTime"  format="dd-MM-yyyy 'at' hh:mm a" /></font> &nbsp;&nbsp;<@s.property value="#eventResult.event" />, by <@s.property value="#eventResult.operator.displayName" /></div>
 					 	<div class="record_data_link2">
-					 		<a href="${base}/${deleteEventLink}?pageNo=${eventPagination.pageNo}&auditEvent.id=${eventResult.id}">&nbsp;&nbsp;&nbsp; Delete &nbsp;&nbsp;&nbsp;</a>
+					 		<a href="${base}/${deleteEventLink}?pageNo=${eventPagination.pageNo}&auditEvent.id=<@s.property value='#eventResult.id' />">&nbsp;&nbsp;&nbsp; Delete &nbsp;&nbsp;&nbsp;</a>
 					 	</div>
 					</div>
 				</div>
