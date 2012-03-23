@@ -105,6 +105,13 @@ public class MDRegisterAction extends DMCoreAction {
             setNavAfterExc();
             return ERROR;
         }
+        //user not logged in
+        if (user == null) {
+            logger.error(getText("ands.md.registration.permission.denied"));
+            addActionError(getText("ands.md.registration.permission.denied"));
+            setNavAfterExc();
+            return ERROR;
+        }
 
         try {
             collection = this.dmService.getCollection(collection.getId(), collection.getOwner().getId());
@@ -134,12 +141,6 @@ public class MDRegisterAction extends DMCoreAction {
                 return ERROR;
             }
         }
-//
-//        if (!monUser && !noneLdapSupprotForMd) {
-//            addActionError(getText("ands.md.registration.none.ldap.user.not.supported"));
-//            setNavAfterExc();
-//            return ERROR;
-//        }
 
         //only the owner and system admin can publish this collection
         if ((user.getId() != collection.getOwner().getId()) && (user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
@@ -389,6 +390,14 @@ public class MDRegisterAction extends DMCoreAction {
         } catch (Exception e) {
             logger.error(e);
             addActionError(getText("ands.md.registration.get.user.failed"));
+            setNavAfterExc();
+            return ERROR;
+        }
+
+        //user not logged in
+        if (user == null) {
+            logger.error(getText("ands.md.registration.permission.denied"));
+            addActionError(getText("ands.md.registration.permission.denied"));
             setNavAfterExc();
             return ERROR;
         }
