@@ -27,20 +27,20 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-
+import au.edu.monash.merc.capture.config.ConfigSettings;
+import au.edu.monash.merc.capture.domain.AuditEvent;
+import au.edu.monash.merc.capture.domain.Collection;
+import au.edu.monash.merc.capture.domain.Permission;
+import au.edu.monash.merc.capture.domain.UserType;
+import au.edu.monash.merc.capture.util.CaptureUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import au.edu.monash.merc.capture.config.ConfigSettings;
-import au.edu.monash.merc.capture.domain.AuditEvent;
-import au.edu.monash.merc.capture.domain.Collection;
-import au.edu.monash.merc.capture.domain.Permission;
-import au.edu.monash.merc.capture.util.CaptureUtil;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 /**
  * @author simonyu
@@ -124,6 +124,26 @@ public class EditColAction extends DMCoreAction {
                 // populate the rifcs registration if enabled
                 String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
                 mdRegEnabled = Boolean.valueOf(mdRegEnabledStr).booleanValue();
+
+                String mdRegNonLdapEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_MD_REGISTER_FOR_NON_LDAP_USER_SUPPORTED);
+                boolean mdRegNonLdapEnabled = Boolean.valueOf(mdRegNonLdapEnabledStr).booleanValue();
+
+                //see if it's a ldap user
+                String passwd = user.getPassword();
+                boolean monUser = true;
+                if (!StringUtils.endsWithIgnoreCase(passwd, "ldap")) {
+                    monUser = false;
+                }
+
+                if (mdRegEnabled) {
+                    //if metadata registration is enabled, but non-monash user is not supported
+                    //we still need to enable an admin to registration metadata
+                    if (!monUser && !mdRegNonLdapEnabled) {
+                        if ((user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
+                            mdRegEnabled = false;
+                        }
+                    }
+                }
 
                 // populate the collectionlinks
                 populateLinksInUsrCollection();

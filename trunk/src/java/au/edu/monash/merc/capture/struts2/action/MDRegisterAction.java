@@ -82,6 +82,22 @@ public class MDRegisterAction extends DMCoreAction {
     public String showMdReg() {
         setViewColDetailLink(ActConstants.VIEW_COLLECTION_DETAILS_ACTION);
         try {
+            String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
+            boolean mdRegEnabled = Boolean.valueOf(mdRegEnabledStr);
+            if (!mdRegEnabled) {
+                logger.error(getText("ands.md.registration.disabled"));
+                addActionError(getText("ands.md.registration.disabled"));
+                setNavAfterExc();
+                return ERROR;
+            }
+        } catch (Exception ex) {
+            logger.error(ex);
+            addActionError(getText("ands.md.registration.show.mdreg.failed"));
+            setNavAfterExc();
+            return ERROR;
+        }
+
+        try {
             user = retrieveLoggedInUser();
         } catch (Exception e) {
             logger.error(e);
@@ -109,11 +125,21 @@ public class MDRegisterAction extends DMCoreAction {
             monUser = false;
         }
 
+        //if metadata registration is enabled, but non-monash user is not supported
+        //we still need to enable an admin to registration metadata if this user is an admin
         if (!monUser && !noneLdapSupprotForMd) {
-            addActionError(getText("ands.md.registration.none.ldap.user.not.supported"));
-            setNavAfterExc();
-            return ERROR;
+            if ((user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
+                addActionError(getText("ands.md.registration.none.ldap.user.not.supported"));
+                setNavAfterExc();
+                return ERROR;
+            }
         }
+//
+//        if (!monUser && !noneLdapSupprotForMd) {
+//            addActionError(getText("ands.md.registration.none.ldap.user.not.supported"));
+//            setNavAfterExc();
+//            return ERROR;
+//        }
 
         //only the owner and system admin can publish this collection
         if ((user.getId() != collection.getOwner().getId()) && (user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
@@ -367,15 +393,40 @@ public class MDRegisterAction extends DMCoreAction {
             return ERROR;
         }
 
+        try {
+            String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
+            boolean mdRegEnabled = Boolean.valueOf(mdRegEnabledStr);
+            if (!mdRegEnabled) {
+                logger.error(getText("ands.md.registration.disabled"));
+                addActionError(getText("ands.md.registration.disabled"));
+                setNavAfterExc();
+                return ERROR;
+            }
+        } catch (Exception ex) {
+            logger.error(ex);
+            addActionError(getText("ands.md.registration.check.mdreg.failed"));
+            setNavAfterExc();
+            return ERROR;
+        }
+
         //check if none ldap user supported for md registration or not.
         String noneLdapSupported = configSetting.getPropValue(ConfigSettings.ANDS_MD_REGISTER_FOR_NON_LDAP_USER_SUPPORTED);
         boolean noneLdapSupprotForMd = Boolean.valueOf(noneLdapSupported);
 
+        //see if it's a ldap user
         String passwd = user.getPassword();
-        if (!StringUtils.equals(passwd, "ldap") && !noneLdapSupprotForMd) {
-            addActionError(getText("ands.md.registration.none.ldap.user.not.supported"));
-            setNavAfterExc();
-            return ERROR;
+        boolean monUser = true;
+        if (!StringUtils.endsWithIgnoreCase(passwd, "ldap")) {
+            monUser = false;
+        }
+        //if metadata registration is enabled, but non-monash user is not supported
+        //we still need to enable an admin to registration metadata if this user is an admin
+        if (!monUser && !noneLdapSupprotForMd) {
+            if ((user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
+                addActionError(getText("ands.md.registration.none.ldap.user.not.supported"));
+                setNavAfterExc();
+                return ERROR;
+            }
         }
 
         if ((user.getId() != collection.getOwner().getId()) && (user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
