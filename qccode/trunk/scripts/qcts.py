@@ -70,14 +70,15 @@ def albedo(cf,ds):
         Usage qcts.albedo(ds)
         ds: data structure
         """
+    log.info(' Applying albedo constraints')
     if 'albedo' not in ds.series.keys():
-        if 'Fsd' in ds.series.keys():
+        if 'Fsd' in ds.series.keys() and 'Fsu' in ds.series.keys():
             Fsd,f = qcutils.GetSeriesasMA(ds,'Fsd')
             Fsu,f = qcutils.GetSeriesasMA(ds,'Fsu')
             albedo = Fsu / Fsd
             qcutils.CreateSeries(ds,'albedo',albedo,FList=['Fsd','Fsu'],Descr='solar albedo',Units='unitless')
         else:
-            log.error('  Fsd not in ds, albedo not calculated')
+            log.error('  Fsd or Fsu not in ds, albedo not calculated')
             return
     else:
         albedo,f = qcutils.GetSeriesasMA(ds,'albedo')

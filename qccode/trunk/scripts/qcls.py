@@ -77,7 +77,6 @@ def l2qc(cf,ds1):
     qcck.do_7500check(cf,ds2)
     # constrain albedo estimates to full sun angles
     qcts.albedo(cf,ds2)
-    log.info(' Finished the albedo constraints')
     # apply linear corrections to the data
     log.info(' Applying linear corrections ...')
     qcck.do_linear(cf,ds2)
