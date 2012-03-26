@@ -71,7 +71,7 @@
 							Modified by <@s.property value="#dsResult.collection.modifiedByUser.displayName" />, &nbsp;&nbsp;&nbsp;&nbsp; 
 							Modified date: <@s.date name="#dsResult.collection.modifiedTime" format="yyyy-MM-dd" />
 						</div>
-						<div class="record_data_link"><a href="${base}/${viewColDetailLink}?collection.id=<@s.property value='#dsResult.collection.id' />&collection.owner.id=<@s.property value='dsResult.collection.owner.id' />&viewType=${viewType}"><@s.property value="#dsResult.name" /></a></div>
+						<div class="record_data_link"><a href="${base}/${viewColDetailLink}?collection.id=<@s.property value='#dsResult.collection.id' />&collection.owner.id=<@s.property value='#dsResult.collection.owner.id' />&viewType=${viewType}"><@s.property value="#dsResult.name" /></a></div>
 					</div>
 				</div>
 				<div style="clear:both"></div>
