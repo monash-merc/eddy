@@ -28,11 +28,11 @@
 			<@s.if test="%{pagination.pageResults.size() > 0}">
 				<!-- Hidden msg content and it's used by page view sort -->
 				<div class="msg_content">
-					<a href="${base}/${pageLink}${pageSuffix}${pagination.pageNo}" class="page_url"></a>
+					<a href="${base}/${pageLink}${pageSuffix}<@s.property value='pagination.pageNo' />" class="page_url"></a>
 				</div>
 				<div class="single_line_center_block">	
 					<span class="inline_span">				
-						Page size: <@s.select id="item_select_size" name="sizePerPage" headerKey="${sizePerPage}"  list="pageSizeMap" cssClass="input_select_small" />
+						Page size: <@s.select id="item_select_size" name="sizePerPage" headerKey="<@s.property value='sizePerPage' />"  list="pageSizeMap" cssClass="input_select_small" />
 						&nbsp;Sorted by: <@s.select id="item_select_order" name="orderBy" headerKey="${orderBy}"  list="orderByMap" cssClass="input_select_small" />
 						&nbsp;Ordered by: <@s.select id="item_select_otype" name="orderByType" headerKey="${orderByType}"  list="orderByTypeMap" cssClass="input_select_small" />
 					</span>
@@ -41,7 +41,7 @@
 				<@s.iterator status="colStat" value="pagination.pageResults" id="colResult" >
 				<div class="left_inner_panel">
 					<div class="record_data">
-						<div class="record_data_link"><a href="${base}/${viewColDetailLink}?collection.id=${colResult.id}&collection.owner.id=${colResult.owner.id}&viewType=${viewType}"><@s.property value="#colResult.name" /></a></div>
+						<div class="record_data_link"><a href="${base}/${viewColDetailLink}?collection.id=<@s.property value='#colResult.id '/>&collection.owner.id=<@s.property value='#colResult.owner.id' />&viewType=${viewType}"><@s.property value="#colResult.name" /></a></div>
 						<div class="record_data_inline"><@s.property value="#colResult.briefDesc" /></div>
 						<div class="record_data_inline2">
 							Created by <@s.property value="#colResult.owner.displayName" />, &nbsp;&nbsp;&nbsp;&nbsp; 
@@ -51,7 +51,7 @@
 					 	</div>
 
 					 	<div class="record_data_link2">
-					 	 	<a href="${base}/${viewColDetailLink}?collection.id=${colResult.id}&collection.owner.id=${colResult.owner.id}&viewType=${viewType}">View details</a> 	
+					 	 	<a href="${base}/${viewColDetailLink}?collection.id=<@s.property value='#colResult.id' />&collection.owner.id=<@s.property value='#colResult.owner.id' />&viewType=${viewType}">View details</a>
 					 	</div>
 					</div>
 				</div>

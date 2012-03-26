@@ -53,7 +53,7 @@
 					<tr>
 						<td>
 				 	 		<div class="inline_td_div"> 
-				 	 			<a href="${base}/${viewColDetailLink}?collection.id=${collection.id}&collection.owner.id=${collection.owner.id}&viewType=${viewType}"">&nbsp; View details &nbsp;</a>
+				 	 			<a href="${base}/${viewColDetailLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}"">&nbsp; View details &nbsp;</a>
 				 	 	 	</div>
 				 	 	</td>
 					</tr>

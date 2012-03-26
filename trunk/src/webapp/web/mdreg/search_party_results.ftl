@@ -52,7 +52,7 @@
                         <td align="center" rowspan="6">
                             <@s.if test="%{#fpb.fromRm == false}">
                             <div class="tab_div">
-                                <a href="${base}/data/showEditUDParty.jspx?addedPartyBean.partyKey=${fpb.partyKey}&searchCnOrEmail=${searchCnOrEmail}">Update</a>
+                                <a href="${base}/data/showEditUDParty.jspx?addedPartyBean.partyKey=<@s.property value='#fpb.partyKey' />&searchCnOrEmail=${searchCnOrEmail}">Update</a>
                             </div>
                             </@s.if>
                             <@s.else>

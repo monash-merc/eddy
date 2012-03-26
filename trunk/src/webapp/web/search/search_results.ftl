@@ -15,15 +15,15 @@
 		<!-- page sorting block -->
 		<div class="msg_content">
 			<@s.if test="%{searchBean.collectionOnly == true}">
-				<a href="${base}/${pageLink}${pageSuffix}${pagination.pageNo}" class="page_url"></a>
+				<a href="${base}/${pageLink}${pageSuffix}<@s.property value='pagination.pageNo' />" class="page_url"></a>
 			</@s.if>
 			<@s.else>
-				<a href="${base}/${pageLink}${pageSuffix}${dsPagination.pageNo}" class="page_url"></a>
+				<a href="${base}/${pageLink}${pageSuffix}<@s.property value='dsPagination.pageNo' />" class="page_url"></a>
 			</@s.else>
 		</div>
 		<div class="search_border_block">	
 			<span class="inline_span">				
-				Page size: <@s.select id="item_select_size" name="sizePerPage" headerKey="${sizePerPage}"  list="pageSizeMap" cssClass="input_select_small" />
+				Page size: <@s.select id="item_select_size" name="sizePerPage" headerKey="<@s.property value='sizePerPage' />"  list="pageSizeMap" cssClass="input_select_small" />
 				&nbsp;Sorted by: <@s.select id="item_select_order" name="orderBy" headerKey="${orderBy}"  list="orderByMap" cssClass="input_select_small" />
 				&nbsp;Ordered by: <@s.select id="item_select_otype" name="orderByType" headerKey="${orderByType}"  list="orderByTypeMap" cssClass="input_select_small" />
 			</span>
@@ -37,7 +37,7 @@
 			<@s.iterator status="colStat" value="pagination.pageResults" id="colResult" >
 				<div class="left_inner_panel">
 					<div class="search_data">
-						<div class="record_data_link"><a href="${base}/${viewColDetailLink}?collection.id=${colResult.id}&collection.owner.id=${colResult.owner.id}&viewType=${viewType}" /><@s.property value="#colResult.name" /></a></div>
+						<div class="record_data_link"><a href="${base}/${viewColDetailLink}?collection.id=<@s.property value='#colResult.id' />&collection.owner.id=<@s.property value='#colResult.owner.id' />&viewType=${viewType}" /><@s.property value="#colResult.name" /></a></div>
 						<div class="record_data_inline"><@s.property value="#colResult.briefDesc" /></div>
 						<div class="record_data_inline2">
 							Created by <@s.property value="#colResult.owner.displayName" />, &nbsp;&nbsp;&nbsp;&nbsp; 
@@ -46,7 +46,7 @@
 							Modified date: <@s.date name="#colResult.modifiedTime" format="yyyy-MM-dd hh:mm" />
 					 	 </div>
 					 	 <div class="record_data_link2"> 
-					 	 	<a href="${base}/${viewColDetailLink}?collection.id=${colResult.id}&collection.owner.id=${colResult.owner.id}&viewType=${viewType}">View details</a> 	
+					 	 	<a href="${base}/${viewColDetailLink}?collection.id=<@s.property value='#colResult.id' />&collection.owner.id=<@s.property value='#colResult.owner.id' />&viewType=${viewType}">View details</a>
 					 	 </div>
 					</div>
 				</div>
@@ -63,7 +63,7 @@
 			<@s.iterator status="dsStat" value="dsPagination.pageResults" id="dsResult" >
 				<div class="left_inner_panel">
 					<div class="search_data">
-						<div class="record_data_link"><a href="${base}/${viewColDetailLink}?collection.id=${dsResult.collection.id}&collection.owner.id=${dsResult.collection.owner.id}&viewType=${viewType}"><@s.property value="#dsResult.collection.name" /></a></div>
+						<div class="record_data_link"><a href="${base}/${viewColDetailLink}?collection.id=<@s.property value='#dsResult.collection.id' />&collection.owner.id=<@s.property value='#dsResult.collection.owner.id' />&viewType=${viewType}"><@s.property value="#dsResult.collection.name" /></a></div>
 						<div class="record_data_inline"><@s.property value="#dsResult.collection.briefDesc" /></div>
 						<div class="record_data_inline2">
 							Created by <@s.property value="#dsResult.collection.owner.displayName" />, &nbsp;&nbsp;&nbsp;&nbsp; 
@@ -71,7 +71,7 @@
 							Modified by <@s.property value="#dsResult.collection.modifiedByUser.displayName" />, &nbsp;&nbsp;&nbsp;&nbsp; 
 							Modified date: <@s.date name="#dsResult.collection.modifiedTime" format="yyyy-MM-dd" />
 						</div>
-						<div class="record_data_link"><a href="${base}/${viewColDetailLink}?collection.id=${dsResult.collection.id}&collection.owner.id=${dsResult.collection.owner.id}&viewType=${viewType}"><@s.property value="#dsResult.name" /></a></div>
+						<div class="record_data_link"><a href="${base}/${viewColDetailLink}?collection.id=<@s.property value='#dsResult.collection.id' />&collection.owner.id=<@s.property value='dsResult.collection.owner.id' />&viewType=${viewType}"><@s.property value="#dsResult.name" /></a></div>
 					</div>
 				</div>
 				<div style="clear:both"></div>

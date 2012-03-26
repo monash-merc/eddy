@@ -33,7 +33,7 @@
 		 		
 		 		<table width="100%" class="no_bd_tab_data" >
 		 			<tr>
-		 				<td width="100" rowspan="5"><div class="user_avatar"><img src="${base}/user/viewImage.jspx?avatarUserId=${regUser.id}"></div></td>
+		 				<td width="100" rowspan="5"><div class="user_avatar"><img src="${base}/user/viewImage.jspx?avatarUserId=<@s.property value='regUser.id' />"></div></td>
 		 			</tr>
 		 			<tr>
 		 				<td align="right" width="100"> <b> User name: </b></td>

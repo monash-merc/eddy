@@ -22,11 +22,11 @@
 		</div>
 		<@s.if test="%{userPagination.pageResults.size() > 0}">
 			<div class="msg_content">
-				<a href="${base}/${pageLink}${pageSuffix}${userPagination.pageNo}" class="page_url"></a>
+				<a href="${base}/${pageLink}${pageSuffix}<@s.property value='userPagination.pageNo' />" class="page_url"></a>
 			</div>
 			<div class="single_line_center_block">	
 				<span class="inline_span">				
-					Page size: <@s.select id="item_select_size" name="sizePerPage" headerKey="${sizePerPage}"  list="pageSizeMap" cssClass="input_select_small" />
+					Page size: <@s.select id="item_select_size" name="sizePerPage" headerKey="<@s.property value='sizePerPage' />"  list="pageSizeMap" cssClass="input_select_small" />
 					&nbsp;Sorted by: <@s.select id="item_select_order" name="orderBy" headerKey="${orderBy}"  list="orderByMap" cssClass="input_select_small" />
 					&nbsp;Ordered by: <@s.select id="item_select_otype" name="orderByType" headerKey="${orderByType}"  list="orderByTypeMap" cssClass="input_select_small" />
 				</span>
@@ -59,10 +59,10 @@
 				 	 		<div class="tab_div">
 					 	 		<center>
 					 	 			<@s.if test="%{(user.userType == 1 || user.userType == 2) && (#session.authen_user_id != #userResult.id) && (#userResult.userType !=1)}">
-					 	 				<a href="${base}/admin/showUserStatus.jspx?regUser.id=${userResult.id}">&nbsp; Manage &nbsp; </a>
+					 	 				<a href="${base}/admin/showUserStatus.jspx?regUser.id=<@s.property value='#userResult.id' />">&nbsp; Manage &nbsp; </a>
 					 	 			</@s.if>
 					 	 			<@s.else>
-					 	 				<a href="${base}/admin/showUserStatus.jspx?regUser.id=${userResult.id}">&nbsp;&nbsp;&nbsp;&nbsp; View &nbsp;&nbsp;&nbsp;&nbsp; </a>
+					 	 				<a href="${base}/admin/showUserStatus.jspx?regUser.id=<@s.property value='#userResult.id' />">&nbsp;&nbsp;&nbsp;&nbsp; View &nbsp;&nbsp;&nbsp;&nbsp; </a>
 					 	 			</@s.else>
 					 	 		</center>
 				 	 		</div>
