@@ -41,12 +41,16 @@ def AddMetVars(ds):
     Ta,f = qcutils.GetSeriesasMA(ds,'Ta_HMP')
     ps,f = qcutils.GetSeriesasMA(ds,'ps')
     Ah,f = qcutils.GetSeriesasMA(ds,'Ah_HMP')
-    if 'es_HMP' in ds.series.keys() and 'e_HMP' in ds.series.keys():
+    if 'es_HMP' in ds.series.keys():
         esat,f = qcutils.GetSeriesasMA(ds,'es_HMP')
+    else:
+        esat = mf.es(Ta)
+        qcutils.CreateSeries(ds,'es_HMP',esat,FList=['Ta_HMP'],Descr='saturation vapour pressure (HMP)',Units='kPa')
+    if 'e_HMP' in ds.series.keys():
         e,f = qcutils.GetSeriesasMA(ds,'e_HMP')
     else:
         e = mf.vapourpressure(Ah,Ta)
-        esat = mf.es(Ta)
+        qcutils.CreateSeries(ds,'e_HMP',e,FList=['Ta_HMP','Ah_HMP'],Descr='atmospheric vapour pressure (HMP)',Units='kPa')
     rhom = mf.densitymoistair(Ta,ps,Ah)
     Lv = mf.Lv(Ta)
     mr = mf.mixingratio(ps,e)
