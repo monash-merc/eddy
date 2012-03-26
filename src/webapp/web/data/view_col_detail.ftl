@@ -114,12 +114,12 @@ function doAfterImport(success) {
 		 	 	 			<div class="inline_td_div"> 
 		 	 	 				
 			 	 	 		   	<@s.if test="%{permissionBean.viewAllowed == false}">
-			 	 	 		   		<a href="${base}/perm/applyForPerms.jspx?collection.id=${collection.id}">Apply For Permissions</a>
+			 	 	 		   		<a href="${base}/perm/applyForPerms.jspx?collection.id=<@s.property value='collection.id' />">Apply For Permissions</a>
 			 	 	 			</@s.if>
 		 	 	 				
 		 	 	 				<div id='confirm-dialog'>
 		 	 	 					<@s.if test="%{permissionBean.editAllowed == true}">
-		 	 	 		 				<a href="${base}/${showColEditLink}?collection.id=${collection.id}&collection.owner.id=${collection.owner.id}&viewType=${viewType}">&nbsp; &nbsp; &nbsp; &nbsp; Edit &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; </a> &nbsp;&nbsp;
+		 	 	 		 				<a href="${base}/${showColEditLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}">&nbsp; &nbsp; &nbsp; &nbsp; Edit &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; </a> &nbsp;&nbsp;
 			 	   					</@s.if>
 			 	   					<div class="msg_content">All data will be removed from the repository permanently!<p>Are you sure to delet this collection?</p></div>
 									<div id='confirm'>
@@ -131,15 +131,15 @@ function doAfterImport(success) {
 										</div>
 									</div>
 									<@s.if test="%{permissionBean.deleteAllowed}">
-										<a href="${base}/${deleteColLink}?collection.id=${collection.id}&collection.owner.id=${collection.owner.id}&viewType=${viewType}" class="confirm">&nbsp; &nbsp; &nbsp; Delete &nbsp; &nbsp; &nbsp;</a>&nbsp;&nbsp;
+										<a href="${base}/${deleteColLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}" class="confirm">&nbsp; &nbsp; &nbsp; Delete &nbsp; &nbsp; &nbsp;</a>&nbsp;&nbsp;
 					 				</@s.if>
 					 				<@s.if test="%{permissionBean.changePermAllowed}">
-					 					<a href="${base}/${permissionLink}?collection.id=${collection.id}&collection.owner.id=${collection.owner.id}&viewType=${viewType}">&nbsp;Permissions&nbsp;</a>
+					 					<a href="${base}/${permissionLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}">&nbsp;Permissions&nbsp;</a>
 					 				</@s.if>
 					 				<@s.if test="%{mdRegEnabled}">
 						 				<@s.if test="%{collection.owner.id == user.id || user.userType == 1 || user.userType ==2}">
 						 					<!-- modal window for register with ands -->
-						 					<a href="${base}/${andsMdRegLink}?collection.id=${collection.id}&collection.owner.id=${collection.owner.id}&viewType=${viewType}" id="wait_modal" name='wait_modal' title="Public registration of the metadata associated with this collection with the Research Data Australia website">
+						 					<a href="${base}/${andsMdRegLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}" id="wait_modal" name='wait_modal' title="Public registration of the metadata associated with this collection with the Research Data Australia website">
 						 						<@s.text name="ands.md.registration.title" />
 						 					</a>
 						 					<div id='mask'></div>
@@ -246,14 +246,12 @@ function doAfterImport(success) {
 			 	 					<div id='confirm-dialog'>
 										<@s.if test="%{permissionBean.viewAllowed}">
 											<@s.if test="%{#ds.extracted}">
-					 	 						<a href="${base}/${viewDatasetLink}?dataset.id=${ds.id}&collection.id=${collection.id}&collection.owner.id=${collection.owner.id}&viewType=${viewType}" title="Dataset - ${ds.name}" id="viewdataset">View Data</a> &nbsp;
+					 	 						<a href="${base}/${viewDatasetLink}?dataset.id=<@s.property value='#ds.id' />&collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}" title="Dataset - ${ds.name}" id="viewdataset">View Data</a> &nbsp;
 					 	   					</@s.if>
 					 	   				</@s.if>
-					 	   				<!--
-					 	   				<a href="${base}/${viewDatasetLink}?dataset.id=${ds.id}&collection.id=${collection.id}&collection.owner.id=${collection.owner.id}&viewType=${viewType}" title="Dataset - ${ds.name}" class="greybox">View Data </a> &nbsp;
-					 	   				-->
+
 					 	   				<@s.if test="%{permissionBean.exportAllowed}">
-					 	   					<a href="${base}/${downloadDatasetLink}?dataset.id=${ds.id}&collection.id=${collection.id}&collection.owner.id=${collection.owner.id}&viewType=${viewType}">&nbsp;&nbsp;Export&nbsp;&nbsp;</a> &nbsp;
+					 	   					<a href="${base}/${downloadDatasetLink}?dataset.id=<@s.property value='#ds.id' />&collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}">&nbsp;&nbsp;Export&nbsp;&nbsp;</a> &nbsp;
 					 	   				</@s.if>
 					 	   				<@s.if test="%{permissionBean.deleteAllowed}">
 					 	   				<div class="msg_content">The data will be removed from the repository permanently!<p>Are you sure to delet this dataset?</p></div>
@@ -265,7 +263,7 @@ function doAfterImport(success) {
 												<div class='yes'>Yes</div>
 											</div>
 										</div>
-					 	   					<a href="${base}/${deleteDatasetLink}?dataset.id=${ds.id}&collection.id=${collection.id}&collection.owner.id=${collection.owner.id}&viewType=${viewType}" class='confirm'>&nbsp;&nbsp;Delete&nbsp;&nbsp;</a>
+					 	   					<a href="${base}/${deleteDatasetLink}?dataset.id=<@s.property value='#ds.id' />&collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}" class='confirm'>&nbsp;&nbsp;Delete&nbsp;&nbsp;</a>
 			 	 						</@s.if>
 			 	 					</div>
 			 	 				</div>

@@ -40,10 +40,10 @@
 	</div>
 	<div class="mcpop_bddiv">
 		<@s.if test="%{rights.rightsType == 'cccl_license'}">
-			<input type="button" value=" Back " class="mcpop_button" onclick="window.location = '${base}/data/selectRights.jspx?collection.id=${collection.id}&rights.rightsType=${rights.rightsType}&rights.commericial=${rights.commercial}&rights.derivatives=${rights.derivatives}&rights.jurisdiction=${rights.jurisdiction}';"> 
+			<input type="button" value=" Back " class="mcpop_button" onclick="window.location = '${base}/data/selectRights.jspx?collection.id=<@s.property value='collection.id' />&rights.rightsType=${rights.rightsType}&rights.commericial=${rights.commercial}&rights.derivatives=${rights.derivatives}&rights.jurisdiction=${rights.jurisdiction}';">
 		</@s.if>
 		<@s.if test="%{rights.rightsType == 'user_license'}">
-			<input type="button" value=" Back " class="mcpop_button" onclick="window.location = '${base}/data/rightsOptions.jspx?collection.id=${collection.id}&rights.rightsType=${rights.rightsType}';"> 
+			<input type="button" value=" Back " class="mcpop_button" onclick="window.location = '${base}/data/rightsOptions.jspx?collection.id=<@s.property value='collection.id' />&rights.rightsType=${rights.rightsType}';">
 		</@s.if>
 		&nbsp;&nbsp; <input type="button"  value=" Cancel " class="mcpop_button" id="cancelRights" /> &nbsp;&nbsp; <input type="button" value=" Save " id="saveRights" class="mcpop_button" />
 		

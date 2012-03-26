@@ -4,7 +4,7 @@
 	<span class="disabled"> <img src="${base}/images/dis_first.png" class="image_position" /> Prev </span>
 <#else>
 	<a href="${base}/${pageLink}${pageSuffix}1"> <img src="${base}/images/first.png" class="image_position" /> First </a>
-	<a href="${base}/${pageLink}${pageSuffix}${userPagination.prevPage}"> <img src="${base}/images/prev.png" class="image_position" /> Prev </a>
+	<a href="${base}/${pageLink}${pageSuffix}<@s.property value='userPagination.prevPage' />"> <img src="${base}/images/prev.png" class="image_position" /> Prev </a>
 </#if>
 <#if userPagination.pageNo-5 gt 1>
 	<#if userPagination.totalPages gt userPagination.pageNo+4>
@@ -46,7 +46,7 @@
 <#if userPagination.lastPage>	
 	<span class="disabled"> Next <img src="${base}/images/dis_next.png" class="image_position" /> </span><span class="disabled"> Last <img src="${base}/images/dis_last.png" class="image_position" /> </span>
 <#else>
-	<a href="${base}/${pageLink}${pageSuffix}${userPagination.nextPage}"> Next <img src="${base}/images/next.png" class="image_position" /> </a>
-	<a href="${base}/${pageLink}${pageSuffix}${userPagination.totalPages}"> Last <img src="${base}/images/last.png" class="image_position" /> </a>
+	<a href="${base}/${pageLink}${pageSuffix}<@s.property value='userPagination.nextPage' />"> Next <img src="${base}/images/next.png" class="image_position" /> </a>
+	<a href="${base}/${pageLink}${pageSuffix}<@s.property value='userPagination.totalPages' />"> Last <img src="${base}/images/last.png" class="image_position" /> </a>
 </#if>
 </div>

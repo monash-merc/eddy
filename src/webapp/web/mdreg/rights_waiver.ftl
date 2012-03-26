@@ -28,7 +28,7 @@
 		<@s.hidden name="rights.derivatives" id="prights_deri"/>
 		<@s.hidden name="rights.jurisdiction" id="prights_juri"/>
 		<@s.hidden name="rights.rightContents" id="prights_cont" />
-		<input type="button" value=" No, I Do Not Waive " class="waiver_button" onclick="window.location = '${base}/data/rightsOptions.jspx?collection.id=${collection.id}&rights.rightsType=${rights.rightsType}';">
+		<input type="button" value=" No, I Do Not Waive " class="waiver_button" onclick="window.location = '${base}/data/rightsOptions.jspx?collection.id=<@s.property value='collection.id' />&rights.rightsType=${rights.rightsType}';">
 		 &nbsp;&nbsp; <input type="button" value=" Yes, I Wavie " id="saveRights" class="waiver_button" />
 	</div>
 </div>

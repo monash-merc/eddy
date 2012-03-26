@@ -67,7 +67,7 @@
 			<div class="mcpop_bddiv">
 				<@s.hidden name="rights.rightsType" />
 				<@s.hidden name="collection.id" />
-				<input type="button" value=" Back " class="mcpop_button" onclick="window.location = '${base}/data/rightsOptions.jspx?collection.id=${collection.id}&rights.rightsType=${rights.rightsType}';"> &nbsp;&nbsp; <input type="button"  value=" Cancel " class="mcpop_button" id="cancelRights" /> &nbsp;&nbsp; <input type="submit" name="options" value=" Next " class="mcpop_button" />
+				<input type="button" value=" Back " class="mcpop_button" onclick="window.location = '${base}/data/rightsOptions.jspx?collection.id=<@s.property value='collection.id' />&rights.rightsType=${rights.rightsType}';"> &nbsp;&nbsp; <input type="button"  value=" Cancel " class="mcpop_button" id="cancelRights" /> &nbsp;&nbsp; <input type="submit" name="options" value=" Next " class="mcpop_button" />
 			</div>
 			</@s.form>
 		</@s.if>
@@ -97,7 +97,7 @@
 			<div class="mcpop_bddiv">
 				<@s.hidden name="rights.rightsType" />
 				<@s.hidden name="collection.id" />
-				<input type="button" value=" Back " class="mcpop_button" onclick="window.location = '${base}/data/rightsOptions.jspx?collection.id=${collection.id}&rights.rightsType=${rights.rightsType}';"/> &nbsp;&nbsp; <input type="button"  value=" Cancel " class="mcpop_button" id="cancelRights" /> &nbsp;&nbsp; <input type="submit" name="options" value=" Next " class="mcpop_button" />
+				<input type="button" value=" Back " class="mcpop_button" onclick="window.location = '${base}/data/rightsOptions.jspx?collection.id=<@s.property value='collection.id' />&rights.rightsType=${rights.rightsType}';"/> &nbsp;&nbsp; <input type="button"  value=" Cancel " class="mcpop_button" id="cancelRights" /> &nbsp;&nbsp; <input type="submit" name="options" value=" Next " class="mcpop_button" />
 			</div>
 			</@s.form>
 		</@s.if>
@@ -116,7 +116,7 @@
 			<@s.hidden name="rights.derivatives" id="prights_deri"/>
 			<@s.hidden name="rights.jurisdiction" id="prights_juri"/>
 			<@s.hidden name="collection.id" />
-			<input type="button" value=" Back " class="mcpop_button" onclick="window.location = '${base}/data/rightsOptions.jspx?collection.id=${collection.id}&rights.rightsType=${rights.rightsType}';"> &nbsp;&nbsp; 
+			<input type="button" value=" Back " class="mcpop_button" onclick="window.location = '${base}/data/rightsOptions.jspx?collection.id=<@s.property value='collection.id' />&rights.rightsType=${rights.rightsType}';"> &nbsp;&nbsp;
 			<input type="button"  value=" Cancel " class="mcpop_button" id="cancelRights" /> &nbsp;&nbsp; <input type="button"  value=" Save " id="saveRights" class="mcpop_button" />
 		</div>
 		

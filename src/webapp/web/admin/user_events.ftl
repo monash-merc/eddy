@@ -26,11 +26,11 @@
 		</div>
 		<@s.if test="%{eventPagination.pageResults.size() > 0}">
 			<div class="msg_content">
-				<a href="${base}/${pageLink}${pageSuffix}${eventPagination.pageNo}" class="page_url"></a>
+				<a href="${base}/${pageLink}${pageSuffix}<@s.property value='eventPagination.pageNo' />" class="page_url"></a>
 			</div>
 			<div class="single_line_center_block">	
 				<span class="inline_span">				
-					Page size: <@s.select id="item_select_size" name="sizePerPage" headerKey="${sizePerPage}"  list="pageSizeMap" cssClass="input_select_small" />
+					Page size: <@s.select id="item_select_size" name="sizePerPage" headerKey="<@s.property value='sizePerPage' />"  list="pageSizeMap" cssClass="input_select_small" />
 					&nbsp;Sorted by: <@s.select id="item_select_order" name="orderBy" headerKey="${orderBy}"  list="orderByMap" cssClass="input_select_small" />
 					&nbsp;Ordered by: <@s.select id="item_select_otype" name="orderByType" headerKey="${orderByType}"  list="orderByTypeMap" cssClass="input_select_small" />
 				</span>
@@ -41,7 +41,7 @@
 					<div class="record_data">
 						<div class="record_data_inline"><font color="#0E774A"><@s.date name="#eventResult.createdTime"  format="dd-MM-yyyy 'at' hh:mm a" /></font> &nbsp;&nbsp;<@s.property value="#eventResult.event" />, by <@s.property value="#eventResult.operator.displayName" /></div>
 					 	<div class="record_data_link2">
-					 		<a href="${base}/${deleteEventLink}?pageNo=${eventPagination.pageNo}&auditEvent.id=<@s.property value='#eventResult.id' />">&nbsp;&nbsp;&nbsp; Delete &nbsp;&nbsp;&nbsp;</a>
+					 		<a href="${base}/${deleteEventLink}?pageNo=<@s.property value='eventPagination.pageNo' />&auditEvent.id=<@s.property value='#eventResult.id' />">&nbsp;&nbsp;&nbsp; Delete &nbsp;&nbsp;&nbsp;</a>
 					 	</div>
 					</div>
 				</div>
