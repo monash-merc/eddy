@@ -480,14 +480,19 @@ def l4qc(cf,ds3):
             ds4.globalattributes['QCVersion'] = __doc__
             ds4.globalattributes['Functions'] = 'SOLO ANN GapFilling 10-day window, AddMetVars, ComputeDailySums (not included)'
             # duplicate gapfilled fluxes for graphing comparison
-            Fe,flag = qcutils.GetSeriesasMA(ds4,'Fe_gapfilled')
-            qcutils.CreateSeries(ds4,'Fe_wpl',Fe,Flag=flag,Descr='ANN gapfilled Fe',Units='W/m2')
-            Fc,flag = qcutils.GetSeriesasMA(ds4,'Fc_gapfilled')
-            qcutils.CreateSeries(ds4,'Fc_wpl',Fc,Flag=flag,Descr='ANN gapfilled Fc',Units='mg/m2/s')
-            Fh,flag = qcutils.GetSeriesasMA(ds4,'Fh_gapfilled')
-            qcutils.CreateSeries(ds4,'Fh_rmv',Fh,Flag=flag,Descr='ANN gapfilled Fh',Units='W/m2')
+            if 'Fe_gapfilled' in ds4.series.keys():
+                Fe,flag = qcutils.GetSeriesasMA(ds4,'Fe_gapfilled')
+                qcutils.CreateSeries(ds4,'Fe_wpl',Fe,Flag=flag,Descr='ANN gapfilled Fe',Units='W/m2')
+            if 'Fc_gapfilled' in ds4.series.keys():
+                Fc,flag = qcutils.GetSeriesasMA(ds4,'Fc_gapfilled')
+                qcutils.CreateSeries(ds4,'Fc_wpl',Fc,Flag=flag,Descr='ANN gapfilled Fc',Units='mg/m2/s')
+            if 'Fh_gapfilled' in ds4.series.keys():
+                Fh,flag = qcutils.GetSeriesasMA(ds4,'Fh_gapfilled')
+                qcutils.CreateSeries(ds4,'Fh_rmv',Fh,Flag=flag,Descr='ANN gapfilled Fh',Units='W/m2')
             # add relevant meteorological values to L3 data
-            qcts.AddMetVars(ds4)
+            if qcutils.cfkeycheck(cf, Base='General', ThisOne='NoMet'):
+                if cf['General']['NoMet'] != 'True':
+                    qcts.AddMetVars(ds4)
     else:
             ds4 = copy.deepcopy(ds3)
             ds4.globalattributes['Level'] = level

@@ -43,7 +43,8 @@ def autoxl2nc(cf,InLevel,OutLevel):
         ds1 = xl_read_flags(cf,ds,InLevel,VariablesInFile)
         if InLevel == 'L4':
             for ThisOne in ['Fc_gapfilled','Fe_gapfilled','Fh_gapfilled']:
-                ds1.series[ThisOne]['Flag'] = ds.series['Gap']['Data']
+                if ThisOne in ds.series.keys():
+                    ds1.series[ThisOne]['Flag'] = ds.series['Gap']['Data']
         ds = ds1
     # do any functions to create new series
     qcts.do_functions(cf,ds)

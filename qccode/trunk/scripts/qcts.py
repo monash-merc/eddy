@@ -82,7 +82,7 @@ def albedo(cf,ds):
             albedo = Fsu / Fsd
             qcutils.CreateSeries(ds,'albedo',albedo,FList=['Fsd','Fsu'],Descr='solar albedo',Units='unitless')
         else:
-            log.error('  Fsd or Fsu not in ds, albedo not calculated')
+            log.warning('  Fsd or Fsu not in ds, albedo not calculated')
             return
     else:
         albedo,f = qcutils.GetSeriesasMA(ds,'albedo')
