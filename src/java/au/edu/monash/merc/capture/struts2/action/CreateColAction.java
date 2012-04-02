@@ -175,24 +175,24 @@ public class CreateColAction extends DMCoreAction {
 
             String mdRegNonLdapEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_MD_REGISTER_FOR_NON_LDAP_USER_SUPPORTED);
             boolean mdRegNonLdapEnabled = Boolean.valueOf(mdRegNonLdapEnabledStr).booleanValue();
+            if (user != null) {
+                //see if it's a ldap user
+                String passwd = user.getPassword();
+                boolean monUser = true;
+                if (!StringUtils.endsWithIgnoreCase(passwd, "ldap")) {
+                    monUser = false;
+                }
 
-            //see if it's a ldap user
-            String passwd = user.getPassword();
-            boolean monUser = true;
-            if (!StringUtils.endsWithIgnoreCase(passwd, "ldap")) {
-                monUser = false;
-            }
-
-            if (mdRegEnabled) {
-                //if metadata registration is enabled, but non-monash user is not supported
-                //we still need to enable an admin to registration metadata
-                if (!monUser && !mdRegNonLdapEnabled) {
-                    if ((user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
-                        mdRegEnabled = false;
+                if (mdRegEnabled) {
+                    //if metadata registration is enabled, but non-monash user is not supported
+                    //we still need to enable an admin to registration metadata
+                    if (!monUser && !mdRegNonLdapEnabled) {
+                        if ((user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
+                            mdRegEnabled = false;
+                        }
                     }
                 }
             }
-
 
             // set the full permissions
             setupFullPermissions();
