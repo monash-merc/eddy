@@ -385,6 +385,13 @@ netCDFv3 = False
         [[[Attr]]]
             Description = "Atmospheric pressure"
             Units    = "kPa"
+    [[ps_7500]]
+        [[[xl]]]
+            Sheet    = slow_met
+            Name     = ps_7500_Avg
+        [[[Attr]]]
+            Description = "Atmospheric pressure"
+            Units    = "kPa"
     [[Diag_CSAT]]
         [[[xl]]]
             Sheet    = slow_flux
