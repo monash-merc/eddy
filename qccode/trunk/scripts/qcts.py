@@ -2538,7 +2538,7 @@ def UstarFromFh(ds,us_out,T_in, Ah_in, p_in, Fh_in, u_in, z, z0):
 
 def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoMean='False',DoSubSum='False',DoSoil='False'):
     monthabr = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-    if qcutils.cfkeycheck(cf,Base='Params',ThisOne='M1st'):
+    if qcutils.cfkeycheck(cf,Base='Params',ThisOne='firstMonth'):
         M1st = int(cf['Params']['firstMonth'])
     else:
         M1st = 1
