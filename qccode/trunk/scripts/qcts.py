@@ -1071,9 +1071,10 @@ def do_attributes(cf,ds):
         ds.globalattributes['Flag22'] = 'GapFilling (L4_GapFilled): Gap not Filled'
         ds.globalattributes['Flag30'] = 'albedo: bad Fsd < threshold (290 W/m2 default) only if bad time flag (31) not set'
         ds.globalattributes['Flag31'] = 'albedo: bad time flag (not midday 10.00 to 14.00)'
-        ds.globalattributes['Flag32'] = 'Penman-Monteith: bad rst (rst < 0) only if bad Fe (33) and bad Fsd (34) flags not set'
+        ds.globalattributes['Flag32'] = 'Penman-Monteith: bad rst (rst < 0) only if bad Uavg (35), bad Fe (33) and bad Fsd (34) flags not set'
         ds.globalattributes['Flag33'] = 'Penman-Monteith: bad Fe < threshold (0 W/m2 default) only if bad Fsd (34) flag not set'
         ds.globalattributes['Flag34'] = 'Penman-Monteith: bad Fsd < threshold (10 W/m2 default)'
+        ds.globalattributes['Flag35'] = 'Penman-Monteith: Uavg == 0 (undefined aerodynamic resistance under calm conditions) only if bad Fe (33) and bad Fsd (34) flags not set'
     for ThisOne in ds.series.keys():
         if ThisOne in cf['Variables']:
             if 'Attr' in cf['Variables'][ThisOne].keys():
@@ -1730,9 +1731,18 @@ def get_stomatalresistance(cf,ds,Level):
     gamma = mf.gamma(ps,Cpm,Lv)
     delta = mf.delta(Ta)
     Ce = mf.bulktransfercoefficient(Fe,Lv,Uavg,q,qsat)
+    uindex = numpy.ma.where(Uavg == 0)[0]
+    Uavg[uindex] = 0.000000000000001
     rav = mf.aerodynamicresistance(Uavg,Ce)
+    rav[uindex] = numpy.float64(-9999)
     rst = ((((((delta * Fnr) + (c.rho_water * Cpm * (VPD / ((Lv / 1000) * rav)))) / (Fe / (Lv / 1000))) - delta) / gamma) - 1) * rav
+    rst[uindex] = numpy.float64(-9999)
     Gst = (1 / rst) * (Ah * 1000) / 18
+    Gst[uindex] = numpy.float64(-9999)
+    qcutils.CreateSeries(ds,'Ce',Ce,FList=PMin,Descr='Bulk transfer coefficient, Brutseart/Stull formulation of bulk transfer coefficient, '+Level,Units='s/m')
+    qcutils.CreateSeries(ds,'rav',rav,FList=PMin,Descr='Aerodynamic resistance from bulk transfer coefficient, Brutseart/Stull formulation of bulk transfer coefficient, '+Level,Units='s/m')
+    qcutils.CreateSeries(ds,'rst_raw',rst,FList=PMin,Descr='Unfiltered Bulk stomatal resistance from Penman-Monteith inversion, Brutseart/Stull formulation of bulk transfer coefficient, '+Level,Units='s/m')
+    qcutils.CreateSeries(ds,'Gst_raw',Gst,FList=PMin,Descr='Unfiltered Bulk stomatal conductance from Penman-Monteith inversion, Brutseart/Stull formulation of bulk transfer coefficient, '+Level,Units='mmolH2O/(m2ground s)')
     
     if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMcritFsd'):
         critFsd = float(cf['FunctionArgs']['PMcritFsd'])
@@ -1762,6 +1772,9 @@ def get_stomatalresistance(cf,ds,Level):
     
     ds.series['rst']['Flag'][index1] = 32
     ds.series['Gst']['Flag'][index1] = 32
+    ds.series['rst']['Flag'][uindex] = 35
+    ds.series['Gst']['Flag'][uindex] = 35
+    ds.series['rav']['Flag'][uindex] = 35
     ds.series['rst']['Flag'][index2] = 33
     ds.series['Gst']['Flag'][index2] = 33
     ds.series['rst']['Flag'][index3] = 34
@@ -2600,7 +2613,7 @@ def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoMean
         for day in range(1,dRan+1):
             xlRow = xlRow + 1
             if ThisOne == 'rst' or ThisOne == 'Gst' or ThisOne == 'Gst_mol':
-                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day) & ((ds.series[ThisOne]['Flag'] == 0) | (ds.series[ThisOne]['Flag'] == 21)))[0]
+                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day) & (ds.series[ThisOne]['Flag'] < 32))[0]
                 ti = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day))[0]
                 nRecs = len(ti)
                 check = numpy.ma.empty(nRecs,str)

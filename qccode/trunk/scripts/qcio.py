@@ -425,6 +425,8 @@ def xl_write_series(cf,ds,level):
     xlFlagSheet.write(3,xlCol+7,ds.globalattributes['Flag33'])
     xlFlagSheet.write(3,xlCol+8,'34:')
     xlFlagSheet.write(3,xlCol+9,ds.globalattributes['Flag34'])
+    xlFlagSheet.write(3,xlCol+10,'35:')
+    xlFlagSheet.write(3,xlCol+11,ds.globalattributes['Flag35'])
     #d_xf = xlwt.easyxf('font: height 160',num_format_str='dd/mm/yyyy hh:mm')
     d_xf = xlwt.easyxf(num_format_str='dd/mm/yyyy hh:mm')
     for j in range(nRecs):
