@@ -2600,24 +2600,7 @@ def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoMean
         for day in range(1,dRan+1):
             xlRow = xlRow + 1
             if ThisOne == 'rst' or ThisOne == 'Gst' or ThisOne == 'Gst_mol':
-                if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMcritFsd'):
-                    critFsd = float(cf['FunctionArgs']['PMcritFsd'])
-                else:
-                    critFsd = 10.
-                
-                if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMcritFe'):
-                    critFe = float(cf['FunctionArgs']['PMcritFe'])
-                else:
-                    critFe = 0.
-                
-                if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
-                    PMin = ast.literal_eval(cf['FunctionArgs']['PMin'])
-                else:
-                    PMin = ['Fe_wpl', 'Ta_EC', 'Ah_EC', 'ps', 'Ws_CSAT', 'Fnr', 'Fsd']
-                
-                PMin1 = PMin[6]
-                PMin2 = PMin[0]
-                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day) & (ds.series[PMin1]['Data'] > critFsd) & (ds.series[PMin2]['Data'] > critFe) & (ds.series['rst']['Data'] > 0))[0]
+                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day) & ((ds.series[ThisOne]['Flag'] == 0) | (ds.series[ThisOne]['Flag'] == 21)))[0]
                 ti = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day))[0]
                 nRecs = len(ti)
                 check = numpy.ma.empty(nRecs,str)
