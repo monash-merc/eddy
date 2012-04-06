@@ -1,21 +1,22 @@
 """
-    OzFlux QC v1.8.2 19 Mar 2012;
+    OzFlux QC v1.8.2.b1 6 Apr 2012;
 
     Version History:
-    <<v1.0: 21 July 2011, code diversion reconciliation, PIsaac & JCleverly>>
-    <<v1.0b 25 July 2011, with log capability, JCleverly>>
-    <<v1.1b 26 July 2011, FhvtoFh output generalised and added to all sites qcl3, qcts functions modified to accept met constants or variables, JCleverly>>
-    <<v1.2 23 Aug 2011, daily_sums functions moved to qcts module, JCleverly>>
-    <<v1.3 26 Sep 2011, intermediate editing at OzFlux Black Mountain data workshop, PIsaac & JCleverly>>
-    <<v1.4 30 Sep 2011, final version arrising from OzFlux Black Mountain data workshop, PIsaac & JCleverly>>
-    <<v1.5 30 Nov 2011, revised l4qc calls in qc.py & Wombat modifications integrated, JCleverly>>
-    <<v1.5.1 21 Feb 2012, code rationalisation and generalisation in progress, PIsaac & JCleverly>>
-    <<v1.5.2 24 Feb 2012, de-bugging completion for ASM, PIsaac & JCleverly>>
+    <<v1.0: 21 July 2011, code diversion reconciliation>>
+    <<v1.0b 25 July 2011, with log capability>>
+    <<v1.1b 26 July 2011, FhvtoFh output generalised and added to all sites qcl3, qcts functions modified to accept met constants or variables>>
+    <<v1.2 23 Aug 2011, daily_sums functions moved to qcts module>>
+    <<v1.3 26 Sep 2011, intermediate editing at OzFlux Black Mountain data workshop>>
+    <<v1.4 30 Sep 2011, final version arrising from OzFlux Black Mountain data workshop>>
+    <<v1.5 30 Nov 2011, revised l4qc calls in qc.py & Wombat modifications integrated>>
+    <<v1.5.1 21 Feb 2012, code rationalisation and generalisation in progress>>
+    <<v1.5.2 24 Feb 2012, de-bugging completion for ASM>>
     <<v1.6 24 Feb 2012, generalised qcls.l3qc, ASM tested ok L1-L4>>
     <<v1.7 27 Feb 2012, generalised qcls.l4qc, ASM tested ok L1-L4>>
     <<v1.8 16 Mar 2012, ASM and Standard (Gingin) tested ok L1-L3>>
     <<v1.8.1 19 Mar 2012, rst from Penman-Monteith inversion added to L3 & L4>>
     <<v1.8.2 19 Mar 2012, rst from Penman-Monteith inversion tested ok ASM L3 & L4>>
+    <<v1.8.2.b1 6 Apr 2012, beta-version release>>
 """
 
 import sys
