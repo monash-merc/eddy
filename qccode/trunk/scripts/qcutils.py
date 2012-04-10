@@ -24,7 +24,7 @@ def cfkeycheck(cf,Base='Variables',ThisOne=[],key=[]):
         else:
             return
 
-def CreateSeries(ds,Label,Data,FList=None,Flag=None,Descr=None,Units=None):
+def CreateSeries(ds,Label,Data,FList=[''],Flag=None,Descr='',Units=''):
     ds.series[unicode(Label)] = {}
     ds.series[Label]['Data'] = numpy.ma.filled(Data,float(-9999))
     if Flag == None:
