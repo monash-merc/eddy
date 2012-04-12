@@ -1710,7 +1710,7 @@ def get_stomatalresistance(cf,ds,Level):
     if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
         PMin = ast.literal_eval(cf['FunctionArgs']['PMin'])
     else:
-        PMin = ['Fe_wpl', 'Ta_EC', 'Ah_EC', 'ps', 'Ws_CSAT', 'Fnr', 'Fsd']
+        PMin = ['Fe_wpl', 'Ta_EC', 'Ah_EC', 'ps', 'Ws_EC', 'Fnr', 'Fsd']
     
     if 'Lv' not in ds.series.keys():
         AddMetVars(ds)
