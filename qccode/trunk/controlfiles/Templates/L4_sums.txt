@@ -14,6 +14,10 @@
 # [Plots]     - definition of time series plots
 [General]
 Platform = PC    # Mac or PC
+# Following is a list of optional pre-sums functions to apply.  No default functions are available at L4
+# Note:  'SOLO' and 'Met' cannot be run using the same controlfile
+FunctionList = "['Sums']"
+# FunctionList alternate:  FunctionList = "['Sums','MergeSeriesWS','rstFromPenmanMonteith']"
 
 [Files]
     [[L3]]

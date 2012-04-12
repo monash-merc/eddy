@@ -13,8 +13,10 @@
 # [PlotSpec]  - Definition of plot window size.  Adjust until the plots fit comfortably in your display. Optional
 # [Plots]     - definition of time series plots
 [General]
-SOLO = True
 Platform = PC    # Mac or PC
+FunctionList = "['SOLO','Sums']"
+# FunctionList alternate:  FunctionList = "['SOLO','Sums','MergeSeriesWS','rstFromPenmanMonteith']"
+# FunctionList alternate:  FunctionList = "['SOLO']"
 
 [Files]
     [[L3]]

@@ -7,11 +7,11 @@ netCDFv3 = False
 [Files]
     [[L4]]
         xlFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level3_intermediates/
-        xlFileName = ASM_EC_2012_1Jan-Mar_FullPreFilled.xls
+        xlFileName = ASM_EC_2012_2Apr-Jun_FullPreFilled.xls
         xlHeaderRow  = 6
         xl1stDataRow = 7
         ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
-        ncFileName = ASM_EC_2012_1Jan-Mar_L4.nc
+        ncFileName = ASM_EC_2012_2Apr-Jun_L4.nc
 
 [Global]
     SiteName = AliceSpringsMulga

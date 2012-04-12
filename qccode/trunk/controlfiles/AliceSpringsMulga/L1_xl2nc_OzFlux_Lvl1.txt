@@ -7,11 +7,11 @@ netCDFv3 = False
 [Files]
     [[L1]]
         xlFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level1/
-        xlFileName = ASM_EC_2012_1Jan-Mar.xls
+        xlFileName = ASM_EC_2012_2Apr-Jun.xls
         xlHeaderRow  = 2
         xl1stDataRow = 5
         ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
-        ncFileName = ASM_EC_2012_1Jan-Mar_L1.nc
+        ncFileName = ASM_EC_2012_2Apr-Jun_L1.nc
 
 [Global]
     SiteName = AliceSpringsMulga
@@ -382,13 +382,6 @@ netCDFv3 = False
         [[[xl]]]
             Sheet    = ex_met
             Name     = ps_CS106_Avg
-        [[[Attr]]]
-            Description = "Atmospheric pressure"
-            Units    = "kPa"
-    [[ps_7500]]
-        [[[xl]]]
-            Sheet    = slow_met
-            Name     = ps_7500_Avg
         [[[Attr]]]
             Description = "Atmospheric pressure"
             Units    = "kPa"

@@ -1,6 +1,6 @@
 [General]
 #Standard (Default) FunctionList = "['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'Fe_WPL', 'Fc_WPL', 'MergeSeriesFsd', 'CalculateNetRadiation', 'MergeSeriesFn', 'PreCorrectSoilAverage', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks']"
-FunctionList   = "['AddMetVars', 'CorrectSWC', 'do_linear', 'CoordRotation2D', 'MassmanApprox', 'Massman', 'CalculateFluxesRM', 'FhvtoFh', 'Fe_WPLcov', 'Fc_WPLcov', 'CorrectFgForStorage', 'PostCorrectSoilAverage', 'rstFromPenmanMonteith', 'do_qcchecks', 'gaps']"
+FunctionList   = "['AddMetVars', 'CorrectSWC', 'do_linear', 'CoordRotation2D', 'MassmanApprox', 'Massman', 'CalculateFluxesRM', 'FhvtoFh', 'Fe_WPLcov', 'Fc_WPLcov', 'CorrectFgForStorage', 'PostCorrectSoilAverage', 'MergeSeriesWS', 'rstFromPenmanMonteith', 'do_qcchecks', 'gaps']"
 RotateFlag   = Yes
 netCDFv3 = False
 Platform = Mac    # Mac or PC
@@ -8,15 +8,15 @@ Platform = Mac    # Mac or PC
 [Files]
     [[L2]]
         ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
-        ncFileName = ASM_EC_2012_1Jan-Mar_L2.nc
+        ncFileName = ASM_EC_2012_2Apr-Jun_L2.nc
     [[L3]]
         ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
-        ncFileName = ASM_EC_2012_1Jan-Mar_L3.nc
+        ncFileName = ASM_EC_2012_2Apr-Jun_L3.nc
         xlFlagFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level3/
-        xlFlagFileName = ASM_EC_2012_1Jan-Mar_flagstats_L3.xls
+        xlFlagFileName = ASM_EC_2012_2Apr-Jun_flagstats_L3.xls
     [[L3_Corrected]]
         ncFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level3/
-        ncFileName = ASM_EC_2012_1Jan-Mar_L3_Corrected.nc
+        ncFileName = ASM_EC_2012_2Apr-Jun_L3_Corrected.nc
 
 
 [FunctionArgs]
@@ -37,7 +37,7 @@ CFg3Args = "['Fgc_mu','Fg_mu','Ts_mu','Sws_mu']"
 # Default ASBEswc = Sws_Av
 #IOM = "['Sws_10cm']"  # for FoggDam
 #IOM = "['Sws_5cm']"   # for AdelaideRiver
-PMin = "['Fe_wpl', 'Ta_HMP', 'Ah_HMP', 'ps', 'Ws_CSAT', 'Fnr', 'Fsd']"
+PMin = "['Fe_wpl', 'Ta_HMP', 'Ah_HMP', 'ps', 'Ws_EC', 'Fnr', 'Fsd']"
 PMcritFe = 0  # Fe flux greater than or equal to this value to keep rst
 PMcritFsd = 10  # Fsd flux greater than or equal to this value to keep rst
 # Default PMin = "['Fe_wpl', 'Ta_EC', 'Ah_EC', 'ps', 'Ws_CSAT', 'Fnr', 'Fsd']"
@@ -331,6 +331,10 @@ noDefaultXl = True
         [[[AverageSeries]]]
 	    Source = "['svwc_s_baresoil','svwc_s_mulga','svwc_s_understory']"
 #            Source = "['Sws_01']"      #  Default
+    [[Ws_EC]]
+        [[[MergeSeries]]]
+            Source = "['Ws_WS','Ws_CSAT']"
+#            Source = "['Ws_WS_01','Ws_CSAT']"
 
 
 [PlotSpec]

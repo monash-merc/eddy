@@ -15,6 +15,9 @@
 [General]
 SOLO = True
 Platform = PC    # Mac or PC
+FunctionList = "['SOLO','Sums']"
+# FunctionList alternate:  FunctionList = "['SOLO','Sums','MergeSeriesWS','rstFromPenmanMonteith']"
+# FunctionList alternate:  FunctionList = "['SOLO']"
 
 [Files]
     [[L3]]
