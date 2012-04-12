@@ -45,8 +45,7 @@ Platform = PC    # Mac or PC
         xlFlagFileName = ASM_EC_2012_1Jan-Mar_flagstats_L2.xls
 
 [Output]
-#noDefaultXl = True   # uncomment to load controlfile for additional excel output files
-L2 = "['Ah_7500_Av','Ah_HMP_01','Cc_7500_Av','Tv_CSAT','Ta_HMP_01']"  # comment to load controlfile for additional excel output files
+L2 = "['Ah_7500_Av','Ah_HMP_01','Cc_7500_Av','Tv_CSAT','Ta_HMP_01']"
 
 [Variables]
 # Radiation

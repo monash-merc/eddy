@@ -22,27 +22,31 @@ Platform = Mac    # Mac or PC
 [FunctionArgs]
 # Site- and process-specific variable and parameter lists
 # Flags are named as abbreviated forms of functions in FunctionList
-# CFg: CorrectFgForStorage, A3SBE: Average3SeriesByElements, IOM: IntegrateOverMissing
+# Ta2Tv: TaFromTv, CF: CalcluateFluxes
+# ASBEFg: AverageFgSeriesByElements, ASBETs: AverageTsSeriesByElements, ASBEswc: AverageSWCSeriesByElements
+# CFg: CorrectFgForStorage, IOM: IntegrateOverMissing
 #
-# Default FhvtoFhArgs:  "['Ta_EC','Fh','Tv_CSAT','Fe_raw','ps','Ah_EC','Fh_rv']"
-# Default FhvtoFhattr:  "['Fh rotated and converted from virtual heat flux']"
+# Default Ta2Tv = "['Ta_CSAT','Tv_CSAT','Ah_EC','ps']"
+# Default CF = "['Ta_EC','Ah_EC','ps']"
+# Default FhvtoFhArgs = "['Ta_EC','Fh','Tv_CSAT','Fe_raw','ps','Ah_EC','Fh_rv']"
+# Default FhvtoFhattr = "['Fh rotated and converted from virtual heat flux']"
 FhvtoFhArgs = "['Ta_HMP','Fh_rm','Tv_CSAT','Fe_rm','ps','Ah_HMP','Fh_rmv']"
 FhvtoFhattr = "['Fh rotated, massman corrected, and converted from virtual heat flux']"
-# Default CFg1Args = "['Fg','Fg_Av','Ts']"
-CFg1Args = "['Fgc_bs','Fg_bs','Ts_bs','Sws_bs']"
-CFg2Args = "['Fgc_ms','Fg_ms','Ts_ms','Sws_ms']"
-CFg3Args = "['Fgc_mu','Fg_mu','Ts_mu','Sws_mu']"
 # Default ASBEFg = Fg_Av   # Output variable
 # Default ASBETs = Ts_Av
 # Default ASBEswc = Sws_Av
-#IOM = "['Sws_10cm']"  # for FoggDam
-#IOM = "['Sws_5cm']"   # for AdelaideRiver
-PMin = "['Fe_wpl', 'Ta_HMP', 'Ah_HMP', 'ps', 'Ws_EC', 'Fnr', 'Fsd']"
-PMcritFe = 0  # Fe flux greater than or equal to this value to keep rst
-PMcritFsd = 10  # Fsd flux greater than or equal to this value to keep rst
+# Default CFg1Args = "['Fg','Fg_Av','Ts_Av']"  # Output Fg, Input Fg, Input Ts; up to 3 separate soil arrays
+CFg1Args = "['Fgc_bs','Fg_bs','Ts_bs','Sws_bs']"
+CFg2Args = "['Fgc_ms','Fg_ms','Ts_ms','Sws_ms']"
+CFg3Args = "['Fgc_mu','Fg_mu','Ts_mu','Sws_mu']"
+#IOM = "['Sws_10cm']"  # uncomment for FoggDam
+#IOM = "['Sws_5cm']"   # uncomment for AdelaideRiver
 # Default PMin = "['Fe_wpl', 'Ta_EC', 'Ah_EC', 'ps', 'Ws_CSAT', 'Fnr', 'Fsd']"
 # Default PMcritFe = 0  # Fe flux greater than or equal to this value to keep rst
 # Default PMcritFsd = 10  # Fsd flux greater than or equal to this value to keep rst
+PMin = "['Fe_wpl', 'Ta_HMP', 'Ah_HMP', 'ps', 'Ws_EC', 'Fnr', 'Fsd']"
+PMcritFe = 0  # Fe flux greater than or equal to this value to keep rst
+PMcritFsd = 10  # Fsd flux greater than or equal to this value to keep rst
 
 [Massman]
 zmd = 7.3  # instrument height above displacement plane, d = 2 / 3 * h = 4.3, h = 6.5, z = 11.635 m
@@ -76,8 +80,8 @@ SWCattr = "['Surface soil water content of bare soil, empirically corrected to c
 TDRattr = "['Surface soil water content of bare soil near raingage, empirically corrected to collected samples', '10-30 cm deep soil water content of bare soil array 1, empirically corrected to collected samples', '60-80 cm deep soil water content of bare soil array 1, empirically corrected to collected samples', '100-130 cm deep soil water content of bare soil array 1, empirically corrected to collected samples', '10-30 cm deep soil water content below mulga array 1, empirically corrected to collected samples', '60-80 cm deep soil water content below mulga array 1, empirically corrected to collected samples', '100-130 cm deep soil water content below mulga array 1, empirically corrected to collected samples', '10-30 cm deep soil water content below understory array 1, empirically corrected to collected samples', '60-80 cm deep soil water content below understory array 1, empirically corrected to collected samples', '100-130 cm deep soil water content below understory array 1, empirically corrected to collected samples', '10-30 cm deep soil water content of bare soil array 2, empirically corrected to collected samples', '60-80 cm deep soil water content of bare soil array 2, empirically corrected to collected samples', '100-120 cm deep soil water content of bare soil array 2, empirically corrected to collected samples', '143-163 cm deep soil water content of bare soil array 2, empirically corrected to collected samples', '10-30 cm deep soil water content below mulga array 2, empirically corrected to collected samples', '10-30 cm deep soil water content below mulga array 2, empirically corrected to collected samples', '60-80 cm deep soil water content below mulga array 2, empirically corrected to collected samples', '100-130 cm deep soil water content below mulga array 2, empirically corrected to collected samples', '10-30 cm deep soil water content below understory array 2, empirically corrected to collected samples', '10-30 cm deep soil water content below understory array 2, empirically corrected to collected samples', '60-80 cm deep soil water content below understory array 2, empirically corrected to collected samples', '100-130 cm deep soil water content below understory array 2, empirically corrected to collected samples']"
 
 [Output]
-OFL2 = "['Fm_rm', 'Fc_wpl', 'Fe_wpl', 'Fh_rmv', 'Fg_Av', 'Fnr', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustarM', 'LM', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Vbat_TopPanel', 'Vbat_BotPanel', 'Tpanel', 'Tpanel_CR1000', 'Tpanel_CR3000b', 'theta', 'eta', 'Ux', 'u', 'Uy', 'v', 'Uz', 'w', 'UxUx', 'UxUy', 'uwM', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'vwM', 'AhAh', 'CcCc', 'UxUz', 'UyUz', 'UzT', 'UzA', 'UzC', 'wAwpl', 'wCM', 'wTM', 'Ts_Av', 'Sws_Av', 'svwc_s_baresoil', 'Ts_bs', 'delTs_bs', 'Fgc_bs', 'svwc_s_understory', 'Ts_mu', 'delTs_mu', 'Fgc_mu', 'svwc_s_mulga', 'Ts_ms', 'delTs_ms', 'Fgc_ms', 'svwc_10cm_baresoil_a1', 'svwc_60cm_baresoil_a1', 'svwc_100cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_60cm_mulga_a1', 'svwc_100cm_mulga_a1', 'svwc_10cm_understory_a1', 'svwc_60cm_understory_a1', 'svwc_100cm_understory_a1', 'svwc_10cm_baresoil_a2', 'svwc_60cm_baresoil_a2', 'svwc_100cm_baresoil_a2', 'svwc_143cm_baresoil_a2', 'svwc_10cm_a_mulga_a2', 'svwc_10cm_b_mulga_a2', 'svwc_60cm_mulga_a2', 'svwc_100cm_mulga_a2', 'svwc_10cm_a_understory_a2', 'svwc_10cm_b_understory_a2', 'svwc_60cm_understory_a2', 'svwc_100cm_understory_a2', 'Ah_HMP', 'q', 'e_HMP', 'RH_HMP', 'rho_a', 'rho_d', 'es_HMP', 'Ta_HMP', 'Ah_HMP_200cm', 'e_HMP_200cm', 'RH_HMP_200cm', 'es_HMP_200cm', 'Ta_HMP_200cm', 'Ah_HMP_425cm', 'e_HMP_425cm', 'RH_HMP_425cm', 'es_HMP_425cm', 'Ta_HMP_425cm', 'Ah_HMP_657cm', 'e_HMP_657cm', 'RH_HMP_657cm', 'es_HMP_657cm', 'Ta_HMP_657cm', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Ws_WS_925cm', 'Wd_WS_925cm', 'Ws_CSAT_Sd', 'Wd_CSAT_Sd', 'Ws_WS_925cm_Sd', 'Wd_WS_925cm_Sd', 'Ws_WS_200cm', 'Ws_WS_200cm_Sd', 'Ws_WS_425cm', 'Ws_WS_425cm_Sd', 'Ws_WS_662cm', 'Ws_WS_662cm_Sd', 'Rain', 'rst', 'Gst', 'xlDateTime', 'Year', 'Month', 'Day', 'Hour', 'Minute', 'Second', 'Hdh']"
-noDefaultXl = True
+OFL2 = "['Fm_rm', 'Fc_wpl', 'Fe_wpl', 'Fh_rmv', 'Fg_Av', 'Fnr', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustarM', 'LM', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Vbat_TopPanel', 'Vbat_BotPanel', 'Tpanel', 'Tpanel_CR1000', 'Tpanel_CR3000b', 'theta', 'eta', 'Ux', 'u', 'Uy', 'v', 'Uz', 'w', 'UxUx', 'UxUy', 'uwM', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'vwM', 'AhAh', 'CcCc', 'UxUz', 'UyUz', 'UzT', 'UzA', 'UzC', 'wAwpl', 'wCM', 'wTM', 'Ts_Av', 'Sws_Av', 'svwc_s_baresoil', 'Ts_bs', 'delTs_bs', 'Fgc_bs', 'svwc_s_understory', 'Ts_mu', 'delTs_mu', 'Fgc_mu', 'svwc_s_mulga', 'Ts_ms', 'delTs_ms', 'Fgc_ms', 'svwc_10cm_baresoil_a1', 'svwc_60cm_baresoil_a1', 'svwc_100cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_60cm_mulga_a1', 'svwc_100cm_mulga_a1', 'svwc_10cm_understory_a1', 'svwc_60cm_understory_a1', 'svwc_100cm_understory_a1', 'svwc_10cm_baresoil_a2', 'svwc_60cm_baresoil_a2', 'svwc_100cm_baresoil_a2', 'svwc_143cm_baresoil_a2', 'svwc_10cm_a_mulga_a2', 'svwc_10cm_b_mulga_a2', 'svwc_60cm_mulga_a2', 'svwc_100cm_mulga_a2', 'svwc_10cm_a_understory_a2', 'svwc_10cm_b_understory_a2', 'svwc_60cm_understory_a2', 'svwc_100cm_understory_a2', 'Ah_HMP', 'q', 'e_HMP', 'RH_HMP', 'rho_a', 'rho_d', 'es_HMP', 'Ta_HMP', 'Ah_HMP_200cm', 'e_HMP_200cm', 'RH_HMP_200cm', 'es_HMP_200cm', 'Ta_HMP_200cm', 'Ah_HMP_425cm', 'e_HMP_425cm', 'RH_HMP_425cm', 'es_HMP_425cm', 'Ta_HMP_425cm', 'Ah_HMP_657cm', 'e_HMP_657cm', 'RH_HMP_657cm', 'es_HMP_657cm', 'Ta_HMP_657cm', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Ws_WS_925cm', 'Wd_WS_925cm', 'Ws_CSAT_Sd', 'Wd_CSAT_Sd', 'Ws_WS_925cm_Sd', 'Wd_WS_925cm_Sd', 'Ws_WS_200cm', 'Ws_WS_200cm_Sd', 'Ws_WS_425cm', 'Ws_WS_425cm_Sd', 'Ws_WS_662cm', 'Ws_WS_662cm_Sd', 'Rain', 'rst', 'Gst', 'xlDateTime', 'Year', 'Month', 'Day', 'Hour', 'Minute', 'Second', 'Hdh']"  # specify an optional variable list for submission of netCDF at L3 to OzFlux
+noDefaultXl = True   # uncomment to load controlfile for additional excel output files
 
 [Variables]
     [[Fh_rmv]]

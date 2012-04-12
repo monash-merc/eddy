@@ -46,10 +46,6 @@
 # [Plots]     - definition of time series plots
 #
 [General]
-FunctionList = "['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'Fe_WPL', 'Fc_WPL', 'MergeSeriesFsd', 'CalculateNetRadiation', 'MergeSeriesFn', 'PreCorrectSoilAverage', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks']"
-# AdelaideRiver:  "['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'Fe_WPL', 'Fc_WPL', 'CalculateNetRadiation', 'MergeSeriesFn', 'InterpolateOverMissing', 'PreCorrectSoilAverage', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks']"
-# AliceSpringsMulga:  "['AddMetVars', 'CorrectSWC', 'do_linear', 'CoordRotation2D', 'MassmanApprox', 'Massman', 'CalculateFluxesRM', 'FhvtoFh', 'Fe_WPLcov', 'Fc_WPLcov', 'CorrectFgForStorage', 'PostCorrectSoilAverage', 'rstFromPenmanMonteith', 'do_qcchecks', 'gaps']"
-# FoggDam:  "['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'Fe_WPL', 'Fc_WPL', 'CalculateNetRadiation', 'MergeSeriesFn', 'InterpolateOverMissing', 'PreCorrectSoilAverage', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks']"
 Platform = PC    # Mac or PC
 
 [Files]
@@ -64,31 +60,6 @@ Platform = PC    # Mac or PC
         xlFilePath = /Volumes/EcoHydro/TERN-OzFlux/Craig Macfarlane/
         xlFileName = Gingin_0332012_L3_corrected.xls
 
-[FunctionArgs]
-# Site- and process-specific variable and parameter lists
-# Flags are named as abbreviated forms of functions in FunctionList
-# Ta2Tv: TaFromTv, CF: CalcluateFluxes
-# ASBEFg: AverageFgSeriesByElements, ASBETs: AverageTsSeriesByElements, ASBEswc: AverageSWCSeriesByElements
-# CFg: CorrectFgForStorage, A3SBE: Average3SeriesByElements, IOM: IntegrateOverMissing
-#
-# Default Ta2Tv = "['Ta_CSAT','Tv_CSAT','Ah_EC','ps']"
-# Default CF = "['Ta_EC','Ah_EC','ps']"
-# Default FhvtoFhArgs = "['Ta_EC','Fh','Tv_CSAT','Fe_raw','ps','Ah_EC','Fh_rv']"
-# Default FhvtoFhattr = "['Fh rotated and converted from virtual heat flux']"
-# Default ASBEFg = Fg_Av   # Output variable
-# Default ASBETs = Ts_Av
-# Default ASBEswc = Sws_Av
-# Default CFg1Args = "['Fg','Fg_Av','Ts_Av']"  # Output Fg, Input Fg, Input Ts
-#IOM = "['Sws_10cm']"  # uncomment for FoggDam
-#IOM = "['Sws_5cm']"   # uncomment for AdelaideRiver
-
-#[Massman]
-#    zmd = 7.3  # instrument height above displacement plane, d = 2 / 3 * h = 4.3, h = 6.5, z = 11.635 m
-#    z0 = 0.8  # roughness length from Brutseart 1982, eqn 5.7: h / z = 3 * e
-#    angle = 16  # angle between CSAT3 mounting point and IRGA sensor head mid-path
-#    CSATarm = 0.475  # distance from CSAT mounting point to CSAT sensor
-#    IRGAarm = 0.315  # distance from CSAT mounting point to IRGA sensor
-
 [Soil]
     FgDepth = 0.08  # Depth of ground heat flux plates, m
     BulkDensity = 1900  # soil bulk density in kg/m3
@@ -97,9 +68,7 @@ Platform = PC    # Mac or PC
     SwsSeries = "['Sws_01']"	
 
 [Output]
-#noDefaultXl = True   # uncomment to load controlfile for additional excel output files
-L3 = "['Fm', 'Fc_wpl', 'Fe_wpl', 'Fh_rv', 'Fg_Av', 'Fnr', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustarM', 'LM', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'theta', 'eta', 'Ux', 'u', 'Uy', 'v', 'Uz', 'w', 'UxUx', 'UxUy', 'uw', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'vw', 'AhAh', 'CcCc', 'UxUz', 'UyUz', 'UzT', 'UzA', 'UzC', 'wA', 'wC', 'wT', 'Ts_Av', 'Sws_Av', 'Ah_EC', 'q', 'e_HMP', 'RH_HMP', 'rho_a', 'rho_d', 'es_HMP', 'Ta_EC', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Rain']"  # comment to load controlfile for additional excel output files
-#OFL2 = "['Fm', 'Fc_wpl', 'Fe_wpl', 'Fh_rv', 'Fg_Av', 'Fnr', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustarM', 'LM', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'theta', 'eta', 'Ux', 'u', 'Uy', 'v', 'Uz', 'w', 'UxUx', 'UxUy', 'uw', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'vw', 'AhAh', 'CcCc', 'UxUz', 'UyUz', 'UzT', 'UzA', 'UzC', 'wA', 'wC', 'wT', 'Ts_Av', 'Sws_Av', 'Ah_EC', 'q', 'e_HMP', 'RH_HMP', 'rho_a', 'rho_d', 'es_HMP', 'Ta_EC', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Rain']"  # uncomment to specify an optional variable list for submission of netCDF at L3 to OzFlux
+L3 = "['Fm', 'Fc_wpl', 'Fe_wpl', 'Fh_rv', 'Fg_Av', 'Fnr', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustarM', 'LM', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'theta', 'eta', 'Ux', 'u', 'Uy', 'v', 'Uz', 'w', 'UxUx', 'UxUy', 'uw', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'vw', 'AhAh', 'CcCc', 'UxUz', 'UyUz', 'UzT', 'UzA', 'UzC', 'wA', 'wC', 'wT', 'Ts_Av', 'Sws_Av', 'Ah_EC', 'q', 'e_HMP', 'RH_HMP', 'rho_a', 'rho_d', 'es_HMP', 'Ta_EC', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Rain']"
 
 [Variables]
 # Radiation
