@@ -10,17 +10,17 @@
 	<#if dsPagination.totalPages gt dsPagination.pageNo+4>
 		<#list dsPagination.pageNo-5..dsPagination.pageNo+4 as i>
 			<#if i == dsPagination.pageNo>
-				<span class="current">${i}</span>
+				<span class="current">${i?c}</span>
 			<#else>
-				<a href="${base}/${pageLink}${pageSuffix}<#if i gt 0>${i}</#if>">${i}</a>
+				<a href="${base}/${pageLink}${pageSuffix}<#if i gt 0>${i?c}</#if>">${i?c}</a>
 			</#if>
 		</#list>
 	<#else>
 		<#list dsPagination.totalPages-9..dsPagination.totalPages as i>
 			<#if i == dsPagination.pageNo>
-				<span class="current">${i}</span>
+				<span class="current">${i?c}</span>
 			<#else>
-				<a href="${base}/${pageLink}${pageSuffix}<#if i gt 0>${i}</#if>">${i}</a>
+				<a href="${base}/${pageLink}${pageSuffix}<#if i gt 0>${i?c}</#if>">${i?c}</a>
 			</#if>
 		</#list>
 	</#if>
@@ -28,17 +28,17 @@
 	<#if dsPagination.totalPages gt 10>
 		<#list 1..10 as i>
 			<#if i == dsPagination.pageNo>
-				<span class="current">${i}</span>
+				<span class="current">${i?c}</span>
 			<#else>
-				<a href="${base}/${pageLink}${pageSuffix}<#if i gt 0>${i}</#if>">${i}</a>
+				<a href="${base}/${pageLink}${pageSuffix}<#if i gt 0>${i?c}</#if>">${i?c}</a>
 			</#if>
 		</#list>
 	<#else>
 		<#list 1..dsPagination.totalPages as i>
 			<#if i == dsPagination.pageNo>
-				<span class="current">${i}</span>
+				<span class="current">${i?c}</span>
 			<#else>
-				<a href="${base}/${pageLink}${pageSuffix}<#if i gt 0>${i}</#if>">${i}</a>
+				<a href="${base}/${pageLink}${pageSuffix}<#if i gt 0>${i?c}</#if>">${i?c}</a>
 			</#if>
 		</#list>
 	</#if>
