@@ -27,19 +27,6 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
-import java.io.File;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-
 import au.edu.monash.merc.capture.config.SystemPropertiesConfigurer;
 import au.edu.monash.merc.capture.domain.AuditEvent;
 import au.edu.monash.merc.capture.domain.Avatar;
@@ -48,302 +35,317 @@ import au.edu.monash.merc.capture.domain.Profile;
 import au.edu.monash.merc.capture.dto.OrderBy;
 import au.edu.monash.merc.capture.dto.page.Pagination;
 import au.edu.monash.merc.capture.util.CaptureUtil;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import javax.annotation.PostConstruct;
+import java.io.File;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Scope("prototype")
 @Controller("admin.userProfileAction")
 public class UserProfileAction extends DMCoreAction {
 
-	Pagination<AuditEvent> eventPagination;
+    Pagination<AuditEvent> eventPagination;
 
-	Pagination<PermissionRequest> permReqPagination;
+    Pagination<PermissionRequest> permReqPagination;
 
-	private Profile profile;
+    private Profile profile;
 
-	private Logger logger = Logger.getLogger(this.getClass().getName());
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
-	protected static Map<String, String> countryMap = new LinkedHashMap<String, String>();
+    protected static Map<String, String> countryMap = new LinkedHashMap<String, String>();
 
-	protected static Map<String, String> genderMap = new LinkedHashMap<String, String>();
+    protected static Map<String, String> genderMap = new LinkedHashMap<String, String>();
 
-	@Autowired
-	@Qualifier("countryPropertyConfigurer")
-	private SystemPropertiesConfigurer countryPropertyConfigurer;
+    @Autowired
+    @Qualifier("countryPropertyConfigurer")
+    private SystemPropertiesConfigurer countryPropertyConfigurer;
 
-	@PostConstruct
-	public void initProp() {
-		setGenderMap();
-		setCountries();
-	}
+    @PostConstruct
+    public void initProp() {
+        setGenderMap();
+        setCountries();
+    }
 
-	public String showProfile() {
-		try {
-			user = retrieveLoggedInUser();
-			// profile = this.dmService.getUserProfile(user.getId());
-			profile = user.getProfile();
-			setNavForProfileSuccess();
-		} catch (Exception e) {
-			setNavForShowProfileExc();
-			addActionError(getText("get.user.profile.failed"));
-			return ERROR;
-		}
-		return SUCCESS;
-	}
+    public String showProfile() {
+        try {
+            user = retrieveLoggedInUser();
+            // profile = this.dmService.getUserProfile(user.getId());
+            profile = user.getProfile();
+            setNavForProfileSuccess();
+        } catch (Exception e) {
+            setNavForShowProfileExc();
+            addActionError(getText("get.user.profile.failed"));
+            return ERROR;
+        }
+        return SUCCESS;
+    }
 
-	private void setNavForShowProfileExc() {
-		String startNav = getText("user.display.home.action.title");
-		String startNavLink = ActConstants.DISPLAY_USER_HOME_ACTION;
-		String secondNav = getText("user.profile.action.title");
-		setPageTitle(secondNav + " Error");
-		navigationBar = generateNavLabel(startNav, startNavLink, secondNav, null, null, null);
-	}
+    private void setNavForShowProfileExc() {
+        String startNav = getText("user.display.home.action.title");
+        String startNavLink = ActConstants.DISPLAY_USER_HOME_ACTION;
+        String secondNav = getText("user.profile.action.title");
+        setPageTitle(secondNav + " Error");
+        navigationBar = generateNavLabel(startNav, startNavLink, secondNav, null, null, null);
+    }
 
-	private void setNavForProfileSuccess() {
-		String startNav = getText("user.display.home.action.title");
-		String startNavLink = ActConstants.DISPLAY_USER_HOME_ACTION;
-		String secondNav = getText("user.profile.action.title");
-		setPageTitle(secondNav);
-		navigationBar = generateNavLabel(startNav, startNavLink, secondNav, null, null, null);
-	}
+    private void setNavForProfileSuccess() {
+        String startNav = getText("user.display.home.action.title");
+        String startNavLink = ActConstants.DISPLAY_USER_HOME_ACTION;
+        String secondNav = getText("user.profile.action.title");
+        setPageTitle(secondNav);
+        navigationBar = generateNavLabel(startNav, startNavLink, secondNav, null, null, null);
+    }
 
-	private void reformatNewLines() {
-		if (!StringUtils.isBlank(profile.getContactDetails())) {
-			String contactDetails = nlToBr(profile.getContactDetails());
-			profile.setContactDetails(contactDetails);
-		}
-		if (!StringUtils.isBlank(profile.getInterests())) {
-			String interests = nlToBr(profile.getInterests());
-			profile.setInterests(interests);
-		}
-	}
+    private void reformatNewLines() {
+        if (!StringUtils.isBlank(profile.getContactDetails())) {
+            String contactDetails = nlToBr(profile.getContactDetails());
+            profile.setContactDetails(contactDetails);
+        }
+        if (!StringUtils.isBlank(profile.getInterests())) {
+            String interests = nlToBr(profile.getInterests());
+            profile.setInterests(interests);
+        }
+    }
 
-	private void postProcess() {
-		if (StringUtils.isBlank(profile.getGender())) {
-			profile.setGender("Male");
-		}
-		if (StringUtils.isBlank(profile.getCountry())) {
-			profile.setCountry("AU");
-		}
-	}
+    private void postProcess() {
+        if (StringUtils.isBlank(profile.getGender())) {
+            profile.setGender("Male");
+        }
+        if (StringUtils.isBlank(profile.getCountry())) {
+            profile.setCountry("AU");
+        }
+    }
 
-	public String showProfileUpdate() {
-		try {
-			user = retrieveLoggedInUser();
-			// profile = this.dmService.getUserProfile(user.getId());
-			profile = user.getProfile();
-			// post processing for populating the gender and countries
-			postProcess();
-		} catch (Exception e) {
-			addActionError(getText("get.user.profile.failed"));
-			return ERROR;
-		}
-		return SUCCESS;
-	}
+    public String showProfileUpdate() {
+        try {
+            user = retrieveLoggedInUser();
+            // profile = this.dmService.getUserProfile(user.getId());
+            profile = user.getProfile();
+            // post processing for populating the gender and countries
+            postProcess();
+        } catch (Exception e) {
+            addActionError(getText("get.user.profile.failed"));
+            return ERROR;
+        }
+        return SUCCESS;
+    }
 
-	public String updateProfile() {
-		try {
+    public String updateProfile() {
+        try {
 
-			user = retrieveLoggedInUser();
-			Profile oldProfile = user.getProfile(); // this.dmService.getUserProfile(user.getId());
-			Avatar avatar = user.getAvatar();
+            user = retrieveLoggedInUser();
+            Profile oldProfile = user.getProfile(); // this.dmService.getUserProfile(user.getId());
+            Avatar avatar = user.getAvatar();
 
-			// check avatar changes first, if any. just update the avatar, the following updating only applys for an
-			// user who never upload his avatar.
-			if (StringUtils.isNotBlank(profile.getGender()) && (!oldProfile.getGender().equalsIgnoreCase(profile.getGender()))) {
-				if (!avatar.isCustomized()) {
-					String avatarFile = null;
-					if (profile.getGender().equalsIgnoreCase("male")) {
-						avatarFile = "avatar" + File.separator + "male.png";
-					} else {
-						avatarFile = "avatar" + File.separator + "female.png";
-					}
-					avatar.setFileName(avatarFile);
-					this.dmService.updateAvatar(avatar);
-				}
-			}
+            // check avatar changes first, if any. just update the avatar, the following updating only applys for an
+            // user who never upload his avatar.
+            String gender = profile.getGender();
 
-			// start to update the profile.
-			oldProfile.setGender(profile.getGender());
+            //if Gender is not selected, just set male as default value
+            if (StringUtils.isBlank(gender)) {
+                profile.setGender("Male");
+            }
 
-			if (!StringUtils.isBlank(profile.getAddress())) {
-				oldProfile.setAddress(profile.getAddress());
-			}
-			if (!StringUtils.isBlank(profile.getCity())) {
-				oldProfile.setCity(profile.getCity());
-			}
-			if (!StringUtils.isBlank(profile.getState())) {
-				oldProfile.setState(profile.getState());
-			}
-			if (!StringUtils.isBlank(profile.getPostcode())) {
-				oldProfile.setPostcode(profile.getPostcode());
-			}
-			if (!StringUtils.isBlank(profile.getContactDetails())) {
-				oldProfile.setContactDetails(profile.getContactDetails());
-			}
-			if (!StringUtils.isBlank(profile.getCountry())) {
-				oldProfile.setCountry(profile.getCountry());
-			}
+            if (!avatar.isCustomized()) {
+                String avatarFile = null;
+                if (profile.getGender().equalsIgnoreCase("male")) {
+                    avatarFile = "avatar" + File.separator + "male.png";
+                } else {
+                    avatarFile = "avatar" + File.separator + "female.png";
+                }
+                avatar.setFileName(avatarFile);
+                this.dmService.updateAvatar(avatar);
+            }
 
-			if (!StringUtils.isBlank(profile.getOccupation())) {
-				oldProfile.setOccupation(profile.getOccupation());
-			}
-			if (!StringUtils.isBlank(profile.getIndustryField())) {
-				oldProfile.setIndustryField(profile.getIndustryField());
-			}
-			if (!StringUtils.isBlank(profile.getInterests())) {
-				oldProfile.setInterests(profile.getInterests());
-			}
-			if (!StringUtils.isBlank(profile.getOrganization())) {
-				oldProfile.setOrganization(profile.getOrganization());
-			}
+            // start to update the profile.
+            oldProfile.setGender(profile.getGender());
+            if (!StringUtils.isBlank(profile.getAddress())) {
+                oldProfile.setAddress(profile.getAddress());
+            }
+            if (!StringUtils.isBlank(profile.getCity())) {
+                oldProfile.setCity(profile.getCity());
+            }
+            if (!StringUtils.isBlank(profile.getState())) {
+                oldProfile.setState(profile.getState());
+            }
+            if (!StringUtils.isBlank(profile.getPostcode())) {
+                oldProfile.setPostcode(profile.getPostcode());
+            }
+            if (!StringUtils.isBlank(profile.getContactDetails())) {
+                oldProfile.setContactDetails(profile.getContactDetails());
+            }
+            if (!StringUtils.isBlank(profile.getCountry())) {
+                oldProfile.setCountry(profile.getCountry());
+            }
 
-			// update the profile.
-			this.dmService.updateProfile(oldProfile);
-			profile = oldProfile;
-			// reformat the display format for interests and contact details.
-			reformatNewLines();
-			// post processing for populating the gender and countries
-			postProcess();
-			// set navigation bar
-			setNavForUpdateProfileSuccess();
-		} catch (Exception e) {
-			logger.error(e);
-			// post processing for populating the gender and countries
-			setNavForUpdateProfileExc();
-			postProcess();
-			addActionError(getText("failed.to.update.user.profile"));
-			return ERROR;
-		}
-		return SUCCESS;
-	}
+            if (!StringUtils.isBlank(profile.getOccupation())) {
+                oldProfile.setOccupation(profile.getOccupation());
+            }
+            if (!StringUtils.isBlank(profile.getIndustryField())) {
+                oldProfile.setIndustryField(profile.getIndustryField());
+            }
+            if (!StringUtils.isBlank(profile.getInterests())) {
+                oldProfile.setInterests(profile.getInterests());
+            }
+            if (!StringUtils.isBlank(profile.getOrganization())) {
+                oldProfile.setOrganization(profile.getOrganization());
+            }
 
-	private void setNavForUpdateProfileExc() {
-		String startNav = getText("user.display.home.action.title");
-		String startNavLink = ActConstants.DISPLAY_USER_HOME_ACTION;
-		String secondNav = getText("user.profile.action.title");
-		setPageTitle(secondNav + " Updating Error");
-		navigationBar = generateNavLabel(startNav, startNavLink, secondNav, null, null, null);
-	}
+            // update the profile.
+            this.dmService.updateProfile(oldProfile);
+            profile = oldProfile;
+            // reformat the display format for interests and contact details.
+            reformatNewLines();
+            // post processing for populating the gender and countries
+            postProcess();
+            // set navigation bar
+            setNavForUpdateProfileSuccess();
+        } catch (Exception e) {
+            logger.error(e);
+            // post processing for populating the gender and countries
+            setNavForUpdateProfileExc();
+            postProcess();
+            addActionError(getText("failed.to.update.user.profile"));
+            return ERROR;
+        }
+        return SUCCESS;
+    }
 
-	private void setNavForUpdateProfileSuccess() {
-		String startNav = getText("user.display.home.action.title");
-		String startNavLink = ActConstants.DISPLAY_USER_HOME_ACTION;
-		String secondNav = getText("user.profile.action.title");
-		setPageTitle(secondNav);
-		navigationBar = generateNavLabel(startNav, startNavLink, secondNav, null, null, null);
-	}
+    private void setNavForUpdateProfileExc() {
+        String startNav = getText("user.display.home.action.title");
+        String startNavLink = ActConstants.DISPLAY_USER_HOME_ACTION;
+        String secondNav = getText("user.profile.action.title");
+        setPageTitle(secondNav + " Updating Error");
+        navigationBar = generateNavLabel(startNav, startNavLink, secondNav, null, null, null);
+    }
 
-	public void validateUpdateProfile() {
-		if (!CaptureUtil.notGTFixedLength(profile.getContactDetails(), 1000)) {
-			addFieldError("contactDetails", getText("profile.contact.details.length.too.long"));
-		}
-		if (!CaptureUtil.notGTFixedLength(profile.getInterests(), 1000)) {
-			addFieldError("interests", getText("profile.user.interests.length.too.long"));
-		}
-		postProcess();
-	}
+    private void setNavForUpdateProfileSuccess() {
+        String startNav = getText("user.display.home.action.title");
+        String startNavLink = ActConstants.DISPLAY_USER_HOME_ACTION;
+        String secondNav = getText("user.profile.action.title");
+        setPageTitle(secondNav);
+        navigationBar = generateNavLabel(startNav, startNavLink, secondNav, null, null, null);
+    }
 
-	public String displayUserHome() {
+    public void validateUpdateProfile() {
+        if (!CaptureUtil.notGTFixedLength(profile.getContactDetails(), 1000)) {
+            addFieldError("contactDetails", getText("profile.contact.details.length.too.long"));
+        }
+        if (!CaptureUtil.notGTFixedLength(profile.getInterests(), 1000)) {
+            addFieldError("interests", getText("profile.user.interests.length.too.long"));
+        }
+        postProcess();
+    }
 
-		try {
-			user = retrieveLoggedInUser();
-			// profile = this.dmService.getUserProfile(user.getId());
-			profile = user.getProfile();
+    public String displayUserHome() {
 
-			// get permissions requests
-			permReqPagination = this.dmService.getPermRequestsByPages(user.getId(), 1, 10, orderByDescTime("requestTime"));
+        try {
+            user = retrieveLoggedInUser();
+            // profile = this.dmService.getUserProfile(user.getId());
+            profile = user.getProfile();
 
-			eventPagination = this.dmService.getEventByUserId(user.getId(), 1, 10, orderByDescTime("createdTime"));
+            // get permissions requests
+            permReqPagination = this.dmService.getPermRequestsByPages(user.getId(), 1, 10, orderByDescTime("requestTime"));
 
-			// reformat the display format for interests and contact details.
-			reformatNewLines();
-			// post processing for populating the gender and countries
-			setNavAfterSuccess();
-		} catch (Exception e) {
-			logger.error(e);
-			addActionError(getText("view.user.home.failed"));
-			setNavAfterExc();
-			return INPUT;
-		}
-		return SUCCESS;
-	}
+            eventPagination = this.dmService.getEventByUserId(user.getId(), 1, 10, orderByDescTime("createdTime"));
 
-	protected OrderBy[] orderByDescTime(String orderName) {
-		return new OrderBy[] { OrderBy.desc(orderName) };
-	}
+            // reformat the display format for interests and contact details.
+            reformatNewLines();
+            // post processing for populating the gender and countries
+            setNavAfterSuccess();
+        } catch (Exception e) {
+            logger.error(e);
+            addActionError(getText("view.user.home.failed"));
+            setNavAfterExc();
+            return INPUT;
+        }
+        return SUCCESS;
+    }
 
-	private void setGenderMap() {
-		if (genderMap == null || genderMap.size() == 0) {
-			genderMap.put("Male", "Male");
-			genderMap.put("Female", "Female");
-		}
-	}
+    protected OrderBy[] orderByDescTime(String orderName) {
+        return new OrderBy[]{OrderBy.desc(orderName)};
+    }
 
-	private void setCountries() {
-		if (countryMap == null || countryMap.size() == 0) {
-			Map<String, String> cMp = this.countryPropertyConfigurer.getResolvedProps();
-			countryMap = CaptureUtil.sortByValue(cMp);
-		}
-	}
+    private void setGenderMap() {
+        if (genderMap == null || genderMap.size() == 0) {
+            genderMap.put("Male", "Male");
+            genderMap.put("Female", "Female");
+        }
+    }
 
-	private void setNavAfterSuccess() {
-		String startNav = getText("user.display.home.action.title");
-		String startNavLink = ActConstants.DISPLAY_USER_HOME_ACTION;
-		setPageTitle(startNav);
-		navigationBar = generateNavLabel(startNav, startNavLink, null, null, null, null);
-	}
+    private void setCountries() {
+        if (countryMap == null || countryMap.size() == 0) {
+            Map<String, String> cMp = this.countryPropertyConfigurer.getResolvedProps();
+            countryMap = CaptureUtil.sortByValue(cMp);
+        }
+    }
 
-	private void setNavAfterExc() {
-		String startNav = getText("user.display.home.action.title");
-		setPageTitle(startNav + " Error");
-		navigationBar = generateNavLabel(startNav, null, null, null, null, null);
-	}
+    private void setNavAfterSuccess() {
+        String startNav = getText("user.display.home.action.title");
+        String startNavLink = ActConstants.DISPLAY_USER_HOME_ACTION;
+        setPageTitle(startNav);
+        navigationBar = generateNavLabel(startNav, startNavLink, null, null, null, null);
+    }
 
-	public Pagination<AuditEvent> getEventPagination() {
-		return eventPagination;
-	}
+    private void setNavAfterExc() {
+        String startNav = getText("user.display.home.action.title");
+        setPageTitle(startNav + " Error");
+        navigationBar = generateNavLabel(startNav, null, null, null, null, null);
+    }
 
-	public void setEventPagination(Pagination<AuditEvent> eventPagination) {
-		this.eventPagination = eventPagination;
-	}
+    public Pagination<AuditEvent> getEventPagination() {
+        return eventPagination;
+    }
 
-	public Pagination<PermissionRequest> getPermReqPagination() {
-		return permReqPagination;
-	}
+    public void setEventPagination(Pagination<AuditEvent> eventPagination) {
+        this.eventPagination = eventPagination;
+    }
 
-	public void setPermReqPagination(Pagination<PermissionRequest> permReqPagination) {
-		this.permReqPagination = permReqPagination;
-	}
+    public Pagination<PermissionRequest> getPermReqPagination() {
+        return permReqPagination;
+    }
 
-	public Profile getProfile() {
-		return profile;
-	}
+    public void setPermReqPagination(Pagination<PermissionRequest> permReqPagination) {
+        this.permReqPagination = permReqPagination;
+    }
 
-	public void setProfile(Profile profile) {
-		this.profile = profile;
-	}
+    public Profile getProfile() {
+        return profile;
+    }
 
-	public SystemPropertiesConfigurer getCountryPropertyConfigurer() {
-		return countryPropertyConfigurer;
-	}
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
 
-	public void setCountryPropertyConfigurer(SystemPropertiesConfigurer countryPropertyConfigurer) {
-		this.countryPropertyConfigurer = countryPropertyConfigurer;
-	}
+    public SystemPropertiesConfigurer getCountryPropertyConfigurer() {
+        return countryPropertyConfigurer;
+    }
 
-	public Map<String, String> getCountryMap() {
-		return countryMap;
-	}
+    public void setCountryPropertyConfigurer(SystemPropertiesConfigurer countryPropertyConfigurer) {
+        this.countryPropertyConfigurer = countryPropertyConfigurer;
+    }
 
-	public void setCountryMap(Map<String, String> countryMap) {
-		UserProfileAction.countryMap = countryMap;
-	}
+    public Map<String, String> getCountryMap() {
+        return countryMap;
+    }
 
-	public Map<String, String> getGenderMap() {
-		return genderMap;
-	}
+    public void setCountryMap(Map<String, String> countryMap) {
+        UserProfileAction.countryMap = countryMap;
+    }
 
-	public void setGenderMap(Map<String, String> genderMap) {
-		UserProfileAction.genderMap = genderMap;
-	}
+    public Map<String, String> getGenderMap() {
+        return genderMap;
+    }
+
+    public void setGenderMap(Map<String, String> genderMap) {
+        UserProfileAction.genderMap = genderMap;
+    }
 
 }
