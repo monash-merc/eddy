@@ -1736,7 +1736,7 @@ def get_stomatalresistance(cf,ds,Level):
     Uavg[uindex] = 0.000000000000001
     rav = mf.aerodynamicresistance(Uavg,Ce)
     rav[uindex] = numpy.float64(-9999)
-    rst = ((((((delta * (Fnr - Fg)) + (c.rho_water * Cpm * (VPD / ((Lv / 1000) * rav)))) / (Fe / (Lv / 1000))) - delta) / gamma) - 1) * rav
+    rst = ((((((delta * (Fnr - Fg) / (Lv / 1000)) + (c.rho_water * Cpm * (VPD / ((Lv / 1000) * rav)))) / (Fe / (Lv / 1000))) - delta) / gamma) - 1) * rav
     rst[uindex] = numpy.float64(-9999)
     Gst = (1 / rst) * (Ah * 1000) / 18
     Gst[uindex] = numpy.float64(-9999)
