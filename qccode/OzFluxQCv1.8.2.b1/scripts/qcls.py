@@ -416,6 +416,9 @@ def l3qc(cf,ds2):
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'gaps' in cf['General']['FunctionList']:
         qcck.gaps(cf,ds3)
     
+# coordinate gaps in Ah_7500_Av with Fc_wpl
+    qcck.do_Ah7500check(cf,ds3)
+    
     qcutils.GetSeriesStats(cf,ds3)
     return ds3
 

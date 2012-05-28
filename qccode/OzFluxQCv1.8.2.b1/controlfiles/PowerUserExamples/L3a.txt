@@ -47,6 +47,7 @@ PMcritFsd = 10  # Fsd flux greater than or equal to this value to keep rst
 # Default PMin = "['Fe_wpl', 'Ta_EC', 'Ah_EC', 'ps', 'Ws_CSAT', 'Fnr', 'Fsd', 'Fg']"
 # Default PMcritFe = 0  # Fe flux greater than or equal to this value to keep rst
 # Default PMcritFsd = 10  # Fsd flux greater than or equal to this value to keep rst
+# Default AhcheckFc = "['Fc_wpl']"
 
 [Massman]
 zmd = 7.3  # instrument height above displacement plane, d = 2 / 3 * h = 4.3, h = 6.5, z = 11.635 m
