@@ -409,7 +409,7 @@ def CalculateFluxes_Unrotated(ds):
     else:
         log.error('  CalculateFluxes_Unrotated: UxUz not found in ds.series, Fm and ustar not calculated')
 
-def CalculateFluxesRM(ds):
+def CalculateFluxesRM(ds,Ta_in,Ah_in,ps_in):
     """
         Calculate the fluxes from the rotated and Massman corrected covariances.
         
@@ -423,9 +423,9 @@ def CalculateFluxesRM(ds):
     log.info(' Calculating fluxes from covariances')
     if 'wTM' in ds.series.keys():
         wT,f = qcutils.GetSeriesasMA(ds,'wTM')
-        Ta,f = qcutils.GetSeriesasMA(ds,'Ta_HMP')
-        ps,f = qcutils.GetSeriesasMA(ds,'ps')
-        Ah,f = qcutils.GetSeriesasMA(ds,'Ah_HMP')
+        Ta,f = qcutils.GetSeriesasMA(ds,Ta_in)
+        ps,f = qcutils.GetSeriesasMA(ds,ps_in)
+        Ah,f = qcutils.GetSeriesasMA(ds,Ah_in)
         if 'rhom' in ds.series.keys():
             rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
         else:
@@ -1092,7 +1092,7 @@ def do_attributes(cf,ds):
         ds.globalattributes['Flag40'] = 'Partitioning: Night Re computed from exponential temperature response curves'
         ds.globalattributes['Flag41'] = 'Partitioning: Day GPP/Re computed from light-response curves, GPP = Re - Fc'
         ds.globalattributes['Flag42'] = 'Partitioning: GPP night mask'
-        ds.globalattributes['Flag43'] = 'Partitioning: Fc > Re, GPP = 0, Re = Fc'
+        ds.globalattributes['Flag43'] = 'Partitioning: Day Fc > Re, GPP = 0, Re = Fc'
     for ThisOne in ds.series.keys():
         if ThisOne in cf['Variables']:
             if 'Attr' in cf['Variables'][ThisOne].keys():

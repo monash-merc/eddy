@@ -132,7 +132,7 @@ def l3qc(cf,ds2):
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList'):
         l3functions = ast.literal_eval(cf['General']['FunctionList'])
     else:
-        l3functions = ['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'Fe_WPL', 'Fc_WPL', 'MergeSeriesFsd', 'CalculateNetRadiation', 'MergeSeriesFn', 'AverageSeriesByElements', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks']
+        l3functions = ['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'Fe_WPL', 'Fc_WPL', 'CalculateNetRadiation', 'MergeSeriesFn', 'AverageSeriesByElements', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks']
     ds3.globalattributes['Functions'] = l3functions
     # add relevant meteorological values to L3 data
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'AddMetVars' in cf['General']['FunctionList']:
@@ -206,7 +206,12 @@ def l3qc(cf,ds2):
     
     # calculate the fluxes from covariances
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'Massman' in cf['General']['FunctionList']:
-        qcts.CalculateFluxesRM(ds3)
+        if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='CF'):
+            args = ast.literal_eval(cf['FunctionArgs']['CF'])
+        else:
+            args = ['Ta_HMP','Ah_HMP','ps']
+        
+        qcts.CalculateFluxesRM(ds3,args[0],args[1],args[2])
     
     # approximate wT from virtual wT using wA (ref: Campbell OPECSystem manual)
     if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='FhvtoFhArgs'):
@@ -389,7 +394,11 @@ def l3qc(cf,ds2):
     
     # calculate the available energy
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'CalculateAvailableEnergy' in cf['General']['FunctionList']:
-        qcts.CalculateAvailableEnergy(ds3,'Fa','Fn','Fg')
+        if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='Avail'):
+            arg = ast.literal_eval(cf['FunctionArgs']['Avail'])
+        else:
+            args = ['Fa','Fn','Fg']
+        qcts.CalculateAvailableEnergy(ds3,args[0],args[1],args[2])
     
     # combine wind speed from the CSAT and the Wind Sentry
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'MergeSeriesWS' in cf['General']['FunctionList']:
