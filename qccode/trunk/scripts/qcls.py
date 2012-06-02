@@ -1,5 +1,5 @@
 """
-    OzFlux QC v1.8.2.b1 6 Apr 2012;
+    OzFlux QC v1.9.b1 2 Jun 2012;
 
     Version History:
     <<v1.0: 21 July 2011, code diversion reconciliation>>
@@ -17,6 +17,7 @@
     <<v1.8.1 19 Mar 2012, rst from Penman-Monteith inversion added to L3 & L4>>
     <<v1.8.2 19 Mar 2012, rst from Penman-Monteith inversion tested ok ASM L3 & L4>>
     <<v1.8.2.b1 6 Apr 2012, beta-version release>>
+    <<v1.9.b1 2 June 2012, OzFlux pre-workshop beta release>>
 """
 
 import sys
@@ -133,21 +134,21 @@ def l3qc(cf,ds2):
     else:
         l3functions = ['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'Fe_WPL', 'Fc_WPL', 'MergeSeriesFsd', 'CalculateNetRadiation', 'MergeSeriesFn', 'AverageSeriesByElements', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks']
     ds3.globalattributes['Functions'] = l3functions
-# add relevant meteorological values to L3 data
+    # add relevant meteorological values to L3 data
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'AddMetVars' in cf['General']['FunctionList']:
         log.info(' Adding standard met variables to database')
         qcts.AddMetVars(ds3)
     
-# correct measured soil water content using empirical relationship to collected samples
+    # correct measured soil water content using empirical relationship to collected samples
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'CorrectSWC' in cf['General']['FunctionList']:
         log.info(' Correcting soil moisture data ...')
         qcts.CorrectSWC(cf,ds3)
     
-# apply linear corrections to the data
+    # apply linear corrections to the data
     log.info(' Applying linear corrections ...')
     qcck.do_linear(cf,ds3)
     
-# merge the HMP and corrected 7500 data
+    # merge the HMP and corrected 7500 data
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'MergeSeriesAh' in cf['General']['FunctionList']:
         if qcutils.cfkeycheck(cf,ThisOne='Ah_EC',key='MergeSeries') and 'Source' in cf['Variables']['Ah_EC']['MergeSeries'].keys():
             arg = ast.literal_eval(cf['Variables']['Ah_EC']['MergeSeries']['Source'])
@@ -161,7 +162,7 @@ def l3qc(cf,ds2):
         if len(srclist) > 0:
             qcts.MergeSeries(ds3,'Ah_EC',srclist,[0,10])
     
-# get the air temperature from the CSAT virtual temperature
+    # get the air temperature from the CSAT virtual temperature
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'TaFromTv' in cf['General']['FunctionList']:
         if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='Ta2Tv'):
             args = ast.literal_eval(cf['FunctionArgs']['Ta2Tv'])
@@ -170,7 +171,7 @@ def l3qc(cf,ds2):
         
         qcts.TaFromTv(ds3,args[0],args[1],args[2],args[3])
     
-# merge the HMP and corrected CSAT data
+    # merge the HMP and corrected CSAT data
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'MergeSeriesTa' in cf['General']['FunctionList']:
         if qcutils.cfkeycheck(cf,ThisOne='Ta_EC',key='MergeSeries') and 'Source' in cf['Variables']['Ta_EC']['MergeSeries'].keys():
             arg = ast.literal_eval(cf['Variables']['Ta_EC']['MergeSeries']['Source'])
@@ -184,7 +185,7 @@ def l3qc(cf,ds2):
         if len(srclist) > 0:
             qcts.MergeSeries(ds3,'Ta_EC',srclist,[0,10])
     
-# do the 2D coordinate rotation
+    # do the 2D coordinate rotation
     qcts.CoordRotation2D(cf,ds3)
     
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'Massman' in cf['General']['FunctionList']:
@@ -194,7 +195,7 @@ def l3qc(cf,ds2):
         # do the Massman frequency attenuation correction
         qcts.Massman(cf,ds3)
     
-# calculate the fluxes
+    # calculate the fluxes
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'Massman' not in cf['General']['FunctionList']:
         if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='CF'):
             args = ast.literal_eval(cf['FunctionArgs']['CF'])
@@ -203,11 +204,11 @@ def l3qc(cf,ds2):
         
         qcts.CalculateFluxes(ds3,args[0],args[1],args[2])
     
-# calculate the fluxes from covariances
+    # calculate the fluxes from covariances
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'Massman' in cf['General']['FunctionList']:
         qcts.CalculateFluxesRM(ds3)
     
-# approximate wT from virtual wT using wA (ref: Campbell OPECSystem manual)
+    # approximate wT from virtual wT using wA (ref: Campbell OPECSystem manual)
     if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='FhvtoFhArgs'):
         attr = ast.literal_eval(cf['FunctionArgs']['FhvtoFhattr'])
         args = ast.literal_eval(cf['FunctionArgs']['FhvtoFhArgs'])
@@ -217,7 +218,7 @@ def l3qc(cf,ds2):
         args = ['Ta_EC','Fh','Tv_CSAT','Fe_raw','ps','Ah_EC','Fh_rv']
         qcts.FhvtoFh(ds3,args[0],args[1],args[2],args[3],args[4],args[5],args[6],attr)
     
-# correct the H2O & CO2 flux due to effects of flux on density measurements
+    # correct the H2O & CO2 flux due to effects of flux on density measurements
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'Massman' not in cf['General']['FunctionList']:
         qcts.Fe_WPL(ds3,'Fe_wpl','Fe_raw','Fh_rv','Ta_EC','Ah_EC','ps')
         qcts.Fc_WPL(ds3,'Fc_wpl','Fc_raw','Fh_rv','Fe_wpl','Ta_EC','Ah_EC','Cc_7500_Av','ps')
@@ -225,13 +226,13 @@ def l3qc(cf,ds2):
         qcts.Fe_WPLcov(ds3,'Fe_wpl','wAM','Fh_rmv','Ta_HMP','Ah_HMP','ps')
         qcts.Fc_WPLcov(ds3,'Fc_wpl','wCM','Fh_rmv','wAwpl','Ta_HMP','Ah_HMP','Cc_7500_Av','ps')
     
-# calculate the net radiation from the Kipp and Zonen CNR1
+    # calculate the net radiation from the Kipp and Zonen CNR1
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'CalculateNetRadiation' in cf['General']['FunctionList']:
         srclist = qcutils.GetMergeList(cf,'Fsd',default=['Fsd'])
         qcts.MergeSeries(ds3,'Fsd',srclist,[0,10])
         qcts.CalculateNetRadiation(ds3,'Fn_KZ','Fsd','Fsu','Fld','Flu')
     
-# combine the net radiation from the Kipp and Zonen CNR1 and the NRlite
+    # combine the net radiation from the Kipp and Zonen CNR1 and the NRlite
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'MergeSeriesFn' in cf['General']['FunctionList']:
         if qcutils.cfkeycheck(cf,ThisOne='Fn',key='MergeSeries') and 'Source' in cf['Variables']['Fn']['MergeSeries'].keys():
             arg = ast.literal_eval(cf['Variables']['Fn']['MergeSeries']['Source'])
@@ -245,14 +246,14 @@ def l3qc(cf,ds2):
         if len(srclist) > 0:
             qcts.MergeSeries(ds3,'Fn',srclist,[0,10])
     
-# interpolate over missing soil moisture values
+    # interpolate over missing soil moisture values
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'InterpolateOverMissing' in cf['General']['FunctionList']:
         if qcutils.cfkeycheck(cf,Base='FunctionArgs', ThisOne='IOM'):
             qcts.InterpolateOverMissing(ds3,series=ast.literal_eval(cf,['FunctionArgs']['IOM']))
         else:
             qcts.InterpolateOverMissing(ds3,series=ast.literal_eval(cf,['FunctionArgs']['IOM']))
     
-# average soil measurements before correcting for storage above sensors
+    # average soil measurements before correcting for storage above sensors
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'PreCorrectSoilAverage' in cf['General']['FunctionList']:
     # average the soil heat flux data
         if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='ASBEFg'):
@@ -308,7 +309,7 @@ def l3qc(cf,ds2):
         if len(srclist) > 0:
             qcts.AverageSeriesByElements(ds3,outvar,srclist)
         
-# correct the measured soil heat flux for storage in the soil layer above the sensor
+    # correct the measured soil heat flux for storage in the soil layer above the sensor
     if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='CFg1Args'):
         args = ast.literal_eval(cf['FunctionArgs']['CFg1Args'])
     else:
@@ -330,7 +331,7 @@ def l3qc(cf,ds2):
         else:
             qcts.CorrectFgForStorage(cf,ds3,args[0],args[1],args[2])
     
-# average soil measurements after correcting for storage above sensors
+    # average soil measurements after correcting for storage above sensors
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'PostCorrectSoilAverage' in cf['General']['FunctionList']:
         if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='ASBEFg'):
             outvar = ast.literal_eval(cf['FunctionArgs']['ASBEFg'])
@@ -386,11 +387,11 @@ def l3qc(cf,ds2):
             qcts.AverageSeriesByElements(ds3,outvar,srclist)
         
     
-# calculate the available energy
+    # calculate the available energy
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'CalculateAvailableEnergy' in cf['General']['FunctionList']:
         qcts.CalculateAvailableEnergy(ds3,'Fa','Fn','Fg')
     
-# combine wind speed from the CSAT and the Wind Sentry
+    # combine wind speed from the CSAT and the Wind Sentry
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'MergeSeriesWS' in cf['General']['FunctionList']:
         if qcutils.cfkeycheck(cf,ThisOne='Ws_EC',key='MergeSeries') and 'Source' in cf['Variables']['Ws_EC']['MergeSeries'].keys():
             arg = ast.literal_eval(cf['Variables']['Ws_EC']['MergeSeries']['Source'])
@@ -404,17 +405,20 @@ def l3qc(cf,ds2):
         if len(srclist) > 0:
             qcts.MergeSeries(ds3,'Ws_EC',srclist,[0,10])
     
-# calculate bulk stomatal resistance from Penman-Monteith inversion using bulk transfer coefficient (Stull 1988)
+    # calculate bulk stomatal resistance from Penman-Monteith inversion using bulk transfer coefficient (Stull 1988)
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'rstFromPenmanMonteith' in cf['General']['FunctionList']:
         Level = ds3.globalattributes['Level']
         qcts.get_stomatalresistance(cf,ds3,Level)
     
-# re-apply the quality control checks (range, diurnal and rules)
+    # re-apply the quality control checks (range, diurnal and rules)
     qcck.do_qcchecks(cf,ds3)
     
-# coordinate gaps in the three main fluxes
+    # coordinate gaps in the three main fluxes
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'gaps' in cf['General']['FunctionList']:
         qcck.gaps(cf,ds3)
+    
+    # coordinate gaps in Ah_7500_Av with Fc_wpl
+    qcck.do_Ah7500check(cf,ds3)
     
     qcutils.GetSeriesStats(cf,ds3)
     return ds3

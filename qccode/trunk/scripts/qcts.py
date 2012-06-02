@@ -621,6 +621,20 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
                 CIn = ast.literal_eval(cf['Sums']['Cin'])
             else:
                 CIn = ['Fc']
+            
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='GPPin'):
+                GPPIn = ast.literal_eval(cf['Sums']['GPPin'])
+                GPP,f = qcutils.GetSeriesasMA(ds,GPPIn[0])
+                Re,f = qcutils.GetSeriesasMA(ds,GPPIn[1])
+                GPP_mmol = GPP * 1800 / 1000
+                Re_mmol = Re * 1800 / 1000
+                qcutils.CreateSeries(ds,'GPP_mmol',GPP_mmol,FList=[GPPIn[0]],Descr='Cumulative 30-min GPP',Units='mmol/m2')
+                qcutils.CreateSeries(ds,'Re_mmol',Re_mmol,FList=[GPPIn[1]],Descr='Cumulative 30-min Re',Units='mmol/m2')
+                GPPOut = ['GPP_mmol','Re_mmol']
+                for listindex in range(0,2):
+                    OutList.append(GPPOut[listindex])
+                    SumOutList.append(GPPOut[listindex])
+            
             Fc,f = qcutils.GetSeriesasMA(ds,CIn[0])
             Fc_umol = Fc * 1e6 / (1000 * 44)               # umol/m2-s for min/max
             Fc_mmol = Fc_umol * 1800 / 1000                # mmol/m2-30min for summing
@@ -1075,6 +1089,10 @@ def do_attributes(cf,ds):
         ds.globalattributes['Flag33'] = 'Penman-Monteith: bad Fe < threshold (0 W/m2 default) only if bad Fsd (34) flag not set'
         ds.globalattributes['Flag34'] = 'Penman-Monteith: bad Fsd < threshold (10 W/m2 default)'
         ds.globalattributes['Flag35'] = 'Penman-Monteith: Uavg == 0 (undefined aerodynamic resistance under calm conditions) only if bad Fe (33) and bad Fsd (34) flags not set'
+        ds.globalattributes['Flag40'] = 'Partitioning: Night Re computed from exponential temperature response curves'
+        ds.globalattributes['Flag41'] = 'Partitioning: Day GPP/Re computed from light-response curves, GPP = Re - Fc'
+        ds.globalattributes['Flag42'] = 'Partitioning: GPP night mask'
+        ds.globalattributes['Flag43'] = 'Partitioning: Fc > Re, GPP = 0, Re = Fc'
     for ThisOne in ds.series.keys():
         if ThisOne in cf['Variables']:
             if 'Attr' in cf['Variables'][ThisOne].keys():
@@ -1710,7 +1728,7 @@ def get_stomatalresistance(cf,ds,Level):
     if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
         PMin = ast.literal_eval(cf['FunctionArgs']['PMin'])
     else:
-        PMin = ['Fe_wpl', 'Ta_EC', 'Ah_EC', 'ps', 'Ws_EC', 'Fnr', 'Fsd']
+        PMin = ['Fe_wpl', 'Ta_EC', 'Ah_EC', 'ps', 'Ws_EC', 'Fnr', 'Fsd', 'Fg']
     
     if 'Lv' not in ds.series.keys():
         AddMetVars(ds)
@@ -1721,6 +1739,7 @@ def get_stomatalresistance(cf,ds,Level):
     Uavg,f = qcutils.GetSeriesasMA(ds,PMin[4])
     Fnr,f = qcutils.GetSeriesasMA(ds,PMin[5])
     Fsd,f = qcutils.GetSeriesasMA(ds,PMin[6])
+    Fg,f = qcutils.GetSeriesasMA(ds,PMin[7])
     VPD,f = qcutils.GetSeriesasMA(ds,'VPD')
     Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
     q,f = qcutils.GetSeriesasMA(ds,'q')
@@ -1735,7 +1754,7 @@ def get_stomatalresistance(cf,ds,Level):
     Uavg[uindex] = 0.000000000000001
     rav = mf.aerodynamicresistance(Uavg,Ce)
     rav[uindex] = numpy.float64(-9999)
-    rst = ((((((delta * Fnr) + (c.rho_water * Cpm * (VPD / ((Lv / 1000) * rav)))) / (Fe / (Lv / 1000))) - delta) / gamma) - 1) * rav
+    rst = ((((((delta * (Fnr - Fg) / (Lv / 1000)) + (c.rho_water * Cpm * (VPD / ((Lv / 1000) * rav)))) / (Fe / (Lv / 1000))) - delta) / gamma) - 1) * rav
     rst[uindex] = numpy.float64(-9999)
     Gst = (1 / rst) * (Ah * 1000) / 18
     Gst[uindex] = numpy.float64(-9999)
@@ -2614,6 +2633,26 @@ def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoMean
             xlRow = xlRow + 1
             if ThisOne == 'rst' or ThisOne == 'Gst' or ThisOne == 'Gst_mol':
                 di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day) & (ds.series[ThisOne]['Flag'] < 32))[0]
+                ti = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day))[0]
+                nRecs = len(ti)
+                check = numpy.ma.empty(nRecs,str)
+                for i in range(nRecs):
+                    index = ti[i]
+                    check[i] = ds.series['Day']['Data'][index]
+                if len(check) < 48:
+                    di = []
+            elif ThisOne == 'GPP' or ThisOne == 'GPP_mmol':
+                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day) & ((ds.series[ThisOne]['Flag'] != 22) & (ds.series[ThisOne]['Flag'] != 42)))[0]
+                ti = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day))[0]
+                nRecs = len(ti)
+                check = numpy.ma.empty(nRecs,str)
+                for i in range(nRecs):
+                    index = ti[i]
+                    check[i] = ds.series['Day']['Data'][index]
+                if len(check) < 48:
+                    di = []
+            elif ThisOne == 'Re_mmol':
+                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day) & ((ds.series[ThisOne]['Flag'] == 0) | (ds.series[ThisOne]['Flag'] > 39)))[0]
                 ti = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day))[0]
                 nRecs = len(ti)
                 check = numpy.ma.empty(nRecs,str)

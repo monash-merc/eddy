@@ -45,6 +45,24 @@ def do_7500check(cf,ds):
         else:
             log.error('  qcck.do_7500check: series '+str(ThisOne)+' in LI75List not found in ds.series')
 
+def do_Ah7500check(cf,ds):
+    '''Cleans up Ah_7500_Av based upon Fc_wpl gaps to for QA check on Ah_7500_Av v Ah_HMP.'''
+    log.info(' Doing the Ah_7500 check')
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='FunctionArgs',key='AhcheckFc'):
+        Fcvar = ast.literal_eval(cf['FunctionArgs']['AhcheckFc'])
+    else:
+        Fcvar = ['Fc_wpl']
+    
+    # index1  Index of bad Ah_7500_Av observations
+    index1 = numpy.where((ds.series['Ah_7500_Av']['Flag']!=0) & (ds.series['Ah_7500_Av']['Flag']!=10))
+    
+    # index2  Index of bad Fc observations
+    index2 = numpy.where((ds.series[Fcvar[0]]['Flag']!=0) & (ds.series[Fcvar[0]]['Flag']!=10))
+    
+    ds.series['Ah_7500_Av']['Data'][index2] = numpy.float64(-9999)
+    ds.series['Ah_7500_Av']['Flag'][index2] = ds.series[Fcvar[0]]['Flag'][index2]
+    ds.series['Ah_7500_Av']['Flag'][index1] = ds.series['Ah_7500_Av']['Flag'][index1]
+
 def do_CSATcheck(cf,ds):
     '''Rejects data values for series specified in CSATList for times when the Diag_CSAT
        flag is non-zero.  If the Diag_CSAT flag is not present in the data structure passed

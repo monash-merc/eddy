@@ -960,3 +960,31 @@ netCDFv3 = False
         [[[Attr]]]
             Description = "Rainfall, 30 minute total"
             Units    = "mm"
+    [[Re_night]]
+        [[[xl]]]
+            Sheet    = Data
+            Name     = Re_night
+        [[[Attr]]]
+            Description = "Nocturnal carbon flux gapfilled using modelled from Q10 response curve binned by soil volumetric moisture content"
+            Units    = "umol/(m2 s)"
+    [[Re_day]]
+        [[[xl]]]
+            Sheet    = Data
+            Name     = Re_day
+        [[[Attr]]]
+            Description = "Diurnal ecosystem respiration from temperature and intercept of light response curve binned by temperature class"
+            Units    = "umol/(m2 s)"
+    [[Re_umol]]
+        [[[xl]]]
+            Sheet    = Data
+            Name     = Re_umol
+        [[[Attr]]]
+            Description = "Ecosystem respiration gapfilled using modelled from Q10 response curve binned by soil volumetric moisture content class (night) and intercept of light response curve binned by temperature class (day)"
+            Units    = "umol/(m2 s)"
+    [[GPP]]
+        [[[xl]]]
+            Sheet    = Data
+            Name     = GPP
+        [[[Attr]]]
+            Description = "Gross primary production, determined as Re - Fc (day)"
+            Units    = "umol/(m2 s)"

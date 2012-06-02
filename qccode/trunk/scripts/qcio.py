@@ -35,7 +35,7 @@ def autoxl2nc(cf,InLevel,OutLevel):
     if InLevel == 'L1':
         qcts.get_qcflag(ds)
     # get the flags from gap filled 'L3' or 'L4' Excel file
-    if InLevel == 'L2' or InLevel == 'L3' or InLevel == 'L4':
+    if InLevel != 'L1':
         VariablesInFile = ds.series.keys()
         for ThisOne in ['xlDateTime','Gap','Year','Month','Day','Hour','Minute','Second','Hdh']:
             if ThisOne in VariablesInFile:
@@ -427,6 +427,14 @@ def xl_write_series(cf,ds,level):
     xlFlagSheet.write(3,xlCol+9,ds.globalattributes['Flag34'])
     xlFlagSheet.write(3,xlCol+10,'35:')
     xlFlagSheet.write(3,xlCol+11,ds.globalattributes['Flag35'])
+    xlFlagSheet.write(3,xlCol+12,'40:')
+    xlFlagSheet.write(3,xlCol+13,ds.globalattributes['Flag40'])
+    xlFlagSheet.write(3,xlCol+14,'41:')
+    xlFlagSheet.write(3,xlCol+15,ds.globalattributes['Flag41'])
+    xlFlagSheet.write(3,xlCol+16,'42:')
+    xlFlagSheet.write(3,xlCol+17,ds.globalattributes['Flag42'])
+    xlFlagSheet.write(3,xlCol+18,'43:')
+    xlFlagSheet.write(3,xlCol+19,ds.globalattributes['Flag43'])
     #d_xf = xlwt.easyxf('font: height 160',num_format_str='dd/mm/yyyy hh:mm')
     d_xf = xlwt.easyxf(num_format_str='dd/mm/yyyy hh:mm')
     for j in range(nRecs):

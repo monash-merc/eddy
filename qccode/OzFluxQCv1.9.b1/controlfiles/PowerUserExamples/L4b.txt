@@ -52,12 +52,13 @@ secondMonth = 6
 SumList = "['Rain','ET','Energy','Radiation','Carbon','PM']"
 SubSumList = "['ET','Energy']"
 MinMaxList = "['PM','VPD','Ta_HMP','Ta_HMP_200cm','Vbat','Vbat_TopPanel','Vbat_BotPanel','Tpanel','Carbon']"
-MeanList = "['PM','VPD','Ta_HMP','Ta_HMP_200cm','Tpanel']"
+MeanList = "['PM','VPD','Ta_HMP','Ta_HMP_200cm','Tpanel','GPP','Re_umol']"
 #
 ETin = "['Fe_gapfilled']"
 Energyin = "['Fe_gapfilled', 'Fh_gapfilled', 'Fg_Av']"
 Radin = "['Fld','Flu','Fnr','Fsd','Fsu']"
 Cin = "['Fc_gapfilled']"
+GPPin = "['GPP','Re_umol']"
 #
 SoilList = "['SWCsurface','SWC10cm','SWC60cm','SWC100cm']"
 SWCsurface = "['svwc_s_baresoil', 'svwc_s_mulga', 'svwc_s_understory']"
