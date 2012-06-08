@@ -1,53 +1,56 @@
 [General]
-#Standard (Default) FunctionList = "['do_linear', 'MergeSeriesAh', 'TaFromTv', 'MergeSeriesTa', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'Fe_WPL', 'Fc_WPL', 'MergeSeriesFsd', 'CalculateNetRadiation', 'MergeSeriesFn', 'PreCorrectSoilAverage', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks']"
-FunctionList   = "['AddMetVars', 'CorrectSWC', 'do_linear', 'CoordRotation2D', 'MassmanApprox', 'Massman', 'CalculateFluxesRM', 'FhvtoFh', 'Fe_WPLcov', 'Fc_WPLcov', 'CorrectFgForStorage', 'PostCorrectSoilAverage', 'MergeSeriesWS', 'rstFromPenmanMonteith', 'do_qcchecks', 'gaps']"
+#Standard (Default) FunctionList = "['do_linear', 'MergeSeriesAhTa', 'TaFromTv', 'CalculateMetVars', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'WPL', 'CalculateNetRadiation', 'MergeSeriesFn', 'PreCorrectSoilAverage', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks','do_Ah7500check']"
+FunctionList   = "['CorrectSWC', 'do_linear', 'CalculateMetVars', 'CoordRotation2D', 'MassmanApprox', 'Massman', 'CalculateFluxesRM', 'FhvtoFh', 'WPLcov', 'MergeSeriesWS', 'CorrectFgForStorage', 'PostCorrectSoilAverage','rstFromPenmanMonteith', 'do_qcchecks', 'gaps','do_Ah7500check']"
 RotateFlag   = Yes
 netCDFv3 = False
 Platform = Mac    # Mac or PC
 
 [Files]
     [[L2]]
-        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
-        ncFileName = ASM_EC_2012_2Apr-Jun_L2.nc
+        ncFilePath = ncData/ASM/
+        ncFileName = ASM_EC_2010_L2.nc
     [[L3]]
-        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
-        ncFileName = ASM_EC_2012_2Apr-Jun_L3.nc
-        xlFlagFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level3/
-        xlFlagFileName = ASM_EC_2012_2Apr-Jun_flagstats_L3.xls
+        ncFilePath = ncData/ASM/
+        ncFileName = ASM_EC_2010_L3.nc
+        xlFlagFilePath = ../AliceSpringsMulga/level3/
+        xlFlagFileName = ASM_EC_2010_flagstats_L3.xls
     [[L3_Corrected]]
-        ncFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level3/
-        ncFileName = ASM_EC_2012_2Apr-Jun_L3_Corrected.nc
-
+        ncFilePath = ../AliceSpringsMulga/level3/
+        ncFileName = ASM_EC_2010_L3_Corrected.nc
 
 [FunctionArgs]
 # Site- and process-specific variable and parameter lists
 # Flags are named as abbreviated forms of functions in FunctionList
-# Ta2Tv: TaFromTv, CF: CalcluateFluxes
-# ASBEFg: AverageFgSeriesByElements, ASBETs: AverageTsSeriesByElements, ASBEswc: AverageSWCSeriesByElements
-# CFg: CorrectFgForStorage, IOM: IntegrateOverMissing
+# CFg: CorrectFgForStorage, A3SBE: AverageSeriesByElements, IOM: IntegrateOverMissing
+# CF:  CalculateFluxes, EWPL: FeWPLCov, CWPL: FcWPLCov
 #
-# Default Ta2Tv = "['Ta_CSAT','Tv_CSAT','Ah_EC','ps']"
-# Default CF = "['Ta_EC','Ah_EC','ps']"
-# Default FhvtoFhArgs = "['Ta_EC','Fh','Tv_CSAT','Fe_raw','ps','Ah_EC','Fh_rv']"
-# Default FhvtoFhattr = "['Fh rotated and converted from virtual heat flux']"
-FhvtoFhArgs = "['Ta_HMP','Fh_rm','Tv_CSAT','Fe_rm','ps','Ah_HMP','Fh_rmv']"
-FhvtoFhattr = "['Fh rotated, massman corrected, and converted from virtual heat flux']"
-# Default ASBEFg = Fg_Av   # Output variable
-# Default ASBETs = Ts_Av
-# Default ASBEswc = Sws_Av
-# Default CFg1Args = "['Fg','Fg_Av','Ts_Av']"  # Output Fg, Input Fg, Input Ts; up to 3 separate soil arrays
+# Default FhvtoFhArgs:  "['Ta_EC','Fh','Tv_CSAT','Fe_raw','ps','Ah_EC','Fh_rv','Fh rotated and converted from virtual heat flux']"
+FhvtoFhArgs = "['Ta_HMP','Fh_rm','Tv_CSAT','Fe_rm','ps','Ah_HMP','Fh_rmv','Fh rotated, massman corrected, and converted from virtual heat flux']"
+# Default CFg1Args = "['Fg','Fg_Av','Ts']"
 CFg1Args = "['Fgc_bs','Fg_bs','Ts_bs','Sws_bs']"
 CFg2Args = "['Fgc_ms','Fg_ms','Ts_ms','Sws_ms']"
 CFg3Args = "['Fgc_mu','Fg_mu','Ts_mu','Sws_mu']"
-#IOM = "['Sws_10cm']"  # uncomment for FoggDam
-#IOM = "['Sws_5cm']"   # uncomment for AdelaideRiver
-PMin = "['Fe_wpl', 'Ta_HMP', 'Ah_HMP', 'ps', 'Ws_EC', 'Fnr', 'Fsd', 'Fg_Av']"
+#IOM = "['Sws_10cm']"  # for FoggDam
+#IOM = "['Sws_5cm']"   # for AdelaideRiver
+PMin = "['Fe_wpl', 'Ta_HMP', 'Ah_HMP', 'ps', 'Ws', 'Fnr', 'Fsd', 'Fg']"
 PMcritFe = 0  # Fe flux greater than or equal to this value to keep rst
 PMcritFsd = 10  # Fsd flux greater than or equal to this value to keep rst
-# Default PMin = "['Fe_wpl', 'Ta_EC', 'Ah_EC', 'ps', 'Ws_CSAT', 'Fnr', 'Fsd', 'Fg']"
+# Default PMin = "['Fe_wpl', 'Ta_EC', 'Ah_EC', 'ps', 'Ws_EC', 'Fnr', 'Fsd', 'Fg']"
 # Default PMcritFe = 0  # Fe flux greater than or equal to this value to keep rst
 # Default PMcritFsd = 10  # Fsd flux greater than or equal to this value to keep rst
-# Default AhcheckFc = "['Fc_wpl']"
+# Default CF = "['Ta_HMP', 'Ah_HMP', 'ps']"
+# Default WPL|Massman EWPL = "['Fe_wpl','wAM','Fh_rmv','Ta_EC','Ah_EC','ps']"
+# Default WPL|Massman CWPL = "['Fc_wpl','wCM','Fh_rmv','wAwpl','Ta_EC','Ah_EC','Cc_7500_Av','ps']"
+EWPL = "['Fe_wpl','wAM','Fh_rmv','Ta_HMP','Ah_HMP','ps']"
+CWPL = "['Fc_wpl','wCM','Fh_rmv','wAwpl','Ta_HMP','Ah_HMP','Cc_7500_Av','ps']"
+# Default MetVars = "['Ta','ps','Ah']"
+MetVars = "['Ta_HMP','ps','Ah_HMP']"
+CF = "['Ta_HMP','Ah_HMP','ps']"
+AhcheckFc = "['Fc_wpl']"
+    [[CFgArgs]]
+        0 = "['Fgc_bs','Fg_bs','Ts_bs','Sws_bs']"
+        1 = "['Fgc_ms','Fg_ms','Ts_ms','Sws_ms']"
+        2 = "['Fgc_mu','Fg_mu','Ts_mu','Sws_mu']"
 
 [Massman]
 zmd = 7.3  # instrument height above displacement plane, d = 2 / 3 * h = 4.3, h = 6.5, z = 11.635 m
@@ -81,8 +84,8 @@ SWCattr = "['Surface soil water content of bare soil, empirically corrected to c
 TDRattr = "['Surface soil water content of bare soil near raingage, empirically corrected to collected samples', '10-30 cm deep soil water content of bare soil array 1, empirically corrected to collected samples', '60-80 cm deep soil water content of bare soil array 1, empirically corrected to collected samples', '100-130 cm deep soil water content of bare soil array 1, empirically corrected to collected samples', '10-30 cm deep soil water content below mulga array 1, empirically corrected to collected samples', '60-80 cm deep soil water content below mulga array 1, empirically corrected to collected samples', '100-130 cm deep soil water content below mulga array 1, empirically corrected to collected samples', '10-30 cm deep soil water content below understory array 1, empirically corrected to collected samples', '60-80 cm deep soil water content below understory array 1, empirically corrected to collected samples', '100-130 cm deep soil water content below understory array 1, empirically corrected to collected samples', '10-30 cm deep soil water content of bare soil array 2, empirically corrected to collected samples', '60-80 cm deep soil water content of bare soil array 2, empirically corrected to collected samples', '100-120 cm deep soil water content of bare soil array 2, empirically corrected to collected samples', '143-163 cm deep soil water content of bare soil array 2, empirically corrected to collected samples', '10-30 cm deep soil water content below mulga array 2, empirically corrected to collected samples', '10-30 cm deep soil water content below mulga array 2, empirically corrected to collected samples', '60-80 cm deep soil water content below mulga array 2, empirically corrected to collected samples', '100-130 cm deep soil water content below mulga array 2, empirically corrected to collected samples', '10-30 cm deep soil water content below understory array 2, empirically corrected to collected samples', '10-30 cm deep soil water content below understory array 2, empirically corrected to collected samples', '60-80 cm deep soil water content below understory array 2, empirically corrected to collected samples', '100-130 cm deep soil water content below understory array 2, empirically corrected to collected samples']"
 
 [Output]
-OFL2 = "['Fm_rm', 'Fc_wpl', 'Fe_wpl', 'Fh_rmv', 'Fg_Av', 'Fnr', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustarM', 'LM', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Vbat_TopPanel', 'Vbat_BotPanel', 'Tpanel', 'Tpanel_CR1000', 'Tpanel_CR3000b', 'theta', 'eta', 'Ux', 'u', 'Uy', 'v', 'Uz', 'w', 'UxUx', 'UxUy', 'uwM', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'vwM', 'AhAh', 'CcCc', 'UxUz', 'UyUz', 'UzT', 'UzA', 'UzC', 'wAwpl', 'wCM', 'wTM', 'Ts_Av', 'Sws_Av', 'svwc_s_baresoil', 'Ts_bs', 'delTs_bs', 'Fgc_bs', 'svwc_s_understory', 'Ts_mu', 'delTs_mu', 'Fgc_mu', 'svwc_s_mulga', 'Ts_ms', 'delTs_ms', 'Fgc_ms', 'svwc_10cm_baresoil_a1', 'svwc_60cm_baresoil_a1', 'svwc_100cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_60cm_mulga_a1', 'svwc_100cm_mulga_a1', 'svwc_10cm_understory_a1', 'svwc_60cm_understory_a1', 'svwc_100cm_understory_a1', 'svwc_10cm_baresoil_a2', 'svwc_60cm_baresoil_a2', 'svwc_100cm_baresoil_a2', 'svwc_143cm_baresoil_a2', 'svwc_10cm_a_mulga_a2', 'svwc_10cm_b_mulga_a2', 'svwc_60cm_mulga_a2', 'svwc_100cm_mulga_a2', 'svwc_10cm_a_understory_a2', 'svwc_10cm_b_understory_a2', 'svwc_60cm_understory_a2', 'svwc_100cm_understory_a2', 'Ah_HMP', 'q', 'e_HMP', 'RH_HMP', 'rho_a', 'rho_d', 'es_HMP', 'Ta_HMP', 'Ah_HMP_200cm', 'e_HMP_200cm', 'RH_HMP_200cm', 'es_HMP_200cm', 'Ta_HMP_200cm', 'Ah_HMP_425cm', 'e_HMP_425cm', 'RH_HMP_425cm', 'es_HMP_425cm', 'Ta_HMP_425cm', 'Ah_HMP_657cm', 'e_HMP_657cm', 'RH_HMP_657cm', 'es_HMP_657cm', 'Ta_HMP_657cm', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Ws_WS_925cm', 'Wd_WS_925cm', 'Ws_CSAT_Sd', 'Wd_CSAT_Sd', 'Ws_WS_925cm_Sd', 'Wd_WS_925cm_Sd', 'Ws_WS_200cm', 'Ws_WS_200cm_Sd', 'Ws_WS_425cm', 'Ws_WS_425cm_Sd', 'Ws_WS_662cm', 'Ws_WS_662cm_Sd', 'Rain', 'rst', 'Gst', 'xlDateTime', 'Year', 'Month', 'Day', 'Hour', 'Minute', 'Second', 'Hdh']"  # specify an optional variable list for submission of netCDF at L3 to OzFlux
-noDefaultXl = True   # uncomment to load controlfile for additional excel output files
+#OFL2 = "['Fm_rm', 'Fc_wpl', 'Fe_wpl', 'Fh_rmv', 'Fg_Av', 'Fnr', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustarM', 'LM', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'Tpanel_CR1000', 'theta', 'eta', 'Ux', 'u', 'Uy', 'v', 'Uz', 'w', 'UxUx', 'UxUy', 'uwM', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'vwM', 'AhAh', 'CcCc', 'UxUz', 'UyUz', 'UzT', 'UzA', 'UzC', 'wAwpl', 'wCM', 'wTM', 'Ts_Av', 'Sws_Av', 'svwc_s_baresoil', 'Ts_bs', 'delTs_bs', 'Fgc_bs', 'svwc_s_understory', 'Ts_mu', 'delTs_mu', 'Fgc_mu', 'svwc_s_mulga', 'Ts_ms', 'delTs_ms', 'Fgc_ms', 'svwc_10cm_baresoil_a1', 'svwc_60cm_baresoil_a1', 'svwc_100cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_60cm_mulga_a1', 'svwc_100cm_mulga_a1', 'svwc_10cm_understory_a1', 'svwc_60cm_understory_a1', 'svwc_100cm_understory_a1', 'svwc_10cm_baresoil_a2', 'svwc_60cm_baresoil_a2', 'svwc_100cm_baresoil_a2', 'svwc_143cm_baresoil_a2', 'svwc_10cm_a_mulga_a2', 'svwc_10cm_b_mulga_a2', 'svwc_60cm_mulga_a2', 'svwc_100cm_mulga_a2', 'svwc_10cm_a_understory_a2', 'svwc_10cm_b_understory_a2', 'svwc_60cm_understory_a2', 'svwc_100cm_understory_a2', 'Ah_HMP', 'q', 'e_HMP', 'RH', 'rho_a', 'rho_d', 'es_HMP', 'Ta_HMP', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Ws_WS', 'Wd_WS', 'Ws_CSAT_Sd', 'Wd_CSAT_Sd', 'Ws_WS_Sd', 'Wd_WS_Sd', 'Rain', 'rst', 'Gst', 'xlDateTime', 'Year', 'Month', 'Day', 'Hour', 'Minute', 'Second', 'Hdh']"
+noDefaultXl = True
 
 [Variables]
     [[Fh_rmv]]
@@ -114,15 +117,23 @@ noDefaultXl = True   # uncomment to load controlfile for additional excel output
             Lower      = "[-0.8]*12"
             Upper      = "[2]*12"
         [[[DiurnalCheck]]]
-            NumSd      = "[10]*12"
+            NumSd      = "[5]*12"
     [[C_ppm]]
         [[[RangeCheck]]]
             Lower      = "[150]*12"
             Upper      = "[600]*12"
+        [[[Linear]]]
+            0      = "['2010-9-1 10:00','2010-11-30 7:00',1.6,0]"
+        [[[LocalDrift]]]
+            0      = "['2010-12-3 11:00','2010-12-31 23:30',1.05,0.000011388441,0]"
     [[Cc_7500_Av]]
         [[[RangeCheck]]]
             Lower      = "[350]*12"
             Upper      = "[1500]*12"
+        [[[Linear]]]
+            0      = "['2010-9-1 10:00','2010-11-30 7:00',1.6,0]"
+        [[[LocalDrift]]]
+            0      = "['2010-12-3 11:00','2010-12-31 23:30',1.05,0.000011388441,0]"
     [[H_ppt]]
         [[[RangeCheck]]]
             Lower      = "[0]*12"
@@ -141,7 +152,7 @@ noDefaultXl = True   # uncomment to load controlfile for additional excel output
             Upper      = [50]*12
     [[Ta_HMP]]
         [[[RangeCheck]]]
-            Lower      = [-10]*12
+            Lower      = [0]*12
             Upper      = [50]*12
     [[svwc_s_baresoil]]
         [[[RangeCheck]]]
@@ -321,48 +332,48 @@ noDefaultXl = True   # uncomment to load controlfile for additional excel output
             Upper      = "[.45]*12"
         [[[DiurnalCheck]]]
             NumSd      = "[3]*12"
-    [[Fg_Av]]
+    [[Fg]]
         [[[AverageSeries]]]
             Source = "['Fgc_bs', 'Fgc_ms', 'Fgc_mu']"
 #            Source = "['Fg_01']"      #  Default
         [[[RangeCheck]]]
             Lower      = "[-300]*12"
             Upper      = "[300]*12"
-    [[Ts_Av]]		    
+    [[Ts]]		    
         [[[AverageSeries]]]
 	    Source = "['Ts_bs','Ts_ms','Ts_mu']"
 #            Source = "['Ts_01']"      #  Default
-    [[Sws_Av]]		    
+    [[Sws]]		    
         [[[AverageSeries]]]
 	    Source = "['svwc_s_baresoil','svwc_s_mulga','svwc_s_understory']"
 #            Source = "['Sws_01']"      #  Default
-    [[Ws_EC]]
+    [[Ws]]
         [[[MergeSeries]]]
             Source = "['Ws_WS','Ws_CSAT']"
-#            Source = "['Ws_WS_01','Ws_CSAT']"
+#            Source = "['Ws_WS_01','Ws_CSAT']"      #  Default
 
 
 [PlotSpec]
-Width = 23.5    # office
-Height = 11.5   # office
+#Width = 23.5    # office
+#Height = 11.5   # office
 #Width = 19.5    # home
 #Height = 11.4   # home
-#Width = 17      # field
-#Height = 9.5    # field
+Width = 17      # field
+Height = 9.5    # field
 
 [Plots]
     [[21]]
         Title = "Fluxes"
-        Variables = "['Fh_rmv','ustarM','Fm_rm','Fg_Av','Fe_wpl','Fc_wpl']"
+        Variables = "['Fh_rmv','ustarM','Fm_rm','Fg','Fe_wpl','Fc_wpl']"
     [[22]]
         Title = "Radiation"
         Variables = "['Fsd','Fsu','Fld','Flu','Fnr','albedo']"
     [[23]]
         Title = "Meteorology"
-        Variables = "['Ta_HMP','Ah_HMP','Rain','ps','Sws_Av','Ts_Av']"
+        Variables = "['Ta_HMP','Ah_HMP','Rain','ps','Sws','Ts']"
     [[24]]
         Title = "Diagnostics"
-        Variables = "['Ux','Tpanel','Tpanel_CR1000','Tpanel_CR3000b','Vbat','C_ppm','H_ppt']"
+        Variables = "['Ux','Tpanel','Tpanel_CR1000','Vbat','C_ppm','H_ppt']"
     [[25]]
         Title = "Surface soil water content"
         Variables = "['svwc_s_baresoil','svwc_s_mulga','svwc_s_understory','svwc_s_raingage']"
@@ -396,48 +407,3 @@ Height = 11.5   # office
         Title = "xy plots:  Ah"
         XSeries = "['Ah_HMP']"
         YSeries = "['Ah_7500_Av']"
-#    [[21]]
-#        Title = "Fluxes"
-#        Variables = "['Fh_rmv','ustarM','Fm_rm','Fg_Av','Fe_wpl','Fc_wpl']"
-#    [[22]]
-#        Title = "Radiation"
-#        Variables = "['Fsd','Fsu','Fld','Flu','Fnr','albedo']"
-#    [[23]]
-#        Title = "Meteorology"
-#        Variables = "['Ta_HMP','Ah_HMP','Rain','ps','Sws_Av','Ts_Av']"
-#    [[24]]
-#        Title = "Diagnostics"
-#        Variables = "['Ux','Tpanel','Tpanel_CR1000','Tpanel_CR3000b','Vbat','C_ppm','H_ppt']"
-#    [[25]]
-#        Title = "Surface soil water content"
-#        Variables = "['svwc_s_baresoil','svwc_s_mulga','svwc_s_understory','svwc_s_raingage']"
-#        YLMin = "['.01','.01','.01','.01']"
-#        YLMax = "['.4','.4','.4','.4']"
-#        YRMin = "['.01','.01','.01','.01']"
-#        YRMax = "['.4','.4','.4','.4']"
-#    [[26]]
-#        Title = "10-30 cm soil water content"
-#        Variables = "['svwc_10cm_baresoil_a1','svwc_10cm_mulga_a1','svwc_10cm_understory_a1','svwc_10cm_baresoil_a2','svwc_10cm_a_mulga_a2','svwc_10cm_b_mulga_a2','svwc_10cm_a_understory_a2','svwc_10cm_b_understory_a2']"
-#        YLMin = "['.01','.01','.01','.01','.01','.01','.01','.01']"
-#        YLMax = "['.4','.4','.4','.4','.4','.4','.4','.4']"
-#        YRMin = "['.01','.01','.01','.01','.01','.01','.01','.01']"
-#        YRMax = "['.4','.4','.4','.4','.4','.4','.4','.4']"
-#    [[27]]
-#        Title = "60-80 cm soil water content"
-#        Variables = "['svwc_60cm_baresoil_a1','svwc_60cm_mulga_a1','svwc_60cm_understory_a1','svwc_60cm_baresoil_a2','svwc_60cm_mulga_a2','svwc_60cm_understory_a2']"
-#        YLMin = "['.01','.01','.01','.01','.01','.01']"
-#        YLMax = "['.4','.4','.4','.4','.4','.4']"
-#        YRMin = "['.01','.01','.01','.01','.01','.01']"
-#        YRMax = "['.4','.4','.4','.4','.4','.4']"
-#    [[28]]
-#        Title = "deeper than 99 cm soil water content"
-#        Variables = "['svwc_100cm_baresoil_a1','svwc_100cm_mulga_a1','svwc_100cm_understory_a1','svwc_100cm_baresoil_a2','svwc_143cm_baresoil_a2','svwc_100cm_mulga_a2','svwc_100cm_understory_a2']"
-#        YLMin = "['.01','.01','.01','.01','.01','.01','.01']"
-#        YLMax = "['.4','.4','.4','.4','.4','.4','.4']"
-#        YRMin = "['.01','.01','.01','.01','.01','.01','.01']"
-#        YRMax = "['.4','.4','.4','.4','.4','.4','.4']"
-#    [[29]]
-#        Type = xy
-#        Title = "xy plots:  Ah"
-#        XSeries = "['Ah_HMP']"
-#        YSeries = "['Ah_7500_Av']"

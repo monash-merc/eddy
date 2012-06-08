@@ -10,9 +10,9 @@ import logging
 log = logging.getLogger('qc.plot')
 
 def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
-    SiteName = dsa.globalattributes['SiteName']
+    site_name = dsa.globalattributes['site_name']
     PlotDescription = cf['Plots'][str(nFig)]['Title']
-    dt = int(dsa.globalattributes['TimeStep'])
+    dt = int(dsa.globalattributes['time_step'])
     if qcutils.cfkeycheck(cf,'PlotSpec','Width'):
         PlotWidth = ast.literal_eval(cf['PlotSpec']['Width'])
         PlotHeight = ast.literal_eval(cf['PlotSpec']['Height'])
@@ -42,12 +42,12 @@ def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
     plt.ioff()
     fig = plt.figure(int(nFig),figsize=(PlotWidth,PlotHeight))
     fig.clf()
-    plt.figtext(0.5,0.95,SiteName+': '+PlotDescription,ha='center',size=16)
+    plt.figtext(0.5,0.95,site_name+': '+PlotDescription,ha='center',size=16)
     for ThisOne, n in zip(SeriesList,range(nGraphs)):
         if ThisOne in dsa.series.keys() and ThisOne in dsb.series.keys():
             aflag = dsa.series[ThisOne]['Flag']
             bflag = dsb.series[ThisOne]['Flag']
-            Units = dsa.series[ThisOne]['Attr']['Units']
+            Units = dsa.series[ThisOne]['Attr']['units']
             YAxOrg = ts_YAxOrg + n*yaxOrgOffset
             L1YArray = numpy.ma.masked_where(dsa.series[ThisOne]['Data'][si:ei]==-9999,
                                              dsa.series[ThisOne]['Data'][si:ei])
@@ -183,12 +183,12 @@ def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
     fig.show()
 
 def plotxy(cf,nFig,plt_cf,dsa,dsb,si,ei):
-    SiteName = dsa.globalattributes['SiteName']
+    site_name = dsa.globalattributes['site_name']
     PlotDescription = cf['Plots'][str(nFig)]['Title']
     fig = plt.figure(int(nFig))
     
     fig.clf()
-    plt.figtext(0.5,0.95,SiteName+': '+PlotDescription,ha='center',size=16)
+    plt.figtext(0.5,0.95,site_name+': '+PlotDescription,ha='center',size=16)
     XSeries = ast.literal_eval(plt_cf['XSeries'])
     YSeries = ast.literal_eval(plt_cf['YSeries'])
     log.info(' Plotting xy: '+str(XSeries)+' v '+str(YSeries))

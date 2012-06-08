@@ -31,21 +31,6 @@ import qcls
 import qcplot
 import qcutils
 
-
-def startlog():
-    logger = logging.getLogger('qc')
-    logger.setLevel(logging.DEBUG)
-    fh = logging.FileHandler('logfiles/qc.log')
-    fh.setLevel(logging.DEBUG)
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s %(name)-8s %(levelname)-6s %(message)s', '%d-%m-%y %H:%M')
-    fh.setFormatter(formatter)
-    ch.setFormatter(formatter)
-    logger.addHandler(fh)
-    logger.addHandler(ch)
-    return logger
-
 class qcgui(Tkinter.Frame):
     def __init__(self, master=None):
         Tkinter.Frame.__init__(self, master)
@@ -262,7 +247,7 @@ class qcgui(Tkinter.Frame):
         self.ds3 = qcls.l3qc(self.cf,self.ds2)
         self.do_progress(text='Finished L3')
         txtstr = ' Finished L3: Standard processing for site: '
-        txtstr = txtstr+self.ds3.globalattributes['SiteName']
+        txtstr = txtstr+self.ds3.globalattributes['site_name']
         log.info(txtstr)
         self.do_progress(text='Saving L3 QC & Corrected NetCDF data ...')                     # put up the progress message
         qcio.nc_write_series(self.cf,self.ds3,'L3')                   # save the L3 data
@@ -307,7 +292,7 @@ class qcgui(Tkinter.Frame):
         self.ds3 = qcio.nc_read_series(self.cf,'L3')
         self.update_startenddate(str(self.ds3.series['DateTime']['Data'][0]),
                                  str(self.ds3.series['DateTime']['Data'][-1]))
-        sitename = self.ds3.globalattributes['SiteName']
+        sitename = self.ds3.globalattributes['site_name']
         self.do_progress(text='Doing L4 QC: '+sitename+' ...')
         self.ds4 = qcls.l4qc(self.cf,self.ds3)
         self.do_progress(text='Finished L4: '+sitename)
@@ -335,9 +320,12 @@ class qcgui(Tkinter.Frame):
             self.ds2 = qcio.nc_read_series(self.cf,'L2')
             self.update_startenddate(str(self.ds1.series['DateTime']['Data'][0]),
                                      str(self.ds1.series['DateTime']['Data'][-1]))
+        self.do_progress(text='Plotting L1 & L2 QC ...')
         for nFig in self.cf['Plots'].keys():
-            si = qcutils.GetDateIndex(self.ds1.series['DateTime']['Data'],self.plotstartEntry.get(),0)
-            ei = qcutils.GetDateIndex(self.ds1.series['DateTime']['Data'],self.plotendEntry.get(),-1)
+            si = qcutils.GetDateIndex(self.ds1.series['DateTime']['Data'],self.plotstartEntry.get(),
+                                      ts=self.ds1.globalattributes['time_step'],default=0,match='exact')
+            ei = qcutils.GetDateIndex(self.ds1.series['DateTime']['Data'],self.plotendEntry.get(),
+                                      ts=self.ds1.globalattributes['time_step'],default=-1,match='exact')
             plt_cf = self.cf['Plots'][str(nFig)]
             if 'Type' in plt_cf.keys():
                 if str(plt_cf['Type']).lower() =='xy':
@@ -369,9 +357,12 @@ class qcgui(Tkinter.Frame):
             self.ds3 = qcio.nc_read_series(self.cf,'L3')
             self.update_startenddate(str(self.ds3.series['DateTime']['Data'][0]),
                                      str(self.ds3.series['DateTime']['Data'][-1]))
+        self.do_progress(text='Plotting L3 QC ...')
         for nFig in self.cf['Plots'].keys():
-            si = qcutils.GetDateIndex(self.ds3.series['DateTime']['Data'],self.plotstartEntry.get(),0)
-            ei = qcutils.GetDateIndex(self.ds3.series['DateTime']['Data'],self.plotendEntry.get(),-1)
+            si = qcutils.GetDateIndex(self.ds3.series['DateTime']['Data'],self.plotstartEntry.get(),
+                                      ts=self.ds3.globalattributes['time_step'],default=0,match='exact')
+            ei = qcutils.GetDateIndex(self.ds3.series['DateTime']['Data'],self.plotendEntry.get(),
+                                      ts=self.ds3.globalattributes['time_step'],default=-1,match='exact')
             plt_cf = self.cf['Plots'][str(nFig)]
             if 'Type' in plt_cf.keys():
                 if str(plt_cf['Type']).lower() =='xy':
@@ -407,9 +398,11 @@ class qcgui(Tkinter.Frame):
                                      str(self.ds3.series['DateTime']['Data'][-1]))
         self.do_progress(text='Plotting L3 and L4 QC ...')
         for nFig in self.cf['Plots'].keys():
-            SeriesList = ast.literal_eval(self.cf['Plots'][str(nFig)]['Variables'])
-            si = qcutils.GetDateIndex(self.ds3.series['DateTime']['Data'],self.plotstartEntry.get(),0)
-            ei = qcutils.GetDateIndex(self.ds3.series['DateTime']['Data'],self.plotendEntry.get(),-1)
+            SeriesList = eval(self.cf['Plots'][str(nFig)]['Variables'])
+            si = qcutils.GetDateIndex(self.ds3.series['DateTime']['Data'],self.plotstartEntry.get(),
+                                      ts=self.ds3.globalattributes['time_step'],default=0,match='exact')
+            ei = qcutils.GetDateIndex(self.ds3.series['DateTime']['Data'],self.plotendEntry.get(),
+                                      ts=self.ds3.globalattributes['time_step'],default=-1,match='exact')
             qcplot.plottimeseries(self.cf,nFig,SeriesList,self.ds3,self.ds4,si,ei)
         self.do_progress(text='Finished plotting L4')
         log.info(' Finished plotting L4, check the GUI')
@@ -636,7 +629,7 @@ class qcgui(Tkinter.Frame):
 
 
 if __name__ == "__main__":
-    log = startlog()
+    log = qcutils.startlog('qc','logfiles/qc.log')
     qcGUI = qcgui()
     qcGUI.master.title("QC Data Main GUI")
     qcGUI.mainloop()

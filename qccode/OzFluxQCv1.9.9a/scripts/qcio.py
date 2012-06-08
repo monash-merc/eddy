@@ -37,7 +37,7 @@ def autoxl2nc(cf,InLevel,OutLevel):
     # get the flags from gap filled 'L3' or 'L4' Excel file
     if InLevel != 'L1':
         VariablesInFile = ds.series.keys()
-        for ThisOne in ['xlDateTime','Gap','Year','Month','Day','Hour','Minute','Second','Hdh']:
+        for ThisOne in ['xlDateTime','Gap','Year','Month','Day','Hour','Minute','Second','Hdh','Ddd']:
             if ThisOne in VariablesInFile:
                 VariablesInFile.remove(ThisOne)
         ds1 = xl_read_flags(cf,ds,InLevel,VariablesInFile)
@@ -210,7 +210,7 @@ def nc_write_OzFlux_series(cf,ds,level):
             ncVar = ncFile.createVariable(ThisOne,dt,('Time',))
             ncVar[:] = ds.series[ThisOne]['Data'].tolist()
             setattr(ncVar,'Description',ThisOne)
-            setattr(ncVar,'Units','none')
+            setattr(ncVar,'units','none')
             SeriesList.remove(ThisOne)
     if 'DateTime' in SeriesList:
         SeriesList.remove('DateTime')
@@ -227,7 +227,7 @@ def nc_write_OzFlux_series(cf,ds,level):
             ncVar = ncFile.createVariable(ThisOne+'_QCFlag',dt,('Time',))
             ncVar[:] = ds.series[ThisOne]['Flag'].tolist()
             setattr(ncVar,'Description','QC flag')
-            setattr(ncVar,'Units','none')
+            setattr(ncVar,'units','none')
     ncFile.close()
 
 def nc_write_series(cf,ds,level):
@@ -253,7 +253,7 @@ def nc_write_series(cf,ds,level):
             ncVar = ncFile.createVariable(ThisOne,dt,('Time',))
             ncVar[:] = ds.series[ThisOne]['Data'].tolist()
             setattr(ncVar,'Description',ThisOne)
-            setattr(ncVar,'Units','none')
+            setattr(ncVar,'units','none')
             SeriesList.remove(ThisOne)
     if 'DateTime' in SeriesList:
         SeriesList.remove('DateTime')
@@ -270,7 +270,7 @@ def nc_write_series(cf,ds,level):
             ncVar = ncFile.createVariable(ThisOne+'_QCFlag',dt,('Time',))
             ncVar[:] = ds.series[ThisOne]['Flag'].tolist()
             setattr(ncVar,'Description','QC flag')
-            setattr(ncVar,'Units','none')
+            setattr(ncVar,'units','none')
     ncFile.close()
 
 def xl_read_flags(cf,ds,level,VariablesInFile):
@@ -295,8 +295,8 @@ def xl_read_flags(cf,ds,level,VariablesInFile):
             ActiveSheet = xlBook.sheet_by_name('Flag')
             LastDataRow = int(ActiveSheet.nrows)
             HeaderRow = ActiveSheet.row_values(int(cf['Files'][level]['xlHeaderRow'])-1)
-            if cf['Variables'][ThisOne]['xl']['Name'] in HeaderRow:
-                xlCol = HeaderRow.index(cf['Variables'][ThisOne]['xl']['Name'])
+            if cf['Variables'][ThisOne]['xl']['name'] in HeaderRow:
+                xlCol = HeaderRow.index(cf['Variables'][ThisOne]['xl']['name'])
                 Values = ActiveSheet.col_values(xlCol)[FirstDataRow:LastDataRow]
                 Types = ActiveSheet.col_types(xlCol)[FirstDataRow:LastDataRow]
                 ds.series[ThisOne]['Flag'] = numpy.array([-9999]*len(Values),numpy.float64)
@@ -339,12 +339,12 @@ def xl_read_series(cf,level):
     for ThisOne in cf['Variables'].keys():
         if 'xl' in cf['Variables'][ThisOne].keys():
             log.info(' Getting data for '+ThisOne+' from spreadsheet')
-            ActiveSheet = xlBook.sheet_by_name(cf['Variables'][ThisOne]['xl']['Sheet'])
+            ActiveSheet = xlBook.sheet_by_name(cf['Variables'][ThisOne]['xl']['sheet'])
             LastDataRow = int(ActiveSheet.nrows)
             HeaderRow = ActiveSheet.row_values(int(cf['Files'][level]['xlHeaderRow'])-1)
-            if cf['Variables'][ThisOne]['xl']['Name'] in HeaderRow:
+            if cf['Variables'][ThisOne]['xl']['name'] in HeaderRow:
                 ds.series[unicode(ThisOne)] = {}
-                xlCol = HeaderRow.index(cf['Variables'][ThisOne]['xl']['Name'])
+                xlCol = HeaderRow.index(cf['Variables'][ThisOne]['xl']['name'])
                 Values = ActiveSheet.col_values(xlCol)[FirstDataRow:LastDataRow]
                 Types = ActiveSheet.col_types(xlCol)[FirstDataRow:LastDataRow]
                 ds.series[ThisOne]['Data'] = numpy.array([-9999]*len(Values),numpy.float64)
@@ -370,15 +370,19 @@ def xl_write_series(cf,ds,level):
     # write the xl date/time value to the first column of the worksheets
     d_xf = xlwt.easyxf(num_format_str='dd/mm/yyyy hh:mm')
     for j in range(nRecs):
-        xlDataSheet.write(j+6,xlCol,ds.series['xlDateTime']['Data'][j],d_xf)
-    xlFlagSheet.write(5,xlCol,'TIMESTAMP')
-    xlDataSheet.write(5,xlCol,'TIMESTAMP')
+        xlDataSheet.write(j+10,xlCol,ds.series['xlDateTime']['Data'][j],d_xf)
+    xlFlagSheet.write(9,xlCol,'TIMESTAMP')
+    xlDataSheet.write(9,xlCol,'TIMESTAMP')
     xlDataSheet.write(0,xlCol,'Site:')
-    xlDataSheet.write(0,xlCol+1,ds.globalattributes['Site'])
-    xlDataSheet.write(1,xlCol,'Location:')
-    xlDataSheet.write(1,xlCol+1,ds.globalattributes['Location'])
-    xlDataSheet.write(2,xlCol,'Contact:')
-    xlDataSheet.write(2,xlCol+1,ds.globalattributes['Contact'])
+    xlDataSheet.write(0,xlCol+1,ds.globalattributes['site'])
+    xlDataSheet.write(2,xlCol,'Institution:')
+    xlDataSheet.write(2,xlCol+1,ds.globalattributes['institution'])
+    xlDataSheet.write(1,xlCol,'Latitude:')
+    xlDataSheet.write(1,xlCol+1,ds.globalattributes['latitude'])
+    xlDataSheet.write(1,xlCol+2,'Longitude:')
+    xlDataSheet.write(1,xlCol+3,ds.globalattributes['longitude'])
+    xlDataSheet.write(3,xlCol,'Contact:')
+    xlDataSheet.write(3,xlCol+1,ds.globalattributes['contact'])
     xlFlagSheet.write(0,xlCol,'0:')
     xlFlagSheet.write(0,xlCol+1,ds.globalattributes['Flag0'])
     xlFlagSheet.write(0,xlCol+2,'1:')
@@ -405,40 +409,60 @@ def xl_write_series(cf,ds,level):
     xlFlagSheet.write(1,xlCol+7,ds.globalattributes['Flag13'])
     xlFlagSheet.write(1,xlCol+8,'14:')
     xlFlagSheet.write(1,xlCol+9,ds.globalattributes['Flag14'])
-    xlFlagSheet.write(1,xlCol+10,'16:')
-    xlFlagSheet.write(1,xlCol+11,ds.globalattributes['Flag16'])
-    xlFlagSheet.write(1,xlCol+12,'17:')
-    xlFlagSheet.write(1,xlCol+13,ds.globalattributes['Flag17'])
-    xlFlagSheet.write(2,xlCol,'20:')
-    xlFlagSheet.write(2,xlCol+1,ds.globalattributes['Flag20'])
-    xlFlagSheet.write(2,xlCol+2,'21:')
-    xlFlagSheet.write(2,xlCol+3,ds.globalattributes['Flag21'])
-    xlFlagSheet.write(2,xlCol+4,'22:')
-    xlFlagSheet.write(2,xlCol+5,ds.globalattributes['Flag22'])
-    xlFlagSheet.write(3,xlCol,'30:')
-    xlFlagSheet.write(3,xlCol+1,ds.globalattributes['Flag30'])
-    xlFlagSheet.write(3,xlCol+2,'31:')
-    xlFlagSheet.write(3,xlCol+3,ds.globalattributes['Flag31'])
-    xlFlagSheet.write(3,xlCol+4,'32:')
-    xlFlagSheet.write(3,xlCol+5,ds.globalattributes['Flag32'])
-    xlFlagSheet.write(3,xlCol+6,'33:')
-    xlFlagSheet.write(3,xlCol+7,ds.globalattributes['Flag33'])
-    xlFlagSheet.write(3,xlCol+8,'34:')
-    xlFlagSheet.write(3,xlCol+9,ds.globalattributes['Flag34'])
-    xlFlagSheet.write(3,xlCol+10,'35:')
-    xlFlagSheet.write(3,xlCol+11,ds.globalattributes['Flag35'])
-    xlFlagSheet.write(3,xlCol+12,'40:')
-    xlFlagSheet.write(3,xlCol+13,ds.globalattributes['Flag40'])
-    xlFlagSheet.write(3,xlCol+14,'41:')
-    xlFlagSheet.write(3,xlCol+15,ds.globalattributes['Flag41'])
-    xlFlagSheet.write(3,xlCol+16,'42:')
-    xlFlagSheet.write(3,xlCol+17,ds.globalattributes['Flag42'])
-    xlFlagSheet.write(3,xlCol+18,'43:')
-    xlFlagSheet.write(3,xlCol+19,ds.globalattributes['Flag43'])
+    xlFlagSheet.write(1,xlCol+10,'15:')
+    xlFlagSheet.write(1,xlCol+11,ds.globalattributes['Flag15'])
+    xlFlagSheet.write(1,xlCol+12,'16:')
+    xlFlagSheet.write(1,xlCol+13,ds.globalattributes['Flag16'])
+    xlFlagSheet.write(1,xlCol+14,'17:')
+    xlFlagSheet.write(1,xlCol+15,ds.globalattributes['Flag17'])
+    xlFlagSheet.write(1,xlCol+16,'18:')
+    xlFlagSheet.write(1,xlCol+17,ds.globalattributes['Flag18'])
+    xlFlagSheet.write(1,xlCol+18,'19:')
+    xlFlagSheet.write(1,xlCol+19,ds.globalattributes['Flag19'])
+    xlFlagSheet.write(2,xlCol,'30:')
+    xlFlagSheet.write(2,xlCol+1,ds.globalattributes['Flag30'])
+    xlFlagSheet.write(2,xlCol+2,'31:')
+    xlFlagSheet.write(2,xlCol+3,ds.globalattributes['Flag31'])
+    xlFlagSheet.write(2,xlCol+4,'32:')
+    xlFlagSheet.write(2,xlCol+5,ds.globalattributes['Flag32'])
+    xlFlagSheet.write(2,xlCol+6,'33:')
+    xlFlagSheet.write(2,xlCol+7,ds.globalattributes['Flag33'])
+    xlFlagSheet.write(2,xlCol+8,'34:')
+    xlFlagSheet.write(2,xlCol+9,ds.globalattributes['Flag34'])
+    xlFlagSheet.write(2,xlCol+10,'35:')
+    xlFlagSheet.write(2,xlCol+11,ds.globalattributes['Flag35'])
+    xlFlagSheet.write(2,xlCol+12,'36:')
+    xlFlagSheet.write(2,xlCol+13,ds.globalattributes['Flag36'])
+    xlFlagSheet.write(2,xlCol+14,'37:')
+    xlFlagSheet.write(2,xlCol+15,ds.globalattributes['Flag37'])
+    xlFlagSheet.write(2,xlCol+16,'38:')
+    xlFlagSheet.write(2,xlCol+17,ds.globalattributes['Flag38'])
+    xlFlagSheet.write(2,xlCol+18,'39:')
+    xlFlagSheet.write(2,xlCol+19,ds.globalattributes['Flag39'])
+    xlFlagSheet.write(3,xlCol,'51:')
+    xlFlagSheet.write(3,xlCol+1,ds.globalattributes['Flag51'])
+    xlFlagSheet.write(3,xlCol+2,'52:')
+    xlFlagSheet.write(3,xlCol+3,ds.globalattributes['Flag52'])
+    xlFlagSheet.write(4,xlCol,'61:')
+    xlFlagSheet.write(4,xlCol+1,ds.globalattributes['Flag61'])
+    xlFlagSheet.write(4,xlCol+2,'62:')
+    xlFlagSheet.write(4,xlCol+3,ds.globalattributes['Flag62'])
+    xlFlagSheet.write(4,xlCol+4,'63:')
+    xlFlagSheet.write(4,xlCol+5,ds.globalattributes['Flag63'])
+    xlFlagSheet.write(4,xlCol+6,'64:')
+    xlFlagSheet.write(4,xlCol+7,ds.globalattributes['Flag64'])
+    xlFlagSheet.write(5,xlCol,'70:')
+    xlFlagSheet.write(5,xlCol+1,ds.globalattributes['Flag70'])
+    xlFlagSheet.write(5,xlCol+2,'80:')
+    xlFlagSheet.write(5,xlCol+3,ds.globalattributes['Flag80'])
+    xlFlagSheet.write(5,xlCol+4,'81:')
+    xlFlagSheet.write(5,xlCol+5,ds.globalattributes['Flag81'])
+    xlFlagSheet.write(5,xlCol+6,'82:')
+    xlFlagSheet.write(5,xlCol+7,ds.globalattributes['Flag82'])
     #d_xf = xlwt.easyxf('font: height 160',num_format_str='dd/mm/yyyy hh:mm')
     d_xf = xlwt.easyxf(num_format_str='dd/mm/yyyy hh:mm')
     for j in range(nRecs):
-        xlFlagSheet.write(j+6,xlCol,ds.series['xlDateTime']['Data'][j],d_xf)
+        xlFlagSheet.write(j+10,xlCol,ds.series['xlDateTime']['Data'][j],d_xf)
     # remove the date and time variables from the list to output
     for ThisOne in ['xlDateTime','Year','Month','Day','Hour','Minute','Second','Hdh']:
         if ThisOne in VariablesInFile:
@@ -451,36 +475,37 @@ def xl_write_series(cf,ds,level):
     #VariablesToOutput.sort(key=str.lower)
     # loop over variables to be output to xl file
     for ThisOne in VariablesToOutput:
-        # put up a progress message
-        log.info(' Writing '+ThisOne+' into column '+str(xlCol)+' of the Excel file')
-        # specify the style of the output
-        #d_xf = xlwt.easyxf('font: height 160')
-        d_xf = xlwt.easyxf()
-        # write the units and the variable name to the header rows in the xl file
-        Description = ds.series[ThisOne]['Attr']['Description']
-        Units = ds.series[ThisOne]['Attr']['Units']
-        #xlDataSheet.write(8,xlCol,Units,d_xf)
-        #xlDataSheet.write(9,xlCol,ThisOne,d_xf)
-        xlDataSheet.write(3,xlCol,Description)
-        xlDataSheet.write(4,xlCol,Units)
-        xlDataSheet.write(5,xlCol,ThisOne)
-        # loop over the values in the variable series (array writes don't seem to work)
-        for j in range(nRecs):
-            #xlDataSheet.write(j+10,xlCol,float(ds.series[ThisOne]['Data'][j]),d_xf)
-            xlDataSheet.write(j+6,xlCol,float(ds.series[ThisOne]['Data'][j]))
-        # check to see if this variable has a quality control flag
-        if 'Flag' in ds.series[ThisOne].keys():
-            # write the QC flag name to the xk file
-            #xlFlagSheet.write(9,xlCol,ThisOne,d_xf)
-            xlFlagSheet.write(5,xlCol,ThisOne)
-            # specify the format of the QC flag (integer)
-            #d_xf = xlwt.easyxf('font: height 160',num_format_str='0')
-            d_xf = xlwt.easyxf(num_format_str='0')
-            # loop over QV flag values and write to xl file
+        if ThisOne in VariablesInFile:
+            # put up a progress message
+            log.info(' Writing '+ThisOne+' into column '+str(xlCol)+' of the Excel file')
+            # specify the style of the output
+            #d_xf = xlwt.easyxf('font: height 160')
+            d_xf = xlwt.easyxf()
+            # write the units and the variable name to the header rows in the xl file
+            Description = ds.series[ThisOne]['Attr']['long_name']
+            Units = ds.series[ThisOne]['Attr']['units']
+            #xlDataSheet.write(8,xlCol,Units,d_xf)
+            #xlDataSheet.write(9,xlCol,ThisOne,d_xf)
+            xlDataSheet.write(7,xlCol,Description)
+            xlDataSheet.write(8,xlCol,Units)
+            xlDataSheet.write(9,xlCol,ThisOne)
+            # loop over the values in the variable series (array writes don't seem to work)
             for j in range(nRecs):
-                xlFlagSheet.write(j+6,xlCol,ds.series[ThisOne]['Flag'][j],d_xf)
-        # increment the column pointer
-        xlCol = xlCol + 1
+                #xlDataSheet.write(j+10,xlCol,float(ds.series[ThisOne]['Data'][j]),d_xf)
+                xlDataSheet.write(j+10,xlCol,float(ds.series[ThisOne]['Data'][j]))
+            # check to see if this variable has a quality control flag
+            if 'Flag' in ds.series[ThisOne].keys():
+                # write the QC flag name to the xk file
+                #xlFlagSheet.write(9,xlCol,ThisOne,d_xf)
+                xlFlagSheet.write(9,xlCol,ThisOne)
+                # specify the format of the QC flag (integer)
+                #d_xf = xlwt.easyxf('font: height 160',num_format_str='0')
+                d_xf = xlwt.easyxf(num_format_str='0')
+                # loop over QV flag values and write to xl file
+                for j in range(nRecs):
+                    xlFlagSheet.write(j+10,xlCol,ds.series[ThisOne]['Flag'][j],d_xf)
+            # increment the column pointer
+            xlCol = xlCol + 1
     # tell the user what we are doing
     log.info(' Saving the Excel file ')
     # save the xl file

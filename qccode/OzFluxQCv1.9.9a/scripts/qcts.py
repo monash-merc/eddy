@@ -5,6 +5,7 @@
 
 import sys
 import ast
+from calendar import isleap
 import constants as c
 import datetime
 from matplotlib.dates import date2num
@@ -22,54 +23,12 @@ import logging
 
 log = logging.getLogger('qc.ts')
 
-def AddMetVars(ds):
-    """
-        Add time series of meteorological variables based on fundamental
-        relationships (Stull 1988)
-        
-        Usage qcts.AddMetVars(ds)
-        ds: data structure
-        
-        Variables added:
-            rhom: density of moist air, mf.densitymoistair(Ta,ps,Ah)
-            Lv: latent heat of vapourisation, mf.Lv(Ta)
-            q: specific humidity, mf.specifichumidity(mr)
-                where mr (mixing ratio) = mf.mixingratio(ps,vp)
-            Cpm: specific heat of moist air, mf.specificheatmoistair(q)
-            VPD: vapour pressure deficit, VPD = esat - e
-        """
-    Ta,f = qcutils.GetSeriesasMA(ds,'Ta_HMP')
-    ps,f = qcutils.GetSeriesasMA(ds,'ps')
-    Ah,f = qcutils.GetSeriesasMA(ds,'Ah_HMP')
-    if 'es_HMP' in ds.series.keys():
-        esat,f = qcutils.GetSeriesasMA(ds,'es_HMP')
-    else:
-        esat = mf.es(Ta)
-        qcutils.CreateSeries(ds,'es_HMP',esat,FList=['Ta_HMP'],Descr='saturation vapour pressure (HMP)',Units='kPa')
-    if 'e_HMP' in ds.series.keys():
-        e,f = qcutils.GetSeriesasMA(ds,'e_HMP')
-    else:
-        e = mf.vapourpressure(Ah,Ta)
-        qcutils.CreateSeries(ds,'e_HMP',e,FList=['Ta_HMP','Ah_HMP'],Descr='atmospheric vapour pressure (HMP)',Units='kPa')
-    rhom = mf.densitymoistair(Ta,ps,Ah)
-    Lv = mf.Lv(Ta)
-    mr = mf.mixingratio(ps,e)
-    q = mf.specifichumidity(mr)
-    Cpm = mf.specificheatmoistair(q)
-    VPD = esat - e
-    qcutils.CreateSeries(ds,'rhom',rhom,FList=['Ta_HMP','ps','Ah_HMP'],Descr='Density of moist air',Units='kg/m3')
-    qcutils.CreateSeries(ds,'Lv',Lv,FList=['Ta_HMP'],Descr='Latent heat of vapourisation',Units='J/kg')
-    qcutils.CreateSeries(ds,'q',q,FList=['ps','Ah_HMP','Ta_HMP'],Descr='Specific humidity',Units='kg/m3')
-    qcutils.CreateSeries(ds,'Cpm',Cpm,FList=['ps','Ah_HMP','Ta_HMP'],Descr='Specific heat of moist air',Units='J/kg-K')
-    qcutils.CreateSeries(ds,'VPD',VPD,FList=['es_HMP','e_HMP'],Descr='Vapour pressure deficit',Units='kPa')
-
 def albedo(cf,ds):
     """
         Filter albedo measurements to:
             high solar angle specified by periods between 10.00 and 14.00, inclusive
             and
             full sunlight in which Fsd > 290 W/m2
-        Observations outside this window are masked and QA/QC flag is set to 7
         
         Usage qcts.albedo(ds)
         ds: data structure
@@ -100,8 +59,8 @@ def albedo(cf,ds):
     index1 = numpy.ma.where(Fsd < Fsdbase)[0]
     index2 = numpy.ma.where((ds.series['Hdh']['Data'] < 10) | (ds.series['Hdh']['Data'] > 14))[0]
     albedo[index] = numpy.float64(-9999)
-    ds.series['albedo']['Flag'][index1] = 30     # bad Fsd flag only if bad time flag not set
-    ds.series['albedo']['Flag'][index2] = 31     # bad time flag
+    ds.series['albedo']['Flag'][index1] = 51     # bad Fsd flag only if bad time flag not set
+    ds.series['albedo']['Flag'][index2] = 52     # bad time flag
     ds.series['albedo']['Data']=numpy.ma.filled(albedo,float(-9999))
 
 def ApplyLinear(cf,ds,ThisOne):
@@ -247,7 +206,7 @@ def AverageSeriesByElements(ds,Av_out,Series_in):
         Av_data = numpy.ma.masked_where(TmpArr_data==float(-9999),TmpArr_data)
         Mx_flag = TmpArr_flag
         SeriesNameString = Series_in[0]
-        SeriesUnitString = ds.series[Series_in[0]]['Attr']['Units']
+        SeriesUnitString = ds.series[Series_in[0]]['Attr']['units']
     else:
         TmpArr_data = ds.series[Series_in[0]]['Data'].copy()
         TmpArr_flag = ds.series[Series_in[0]]['Flag'].copy()
@@ -261,16 +220,16 @@ def AverageSeriesByElements(ds,Av_out,Series_in):
         Av_data = numpy.ma.average(TmpArr_data,axis=0)
         Mx_flag = numpy.min(TmpArr_flag,axis=0)
     DStr = 'Element-wise average of series '+SeriesNameString
-    UStr = ds.series[Series_in[0]]['Attr']['Units']
+    UStr = ds.series[Series_in[0]]['Attr']['units']
     qcutils.CreateSeries(ds,Av_out,Av_data,FList=Series_in,Descr=DStr,Units=UStr)
     #ds.series[Av_out] = {}
     #ds.series[Av_out]['Data'] = numpy.ma.filled(Av_data,float(-9999))
     #ds.series[Av_out]['Flag'] = Mx_flag
     #ds.series[Av_out]['Attr'] = {}
     #ds.series[Av_out]['Attr']['Description'] = 'Element-wise average of series '+SeriesNameString
-    #ds.series[Av_out]['Attr']['Units'] = SeriesUnitString
+    #ds.series[Av_out]['Attr']['units'] = SeriesUnitString
 
-def CalculateAvailableEnergy(ds,Fa_out,Fn_in,Fg_in):
+def CalculateAvailableEnergy(cf,ds,Fa_out='Fa',Fn_in='Fn',Fg_in='Fg'):
     """
         Calculate the average energy as Fn - G.
         
@@ -281,6 +240,11 @@ def CalculateAvailableEnergy(ds,Fa_out,Fn_in,Fg_in):
         Fg_in: input ground heat flux in ds.  Example: 'Fg'
         """
     log.info(' Calculating available energy from Fn and Fg')
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='Avail'):
+        arg = ast.literal_eval(cf['FunctionArgs']['Avail'])
+        Fa_out = arg[0]
+        Fn_in = arg[1]
+        Fg_in = arg[2]
     Fn,f = qcutils.GetSeriesasMA(ds,Fn_in)
     Fg,f = qcutils.GetSeriesasMA(ds,Fg_in)
     Fa = Fn - Fg
@@ -288,7 +252,7 @@ def CalculateAvailableEnergy(ds,Fa_out,Fn_in,Fg_in):
                          Descr='Available energy using '+Fn_in+','+Fg_in,
                          Units='W/m2')
 
-def CalculateFluxes(ds,Ta_in,Ah_in,ps_in):
+def CalculateFluxes(cf,ds,Ta_name='Ta',ps_name='ps',Ah_name='Ah'):
     """
         Calculate the fluxes from the rotated covariances.
         
@@ -299,35 +263,41 @@ def CalculateFluxes(ds,Ta_in,Ah_in,ps_in):
         
         Accepts meteorological constants or variables
         """
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='CF'):
+        args = ast.literal_eval(cf['FunctionArgs']['CF'])
+        Ta_name = args[0]
+        Ah_name = args[1]
+        ps_name = args[2]
+        
     log.info(' Calculating fluxes from covariances')
     if 'wT' in ds.series.keys():
         wT,f = qcutils.GetSeriesasMA(ds,'wT')
-        Ta,f = qcutils.GetSeriesasMA(ds,Ta_in)
-        ps,f = qcutils.GetSeriesasMA(ds,ps_in)
-        Ah,f = qcutils.GetSeriesasMA(ds,Ah_in)
+        Ta,f = qcutils.GetSeriesasMA(ds,Ta_name)
+        ps,f = qcutils.GetSeriesasMA(ds,ps_name)
+        Ah,f = qcutils.GetSeriesasMA(ds,Ah_name)
         if 'rhom' in ds.series.keys():
             rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
             Cpm,f = qcutils.GetSeriesasMA(ds,'Cpm')
         else:
             rhom = mf.densitymoistair(Ta,ps,Ah)
-        Fh_nr = rhom * c.Cpd * wT
-        qcutils.CreateSeries(ds,'Fh',Fh_nr,FList=['wT'],Descr='Sensible heat flux, rotated to natural wind coordinates',Units='W/m2')
+        Fh = rhom * c.Cpd * wT
+        qcutils.CreateSeries(ds,'Fh',Fh,FList=['wT'],Descr='Sensible heat flux, rotated to natural wind coordinates',Units='W/m2')
     else:
         log.error('  CalculateFluxes: wT not found in ds.series, Fh not calculated')
     if 'wA' in ds.series.keys():
         wA,f = qcutils.GetSeriesasMA(ds,'wA')
         if 'Lv' in ds.series.keys():
-            Lv,f = qcutils,GetSeriesasMA(ds,'Lv')
-            Fe_raw_nr = Lv * wA / float(1000)
+            Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
+            Fe = Lv * wA / float(1000)
         else:
-            Fe_raw_nr = c.Lv * wA / float(1000)
-        qcutils.CreateSeries(ds,'Fe_raw',Fe_raw_nr,FList=['wA'],Descr='Latent heat flux, rotated to natural wind coordinates',Units='W/m2')
+            Fe = c.Lv * wA / float(1000)
+        qcutils.CreateSeries(ds,'Fe',Fe,FList=['wA'],Descr='Latent heat flux, rotated to natural wind coordinates',Units='W/m2')
     else:
-        log.error('  CalculateFluxes: wA not found in ds.series, Fe_raw not calculated')
+        log.error('  CalculateFluxes: wA not found in ds.series, Fe not calculated')
     if 'wC' in ds.series.keys():
         wC,f = qcutils.GetSeriesasMA(ds,'wC')
-        Fc_raw = wC
-        qcutils.CreateSeries(ds,'Fc_raw',Fc_raw,FList=['wC'],Descr='CO2 flux, rotated to natural wind coordinates',Units='mg/m2/s')
+        Fc = wC
+        qcutils.CreateSeries(ds,'Fc',Fc,FList=['wC'],Descr='CO2 flux, rotated to natural wind coordinates',Units='mg/m2/s')
     else:
         log.error('  CalculateFluxes: wC not found in ds.series, Fc_raw not calculated')
     if 'uw' in ds.series.keys():
@@ -349,67 +319,7 @@ def CalculateFluxes(ds,Ta_in,Ah_in,ps_in):
     else:
         log.error('  CalculateFluxes: wx not found in ds.series, Fm and ustar not calculated')
 
-def CalculateFluxes_Unrotated(ds):
-    """
-        Calculate the fluxes from the raw covariances.
-        
-        Usage qcts.CalculateFluxes_Unrotated(ds)
-        ds: data structure
-        
-        Pre-conditions: MergeSeries (including TaFromTv)
-        
-        Accepts meteorological constants or variables
-        """
-    log.info(' Calculating fluxes from unrotated covariances')
-    if 'UzT' in ds.series.keys():
-        UzT,f = qcutils.GetSeriesasMA(ds,'UzT')
-        Ta,f = qcutils.GetSeriesasMA(ds,'Ta_EC')
-        ps,f = qcutils.GetSeriesasMA(ds,'ps')
-        Ah,f = qcutils.GetSeriesasMA(ds,'Ah_EC')
-        if 'rhom' in ds.series.keys():
-            rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
-        else:
-            rhom = mf.densitymoistair(Ta,ps,Ah)
-        Fh_nr = rhom * c.Cpd * UzT
-        qcutils.CreateSeries(ds,'Fh_nr',Fh_nr,FList=['UzT'],Descr='Sensible heat flux, unrotated',Units='W/m2')
-    else:
-        log.error('  CalculateFluxes_Unrotated: UzT not found in ds.series, Fh_nr not calculated')
-    if 'UzA' in ds.series.keys():
-        UzA,f = qcutils.GetSeriesasMA(ds,'UzA')
-        if 'Lv' in ds.series.keys():
-            Lv,f = qcutils,GetSeriesasMA(ds,'Lv')
-            Fe_raw_nr = Lv * UzA / float(1000)
-        else:
-            Fe_raw_nr = c.Lv * UzA / float(1000)
-        qcutils.CreateSeries(ds,'Fe_raw_nr',Fe_raw_nr,FList=['UzA'],Descr='Latent heat flux, unrotated',Units='W/m2')
-    else:
-        log.error('  CalculateFluxes_Unrotated: UzA not found in ds.series, Fe_raw_nr not calculated')
-    if 'UzC' in ds.series.keys():
-        UzC,f = qcutils.GetSeriesasMA(ds,'UzC')
-        Fc_raw_nr = UzC
-        qcutils.CreateSeries(ds,'Fc_raw_nr',Fc_raw_nr,FList=['UzC'],Descr='CO2 flux, unrotated',Units='mg/m2/s')
-    else:
-        log.error('  CalculateFluxes_Unrotated: UzC not found in ds.series, Fc_raw_nr not calculated')
-    if 'UxUz' in ds.series.keys():
-        if 'UyUz' in ds.series.keys():
-            xz,f = qcutils.GetSeriesasMA(ds,'UxUz')
-            yz,f = qcutils.GetSeriesasMA(ds,'UyUz')
-            vs = xz*xz + yz*yz
-            if 'Fh_nr' not in ds.series.keys():
-                if 'rhom' not in ds.series.keys():
-                        rhom = mf.densitymoistair(Ta,ps,Ah)
-                else:
-                    rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
-            Fm_nr = rhom * numpy.ma.sqrt(vs)
-            us_nr = numpy.ma.sqrt(numpy.ma.sqrt(vs))
-            qcutils.CreateSeries(ds,'Fm_nr',Fm_nr,FList=['UxUz','UyUz'],Descr='Momentum flux, unrotated',Units='kg/m/s2')
-            qcutils.CreateSeries(ds,'ustar_nr',us_nr,FList=['UxUz','UyUz'],Descr='Friction velocity, unrotated',Units='m/s')
-        else:
-            log.error('  CalculateFluxes_Unrotated: UyUz not found in ds.series, Fm and ustar not calculated')
-    else:
-        log.error('  CalculateFluxes_Unrotated: UxUz not found in ds.series, Fm and ustar not calculated')
-
-def CalculateFluxesRM(ds,Ta_in,Ah_in,ps_in):
+def CalculateFluxesRM(cf,ds,Ta_name='Ta_HMP_EC',ps_name='ps',Ah_name='Ah_HMP_EC'):
     """
         Calculate the fluxes from the rotated and Massman corrected covariances.
         
@@ -421,11 +331,16 @@ def CalculateFluxesRM(ds,Ta_in,Ah_in,ps_in):
         Accepts meteorological constants or variables
         """
     log.info(' Calculating fluxes from covariances')
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='CF'):
+        args = ast.literal_eval(cf['FunctionArgs']['CF'])
+        Ta_name = args[0]
+        Ah_name = args[1]
+        ps_name = args[2]
     if 'wTM' in ds.series.keys():
         wT,f = qcutils.GetSeriesasMA(ds,'wTM')
-        Ta,f = qcutils.GetSeriesasMA(ds,Ta_in)
-        ps,f = qcutils.GetSeriesasMA(ds,ps_in)
-        Ah,f = qcutils.GetSeriesasMA(ds,Ah_in)
+        Ta,f = qcutils.GetSeriesasMA(ds,Ta_name)
+        ps,f = qcutils.GetSeriesasMA(ds,ps_name)
+        Ah,f = qcutils.GetSeriesasMA(ds,Ah_name)
         if 'rhom' in ds.series.keys():
             rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
         else:
@@ -494,6 +409,62 @@ def CalculateLongwave(ds,Fl_out,Fl_in,Tbody_in):
                          Descr='Calculated longwave radiation using '+Fl_in+','+Tbody_in,
                          Units='W/m2')
 
+def CalculateMeteorologicalVariables(cf,ds,Ta_name='Ta',ps_name='ps',Ah_name='Ah'):
+    """
+        Add time series of meteorological variables based on fundamental
+        relationships (Stull 1988)
+
+        Usage qcts.CalculateMeteorologicalVariables(ds,Ta_name,ps_name,Ah_name)
+        ds: data structure
+        Ta_name: data series name for air temperature
+        ps_name: data series name for pressure
+        Ah_name: data series name for absolute humidity
+
+        Variables added:
+            rhom: density of moist air, mf.densitymoistair(Ta,ps,Ah)
+            Lv: latent heat of vapourisation, mf.Lv(Ta)
+            q: specific humidity, mf.specifichumidity(mr)
+                where mr (mixing ratio) = mf.mixingratio(ps,vp)
+            Cpm: specific heat of moist air, mf.specificheatmoistair(q)
+            VPD: vapour pressure deficit, VPD = esat - e
+        """
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='MetVars'):
+        vars = ast.literal_eval(cf['FunctionArgs']['MetVars'])
+        Ta_name = vars[0]
+        ps_name = vars[1]
+        Ah_name = vars[2]
+    Ta,f = qcutils.GetSeriesasMA(ds,Ta_name)
+    ps,f = qcutils.GetSeriesasMA(ds,ps_name)
+    Ah,f = qcutils.GetSeriesasMA(ds,Ah_name)
+    
+    if 'e' in ds.series.keys():
+        e,f = qcutils.GetSeriesasMA(ds,'e')
+    else:
+        e = mf.vapourpressure(Ah,Ta)
+    qcutils.CreateSeries(ds,'e',e,FList=[Ta_name,Ah_name],Descr='Vapour pressure',Units='kPa')
+    if 'es_HMP' in ds.series.keys():
+        esat,f = qcutils.GetSeriesasMA(ds,'es_HMP')
+    else:
+        esat = mf.es(Ta)
+        qcutils.CreateSeries(ds,'es_HMP',esat,FList=[Ta_name],Descr='saturation vapour pressure (HMP)',Units='kPa')
+    rhod = mf.densitydryair(Ta,ps)
+    rhom = mf.densitymoistair(Ta,ps,Ah)
+    Lv = mf.Lv(Ta)
+    mr = mf.mixingratio(ps,e)
+    mrsat = mf.mixingratio(ps,esat)
+    q = mf.specifichumidity(mr)
+    qsat = mf.specifichumidity(mrsat)
+    Cpm = mf.specificheatmoistair(q)
+    VPD = esat - e
+    SHD = qsat - q
+    qcutils.CreateSeries(ds,'rhod',rhod,FList=[Ta_name,ps_name],Descr='Density of dry air',Units='kg/m3')
+    qcutils.CreateSeries(ds,'rhom',rhom,FList=[Ta_name,ps_name,Ah_name],Descr='Density of moist air',Units='kg/m3')
+    qcutils.CreateSeries(ds,'Lv',Lv,FList=[Ta_name],Descr='Latent heat of vapourisation',Units='J/kg')
+    qcutils.CreateSeries(ds,'Cpm',Cpm,FList=[Ta_name,ps_name,Ah_name],Descr='Specific heat of moist air',Units='J/kg-K')
+    qcutils.CreateSeries(ds,'q',q,FList=[Ta_name,ps_name,Ah_name],Descr='Specific humidity',Units='kg/kg')
+    qcutils.CreateSeries(ds,'VPD',VPD,FList=[Ta_name,Ah_name],Descr='Vapour pressure deficit',Units='kPa')
+    qcutils.CreateSeries(ds,'SHD',SHD,FList=[Ta_name,Ah_name],Descr='Specific humidity deficit',Units='kg/kg')
+
 def CalculateNetRadiation(ds,Fn_out,Fsd_in,Fsu_in,Fld_in,Flu_in):
     """
         Calculate the net radiation from the 4 components of the surface
@@ -524,7 +495,7 @@ def CalculateNetRadiation(ds,Fn_out,Fsd_in,Fsu_in,Fld_in,Flu_in):
         ds.series[Fn_out]['Flag'] = numpy.zeros(nRecs) + float(1)
         ds.series[Fn_out]['Attr'] = {}
         ds.series[Fn_out]['Attr']['Description'] = 'Calculated net radiation (one or more components missing)'
-        ds.series[Fn_out]['Attr']['Units'] = 'W/m2'
+        ds.series[Fn_out]['Attr']['units'] = 'W/m2'
 
 def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
     """
@@ -649,7 +620,7 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
                     SubOutList.append(COut[listindex])
         elif ThisOne == 'PM':
             if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
-                get_stomatalresistance(cf,ds,'L4')
+                get_stomatalresistance(cf,ds)
                 Gst_mmol,f = qcutils.GetSeriesasMA(ds,'Gst')   # mmol/m2-s
                 Gst_mol =  Gst_mmol * 1800 / 1000                 # mol/m2-30min for summing
                 qcutils.CreateSeries(ds,'Gst_mol',Gst_mol,FList=['Gst'],Descr='Cumulative 30-min Bulk Stomatal Conductance',Units='mol/m2')
@@ -872,7 +843,54 @@ def CoordRotation2D(cf,ds):
             if ds.series['vw']['Flag'][i] > 0:
                 ds.series['vw']['Flag'][i] = 11
 
-def CorrectFgForStorage(cf,ds,Fg_out,Fg_in,Ts_in,SWC_in=[]):
+def CorrectFcForStorage(cf,ds,Fc_out,Fc_in,CO2_in):
+    """
+    Correct CO2 flux for storage in the air column beneath the CO2 instrument.  This
+    routine assumes the air column between the sensor and the surface is well mixed.
+    
+    Usage qcts.CorrectFcForStorage(cf,ds,Fc_out,Fc_in,CO2_in)
+    cf: control file object    
+    ds: data structure
+    Fc_out: series label of the corrected CO2 flux
+    Fc_in: series label of the uncorrected CO2 flux
+    CO2_in: series label of the CO2 concentration
+    
+    Parameters loaded from control file:
+        zm: measurement height, m
+        dt: timestep, seconds
+    """
+    log.info(' Correcting Fc for storage')
+    if 'General' in cf:
+        if 'zms' in cf['General']:
+            zms = float(cf['General']['zms'])
+            Cc,Cc_flag = qcutils.GetSeriesasMA(ds,CO2_in,si=0,ei=-1)
+            rhod,rhod_flag = qcutils.GetSeriesasMA(ds,'rhod',si=0,ei=-1)
+            Fc,Fc_flag = qcutils.GetSeriesasMA(ds,Fc_in,si=0,ei=-1)
+            dc = numpy.ma.ediff1d(Cc,to_begin=0)                      # CO2 concentration difference from timestep to timestep
+            dt=86400*numpy.ediff1d(ds.series['xlDateTime']['Data'],to_begin=float(30)/1440)    # time step in seconds from the Excel datetime values
+            Fc_storage = zms*rhod*dc/dt                               # calculate the CO2 flux based on storage below the measurement height
+            descr = 'Fc infered from CO2 storage using single point CO2 measurement'
+            units = qcutils.GetUnitsFromds(ds,Fc_in)
+            qcutils.CreateSeries(ds,'Fc_storage',Fc_storage,FList=[Fc_in,CO2_in],Descr=descr,Units=units)
+            Fc = Fc + Fc_storage
+            descr = 'Fc_wpl corrected for storage using single point CO2 measurement'
+            qcutils.CreateSeries(ds,Fc_out,Fc,FList=[Fc_in,CO2_in],Descr=descr,Units=units)
+        else:
+            print 'CorrectFcForStorage: zms expected but not found in General section of control file'
+    else:
+        print 'CorrectFcForStorage: section General expected but not found in control file'
+
+def CorrectFg(cf,ds):
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='CFgArgs'):
+        List = cf['FunctionArgs']['CFgArgs'].keys()
+        for i in range(len(List)):
+            CFgArgs = ast.literal_eval(cf['FunctionArgs']['CFgArgs'][str(i)])
+            CorrectFgForStorage(cf,ds,Fg_out=CFgArgs[0],Fg_in=CFgArgs[1],Ts_in=CFgArgs[2],SWC_in=CFgArgs[3])
+        return
+    
+    CorrectFgForStorage(cf,ds)
+
+def CorrectFgForStorage(cf,ds,Fg_out='Fg',Fg_in='Fg',Ts_in='Ts',SWC_in='Sws'):
     """
         Correct ground heat flux for storage in the layer above the heat flux plate
         
@@ -899,14 +917,16 @@ def CorrectFgForStorage(cf,ds,Fg_out,Fg_in,Ts_in,SWC_in=[]):
     #Sws,f = qcutils.GetSeriesasMA(ds,Sws_in)      # volumetric soil moisture
     Sws_default = min(1.0,max(0.0,float(cf['Soil']['SwsDefault'])))
     if len(SWC_in) == 0:
-        slist = ast.literal_eval(cf['Soil']['SwsSeries'])
+        slist = []
+        if qcutils.cfkeycheck(cf,Base='Soil',ThisOne='SwsSeries'):
+            slist = ast.literal_eval(cf['Soil']['SwsSeries'])
         if len(slist)==0:
             Sws = numpy.ones(nRecs)*Sws_default
         elif len(slist)==1:
             Sws,f = qcutils.GetSeriesasMA(ds,slist[0])
         else:
             MergeSeries(ds,'Sws',slist,[0,10])
-            Sws,f = qcutils.GetSeriesasMA(ds,slist[0])
+            Sws,f = qcutils.GetSeriesasMA(ds,'Sws')
     else:
         slist = SWC_in
         Sws,f = qcutils.GetSeriesasMA(ds,SWC_in)
@@ -1067,10 +1087,10 @@ def do_attributes(cf,ds):
             ds.globalattributes[gattr] = cf['Global'][gattr]
         ds.globalattributes['Flag0'] = 'Good data'
         ds.globalattributes['Flag1'] = 'QA/QC: -9999 in level 1 dataset'
-        ds.globalattributes['Flag2'] = 'QA/QC: Range Check'
+        ds.globalattributes['Flag2'] = 'QA/QC: L2 Range Check'
         ds.globalattributes['Flag3'] = 'QA/QC: CSAT Diagnostic'
         ds.globalattributes['Flag4'] = 'QA/QC: LI7500 Diagnostic'
-        ds.globalattributes['Flag5'] = 'QA/QC: Diurnal SD Check'
+        ds.globalattributes['Flag5'] = 'QA/QC: L2 Diurnal SD Check'
         ds.globalattributes['Flag6'] = 'QA/QC: Excluded Dates'
         ds.globalattributes['Flag7'] = 'QA/QC: Excluded Hours'
         ds.globalattributes['Flag10'] = 'Corrections: Apply Linear'
@@ -1078,21 +1098,31 @@ def do_attributes(cf,ds):
         ds.globalattributes['Flag12'] = 'Corrections/Combinations: Massman Frequency Attenuation Correction (Coord Rotation, Tv_CSAT, Ah_HMP, ps)'
         ds.globalattributes['Flag13'] = 'Corrections/Combinations: Virtual to Actual Fh (Coord Rotation, Massman, Ta_HMP)'
         ds.globalattributes['Flag14'] = 'Corrections/Combinations: WPL correction for flux effects on density measurements (Coord Rotation, Massman, Fhv to Fh, Cc_7500_Av)'
-        ds.globalattributes['Flag16'] = 'Corrections/Combinations: Post-correction Range Check'
-        ds.globalattributes['Flag17'] = 'Corrections/Combinations: Post-correction Diurnal SD Check'
-        ds.globalattributes['Flag20'] = 'GapFilling (L3_Corrected): Gap coordination'
-        ds.globalattributes['Flag21'] = 'GapFilling (L4_GapFilled): Gap Filled'
-        ds.globalattributes['Flag22'] = 'GapFilling (L4_GapFilled): Gap not Filled'
-        ds.globalattributes['Flag30'] = 'albedo: bad Fsd < threshold (290 W/m2 default) only if bad time flag (31) not set'
-        ds.globalattributes['Flag31'] = 'albedo: bad time flag (not midday 10.00 to 14.00)'
-        ds.globalattributes['Flag32'] = 'Penman-Monteith: bad rst (rst < 0) only if bad Uavg (35), bad Fe (33) and bad Fsd (34) flags not set'
-        ds.globalattributes['Flag33'] = 'Penman-Monteith: bad Fe < threshold (0 W/m2 default) only if bad Fsd (34) flag not set'
-        ds.globalattributes['Flag34'] = 'Penman-Monteith: bad Fsd < threshold (10 W/m2 default)'
-        ds.globalattributes['Flag35'] = 'Penman-Monteith: Uavg == 0 (undefined aerodynamic resistance under calm conditions) only if bad Fe (33) and bad Fsd (34) flags not set'
-        ds.globalattributes['Flag40'] = 'Partitioning: Night Re computed from exponential temperature response curves'
-        ds.globalattributes['Flag41'] = 'Partitioning: Day GPP/Re computed from light-response curves, GPP = Re - Fc'
-        ds.globalattributes['Flag42'] = 'Partitioning: GPP night mask'
-        ds.globalattributes['Flag43'] = 'Partitioning: Day Fc > Re, GPP = 0, Re = Fc'
+        ds.globalattributes['Flag15'] = 'Corrections/Combinations: Ta from Tv'
+        ds.globalattributes['Flag16'] = 'Corrections/Combinations: L3 Range Check'
+        ds.globalattributes['Flag17'] = 'Corrections/Combinations: L3 Diurnal SD Check'
+        ds.globalattributes['Flag18'] = 'Corrections/Combinations: u* filter'
+        ds.globalattributes['Flag19'] = 'Corrections/Combinations: Gap coordination'
+        ds.globalattributes['Flag30'] = 'GapFilling: Flux Gap Filled by ANN (SOLO)'
+        ds.globalattributes['Flag31'] = 'GapFilling: Flux Gap not Filled by ANN'
+        ds.globalattributes['Flag32'] = 'GapFilling: Met Gap Filled from Climatology'
+        ds.globalattributes['Flag33'] = 'GapFilling: Gap Filled from Ratios'
+        ds.globalattributes['Flag34'] = 'GapFilling: Gap Filled by Interpolation'
+        ds.globalattributes['Flag35'] = 'GapFilling: Gap Filled by Replacement'
+        ds.globalattributes['Flag36'] = 'GapFilling: u* from Fh'
+        ds.globalattributes['Flag37'] = 'GapFilling: u* not from Fh'
+        ds.globalattributes['Flag38'] = 'GapFilling: L4 Range Check'
+        ds.globalattributes['Flag39'] = 'GapFilling: L4 Diurnal SD Check'
+        ds.globalattributes['Flag51'] = 'albedo: bad Fsd < threshold (290 W/m2 default) only if bad time flag (31) not set'
+        ds.globalattributes['Flag52'] = 'albedo: bad time flag (not midday 10.00 to 14.00)'
+        ds.globalattributes['Flag61'] = 'Penman-Monteith: bad rst (rst < 0) only if bad Uavg (35), bad Fe (33) and bad Fsd (34) flags not set'
+        ds.globalattributes['Flag62'] = 'Penman-Monteith: bad Fe < threshold (0 W/m2 default) only if bad Fsd (34) flag not set'
+        ds.globalattributes['Flag63'] = 'Penman-Monteith: bad Fsd < threshold (10 W/m2 default)'
+        ds.globalattributes['Flag64'] = 'Penman-Monteith: Uavg == 0 (undefined aerodynamic resistance under calm conditions) only if bad Fe (33) and bad Fsd (34) flags not set'
+        ds.globalattributes['Flag70'] = 'Partitioning Night: Re computed from exponential temperature response curves'
+        ds.globalattributes['Flag80'] = 'Partitioning Day: GPP/Re computed from light-response curves, GPP = Re - Fc'
+        ds.globalattributes['Flag81'] = 'Partitioning Day: GPP night mask'
+        ds.globalattributes['Flag82'] = 'Partitioning Day: Fc > Re, GPP = 0, Re = Fc'
     for ThisOne in ds.series.keys():
         if ThisOne in cf['Variables']:
             if 'Attr' in cf['Variables'][ThisOne].keys():
@@ -1118,8 +1148,8 @@ def do_functions(cf,ds):
                             ds.series[ThisOne]['Flag'] = ds.series[Parent]['Flag']
                         else:
                             ds.series[ThisOne]['Flag'] = numpy.zeros(nRecs,int)
-                elif 'SquareRoot' in cf['Variables'][ThisOne]['Function'][str(i)].keys() and 'Parent' in cf['Variables'][ThisOne]['Function'][str(i)]['Square'].keys():
-                    Parent = cf['Variables'][ThisOne]['Function'][str(i)]['Square']['Parent']
+                elif 'SquareRoot' in cf['Variables'][ThisOne]['Function'][str(i)].keys() and 'Parent' in cf['Variables'][ThisOne]['Function'][str(i)]['SquareRoot'].keys():
+                    Parent = cf['Variables'][ThisOne]['Function'][str(i)]['SquareRoot']['Parent']
                     ds.series[ThisOne]['Data'] = qcts.SquareRoot(ds.series[Parent]['Data'])
                     nRecs = numpy.size(ds.series[ThisOne]['Data'])
                     if 'Flag' not in ds.series[ThisOne].keys():
@@ -1143,8 +1173,8 @@ def do_functions(cf,ds):
                                 ds.series[ThisOne]['Flag'] = ds.series[Parent]['Flag']
                             else:
                                 ds.series[ThisOne]['Flag'] = numpy.zeros(nRecs,int)
-                    elif 'SquareRoot' in cf['Variables'][ThisOne]['Function'][str(i)].keys() and 'Parent' in cf['Variables'][ThisOne]['Function'][str(i)]['Square'].keys():
-                        Parent = cf['Variables'][ThisOne]['Function'][str(i)]['Square']['Parent']
+                    elif 'SquareRoot' in cf['Variables'][ThisOne]['Function'][str(i)].keys() and 'Parent' in cf['Variables'][ThisOne]['Function'][str(i)]['SquareRoot'].keys():
+                        Parent = cf['Variables'][ThisOne]['Function'][str(i)]['SquareRoot']['Parent']
                         ds.series[ThisOne]['Data'] = qcts.SquareRoot(ds.series[Parent]['Data'])
                         nRecs = numpy.size(ds.series[ThisOne]['Data'])
                         if 'Flag' not in ds.series[ThisOne].keys():
@@ -1157,7 +1187,149 @@ def do_functions(cf,ds):
                         log.error ('Function missing or unknown for variable'+ThisOne)
                         return
 
-def Fc_WPL(ds,Fc_wpl_out,Fc_raw_in,Fh_in,Fe_wpl_in,Ta_in,Ah_in,Cc_in,ps_in):
+def do_l4qc(cf,ds3,level):
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList'):
+        l4functions = ast.literal_eval(cf['General']['FunctionList'])
+        WorkList = ast.literal_eval(cf['General']['FunctionList'])
+        if 'Met' in WorkList:
+            WorkList.remove('Met')
+            ds4 = copy.deepcopy(ds3)
+            do_metgaps(cf,ds4)
+            if 'SOLO' in WorkList:
+                l4functions.remove('SOLO')
+                WorkList.remove('SOLO')
+            ds4.globalattributes['Functions'] = ['InterpolateOverMissing', 'GapFillFromAlternate', 'GapFillFromClimatology', 'GapFillFromRatios', 'ReplaceOnDiff', 'UstarFromFh', 'ReplaceWhereMissing', 'do_qcchecks']
+        if 'SOLO' in WorkList:
+            WorkList.remove('SOLO')
+            ds4 = qcio.nc_read_series(cf,level)
+            do_solo(cf,ds4)
+            ds4.globalattributes['Functions'] = ['SOLO ANN GapFilling 10-day window']
+            # add relevant meteorological values to L3 data
+            log.info(' Adding standard met variables to database')
+            CalculateMeteorologicalVariables(cf,ds4)
+            ds4.globalattributes['Functions'].append('CalculateMetVars')
+            if 'CalculateMetVars' in WorkList:
+                WorkList.remove('CalculateMetVars')
+        if 'Sums' in WorkList:
+            do_sums(cf,ds4,l4functions,WorkList)
+            if 'Met' in l4functions or 'SOLO' in l4functions:
+                for i in range(len(WorkList)):
+                    ds4.globalattributes['Functions'].append(WorkList[i])
+            else:
+                ds4 = copy.deepcopy(ds3)
+                ds4.globalattributes['Functions'] = l4functions
+        if 'Met' not in l4functions and 'SOLO' not in l4functions and 'Sums' not in l4functions:
+            log.error('Met, SOLO or Sums not located in FunctionList')
+            ds4 = copy.deepcopy(ds3)
+            ds4.globalattributes['Level'] = 'L3'
+            ds4.globalattributes['Functions'] = ['No functions applied']
+            return ds4
+    else:
+        log.error('FunctionList not found in control file')
+        ds4 = copy.deepcopy(ds3)
+        ds4.globalattributes['Level'] = 'L3'
+        ds4.globalattributes['Functions'] = ['No functions applied']
+        return ds4
+    ds4.globalattributes['Level'] = level
+    return ds4
+
+def do_metgaps(cf,ds4):
+    # get z-d (measurement height minus displacement height) and z0 from the control file
+    if qcutils.cfkeycheck(cf,Base='Params',ThisOne='zmd') and qcutils.cfkeycheck(cf,Base='Params',ThisOne='z0'):
+        zmd = float(cf['Params']['zmd'])   # z-d for site
+        z0 = float(cf['Params']['z0'])     # z0 for site
+            
+        # make a copy of the L4 data, data from the alternate sites will be merged with this copy
+        # linear interpolation to fill missing values over gaps of 1 hour
+        qcts.InterpolateOverMissing(cf,ds4,maxlen=2)
+        # gap fill meteorological and radiation data from the alternate site(s)
+        log.info(' Gap filling using data from alternate sites')
+        qcts.GapFillFromAlternate(cf,ds4)
+        # gap fill meteorological, radiation and soil data using climatology
+        log.info(' Gap filling using site climatology')
+        qcts.GapFillFromClimatology(cf,ds4)
+        # gap fill using evaporative fraction (Fe/Fa), Bowen ratio (Fh/Fe) and ecosystem water use efficiency (Fc/Fe)
+        log.info(' Gap filling Fe, Fh and Fc using ratios')
+        qcts.GapFillFromRatios(cf,ds4)
+        # calculate u* from Fh and corrected wind speed
+        us_in,us_out = qcts.UstarFromFh(cf,ds4, zmd, z0)
+        qcts.ReplaceWhereMissing(ds4.series[us_in],ds4.series[us_in],ds4.series[us_out],0)
+        # re-apply the quality control checks (range, diurnal and rules)
+        log.info(' Doing QC checks on L4 data')
+        qcck.do_qcchecks(cf,ds4)
+        # interpolate over any ramaining gaps up to 3 hours in length
+        qcts.InterpolateOverMissing(cf,ds4,maxlen=6)
+        # fill any remaining gaps climatology
+        qcts.GapFillFromClimatology(cf,ds4)
+
+def do_solo(cf,ds4,Fc_in='Fc',Fe_in='Fe',Fh_in='Fh',Fc_out='Fc',Fe_out='Fe',Fh_out='Fh'):
+    ''' duplicate gapfilled fluxes for graphing comparison'''
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='SOLOvars'):
+        invars = ast.literal_eval(cf['FunctionArgs']['SOLOvars'])
+        Fc_in = invars[0]
+        Fe_in = invars[1]
+        Fh_in = invars[2]
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='SOLOplot'):
+        outvars = ast.literal_eval(cf['FunctionArgs']['SOLOplot'])
+        Fc_out = outvars[0]
+        Fe_out = outvars[1]
+        Fh_out = outvars[2]
+    if Fe_in in ds4.series.keys():
+        Fe,flag = qcutils.GetSeriesasMA(ds4,Fe_in)
+        qcutils.CreateSeries(ds4,Fe_out,Fe,Flag=flag,Descr='ANN gapfilled Latent Heat Flux',Units='W/m2')
+    if Fc_in in ds4.series.keys():
+        Fc,flag = qcutils.GetSeriesasMA(ds4,Fc_in)
+        qcutils.CreateSeries(ds4,Fc_out,Fc,Flag=flag,Descr='ANN gapfilled Carbon Flux',Units='mg/m2/s')
+    if Fh_in in ds4.series.keys():
+        Fh,flag = qcutils.GetSeriesasMA(ds4,Fh_in)
+        qcutils.CreateSeries(ds4,Fh_out,Fh,Flag=flag,Descr='ANN gapfilled Sensible Heat Flux',Units='W/m2')
+
+def do_sums(cf,ds,l4functions,WorkList):
+    if 'MergeSeriesWS' in l4functions:
+        srclist = qcutils.GetMergeList(cf,'Ws_EC',default=['Ws_WS_01','Ws_CSAT'])
+        if len(srclist) > 0:
+            qcts.MergeSeries(ds,'Ws_EC',srclist,[0,10])
+            
+            # compute daily statistics
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SumList'):
+                SumList = ast.literal_eval(cf['Sums']['SumList'])
+            else:
+                SumList = ['Rain','ET','Energy','Radiation','Carbon']
+            
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SubSumList'):
+                SubSumList = ast.literal_eval(cf['Sums']['SubSumList'])
+            else:
+                SubSumList = []
+            
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='MinMaxList'):
+                MinMaxList = ast.literal_eval(cf['Sums']['MinMaxList'])
+            else:
+                MinMaxList = ['Ta_EC','Vbat','Tpanel','Carbon']
+            
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='MeanList'):
+                MeanList = ast.literal_eval(cf['Sums']['MeanList'])
+            else:
+                MeanList = ['Ta_EC','Tpanel']
+            
+            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SoilList'):
+                SoilList = ast.literal_eval(cf['Sums']['SoilList'])
+            else:
+                SoilList = []
+        
+        StatsList = SumList + MinMaxList + MeanList + SoilList
+        if len(StatsList) > 0:
+            qcts.ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList)
+
+def do_WPL(cf,ds,cov=''):
+    if cov == 'True':
+        Fe_WPLcov(cf,ds)
+        Fc_WPLcov(cf,ds)
+        return
+    
+    Fe_WPL(cf,ds)
+    Fc_WPL(cf,ds)
+
+def Fc_WPL(cf,ds,Fc_wpl_out='Fc',Fc_raw_in='Fc',Fh_in='Fh',Fe_wpl_in='Fe',Ta_in='Ta',Ah_in='Ah',Cc_in='Cc_7500_Av',ps_in='ps'):
     """
         Apply Webb, Pearman and Leuning correction to carbon flux.  This
         correction is necessary to account for flux effects on density
@@ -1183,6 +1355,16 @@ def Fc_WPL(ds,Fc_wpl_out,Fc_raw_in,Fh_in,Fe_wpl_in,Ta_in,Ah_in,Cc_in,ps_in):
         Accepts meteorological constants or variables
         """
     log.info(' Applying WPL correction to Fc')
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='CWPL'):
+        Cargs = ast.literal_eval(cf['FunctionArgs']['CWPL'])
+        Fc_wpl_out = Cargs[0]
+        Fc_raw_in = Cargs[1]
+        Fh_in = Cargs[2]
+        Fe_wpl_in = Cargs[3]
+        Ta_in = Cargs[4]
+        Ah_in = Cargs[5]
+        Cc_in = Cargs[6]
+        ps_in = Cargs[7]
     Fc_raw,f = qcutils.GetSeriesasMA(ds,Fc_raw_in)
     Fh,f = qcutils.GetSeriesasMA(ds,Fh_in)
     Fe_wpl,f = qcutils.GetSeriesasMA(ds,Fe_wpl_in)
@@ -1196,8 +1378,8 @@ def Fc_WPL(ds,Fc_wpl_out,Fc_raw_in,Fh_in,Fe_wpl_in,Ta_in,Ah_in,Cc_in,ps_in):
     Ah = Ah/float(1000)                       # Absolute humidity from g/m3 to kg/m3
     sigma_wpl = Ah/rhod
     if 'Cpm' not in ds.series.keys():
-        if 'e_HMP' in ds.series.keys():
-            e,f = qcutils.GetSeriesasMA(ds,'e_HMP')
+        if 'e' in ds.series.keys():
+            e,f = qcutils.GetSeriesasMA(ds,'e')
             mr = mf.mixingratio(ps,e)
             q = mf.specifichumidity(mr)
             Cpm = mf.specificheatmoistair(q)
@@ -1210,7 +1392,7 @@ def Fc_WPL(ds,Fc_wpl_out,Fc_raw_in,Fh_in,Fe_wpl_in,Ta_in,Ah_in,Cc_in,ps_in):
         Cpm,f = qcutils.GetSeriesasMA(ds,'Cpm')
     if 'rhom' in ds.series.keys() and 'Lv' in ds.series.keys():
         rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
-        Lv,f = qcutils,GetSeriesasMA(ds,'Lv')
+        Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
         co2_wpl_Fe = 1.61*(Cc/rhod)*(Fe_wpl/Lv)
         co2_wpl_Fh = (1+(1.61*sigma_wpl))*Cc/(Ta+273.15)*Fh/(rhom*Cpm)
     else:
@@ -1223,25 +1405,8 @@ def Fc_WPL(ds,Fc_wpl_out,Fc_raw_in,Fh_in,Fe_wpl_in,Ta_in,Ah_in,Cc_in,ps_in):
     Fc_wpl_flag[index] = 14
     qcutils.CreateSeries(ds,Fc_wpl_out,Fc_wpl_data,Flag=Fc_wpl_flag,
                          Descr='WPL corrected Fc',Units='mg/m2/s')
-    #ds.series[Fc_wpl_out]['Flag'] = Fc_wpl_flag
-    #qcutils.CreateSeries(ds,'rhod',rhod,[],'Density of air, dry','kg/m3')
-    #qcutils.CreateSeries(ds,'rhom',rhom,[],'Density of air, moist','kg/m3')
-    #qcutils.CreateSeries(ds,'sigma_wpl',sigma_wpl,[],'WPL sigma term','none')
-    #qcutils.CreateSeries(ds,'Ah_wpl',Ah,[],'Ah in Fc_WPL','kg/m3')
-    #qcutils.CreateSeries(ds,'Cc_wpl',Cc,[],'Cc in Fc_WPL','mg/m3')
-    #qcutils.CreateSeries(ds,'Ta_wpl',Ta,[],'Ta in Fc_WPL','C')
-    #qcutils.CreateSeries(ds,'co2_wpl_Fe',co2_wpl_Fe,[],'Fc WPL correction Fe term','mg/m2/s')
-    #qcutils.CreateSeries(ds,'co2_wpl_Fh',co2_wpl_Fh,[],'Fc WPL correction Fh term','mg/m2/s')
-    #ds.series['rhod']['Flag'] = Fc_wpl_flag
-    #ds.series['rhom']['Flag'] = Fc_wpl_flag
-    #ds.series['sigma_wpl']['Flag'] = Fc_wpl_flag
-    #ds.series['Ah_wpl']['Flag'] = Fc_wpl_flag
-    #ds.series['Cc_wpl']['Flag'] = Fc_wpl_flag
-    #ds.series['Ta_wpl']['Flag'] = Fc_wpl_flag
-    #ds.series['co2_wpl_Fe']['Flag'] = Fc_wpl_flag
-    #ds.series['co2_wpl_Fh']['Flag'] = Fc_wpl_flag
 
-def Fc_WPLcov(ds,Fc_wpl_out,wC,Fh,wA,Ta,Ah,Cc,ps):
+def Fc_WPLcov(cf,ds,Fc_wpl_out='Fc',wC_in='wC',Fh_in='Fh',wA_in='wA',Ta_in='Ta',Ah_in='Ah',Cc_in='Cc_7500_Av',ps_in='ps'):
     """
         Apply Webb, Pearman and Leuning correction to carbon flux using the
         original formulation (WPL80).  This correction is necessary to account
@@ -1267,13 +1432,23 @@ def Fc_WPLcov(ds,Fc_wpl_out,wC,Fh,wA,Ta,Ah,Cc,ps):
         Accepts meteorological constants or variables
         """
     log.info(' Applying WPL correction to Fc')
-    wC,f = qcutils.GetSeriesasMA(ds,wC)
-    Fh,f = qcutils.GetSeriesasMA(ds,Fh)
-    wA,f = qcutils.GetSeriesasMA(ds,wA)
-    Ta,f = qcutils.GetSeriesasMA(ds,Ta)
-    Ah,f = qcutils.GetSeriesasMA(ds,Ah)
-    Cc,f = qcutils.GetSeriesasMA(ds,Cc)
-    ps,f = qcutils.GetSeriesasMA(ds,ps)
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='CWPL'):
+        Cargs = ast.literal_eval(cf['FunctionArgs']['CWPL'])
+        Fc_wpl_out = Cargs[0]
+        wC_in = Cargs[1]
+        Fh_in = Cargs[2]
+        Fe_wpl_in = Cargs[3]
+        Ta_in = Cargs[4]
+        Ah_in = Cargs[5]
+        Cc_in = Cargs[6]
+        ps_in = Cargs[7]
+    wC,f = qcutils.GetSeriesasMA(ds,wC_in)
+    Fh,f = qcutils.GetSeriesasMA(ds,Fh_in)
+    wA,f = qcutils.GetSeriesasMA(ds,wA_in)
+    Ta,f = qcutils.GetSeriesasMA(ds,Ta_in)
+    Ah,f = qcutils.GetSeriesasMA(ds,Ah_in)
+    Cc,f = qcutils.GetSeriesasMA(ds,Cc_in)
+    ps,f = qcutils.GetSeriesasMA(ds,ps_in)
     Cpm,f = qcutils.GetSeriesasMA(ds,'Cpm')
     rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
     nRecs = numpy.size(wC)
@@ -1283,8 +1458,8 @@ def Fc_WPLcov(ds,Fc_wpl_out,wC,Fh,wA,Ta,Ah,Cc,ps):
     Cckg = Cc/float(1000000)                  # CO2 from mg/m3 to kg/m3
     sigma_wpl = Ah/rhod
     if 'Cpm' not in ds.series.keys():
-        if 'e_HMP' in ds.series.keys():
-            e,f = qcutils.GetSeriesasMA(ds,'e_HMP')
+        if 'e' in ds.series.keys():
+            e,f = qcutils.GetSeriesasMA(ds,'e')
             mr = mf.mixingratio(ps,e)
             q = mf.specifichumidity(mr)
             Cpm = mf.specificheatmoistair(q)
@@ -1303,14 +1478,14 @@ def Fc_WPLcov(ds,Fc_wpl_out,wC,Fh,wA,Ta,Ah,Cc,ps):
         wT = Fh / (rhom * Cpm)
     Fc_wpl_data = wC + (1.61 * (Cckg / rhod) * wA) \
                      + ((1 + (1.61 * sigma_wpl)) * (Cc / TaK) * wT)
-    qcutils.CreateSeries(ds,Fc_wpl_out,Fc_wpl_data,FList=['wCM','Fh_rmv','wAwpl','Ta_HMP','Ah_HMP','Cc_7500_Av','ps'],
+    qcutils.CreateSeries(ds,Fc_wpl_out,Fc_wpl_data,FList=[wC_in,Fh_in,wA_in,Ta_in,Ah_in,Cc_in,ps_in],
                          Descr='Fc, rotated to natural wind coordinates, frequency response corrected, and density flux corrected (wpl)',
                          Units='mg/m2/s')
     for i in range(nRecs):
         if (ds.series[Fc_wpl_out]['Flag'][i] > 0) & (ds.series[Fc_wpl_out]['Flag'][i] != 10):
             ds.series[Fc_wpl_out]['Flag'][i] = 14
 
-def Fe_WPL(ds,Fe_wpl_out,Fe_raw_in,Fh_in,Ta_in,Ah_in,ps_in):
+def Fe_WPL(cf,ds,Fe_wpl_out='Fe',Fe_raw_in='Fe',Fh_in='Fh',Ta_in='Ta',Ah_in='Ah',ps_in='ps'):
     """
         Apply Webb, Pearman and Leuning correction to vapour flux.  This
         correction is necessary to account for flux effects on density
@@ -1333,6 +1508,14 @@ def Fe_WPL(ds,Fe_wpl_out,Fe_raw_in,Fh_in,Ta_in,Ah_in,ps_in):
         Accepts meteorological constants or variables
         """
     log.info(' Applying WPL correction to Fe')
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='EWPL'):
+        Eargs = ast.literal_eval(cf['FunctionArgs']['EWPL'])
+        Fe_wpl_out = Eargs[0]
+        Fe_raw_in = Eargs[1]
+        Fh_in = Eargs[2]
+        Ta_in = Eargs[3]
+        Ah_in = Eargs[4]
+        ps_in = Eargs[5]
     Fe_raw,f = qcutils.GetSeriesasMA(ds,Fe_raw_in)
     Fh,f = qcutils.GetSeriesasMA(ds,Fh_in)
     Ta,f = qcutils.GetSeriesasMA(ds,Ta_in)
@@ -1344,8 +1527,8 @@ def Fe_WPL(ds,Fe_wpl_out,Fe_raw_in,Fh_in,Ta_in,Ah_in,ps_in):
     Ah = Ah/float(1000)                       # Absolute humidity from g/m3 to kg/m3
     sigma_wpl = Ah/rhod
     if 'Cpm' not in ds.series.keys():
-        if 'e_HMP' in ds.series.keys():
-            e,f = qcutils.GetSeriesasMA(ds,'e_HMP')
+        if 'e' in ds.series.keys():
+            e,f = qcutils.GetSeriesasMA(ds,'e')
             mr = mf.mixingratio(ps,e)
             q = mf.specifichumidity(mr)
             Cpm = mf.specificheatmoistair(q)
@@ -1358,7 +1541,7 @@ def Fe_WPL(ds,Fe_wpl_out,Fe_raw_in,Fh_in,Ta_in,Ah_in,ps_in):
         Cpm,f = qcutils.GetSeriesasMA(ds,'Cpm')
     if 'rhom' in ds.series.keys() and 'Lv' in ds.series.keys():
         rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
-        Lv,f = qcutils,GetSeriesasMA(ds,'Lv')
+        Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
         h2o_wpl_Fe = 1.61*sigma_wpl*Fe_raw
         h2o_wpl_Fh = (1+(1.61*sigma_wpl))*Ah*Lv*(Fh/(rhom*Cpm))/(Ta+273.15)
     else:
@@ -1373,7 +1556,7 @@ def Fe_WPL(ds,Fe_wpl_out,Fe_raw_in,Fh_in,Ta_in,Ah_in,ps_in):
                          Descr='WPL corrected Fe',Units='W/m2')
     #ds.series[Fe_wpl_out]['Flag'] = Fe_wpl_flag
 
-def Fe_WPLcov(ds,Fe_wpl_out,wA,Fh,Ta,Ah,ps):
+def Fe_WPLcov(cf,ds,Fe_wpl_out='Fe',wA_in='wA',Fh_in='Fh',Ta_in='Ta',Ah_in='Ah',ps_in='ps'):
     """
         Apply Webb, Pearman and Leuning correction to vapour flux using the
         original formulation (WPL80).  This correction is necessary to account
@@ -1397,11 +1580,19 @@ def Fe_WPLcov(ds,Fe_wpl_out,wA,Fh,Ta,Ah,ps):
         Accepts meteorological constants or variables
         """
     log.info(' Applying WPL correction to Fe')
-    wA,f = qcutils.GetSeriesasMA(ds,wA)
-    Fh,f = qcutils.GetSeriesasMA(ds,Fh)
-    Ta,f = qcutils.GetSeriesasMA(ds,Ta)
-    Ah,f = qcutils.GetSeriesasMA(ds,Ah)
-    ps,f = qcutils.GetSeriesasMA(ds,ps)
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='EWPL'):
+        Eargs = ast.literal_eval(cf['FunctionArgs']['EWPL'])
+        Fe_wpl_out = Eargs[0]
+        Fe_raw_in = Eargs[1]
+        Fh_in = Eargs[2]
+        Ta_in = Eargs[3]
+        Ah_in = Eargs[4]
+        ps_in = Eargs[5]
+    wA,f = qcutils.GetSeriesasMA(ds,wA_in)
+    Fh,f = qcutils.GetSeriesasMA(ds,Fh_in)
+    Ta,f = qcutils.GetSeriesasMA(ds,Ta_in)
+    Ah,f = qcutils.GetSeriesasMA(ds,Ah_in)
+    ps,f = qcutils.GetSeriesasMA(ds,ps_in)
     rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
     Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
     Cpm,f = qcutils.GetSeriesasMA(ds,'Cpm')
@@ -1411,8 +1602,8 @@ def Fe_WPLcov(ds,Fe_wpl_out,wA,Fh,Ta,Ah,ps):
     Ah = Ah/float(1000)                       # Absolute humidity from g/m3 to kg/m3
     sigma_wpl = Ah/rhod
     if 'Cpm' not in ds.series.keys():
-        if 'e_HMP' in ds.series.keys():
-            e,f = qcutils.GetSeriesasMA(ds,'e_HMP')
+        if 'e' in ds.series.keys():
+            e,f = qcutils.GetSeriesasMA(ds,'e')
             mr = mf.mixingratio(ps,e)
             q = mf.specifichumidity(mr)
             Cpm = mf.specificheatmoistair(q)
@@ -1434,10 +1625,10 @@ def Fe_WPLcov(ds,Fe_wpl_out,wA,Fh,Ta,Ah,ps):
         wT = Fh / (rhom * Cpm)
         Fe_wpl_data = (c.Lv / 1000) * (1 + (1.61 * sigma_wpl)) * (wA + ((Ah / TaK) * wT))
         wAwpl = Fe_wpl_data * 1000 / c.Lv
-    qcutils.CreateSeries(ds,Fe_wpl_out,Fe_wpl_data,FList=['wAM','Fh_rmv','Ta_HMP','Ah_HMP','ps'],
+    qcutils.CreateSeries(ds,Fe_wpl_out,Fe_wpl_data,FList=[wA_in,Fh_in,Ta_in,Ah_in,ps_in],
                          Descr='Fe, rotated to natural wind coordinates, frequency response corrected, and density flux corrected (wpl)',
                          Units='W/m2')
-    qcutils.CreateSeries(ds,'wAwpl',wAwpl,FList=['wAM','Fh_rmv','Ta_HMP','Ah_HMP','ps'],
+    qcutils.CreateSeries(ds,'wAwpl',wAwpl,FList=[wA_in,Fh_in,Ta_in,Ah_in,ps_in],
                          Descr='Cov(wA), rotated to natural wind coordinates, frequency response corrected, and density flux corrected (wpl)',
                          Units='g/(m2 s)')
     for i in range(nRecs):
@@ -1446,7 +1637,7 @@ def Fe_WPLcov(ds,Fe_wpl_out,wA,Fh,Ta,Ah,ps):
         if ds.series['wAwpl']['Flag'][i] > 0:
             ds.series['wAwpl']['Flag'][i] = 14
 
-def FhvtoFh(ds,Ta_in,Fh_in,Tv_in,Fe_in,ps_in,Ah_in,Fh_out,attr):
+def FhvtoFh(cf,ds,Ta_in='Ta',Fh_in='Fh',Tv_in='Tv_CSAT',Fe_in='Fe',ps_in='ps',Ah_in='Ah',Fh_out='Fh',attr='Fh rotated and converted from virtual heat flux'):
     """
         Corrects sensible heat flux calculated on the covariance between w'
         and theta', deviations in vertical windspeed and sonically-derived
@@ -1474,6 +1665,16 @@ def FhvtoFh(ds,Ta_in,Fh_in,Tv_in,Fe_in,ps_in,Ah_in,Fh_out,attr):
         Accepts meteorological constants or variables
         """
     log.info(' Converting virtual Fh to Fh')
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='FhvtoFhArgs'):
+        args = ast.literal_eval(cf['FunctionArgs']['FhvtoFhArgs'])
+        Ta_in = args[0]
+        Fh_in = args[1]
+        Tv_in = args[2]
+        Fe_in = args[3]
+        ps_in = args[4]
+        Ah_in = args[5]
+        Fh_out = args[6]
+        attr = args[7]
     Ta,f = qcutils.GetSeriesasMA(ds,Ta_in)
     Fh,f = qcutils.GetSeriesasMA(ds,Fh_in)
     Tv,f = qcutils.GetSeriesasMA(ds,Tv_in)
@@ -1505,10 +1706,48 @@ def FhvtoFh(ds,Ta_in,Fh_in,Tv_in,Fe_in,ps_in,Ah_in,Fh_out,attr):
         if ds.series[Fh_out]['Flag'][i] > 0:
             ds.series[Fh_out]['Flag'][i] = 13
 
+def FilterFcByUstar(cf, ds, Fc_out, Fc_in, ustar_in):
+    """
+    Filter the CO2 flux for low ustar periods.  The filtering is done by checking the
+    friction velocity for each time period.  If ustar is less than or equal to the
+    threshold specified in the control file then the CO2 flux is set to missing.  If
+    the ustar is greater than the threshold, no action is taken.  Filtering is not
+    done "in place", a new series is created with the label given in the argument Fc_out.
+    The QC flag is set to 23 to indicate the Fc value is missing due to low ustar values.
+    
+    Usage: qcts.FilterFcByUstar(cf, ds, Fc_out, Fc_in, ustar_in)
+    cf: control file object    
+    ds: data structure
+    Fc_out: series label of the corrected CO2 flux
+    Fc_in: series label of the uncorrected CO2 flux
+    ustar_in: series label of the friction velocity
+    
+    Parameters loaded from control file:
+        ustar_threshold: friction velocity threshold, m/s
+
+    """
+    log.info(' Filtering CO2 flux based on ustar')
+    if 'General' in cf:
+        if 'ustar_threshold' in cf['General']:
+            us_threshold = float(cf['General']['ustar_threshold'])
+            Fc,Fc_flag = qcutils.GetSeriesasMA(ds,Fc_in,si=0,ei=-1)
+            us,us_flag = qcutils.GetSeriesasMA(ds,ustar_in,si=0,ei=-1)
+            Fc = numpy.ma.masked_where(us<=us_threshold,Fc)
+            index = numpy.where(us<=us_threshold)[0]
+            Fc_flag[index] = 18
+            descr = Fc_in+' filtered for low ustar conditions, ustar threshold was '+str(us_threshold)
+            units = qcutils.GetUnitsFromds(ds, Fc_in)
+            qcutils.CreateSeries(ds,Fc_out,Fc,Flag=Fc_flag,Descr=descr,Units=units)
+        else:
+            print 'FilterFcByUstar: ustar_threshold expected but not found in General section of control file'
+    else:
+        print 'FilterFcByUstar: section General expected but not found in control file'
+
 def GapFillFromAlternate(cf,ds,series=''):
     """
         Gap fill using data from alternate sites specified in the control file
         """
+    ts = ds.globalattributes['time_step']
     # Gap fill using data from alternate sites specified in the control file
     ds_alt = {}               # create a dictionary for the data from alternate sites
     open_ncfiles = []         # create an empty list of open netCDF files
@@ -1547,7 +1786,7 @@ def GapFillFromAlternate(cf,ds,series=''):
                     TList = ast.literal_eval(cf['Variables'][ThisOne]['GapFillFromAlternate'][Alt]['Transform'])
                     # loop over the datetime ranges for the transform
                     for TListEntry in TList:
-                        qcts.TransformAlternate(TListEntry,AltDateTime,AltSeriesData)
+                        qcts.TransformAlternate(TListEntry,AltDateTime,AltSeriesData,ts=ts)
                 qcts.ReplaceWhereMissing(ds.series[ThisOne],ds.series[ThisOne],ds_alt[n].series[alt_varname],100)
 
 def GapFillFromClimatology(cf,ds,series=''):
@@ -1577,10 +1816,14 @@ def GapFillFromClimatology(cf,ds,series=''):
                 val1d[i] = Values[h,m-1]
             index = numpy.where(abs(ds.series[ThisOne]['Data']-float(-9999))<c.eps)[0]
             ds.series[ThisOne]['Data'][index] = val1d[index]
-            ds.series[ThisOne]['Flag'][index] = 22
+            ds.series[ThisOne]['Flag'][index] = 32
 
 def GapFillFromRatios(cf,ds):
     nRecs = int(ds.globalattributes['NumRecs'])
+    ndays = 365
+    Year = ds.series['Year']['Data'][0]
+    if isleap(Year): ndays = 366
+    print ' GapFillFromRatios: ndays=',ndays
     # get local versions of the series required as masked arrays
     # - we use masked arrays here to simplify subsequent calculations
     Fn,f = qcutils.GetSeriesasMA(ds,'Fn')         # net radiation
@@ -1588,9 +1831,9 @@ def GapFillFromRatios(cf,ds):
     Fa = Fn - Fg                                  # available energy
     # get local copies of series required as non-masked arrays
     Fh = ds.series['Fh']['Data']
-    Fe = ds.series['Fe_wpl']['Data']
-    Fc = ds.series['Fc_wpl']['Data']
-    for ThisOne in ['Fe_wpl','Fh','Fc_wpl']:
+    Fe = ds.series['Fe']['Data']
+    Fc = ds.series['Fc']['Data']
+    for ThisOne in ['Fe','Fh','Fc']:
         alt_filename = cf['Variables'][ThisOne]['GapFillUsingRatios']['FileName']
         alt_xlbook = xlrd.open_workbook(alt_filename)
         xl_sheetname = cf['Variables'][ThisOne]['GapFillUsingRatios']['xlSheet']
@@ -1598,34 +1841,52 @@ def GapFillFromRatios(cf,ds):
         ratio = numpy.zeros((48,12))
         for xlCol in range(12):
             ratio[:,xlCol] = xlsheet.col_values(xlCol+1)[1:49]
-        ratio1d = numpy.zeros(nRecs)
-        for i in range(len(ds.series['Month']['Data'])):
-            h = numpy.int(2*ds.series['Hdh']['Data'][i])
-            m = numpy.int(ds.series['Month']['Data'][i])
-            ratio1d[i] = ratio[h,m-1]
-        if ThisOne=='Fe_wpl':
-            log.info(' Gap filling Fe_wpl using EF')
+
+        r3d = numpy.tile(ratio,(3,3))
+        nx = numpy.shape(r3d)[1]
+        nxi = ndays*3
+        ny = numpy.shape(r3d)[0]
+        nyi = numpy.shape(r3d)[0]
+        x = numpy.linspace(1,nx,nx)
+        y = numpy.linspace(1,ny,ny)
+        xi = numpy.linspace(1,nx,nxi)
+        yi = numpy.linspace(1,ny,nyi)
+
+        nk = interpolate.RectBivariateSpline(y,x,r3d,kx=2,ky=2)
+        r3di = nk(yi,xi)
+        ri = r3di[nyi/3:2*nyi/3,nxi/3:2*nxi/3]
+        ratio1d = numpy.ravel(ri,order='F')
+
+        #ratio1d = numpy.zeros(nRecs)
+        #for i in range(len(ds.series['Month']['Data'])):
+            #h = numpy.int(2*ds.series['Hdh']['Data'][i])
+            #m = numpy.int(ds.series['Month']['Data'][i])
+            #ratio1d[i] = ratio[h,m-1]
+
+        if ThisOne=='Fe':
+            log.info(' Gap filling Fe using EF')
             Fe_gf = ratio1d * Fa                  # latent heat flux from evaporative fraction
             Fe_gf = numpy.ma.filled(Fe_gf,float(-9999))
             index = numpy.where((abs(Fe-float(-9999))<c.eps)&(abs(Fe_gf-float(-9999))>c.eps))
-            ds.series['Fe_wpl']['Data'][index] = Fe_gf[index]
-            ds.series['Fe_wpl']['Flag'][index] = 23
+            ds.series['Fe']['Data'][index] = Fe_gf[index]
+            ds.series['Fe']['Flag'][index] = 33
             qcutils.CreateSeries(ds,'EF',ratio1d,FList=['Fn'],Descr='Evaporative fraction',Units='none')
+            qcutils.CreateSeries(ds,'Fe_gf',Fe_gf,FList=['Fe'],Descr='Fe gap filled using EF',Units='W/m2')
         if ThisOne=='Fh':
             log.info(' Gap filling Fh using BR')
             Fh_gf = ratio1d * Fe_gf               # sensible heat flux from Bowen ratio
             Fh_gf = numpy.ma.filled(Fh_gf,float(-9999))
             index = numpy.where((abs(Fh-float(-9999))<c.eps)&(abs(Fh_gf-float(-9999))>c.eps))
             ds.series['Fh']['Data'][index] = Fh_gf[index]
-            ds.series['Fh']['Flag'][index] = 23
+            ds.series['Fh']['Flag'][index] = 33
             qcutils.CreateSeries(ds,'BR',ratio1d,FList=['Fn'],Descr='Bowen ratio',Units='none')
-        if ThisOne =='Fc_wpl':
-            log.info(' Gap filling Fc_wpl using WUE')
+        if ThisOne =='Fc':
+            log.info(' Gap filling Fc using WUE')
             Fc_gf = ratio1d * Fe_gf               # CO2 flux from ecosystem water use efficiency
             Fc_gf = numpy.ma.filled(Fc_gf,float(-9999))
             index = numpy.where((abs(Fc-float(-9999))<c.eps)&(abs(Fc_gf-float(-9999))>c.eps))
-            ds.series['Fc_wpl']['Data'][index] = Fc_gf[index]
-            ds.series['Fc_wpl']['Flag'][index] = 23
+            ds.series['Fc']['Data'][index] = Fc_gf[index]
+            ds.series['Fc']['Flag'][index] = 33
             qcutils.CreateSeries(ds,'WUE',ratio1d,FList=['Fn'],Descr='Water use efficiency',Units='none')
 
 def get_averages(Data):
@@ -1723,7 +1984,8 @@ def get_nightsums(Data):
     
     return Num, Sum, Av
 
-def get_stomatalresistance(cf,ds,Level):
+def get_stomatalresistance(cf,ds):
+    Level = ds.globalattributes['Level']
     log.info(' Computing Penman-Monteith bulk stomatal resistance at level '+Level)
     if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
         PMin = ast.literal_eval(cf['FunctionArgs']['PMin'])
@@ -1789,15 +2051,15 @@ def get_stomatalresistance(cf,ds,Level):
         ds.series[Label[listindex]]['Attr']['FsdCutoff'] = critFsd
         ds.series[Label[listindex]]['Attr']['FeCutoff'] = critFe
     
-    ds.series['rst']['Flag'][index1] = 32
-    ds.series['Gst']['Flag'][index1] = 32
-    ds.series['rst']['Flag'][uindex] = 35
-    ds.series['Gst']['Flag'][uindex] = 35
-    ds.series['rav']['Flag'][uindex] = 35
-    ds.series['rst']['Flag'][index2] = 33
-    ds.series['Gst']['Flag'][index2] = 33
-    ds.series['rst']['Flag'][index3] = 34
-    ds.series['Gst']['Flag'][index3] = 34
+    ds.series['rst']['Flag'][index1] = 61
+    ds.series['Gst']['Flag'][index1] = 61
+    ds.series['rst']['Flag'][uindex] = 64
+    ds.series['Gst']['Flag'][uindex] = 64
+    ds.series['rav']['Flag'][uindex] = 64
+    ds.series['rst']['Flag'][index2] = 62
+    ds.series['Gst']['Flag'][index2] = 62
+    ds.series['rst']['Flag'][index3] = 63
+    ds.series['Gst']['Flag'][index3] = 63
 
 def get_soilaverages(Data):
     """
@@ -1906,24 +2168,37 @@ def get_yearmonthdayhourminutesecond(cf,ds):
         ds: data structure
         """
     log.info(' Getting date and time variables')
+    # set the date mode for PC or MAC versions of Excel dates
+    datemode = 0
+    if cf['General']['Platform'] == 'Mac': datemode = 1
     nRecs = len(ds.series['xlDateTime']['Data'])
-    for ThisOne in ['Year','Month','Day','Hour','Minute','Second']:
-        ds.series[ThisOne] = {}
-        ds.series[ThisOne]['Data'] = numpy.array([-9999]*nRecs,numpy.int32)
-    ds.series['Hdh'] = {}
-    ds.series['Hdh']['Data'] = numpy.array([-9999]*nRecs,numpy.float32)
+    Year = numpy.array([-9999]*nRecs,numpy.int32)
+    Month = numpy.array([-9999]*nRecs,numpy.int32)
+    Day = numpy.array([-9999]*nRecs,numpy.int32)
+    Hour = numpy.array([-9999]*nRecs,numpy.int32)
+    Minute = numpy.array([-9999]*nRecs,numpy.int32)
+    Second = numpy.array([-9999]*nRecs,numpy.int32)
+    Hdh = numpy.array([-9999]*nRecs,numpy.float64)
+    Ddd = numpy.array([-9999]*nRecs,numpy.float64)
+    flag = numpy.zeros(nRecs)
     for i in range(nRecs):
-        if cf['General']['Platform'] == 'Mac':
-            DateTuple = xlrd.xldate_as_tuple(ds.series['xlDateTime']['Data'][i],1)
-        else:
-            DateTuple = xlrd.xldate_as_tuple(ds.series['xlDateTime']['Data'][i],0)
-        ds.series['Year']['Data'][i] = int(DateTuple[0])
-        ds.series['Month']['Data'][i] = int(DateTuple[1])
-        ds.series['Day']['Data'][i] = int(DateTuple[2])
-        ds.series['Hour']['Data'][i] = int(DateTuple[3])
-        ds.series['Minute']['Data'][i] = int(DateTuple[4])
-        ds.series['Second']['Data'][i] = int(DateTuple[5])
-        ds.series['Hdh']['Data'][i] = float(DateTuple[3])+float(DateTuple[4])/60.
+        DateTuple = xlrd.xldate_as_tuple(ds.series['xlDateTime']['Data'][i],datemode)
+        Year[i] = int(DateTuple[0])
+        Month[i] = int(DateTuple[1])
+        Day[i] = int(DateTuple[2])
+        Hour[i] = int(DateTuple[3])
+        Minute[i] = int(DateTuple[4])
+        Second[i] = int(DateTuple[5])
+        Hdh[i] = float(DateTuple[3])+float(DateTuple[4])/60.
+        Ddd[i] = ds.series['xlDateTime']['Data'][i] - xlrd.xldate.xldate_from_date_tuple((Year[i],1,1),datemode)
+    qcutils.CreateSeries(ds,'Year',Year,Flag=flag,Descr='Year',Units='none')
+    qcutils.CreateSeries(ds,'Month',Month,Flag=flag,Descr='Month',Units='none')
+    qcutils.CreateSeries(ds,'Day',Day,Flag=flag,Descr='Day',Units='none')
+    qcutils.CreateSeries(ds,'Hour',Hour,Flag=flag,Descr='Hour',Units='none')
+    qcutils.CreateSeries(ds,'Minute',Minute,Flag=flag,Descr='Minute',Units='none')
+    qcutils.CreateSeries(ds,'Second',Second,Flag=flag,Descr='Second',Units='none')
+    qcutils.CreateSeries(ds,'Hdh',Hdh,Flag=flag,Descr='Decimal hour of the day',Units='none')
+    qcutils.CreateSeries(ds,'Ddd',Ddd,Flag=flag,Descr='Decimal day of the year',Units='none')
 
 def InvertSign(ds,ThisOne):
     log.info(' Inverting sign of '+ThisOne)
@@ -1966,29 +2241,7 @@ def InterpolateOverMissing(cf,ds,series='',maxlen=1000):
             tmp2[k] = iom[-1]               # just accept the last missing value index regardless
             iom_new = tmp2[:k+1]            # the array of missing data indices with contiguous block lengths less than maxlen
             ds.series[ThisOne]['Data'][iom_new] = f(DateNum[iom_new]).astype(numpy.float32)        # fill missing values with linear interpolations
-            ds.series[ThisOne]['Flag'][iom_new] = 21
-
-def LPFilter_SavGol(cf,ds,ThisOne):
-    log.info(' Applying low pass Savtisky-Golay filter to '+ThisOne)
-    if qcutils.incf(cf,ThisOne) and qcutils.haskey(cf,ThisOne,'SavGol'):
-        data,flag = qcutils.GetSeries(ds,ThisOne)
-        ldt = ds.series['DateTime']['Data']
-        for ThisOp in cf['Variables'][ThisOne]['SavGol'].keys():
-            OpList = ast.literal_eval(cf['Variables'][ThisOne]['SavGol'][ThisOp])
-            try:
-                si = ldt.index(datetime.datetime.strptime(OpList[0],'%Y-%m-%d %H:%M'))
-            except ValueError:
-                si = 0
-            try:
-                ei = ldt.index(datetime.datetime.strptime(OpList[1],'%Y-%m-%d %H:%M')) + 1
-            except ValueError:
-                ei = -1
-            WindowSize = float(OpList[2])
-            PolyOrder = float(OpList[3])
-            data[si:ei] = savitzky_golay(data[si:ei],WindowSize,PolyOrder,0)
-            flag[si:ei] = 13
-            ds.series[ThisOne]['Data'] = numpy.ma.filled(data,float(-9999))
-            ds.series[ThisOne]['Flag'] = flag
+            ds.series[ThisOne]['Flag'][iom_new] = 34
 
 def Massman(cf,ds):
     """
@@ -2043,6 +2296,13 @@ def Massman(cf,ds):
         """
     
     log.info(' Correcting for flux loss from spectral attenuation')
+    
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'MassmanStandard' in cf['General']['FunctionList']:
+        MassmanStandard(cf,ds)
+        return
+    
+    MassmanApprox(cf,ds)
+    
     zmd = float(cf['Massman']['zmd'])   # z-d for site
     angle = float(cf['Massman']['angle'])     # CSAT3-IRGA separation angle
     CSATarm = float(cf['Massman']['CSATarm'])  # CSAT3 mounting distance
@@ -2065,7 +2325,7 @@ def Massman(cf,ds):
     ustara,f = qcutils.GetSeriesasMA(ds,'ustara')
     wTa,f = qcutils.GetSeriesasMA(ds,'wTa')
     La = mf.molenv(Tv, ustara, wTa)
-    qcutils.CreateSeries(ds,'La',La,FList=['Tv_CSAT','Ah_HMP','ps','wTa'], 
+    qcutils.CreateSeries(ds,'La',La,FList=['Tv_CSAT','ps','wTa'], 
                          Descr='Massman approximately corrected Obukhov Length', Units='m')
     for i in range(nRecs):
         if ds.series['La']['Flag'][i] > 0:
@@ -2163,7 +2423,7 @@ def Massman(cf,ds):
             ds.series['ustarM']['Flag'][i] = 12
     
     LM = mf.molenv(Tv, ustarM, wTM)
-    qcutils.CreateSeries(ds,'LM',LM,FList=['Tv_CSAT','Ah_HMP','ps','wTM'],
+    qcutils.CreateSeries(ds,'LM',LM,FList=['Tv_CSAT','ps','wTM'],
                          Descr='Massman true Obukhov Length',Units='m')
     for i in range(nRecs):
         if ds.series['LM']['Flag'][i] > 0:
@@ -2227,7 +2487,7 @@ def MassmanApprox(cf,ds):
         ustar,f = qcutils.GetSeriesasMA(ds,'ustar')
         wT,f = qcutils.GetSeriesasMA(ds,'wT')
         L = mf.molenv(Tv, ustar, wT)
-        qcutils.CreateSeries(ds,'L',L,FList=['Tv_CSAT','Ah_HMP','ps','wT'],
+        qcutils.CreateSeries(ds,'L',L,FList=['Tv_CSAT','ps','wT'],
                              Descr='Uncorrected Obukhov Length',Units='m')
     
     u,f = qcutils.GetSeriesasMA(ds,'u')
@@ -2293,6 +2553,113 @@ def MassmanApprox(cf,ds):
         if ds.series['wTa']['Flag'][i] > 0:
             ds.series['wTa']['Flag'][i] = 12
 
+def MassmanStandard(cf,ds):
+    """
+       Massman corrections.
+       The steps involved are as follows:
+        1) calculate ustar and L using rotated but otherwise uncorrected covariances
+       """
+    if 'Massman' not in cf:
+        log.info(' Massman section not found in control file, no corrections applied')
+        return
+    log.info(' Correcting for flux loss from spectral attenuation')
+    zmd = float(cf['Massman']['zmd'])             # z-d for site
+    angle = float(cf['Massman']['angle'])         # CSAT3-IRGA separation angle
+    CSATarm = float(cf['Massman']['CSATarm'])     # CSAT3 mounting distance
+    IRGAarm = float(cf['Massman']['IRGAarm'])     # IRGA mounting distance
+    lLat = numpy.ma.sin(numpy.deg2rad(angle)) * IRGAarm
+    lLong = CSATarm - (numpy.ma.cos(numpy.deg2rad(angle)) * IRGAarm)
+    # *** Massman_1stpass starts here ***
+    #  The code for the first and second passes is very similar.  It would be useful to make them the
+    #  same and put into a loop to reduce the nu,ber of lines in this function.
+    # calculate ustar and Monin-Obukhov length from rotated but otherwise uncorrected covariances
+    Ta,f = qcutils.GetSeriesasMA(ds,'Ta_EC')
+    Ah,f = qcutils.GetSeriesasMA(ds,'Ah_EC')
+    ps,f = qcutils.GetSeriesasMA(ds,'ps')
+    nRecs = numpy.size(Ta)
+    u,f = qcutils.GetSeriesasMA(ds,'u')
+    uw,f = qcutils.GetSeriesasMA(ds,'uw')
+    vw,f = qcutils.GetSeriesasMA(ds,'vw')
+    wT,f = qcutils.GetSeriesasMA(ds,'wT')
+    wC,f = qcutils.GetSeriesasMA(ds,'wC')
+    wA,f = qcutils.GetSeriesasMA(ds,'wA')
+    ustarm = numpy.ma.sqrt(numpy.ma.sqrt(uw ** 2 + vw ** 2))
+    Lm = mf.molen(Ta, Ah, ps, ustarm, wT)
+    # now calculate z on L
+    zoLm = zmd / Lm
+    # start calculating the correction coefficients for approximate corrections
+    #  create nxMom, nxScalar and alpha series with their unstable values by default
+    nxMom, nxScalar, alpha = qcutils.nxMom_nxScalar_alpha(zoLm)
+    # now calculate the fxMom and fxScalar coefficients
+    fxMom = nxMom * u / zmd
+    fxScalar = nxScalar * u / zmd
+    # compute spectral filters
+    tao_eMom = ((c.lwVert / (5.7 * u)) ** 2) + ((c.lwHor / (2.8 * u)) ** 2)
+    tao_ewT = ((c.lwVert / (8.4 * u)) ** 2) + ((c.lTv / (4.0 * u)) ** 2)
+    tao_b = c.Tb / 2.8
+    # calculate coefficients
+    bMom = 2 * c.Pi * fxMom * tao_b
+    bScalar = 2 * c.Pi * fxScalar * tao_b
+    pMom = 2 * c.Pi * fxMom * tao_eMom
+    pwT = 2 * c.Pi * fxScalar * tao_ewT
+    # calculate corrections for momentum and scalars
+    rMom = qcutils.rMom(bMom, pMom, alpha)        # I suspect that rMom and rwT are the same functions
+    rwT = qcutils.rwT(bScalar, pwT, alpha)
+    # determine approximately-true Massman fluxes
+    uwm = uw / rMom
+    vwm = vw / rMom
+    wTm = wT / rwT
+    # write the approximate Massman correction fluxes to the data structure
+    #qcutils.CreateSeries(ds,'ustarm',ustarm,FList=['uw','vw'],Descr='Friction velocity (intermediate Massman)',Units='m/s')
+    #qcutils.CreateSeries(ds,'Lm',Lm,FList=['wT','ustarm','Ta_EC'],Descr='Monin-Obukhov length (intermediate Massman)',Units='m')
+    #qcutils.CreateSeries(ds,'uwm',uwm,FList=['uw','Lm'],Descr='Approximate Massman uw covariance',Units='m2/s2')
+    #qcutils.CreateSeries(ds,'vwm',vwm,FList=['vw','Lm'],Descr='Approximate Massman vw covariance',Units='m2/s2')
+    #qcutils.CreateSeries(ds,'wTm',wTm,FList=['wT','Lm'],Descr='Approximate Massman wT covariance',Units='mC/s')
+    # *** Massman_1stpass ends here ***
+    # *** Massman_2ndpass starts here ***
+    # we have calculated the first pass corrected momentum and temperature covariances, now we use
+    # these to calculate the final corrections
+    #  first, get the 2nd pass corrected friction velocity and Monin-Obukhov length
+    ustarm = numpy.ma.sqrt(numpy.ma.sqrt(uwm ** 2 + vwm ** 2))
+    Lm = mf.molen(Ta, Ah, ps, ustarm, wTm)
+    zoLm = zmd / Lm
+    nxMom, nxScalar, alpha = qcutils.nxMom_nxScalar_alpha(zoLm)
+    fxMom = nxMom * (u / zmd)
+    fxScalar = nxScalar * (u / zmd)
+    # compute Massman functions
+    tao_eMom = ((c.lwVert / (5.7 * u)) ** 2) + ((c.lwHor / (2.8 * u)) ** 2)
+    tao_ewT = ((c.lwVert / (8.4 * u)) ** 2) + ((c.lTv / (4.0 * u)) ** 2)
+    tao_ewIRGA = ((c.lwVert / (8.4 * u)) ** 2) + ((c.lIRGA / (4.0 * u)) ** 2) \
+                 + ((lLat / (1.1 * u)) ** 2) + ((lLong / (1.05 * u)) ** 2)
+    tao_b = c.Tb / 2.8
+    # calculate coefficients
+    bMom = 2 * c.Pi * fxMom * tao_b
+    bScalar = 2 * c.Pi * fxScalar * tao_b
+    pMom = 2 * c.Pi * fxMom * tao_eMom
+    pwT = 2 * c.Pi * fxScalar * tao_ewT
+    pwIRGA = 2 * c.Pi * fxScalar * tao_ewIRGA
+    # calculate corrections for momentum and scalars
+    rMom = qcutils.rMom(bMom, pMom, alpha)
+    rwT = qcutils.rwT(bScalar, pwT, alpha)
+    rwIRGA = qcutils.rwIRGA(bScalar, pwIRGA, alpha)
+    # determine true fluxes
+    uwM = uw / rMom
+    vwM = vw / rMom
+    wTM = wT / rwT
+    wCM = wC / rwIRGA
+    wAM = wA / rwIRGA
+    ustarM = numpy.ma.sqrt(numpy.ma.sqrt(uwM ** 2 + vwM ** 2))
+    LM = mf.molen(Ta, Ah, ps, ustarM, wTM)
+    # write the 2nd pass Massman corrected covariances to the data structure
+    qcutils.CreateSeries(ds,'ustar',ustarM,FList=['uw','vw'],Descr='Massman true ustar',Units='m/s')
+    qcutils.CreateSeries(ds,'L',LM,FList=['Ta_EC','Ah_EC','ps','wT'],Descr='Massman true Obukhov Length',Units='m')
+    qcutils.CreateSeries(ds,'uw',uwM,FList=['uw','L'],Descr='Massman true Cov(uw)',Units='m2/s2')
+    qcutils.CreateSeries(ds,'vw',vwM,FList=['vw','L'],Descr='Massman true Cov(vw)',Units='m2/s2')
+    qcutils.CreateSeries(ds,'wT',wTM,FList=['wT','L'],Descr='Massman true Cov(wT)',Units='mC/s')
+    qcutils.CreateSeries(ds,'wA',wAM,FList=['wA','L'],Descr='Massman true Cov(wA)',Units='g/m2/s')
+    qcutils.CreateSeries(ds,'wC',wCM,FList=['wC','L'],Descr='Massman true Cov(wC)',Units='mg/m2/s')
+    # *** Massman_2ndpass ends here ***
+
 def MergeSeries(ds,Destination,Source,QCFlag_OK):
     """
         Merge two series of data to produce one series containing the best data from both.
@@ -2312,20 +2679,20 @@ def MergeSeries(ds,Destination,Source,QCFlag_OK):
         return
     if nSeries==1:
         if Source[0] not in ds.series.keys():
-            log.error('  MergeSeries: primary input series'+Source[0]+'not found')
+            log.error('  MergeSeries: primary input series '+Source[0]+' not found')
             return
         data = ds.series[Source[0]]['Data'].copy()
         flag = ds.series[Source[0]]['Flag'].copy()
         SeriesNameString = Source[0]
-        SeriesUnitString = ds.series[Source[0]]['Attr']['Units']
+        SeriesUnitString = ds.series[Source[0]]['Attr']['units']
     else:
         if Source[0] not in ds.series.keys():
-            log.error('  MergeSeries: primary input series'+Source[0]+'not found')
+            log.error('  MergeSeries: primary input series '+Source[0]+' not found')
             return
         data = ds.series[Source[0]]['Data'].copy()
         flag = ds.series[Source[0]]['Flag'].copy()
         SeriesNameString = Source[0]
-        SeriesUnitString = ds.series[Source[0]]['Attr']['Units']
+        SeriesUnitString = ds.series[Source[0]]['Attr']['units']
         Source.remove(Source[0])
         for ThisOne in Source:
             if ThisOne in ds.series.keys():
@@ -2341,17 +2708,15 @@ def MergeSeries(ds,Destination,Source,QCFlag_OK):
                 data[index] = ds.series[ThisOne]['Data'][index]         # replace bad primary with good secondary
                 flag[index] = ds.series[ThisOne]['Flag'][index]
             else:
-                log.error('  MergeSeries: secondary input series'+ThisOne+'not found')
+                log.error('  MergeSeries: secondary input series '+ThisOne+' not found')
     if Destination not in ds.series.keys():                 # create new series if destination does not exist
-        #ds.series[Destination] = {}
-        #ds.series[Destination]['Attr'] = {}
         qcutils.CreateSeries(ds,Destination,data,Flag=flag,
                              Descr='Merged from '+SeriesNameString,Units=SeriesUnitString)
     else:
         ds.series[Destination]['Data'] = data.copy()
         ds.series[Destination]['Flag'] = flag.copy()
         ds.series[Destination]['Attr']['Description'] = 'Merged from '+SeriesNameString
-        ds.series[Destination]['Attr']['Units'] = SeriesUnitString
+        ds.series[Destination]['Attr']['units'] = SeriesUnitString
 
 def PT100(ds,T_out,R_in,m):
     log.info(' Calculating temperature from PT100 resistance')
@@ -2363,6 +2728,7 @@ def PT100(ds,T_out,R_in,m):
 
 def ReplaceOnDiff(cf,ds,series=''):
     # Gap fill using data from alternate sites specified in the control file
+    ts = ds.globalattributes['time_step']
     if len(series)!=0:
         ds_alt = {}                     # create a dictionary for the data from alternate sites
         open_ncfiles = []               # create an empty list of open netCDF files
@@ -2388,7 +2754,7 @@ def ReplaceOnDiff(cf,ds,series=''):
                             AltSeriesData = ds_alt[n].series[alt_varname]['Data']
                             TList = ast.literal_eval(cf['Variables'][ThisOne]['ReplaceOnDiff'][Alt]['Transform'])
                             for TListEntry in TList:
-                                qcts.TransformAlternate(TListEntry,AltDateTime,AltSeriesData)
+                                qcts.TransformAlternate(TListEntry,AltDateTime,AltSeriesData,ts=ts)
                         if 'Range' in cf['Variables'][ThisOne]['ReplaceOnDiff'][Alt].keys():
                             RList = ast.literal_eval(cf['Variables'][ThisOne]['ReplaceOnDiff'][Alt]['Range'])
                             for RListEntry in RList:
@@ -2427,7 +2793,7 @@ def ReplaceWhereMissing(Destination,Primary,Secondary,FlagOffset=0):
     Destination['Data'][0:len(p_data)] = p_data
     Destination['Flag'][0:len(p_flag)] = p_flag
     Destination['Attr']['Description'] = 'Merged from original and alternate'
-    Destination['Attr']['Units'] = Primary['Attr']['Units']
+    Destination['Attr']['units'] = Primary['Attr']['units']
 
 def ReplaceWhenDiffExceedsRange(DateTime,Destination,Primary,Secondary,RList):
     #print time.strftime('%X')+' Replacing '+Primary+' with '+Secondary+' when difference exceeds threshold'
@@ -2451,18 +2817,18 @@ def ReplaceWhenDiffExceedsRange(DateTime,Destination,Primary,Secondary,RList):
         d_data = (p_data-s_data)/s_data
     elif RList[3]=='p':
         d_data = (p_data-s_data)/p_data
-    si = qcutils.GetDateIndex(DateTime,RList[0],0)
-    ei = qcutils.GetDateIndex(DateTime,RList[1],0)
+    #si = qcutils.GetDateIndex(DateTime,RList[0],0)
+    #ei = qcutils.GetDateIndex(DateTime,RList[1],0)
     Range = RList[2]
     Upper = float(Range[0])
     Lower = float(Range[1])
     index = numpy.ma.where((abs(d_data)<Lower)|(abs(d_data)>Upper))
     p_data[index] = s_data[index]
-    p_flag[index] = 24
+    p_flag[index] = 35
     Destination['Data'] = numpy.ma.filled(p_data,float(-9999))
     Destination['Flag'] = p_flag.copy()
     Destination['Attr']['Description'] = 'Replaced original with alternate when difference exceeded threshold'
-    Destination['Attr']['Units'] = Primary['Attr']['Units']
+    Destination['Attr']['units'] = Primary['Attr']['units']
 
 def savitzky_golay(y, window_size, order, deriv=0):
     ''' Apply Savitsky-Golay low-pass filter to data.'''
@@ -2490,22 +2856,29 @@ def savitzky_golay(y, window_size, order, deriv=0):
 def Square(Series):
     tmp = numpy.array([-9999]*numpy.size(Series),Series.dtype)
     index = numpy.where(Series!=float(-9999))[0]
-    tmp[index] = numpy.square(Series[index])
+    tmp[index] = Series[index] ** 2
     return tmp
 
 def SquareRoot(Series):
     tmp = numpy.array([-9999]*numpy.size(Series),Series.dtype)
     index = numpy.where(Series!=float(-9999))[0]
-    tmp[index] = numpy.sqrt(Series[index])
+    tmp[index] = Series[index] ** .5
     return tmp
 
-def TaFromTv(ds,Ta_out,Tv_in,Ah_in,ps_in):
+def TaFromTv(cf,ds,Ta_out='Ta_CSAT',Tv_in='Tv_CSAT',Ah_in='Ah',ps_in='ps'):
     # Calculate the air temperature from the virtual temperature, the
     # absolute humidity and the pressure.
     # NOTE: the virtual temperature is used in place of the air temperature
     #       to calculate the vapour pressure from the absolute humidity, the
     #       approximation involved here is of the order of 1%.
     log.info(' Calculating Ta from Tv')
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='Ta2Tv'):
+        args = ast.literal_eval(cf['FunctionArgs']['Ta2Tv'])
+        Ta_out = args[0]
+        Tv_in = args[1]
+        Ah_in = args[2]
+        ps_in = args[3]
+        
     Tv,f = qcutils.GetSeriesasMA(ds,Tv_in)
     Ah,f = qcutils.GetSeriesasMA(ds,Ah_in)
     ps,f = qcutils.GetSeriesasMA(ds,ps_in)
@@ -2517,20 +2890,20 @@ def TaFromTv(ds,Ta_out,Tv_in,Ah_in,ps_in):
     Ta_data = mf.tafromtv(Tv,q)
     mask = numpy.ma.getmask(Ta_data)
     index = numpy.where(mask.astype(int)==1)
-    Ta_flag[index] = 11
+    Ta_flag[index] = 15
     qcutils.CreateSeries(ds,Ta_out,Ta_data,Flag=Ta_flag,
                          Descr='Ta calculated from Tv using '+Tv_in,Units='degC')
     
-def TransformAlternate(TList,DateTime,Series):
+def TransformAlternate(TList,DateTime,Series,ts=30):
     # Apply polynomial transform to data series being used as replacement data for gap filling
     #print time.strftime('%X')+' Applying polynomial transform to '+ThisOne
-    si = qcutils.GetDateIndex(DateTime,TList[0],0)
-    ei = qcutils.GetDateIndex(DateTime,TList[1],-1)
+    si = qcutils.GetDateIndex(DateTime,TList[0],ts=ts,default=0,match='exact')
+    ei = qcutils.GetDateIndex(DateTime,TList[1],ts=ts,default=-1,match='exact')
     Series = numpy.ma.masked_where(abs(Series-float(-9999))<c.eps,Series)
     Series[si:ei] = qcutils.polyval(TList[2],Series[si:ei])
     Series = numpy.ma.filled(Series,float(-9999))
 
-def UstarFromFh(ds,us_out,T_in, Ah_in, p_in, Fh_in, u_in, z, z0):
+def UstarFromFh(cf,ds,z,z0,us_out='uscalc',T_in='Ta', Ah_in='Ah', p_in='ps', Fh_in='Fh', u_in='Ws_CSAT', us_in='ustar'):
     # Calculate ustar from sensible heat flux, wind speed and
     # roughness length using Wegstein's iterative method.
     #  T is the air temperature, C
@@ -2540,6 +2913,15 @@ def UstarFromFh(ds,us_out,T_in, Ah_in, p_in, Fh_in, u_in, z, z0):
     #  z is the measurement height minus the displacement height, m
     #  z0 is the momentum roughness length, m
     log.info(' Calculating ustar from (Fh,Ta,Ah,p,u)')
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='ustarFh'):
+        args = ast.literal_eval(cf['FunctionArgs']['ustarFh'])
+        us_out = args[0]
+        T_in = args[1]
+        Ah_in = args[2]
+        p_in = args[3]
+        Fh_in = args[4]
+        u_in = args[5]
+        us_in = args[6]
     T,T_flag = qcutils.GetSeries(ds,T_in)
     Ah,Ah_flag = qcutils.GetSeries(ds,Ah_in)
     p,p_flag = qcutils.GetSeries(ds,p_in)
@@ -2555,18 +2937,13 @@ def UstarFromFh(ds,us_out,T_in, Ah_in, p_in, Fh_in, u_in, z, z0):
            (abs(u[i]-float(-9999))>c.eps)):
             #print ds.series['DateTime']['Data'][i],T[i]
             us[i] = qcutils.Wegstein(T[i], Ah[i], p[i], Fh[i], u[i], z, z0)
-            us_flag[i] = 14
+            us_flag[i] = 36
         else:
             us[i] = numpy.float64(-9999)
-            us_flag[i] = 15
+            us_flag[i] = 37
     #print time.strftime('%X')+' Using CreateSeries to create u* series'
     qcutils.CreateSeries(ds,us_out,us,Flag=us_flag,Descr='ustar from (Fh,Ta,Ah,p,u)',Units='m/s')
-    #ds.series[us_out] = {}
-    #ds.series[us_out]['Data'] = us
-    #ds.series[us_out]['Flag'] = us_flag
-    #ds.series[us_out]['Attr'] = {}
-    #ds.series[us_out]['Attr']['Description'] = 'u* calculated from (Fh,Ta,Ah,P,u)'
-    #ds.series[us_out]['Attr']['Units'] = 'm/s'
+    return us_in, us_out
 
 def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoMean='False',DoSubSum='False',DoSoil='False'):
     monthabr = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
@@ -2579,7 +2956,7 @@ def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoMean
     else:
         M2nd = 12
     log.info(' Doing daily sums for '+ThisOne)
-    Units = ds.series[ThisOne]['Attr']['Units']
+    Units = ds.series[ThisOne]['Attr']['units']
     
     xlRow = 1
     if xlCol == 0:
@@ -2632,7 +3009,7 @@ def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoMean
         for day in range(1,dRan+1):
             xlRow = xlRow + 1
             if ThisOne == 'rst' or ThisOne == 'Gst' or ThisOne == 'Gst_mol':
-                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day) & (ds.series[ThisOne]['Flag'] < 32))[0]
+                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day) & (ds.series[ThisOne]['Flag'] < 61))[0]
                 ti = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day))[0]
                 nRecs = len(ti)
                 check = numpy.ma.empty(nRecs,str)
@@ -2642,7 +3019,7 @@ def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoMean
                 if len(check) < 48:
                     di = []
             elif ThisOne == 'GPP' or ThisOne == 'GPP_mmol':
-                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day) & ((ds.series[ThisOne]['Flag'] != 22) & (ds.series[ThisOne]['Flag'] != 42)))[0]
+                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day) & ((ds.series[ThisOne]['Flag'] != 21) & (ds.series[ThisOne]['Flag'] != 81)))[0]
                 ti = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day))[0]
                 nRecs = len(ti)
                 check = numpy.ma.empty(nRecs,str)
@@ -2652,7 +3029,7 @@ def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoMean
                 if len(check) < 48:
                     di = []
             elif ThisOne == 'Re_mmol':
-                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day) & ((ds.series[ThisOne]['Flag'] == 0) | (ds.series[ThisOne]['Flag'] > 39)))[0]
+                di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day) & ((ds.series[ThisOne]['Flag'] == 0) | (ds.series[ThisOne]['Flag'] > 69)))[0]
                 ti = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day))[0]
                 nRecs = len(ti)
                 check = numpy.ma.empty(nRecs,str)

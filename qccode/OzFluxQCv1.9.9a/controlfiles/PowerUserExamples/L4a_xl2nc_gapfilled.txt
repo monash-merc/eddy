@@ -1,990 +1,1061 @@
 [General]
 InLevel = L4
 OutLevel = L4
-Platform = Mac    # Mac or PC
+Platform = Mac    # comment out if PC excel
 netCDFv3 = False
 
 [Files]
     [[L4]]
-        xlFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level3_intermediates/
-        xlFileName = ASM_EC_2012_2Apr-Jun_FullPreFilled.xls
+        xlFilePath = ../AliceSpringsMulga/level3_intermediates/
+        xlFileName = ASM_EC_2010_FullPreFilled.xls
         xlHeaderRow  = 6
         xl1stDataRow = 7
-        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
-        ncFileName = ASM_EC_2012_2Apr-Jun_L4.nc
+        ncFilePath = ncData/ASM/
+        ncFileName = ASM_EC_2010_L4.nc
 
 [Global]
-    SiteName = AliceSpringsMulga
-    Site = "Alice Springs Mulga, Northern Territory, Australia"
-    Location = "Latitude: -22.283, Longitude: 133.249"
-    Contact  = James.Cleverly@UTS.edu.au
-    TimeStep = 30
+    contact  = "james.cleverly@uts.edu.au"
+    canopy_height = "6.5m"
+    comment = "CF convention version"
+    data_url = "http://ozflux.its.monash.edu.au/"
+    end_datetime = "2010-12-31 23:30"
+    history = ""
+    institution = "University of Technology, Sydney"
+    latitude = -22.283
+    location = "Latitude: -22.283, Longitude: 133.249"
+    longitude = 133.249
+    metadata_url = "http://www.ozflux.org.au/monitoringsites/alicesprings/index.html"
+    ozflux_url = "http://ozflux.org.au/"
+    references = "None"
+    site_name = "AliceSpringsMulga"
+    site = "Alice Springs Mulga, Northern Territory, Australia"
+    soil_type = "Red Sandy Loam"
+    source = "13.7m flux tower plus array of soil sensors"
+    start_datetime = "2010-09-02 00:00"
+    title = "Flux tower data set from the Alice Springs Mulga site for the calendar year 2010"
+    time_step = 30
+    vegetation = "Mulga canopy, grass+herb+shrub understory"
 
 
 [Variables]
     [[xlDateTime]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = TIMESTAMP
+            sheet    = Data
+            name     = TIMESTAMP
         [[[Attr]]]
-            Description = "Date/time in Excel format"
-            Units    = "days"
+            ancillary_variables = ""
+            long_name = "Date/time in Excel format"
+            units    = ""
+            standard_name = "not defined"
     [[Fm_rm]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Fm_rm
+            sheet    = Data
+            name     = Fm_rm
         [[[Attr]]]
-            Description = "Momentum flux, rotated to natural wind coordinates and frequency response corrected"
-            Units    = "kg/(m s2)"
+            ancillary_variables = "Fm_rm QC flag"
+            long_name = "Momentum flux, rotated to natural wind coordinates and frequency response corrected"
+            units    = "kg/(m s2)"
+            standard_name = "not defined"
     [[Gap]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Gap
+            sheet    = Data
+            name     = Gap
         [[[Attr]]]
-            Description = "0 for observed, 21 for gapfilled, 22 for not filled"
-            Units    = "unitless"
+            long_name = "0 for observed, 1 for gapfilled, 2 for not filled"
+            units    = "unitless"
+            standard_name = "not defined"
     [[Fc_gapfilled]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Fc_gapfilled
+            sheet    = Data
+            name     = Fc_gapfilled
         [[[Attr]]]
-            Description = "ANN gapfilled Fc, rotated to natural wind coordinates, frequency response corrected, and density flux corrected (wpl)"
-            Units    = "mg/(m2 s)"
+            ancillary_variables = "Fc_gapfilled QC flag"
+            long_name = "ANN gapfilled carbon flux, rotated to natural wind coordinates, frequency response corrected, and density flux corrected (wpl)"
+            units    = "mg/(m2 s)"
+            standard_name = "surface_upward_mass_flux_of_carbon_dioxide_expressed_as_carbon_due_to_emission_from_natural_sources"
     [[Fe_gapfilled]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Fe_gapfilled
+            sheet    = Data
+            name     = Fe_gapfilled
         [[[Attr]]]
-            Description = "ANN gapfilled Fe, rotated to natural wind coordinates, frequency response corrected, and density flux corrected (wpl)"
-            Units    = "W/m2"
+            ancillary_variables = "Fe_gapfilled QC flag"
+            long_name = "ANN gapfilled latent heat flux, rotated to natural wind coordinates, frequency response corrected, and density flux corrected (wpl)"
+            units    = "W/m2"
+            standard_name = "surface_upward_latent_heat_flux"
     [[Fh_gapfilled]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Fh_gapfilled
+            sheet    = Data
+            name     = Fh_gapfilled
         [[[Attr]]]
-            Description = "Sensible heat flux, rotated to natural wind coordinates and frequency response corrected"
-            Units    = "W/m2"
+            ancillary_variables = "Fh_gapfilled QC flag"
+            long_name = "ANN gapfilled sensible heat flux, rotated to natural wind coordinates and frequency response corrected"
+            units    = "W/m2"
+            standard_name = "surface_upward_latent_heat_flux"
     [[Fg_Av]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Fg_Av
+            sheet    = Data
+            name     = Fg_Av
         [[[Attr]]]
-            Description = "Element-wise average surface ground heat flux measurements in bare soil, beneath mulga and beneath understory"
-            Units    = "W/m2"
+            long_name = "Element-wise average surface ground heat flux measurements in bare soil, beneath mulga and beneath understory"
+            units    = "W/m2"
+            ancillary_variables = "Fg_Av QC flag"
+            standard_name = "downward_heat_flux_in_soil"
     [[Fnr]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Fnr
+            sheet    = Data
+            name     = Fnr
         [[[Attr]]]
-            Description = "Net radiation (Kipp&Zonen)"
-            Units    = "W/m2"
+            ancillary_variables = "Fnr QC flag"
+            long_name = "Net radiation"
+            units    = "W/m2"
+            instrument = "Kipp and Zonen CNR1"
+            standard_name = "not defined"
     [[Fsd]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Fsd
+            sheet    = Data
+            name     = Fsd
         [[[Attr]]]
-            Description = "Down-welling short wave (Kipp&Zonen)"
-            Units    = "W/m2"
+            ancillary_variables = "Fsd QC flag"
+            instrument = "Kipp and Zonen CNR1"
+            long_name = "Down-welling short wave"
+            standard_name = "surface_downwelling_shortwave_flux_in_air"
+            units = "W/m2"
     [[Fsu]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Fsu
+            sheet    = Data
+            name     = Fsu
         [[[Attr]]]
-            Description = "Up-welling short wave (Kipp&Zonen)"
-            Units    = "W/m2"
+            ancillary_variables = "Fsu QC flag"
+            instrument = "Kipp and Zonen CNR1"
+            long_name = "Up-welling short wave"
+            standard_name = "surface_upwelling_shortwave_flux_in_air"
+            units = "W/m2"
     [[Flu]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Flu
+            sheet    = Data
+            name     = Flu
         [[[Attr]]]
-            Description = "Up-welling long wave (Kipp&Zonen)"
-            Units    = "W/m2"
+            ancillary_variables = "Flu QC flag"
+            instrument = "Kipp and Zonen CNR1"
+            long_name = "Up-welling long wave"
+            standard_name = "surface_upwelling_longwave_flux_in_air"
+            units = "W/m2"
     [[Fld]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Fld
+            sheet    = Data
+            name     = Fld
         [[[Attr]]]
-            Description = "Down-welling long wave (Kipp&Zonen)"
-            Units    = "W/m2"
+            ancillary_variables = "Fld QC flag"
+            instrument = "Kipp and Zonen CNR1"
+            long_name = "Down-welling long wave"
+            standard_name = "surface_downwelling_longwave_flux_in_air"
+            units = "W/m2"
     [[albedo]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = albedo
+            sheet    = Data
+            name     = albedo
         [[[Attr]]]
-            Description = "solar albedo"
-            Units    = "unitless"
+            ancillary_variables = "albedo QC flag"
+            long_name = "solar albedo"
+            units    = "unitless"
+            standard_name = "surface_albedo"
     [[ustarM]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = ustarM
+            sheet    = Data
+            name     = ustarM
         [[[Attr]]]
-            Description = "Massman true ustar"
-            Units    = "m/s"
+            ancillary_variables = "ustarM QC flag"
+            long_name = "Massman true ustar"
+            units    = "m/s"
+            standard_name = "not defined"
     [[LM]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = LM
+            sheet    = Data
+            name     = LM
         [[[Attr]]]
-            Description = "Massman true Obukhov Length"
-            Units    = "m"
+            ancillary_variables = "LM QC flag"
+            standard_name = "not defined"
+            long_name = "Massman true Obukhov Length"
+            units    = "m"
     [[Diag_CSAT]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Diag_CSAT
+            sheet    = Data
+            name     = Diag_CSAT
         [[[Attr]]]
-            Description = "CSAT diagnostic value"
-            Units    = "none"
+            long_name = "CSAT diagnostic value"
+            units    = "none"
+            ancillary_variables = "Diag_CSAT QC flag"
+            standard_name = "not defined"
     [[Diag_7500]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Diag_7500
+            sheet    = Data
+            name     = Diag_7500
         [[[Attr]]]
-            Description = "7500 diagnostic value"
-            Units    = "none"
+            long_name = "IRGA diagnostic value"
+            units    = "none"
+            ancillary_variables = "Diag_7500 QC flag"
+            standard_name = "not defined"
     [[AGC_7500]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = AGC_7500
+            sheet    = Data
+            name     = AGC_7500
         [[[Attr]]]
-            Description = "7500 AGC"
-            Units    = "none"
+            long_name = "7500 AGC"
+            units    = "none"
+            ancillary_variables = "AGC_7500 QC flag"
+            standard_name = "not defined"
     [[Vbat]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Vbat
+            sheet    = Data
+            name     = Vbat
         [[[Attr]]]
-            Description = "Battery voltage"
-            Units    = "V"
-    [[Vbat_TopPanel]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = Vbat_TopPanel
-        [[[Attr]]]
-            Description = "Battery voltage check for upper PV panel"
-            Units    = "V"
-    [[Vbat_BotPanel]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = Vbat_BotPanel
-        [[[Attr]]]
-            Description = "Battery voltage check for lower PV panel"
-            Units    = "V"
+            long_name = "Battery voltage"
+            units    = "V"
+            ancillary_variables = "Vbat QC flag"
+            standard_name = "not defined"
     [[Tpanel]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Tpanel
+            sheet    = Data
+            name     = Tpanel
         [[[Attr]]]
-            Description = "CR3000 datalogger panel temperature"
-            Units    = "C"
+            long_name = "CR3000 datalogger panel temperature"
+            units    = "C"
+            ancillary_variables = "Tpanel QC flag"
+            standard_name = "not defined"
     [[Tpanel_CR1000]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Tpanel_CR1000
+            sheet    = Data
+            name     = Tpanel_CR1000
         [[[Attr]]]
-            Description = "soil datalogger panel temperature (CR1000)"
-            Units    = "C"
-    [[Tpanel_CR3000b]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = Tpanel_CR3000b
-        [[[Attr]]]
-            Description = "vertical gradient datalogger panel temperature (CR3000)"
-            Units    = "C"
+            long_name = "soil datalogger panel temperature (CR1000)"
+            units    = "C"
+            ancillary_variables = "Tpanel_CR1000 QC flag"
+            standard_name = "not defined"
     [[theta]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = theta
+            sheet    = Data
+            name     = theta
         [[[Attr]]]
-            Description = "Vertical rotation angle"
-            Units    = "deg"
+            long_name = "Vertical rotation angle"
+            units    = "deg"
+            ancillary_variables = "theta QC flag"
+            standard_name = "not defined"
     [[eta]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = eta
+            sheet    = Data
+            name     = eta
         [[[Attr]]]
-            Description = "Horizontal rotation angle"
-            Units    = "deg"
+            long_name = "Horizontal rotation angle"
+            units    = "deg"
+            ancillary_variables = "eta QC flag"
+            standard_name = "not defined"
     [[Ux]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Ux
+            sheet    = Data
+            name     = Ux
         [[[Attr]]]
-            Description = "Ux (CSAT)"
-            Units    = "m/s"
+            long_name = "Ux (CSAT)"
+            units    = "m/s"
+            ancillary_variables = "Ux QC flag"
+            standard_name = "not defined"
     [[u]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = u
+            sheet    = Data
+            name     = u
         [[[Attr]]]
-            Description = "Longitudinal component in natural wind coordinates"
-            Units    = "m/s"
+            long_name = "Longitudinal component in natural wind coordinates"
+            units    = "m/s"
+            ancillary_variables = "u QC flag"
+            standard_name = "not defined"
     [[Uy]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Uy
+            sheet    = Data
+            name     = Uy
         [[[Attr]]]
-            Description = "Uy (CSAT)"
-            Units    = "m/s"
+            long_name = "Uy (CSAT)"
+            units    = "m/s"
+            ancillary_variables = "Uy QC flag"
+            standard_name = "not defined"
     [[v]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = v
+            sheet    = Data
+            name     = v
         [[[Attr]]]
-            Description = "Lateral component in natural wind coordinates"
-            Units    = "m/s"
+            long_name = "Lateral component in natural wind coordinates"
+            units    = "m/s"
+            ancillary_variables = "v QC flag"
+            standard_name = "not defined"
     [[Uz]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Uz
+            sheet    = Data
+            name     = Uz
         [[[Attr]]]
-            Description = "Uz (CSAT)"
-            Units    = "m/s"
+            long_name = "Uz (CSAT)"
+            units    = "m/s"
+            ancillary_variables = "Uz QC flag"
+            standard_name = "not defined"
     [[w]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = w
+            sheet    = Data
+            name     = w
         [[[Attr]]]
-            Description = "Vertical component in natural wind coordinates"
-            Units    = "m/s"
+            long_name = "Vertical component in natural wind coordinates"
+            units    = "m/s"
+            ancillary_variables = "w QC flag"
+            standard_name = "not defined"
     [[UxUx]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = UxUx
+            sheet    = Data
+            name     = UxUx
         [[[Attr]]]
-            Description = "Variance of Ux"
-            Units    = "m2/s2"
+            long_name = "Variance of Ux"
+            units    = "m2/s2"
+            ancillary_variables = "UxUx QC flag"
+            standard_name = "not defined"
     [[UxUy]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = UxUy
+            sheet    = Data
+            name     = UxUy
         [[[Attr]]]
-            Description = "Covariance of Ux and Uz"
-            Units    = "m2/s2"
+            long_name = "Covariance of Ux and Uz"
+            units    = "m2/s2"
+            ancillary_variables = "UxUy QC flag"
+            standard_name = "not defined"
     [[uwM]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = uwM
+            sheet    = Data
+            name     = uwM
         [[[Attr]]]
-            Description = "Massman true Cov(uw)"
-            Units    = "m2/s2"
+            long_name = "Massman true Cov(uw)"
+            units    = "m2/s2"
+            ancillary_variables = "uwM QC flag"
+            standard_name = "not defined"
     [[UxA]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = UxA
+            sheet    = Data
+            name     = UxA
         [[[Attr]]]
-            Description = "Covariance of Ux and H2O (7500)"
-            Units    = "g/m2/s"
+            long_name = "Covariance of Ux and H2O (7500)"
+            units    = "g/m2/s"
+            ancillary_variables = "UxA QC flag"
+            standard_name = "not defined"
     [[UxC]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = UxC
+            sheet    = Data
+            name     = UxC
         [[[Attr]]]
-            Description = "Covariance of Ux and CO2 (7500)"
-            Units    = "mg/m2/s"
+            long_name = "Covariance of Ux and CO2 (7500)"
+            units    = "mg/m2/s"
+            ancillary_variables = "UxC QC flag"
+            standard_name = "not defined"
     [[UxT]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = UxT
+            sheet    = Data
+            name     = UxT
         [[[Attr]]]
-            Description = "Covariance of Ux and T (CSAT)"
-            Units    = "mC/s"
+            long_name = "Covariance of Ux and T (CSAT)"
+            units    = "mC/s"
+            ancillary_variables = "UxT QC flag"
+            standard_name = "not defined"
     [[UyA]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = UyA
+            sheet    = Data
+            name     = UyA
         [[[Attr]]]
-            Description = "Covariance of Uy and H2O (7500)"
-            Units    = "g/m2/s"
+            long_name = "Covariance of Uy and H2O (7500)"
+            units    = "g/m2/s"
+            ancillary_variables = "UyA QC flag"
+            standard_name = "not defined"
     [[UyC]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = UyC
+            sheet    = Data
+            name     = UyC
         [[[Attr]]]
-            Description = "Covariance of Uy and CO2 (7500)"
-            Units    = "mg/m2/s"
+            long_name = "Covariance of Uy and CO2 (7500)"
+            units    = "mg/m2/s"
+            ancillary_variables = "UyC QC flag"
+            standard_name = "not defined"
     [[UyT]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = UyT
+            sheet    = Data
+            name     = UyT
         [[[Attr]]]
-            Description = "Covariance of Uy and T (CSAT)"
-            Units    = "mC/s"
+            long_name = "Covariance of Uy and T (CSAT)"
+            units    = "mC/s"
+            ancillary_variables = "UyT QC flag"
+            standard_name = "not defined"
     [[UyUy]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = UyUy
+            sheet    = Data
+            name     = UyUy
         [[[Attr]]]
-            Description = "Variance of Uy"
-            Units    = "m2/s2"
+            long_name = "Variance of Uy"
+            units    = "m2/s2"
+            ancillary_variables = "UyUy QC flag"
+            standard_name = "not defined"
     [[vwM]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = vwM
+            sheet    = Data
+            name     = vwM
         [[[Attr]]]
-            Description = "Massman true Cov(vw)"
-            Units    = "m2/s2"
+            long_name = "Massman true Cov(vw)"
+            units    = "m2/s2"
+            ancillary_variables = "vwM QC flag"
+            standard_name = "not defined"
     [[AhAh]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = AhAh
+            sheet    = Data
+            name     = AhAh
         [[[Attr]]]
-            Description = "Variance of Absolute humidity (7500)"
-            Units    = "g2/m6"
+            long_name = "Variance of Absolute humidity (7500)"
+            units    = "g2/m6"
+            ancillary_variables = "AhAh QC flag"
+            standard_name = "not defined"
     [[CcCc]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = CcCc
+            sheet    = Data
+            name     = CcCc
         [[[Attr]]]
-            Description = "Variance of CO2 concentration"
-            Units    = "mg2/m6"
+            long_name = "Variance of CO2 concentration"
+            units    = "mg2/m6"
+            ancillary_variables = "CcCc QC flag"
+            standard_name = "not defined"
     [[UxUz]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = UxUz
+            sheet    = Data
+            name     = UxUz
         [[[Attr]]]
-            Description = "Covariance of Ux and Uz"
-            Units    = "m2/s2"
+            long_name = "Covariance of Ux and Uz"
+            units    = "m2/s2"
+            ancillary_variables = "UxUz QC flag"
+            standard_name = "not defined"
     [[UyUz]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = UyUz
+            sheet    = Data
+            name     = UyUz
         [[[Attr]]]
-            Description = "Covariance of Uy and Uz"
-            Units    = "m2/s2"
+            long_name = "Covariance of Uy and Uz"
+            units    = "m2/s2"
+            ancillary_variables = "UyUz QC flag"
+            standard_name = "not defined"
     [[UzT]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = UzT
+            sheet    = Data
+            name     = UzT
         [[[Attr]]]
-            Description = "Covariance of Uz and T (CSAT)"
-            Units    = "mC/s"
+            long_name = "Covariance of Uz and T (CSAT)"
+            units    = "mC/s"
+            ancillary_variables = "UzT QC flag"
+            standard_name = "not defined"
     [[UzA]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = UzA
+            sheet    = Data
+            name     = UzA
         [[[Attr]]]
-            Description = "Covariance of w and H2O (7500)"
-            Units    = "g/m2/s"
+            long_name = "Covariance of w and H2O (7500)"
+            units    = "g/m2/s"
+            ancillary_variables = "UzA QC flag"
+            standard_name = "not defined"
     [[UzC]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = UzC
+            sheet    = Data
+            name     = UzC
         [[[Attr]]]
-            Description = "Covariance of Uz and CO2 (7500)"
-            Units    = "mg/m2/s"
+            long_name = "Covariance of Uz and CO2 (7500)"
+            units    = "mg/m2/s"
+            ancillary_variables = "UzC QC flag"
+            standard_name = "not defined"
     [[wAwpl]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = wAwpl
+            sheet    = Data
+            name     = wAwpl
         [[[Attr]]]
-            Description = "WPL corrected Cov(wA)"
-            Units    = "g/m2/s"
+            long_name = "WPL corrected Cov(wA)"
+            units    = "g/m2/s"
+            ancillary_variables = "wAwpl QC flag"
+            standard_name = "not defined"
     [[wCM]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = wCM
+            sheet    = Data
+            name     = wCM
         [[[Attr]]]
-            Description = "Massman true Cov(wC)"
-            Units    = "mg/m2/s"
+            long_name = "Massman true Cov(wC)"
+            units    = "mg/m2/s"
+            ancillary_variables = "wCM QC flag"
+            standard_name = "not defined"
    [[wTM]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = wTM
+            sheet    = Data
+            name     = wTM
         [[[Attr]]]
-            Description = "Massman true Cov(wT)"
-            Units    = "mC/s"
+            long_name = "Massman true Cov(wT)"
+            units    = "mC/s"
+            ancillary_variables = "wTM QC flag"
+            standard_name = "not defined"
     [[Ts_Av]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Ts_Av
+            sheet    = Data
+            name     = Ts_Av
         [[[Attr]]]
-            Description = "Element-wise average of series Ts_bs, Ts_ms, Ts_mu"
-            Units    = "C"
+            long_name = "Element-wise average of series Ts_bs, Ts_ms, Ts_mu"
+            units    = "C"
+            ancillary_variables = "Ts_Av QC flag"
+            standard_name = "soil_temperature"
     [[Sws_Av]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Sws_Av
+            sheet    = Data
+            name     = Sws_Av
         [[[Attr]]]
-            Description = "Element-wise average of series Sws_bs, Sws_ms, Sws_mu"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "Element-wise average of series Sws_bs, Sws_ms, Sws_mu"
+            units    = "frac"
+            ancillary_variables = "Sws_Av QC flag"
+            standard_name = "soil_moisture_content"
     [[svwc_s_baresoil]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_s_baresoil
+            sheet    = Data
+            name     = svwc_s_baresoil
         [[[Attr]]]
-            Description = "Surface soil water content of bare soil, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "Surface soil water content of bare soil, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_s_baresoil QC flag"
+            standard_name = "soil_moisture_content"
     [[Ts_bs]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Ts_bs
+            sheet    = Data
+            name     = Ts_bs
         [[[Attr]]]
-            Description = "Soil temperature in bare soil"
-            Units    = "C"
-    [[delTs_bs]]
+            long_name = "Soil temperature in bare soil"
+            units    = "C"
+            ancillary_variables = "Ts_bs QC flag"
+            standard_name = "soil_temperature"
+     [[delTs_bs]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = delTs_bs
+            sheet    = Data
+            name     = delTs_bs
         [[[Attr]]]
-            Description = "30-min change in soil temperature in bare soil"
-            Units    = "C"
+            long_name = "30-min change in soil temperature in bare soil"
+            units    = "C"
+            ancillary_variables = "delTs_bs QC flag"
+            standard_name = "not defined"
     [[Fgc_bs]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Fgc_bs
+            sheet    = Data
+            name     = Fgc_bs
         [[[Attr]]]
-            Description = "Soil heat flux corrected for storage"
-            Units    = "C"
+            long_name = "Soil heat flux corrected for storage"
+            units    = "C"
+            ancillary_variables = "Fgc_bs QC flag"
+            standard_name = "downward_heat_flux_in_soil"
     [[svwc_s_understory]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_s_understory
+            sheet    = Data
+            name     = svwc_s_understory
         [[[Attr]]]
-            Description = "Surface soil water content below understory, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "Surface soil water content below understory, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_s_understory QC flag"
+            standard_name = "soil_moisture_content"
     [[Ts_mu]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Ts_mu
+            sheet    = Data
+            name     = Ts_mu
         [[[Attr]]]
-            Description = "Soil temperature under mulga and ground-cover understory"
-            Units    = "C"
+            long_name = "Soil temperature under mulga and ground-cover understory"
+            units    = "C"
+            ancillary_variables = "Ts_mu QC flag"
+            standard_name = "soil_temperature"
     [[delTs_mu]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = delTs_mu
+            sheet    = Data
+            name     = delTs_mu
         [[[Attr]]]
-            Description = "30-min change in soil temperature under mulga and ground-cover understory"
-            Units    = "C"
+            long_name = "30-min change in soil temperature under mulga and ground-cover understory"
+            units    = "C"
+            ancillary_variables = "delTs_mu QC flag"
+            standard_name = "not defined"
     [[Fgc_mu]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Fgc_mu
+            sheet    = Data
+            name     = Fgc_mu
         [[[Attr]]]
-            Description = "Soil heat flux corrected for storage"
-            Units    = "C"
+            long_name = "Soil heat flux corrected for storage"
+            units    = "C"
+            ancillary_variables = "Fgc_mu QC flag"
+            standard_name = "downward_heat_flux_in_soil"
     [[svwc_s_mulga]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_s_mulga
+            sheet    = Data
+            name     = svwc_s_mulga
         [[[Attr]]]
-            Description = "Surface soil water content below mulga, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "Surface soil water content below mulga, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_s_mulga QC flag"
+            standard_name = "soil_moisture_content"
     [[Ts_ms]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Ts_ms
+            sheet    = Data
+            name     = Ts_ms
         [[[Attr]]]
-            Description = "Soil temperature under mulga and soil"
-            Units    = "C"
+            long_name = "Soil temperature under mulga and soil"
+            units    = "C"
+            ancillary_variables = "Ts_ms QC flag"
+            standard_name = "soil_temperature"
     [[delTs_ms]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = delTs_ms
+            sheet    = Data
+            name     = delTs_ms
         [[[Attr]]]
-            Description = "30-min change in soil temperature under mulga and soil"
-            Units    = "C"
+            long_name = "30-min change in soil temperature under mulga and soil"
+            units    = "C"
+            ancillary_variables = "delTs_ms QC flag"
+            standard_name = "not defined"
     [[Fgc_ms]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Fgc_ms
+            sheet    = Data
+            name     = Fgc_ms
         [[[Attr]]]
-            Description = "Soil heat flux corrected for storage"
-            Units    = "C"
-    [[svwc_s_raingage]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_s_raingage
-        [[[Attr]]]
-            Description = "Surface soil water content of bare soil near raingage, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "Soil heat flux corrected for storage"
+            units    = "C"
+            ancillary_variables = "Fgc_ms QC flag"
+            standard_name = "downward_heat_flux_in_soil"
     [[svwc_10cm_baresoil_a1]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_10cm_baresoil_a1
+            sheet    = Data
+            name     = svwc_10cm_baresoil_a1
         [[[Attr]]]
-            Description = "10-30 cm deep soil water content of bare soil array 1, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "10-30 cm deep soil water content of bare soil array 1, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_10cm_baresoil_a1 QC flag"
+            standard_name = "soil_moisture_content"
     [[svwc_60cm_baresoil_a1]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_60cm_baresoil_a1
+            sheet    = Data
+            name     = svwc_60cm_baresoil_a1
         [[[Attr]]]
-            Description = "60-80 cm deep soil water content of bare soil array 1, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "60-80 cm deep soil water content of bare soil array 1, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_60cm_baresoil_a1 QC flag"
+            standard_name = "soil_moisture_content"
     [[svwc_100cm_baresoil_a1]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_100cm_baresoil_a1
+            sheet    = Data
+            name     = svwc_100cm_baresoil_a1
         [[[Attr]]]
-            Description = "100-130 cm deep soil water content of bare soil array 1, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "100-130 cm deep soil water content of bare soil array 1, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_100cm_baresoil_a1 QC flag"
+            standard_name = "soil_moisture_content"
     [[svwc_10cm_mulga_a1]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_10cm_mulga_a1
+            sheet    = Data
+            name     = svwc_10cm_mulga_a1
         [[[Attr]]]
-            Description = "10-30 cm deep soil water content below mulga array 1, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "10-30 cm deep soil water content below mulga array 1, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_10cm_mulga_a1 QC flag"
+            standard_name = "soil_moisture_content"
     [[svwc_60cm_mulga_a1]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_60cm_mulga_a1
+            sheet    = Data
+            name     = svwc_60cm_mulga_a1
         [[[Attr]]]
-            Description = "60-80 cm deep soil water content below mulga array 1, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "60-80 cm deep soil water content below mulga array 1, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_60cm_mulga_a1 QC flag"
+            standard_name = "soil_moisture_content"
     [[svwc_100cm_mulga_a1]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_100cm_mulga_a1
+            sheet    = Data
+            name     = svwc_100cm_mulga_a1
         [[[Attr]]]
-            Description = "100-130 cm deep soil water content below mulga array 1, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "100-130 cm deep soil water content below mulga array 1, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_100cm_mulga_a1 QC flag"
+            standard_name = "soil_moisture_content"
     [[svwc_10cm_understory_a1]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_10cm_understory_a1
+            sheet    = Data
+            name     = svwc_10cm_understory_a1
         [[[Attr]]]
-            Description = "10-30 cm deep soil water content below understory array 1, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "10-30 cm deep soil water content below understory array 1, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_10cm_understory_a1 QC flag"
+            standard_name = "soil_moisture_content"
     [[svwc_60cm_understory_a1]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_60cm_understory_a1
+            sheet    = Data
+            name     = svwc_60cm_understory_a1
         [[[Attr]]]
-            Description = "60-80 cm deep soil water content below understory array 1, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "60-80 cm deep soil water content below understory array 1, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_60cm_understory_a1 QC flag"
+            standard_name = "soil_moisture_content"
     [[svwc_100cm_understory_a1]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_100cm_understory_a1
+            sheet    = Data
+            name     = svwc_100cm_understory_a1
         [[[Attr]]]
-            Description = "100-130 cm deep soil water content below understory array 1, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "100-130 cm deep soil water content below understory array 1, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_100cm_understory_a1 QC flag"
+            standard_name = "soil_moisture_content"
     [[svwc_10cm_baresoil_a2]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_10cm_baresoil_a2
+            sheet    = Data
+            name     = svwc_10cm_baresoil_a2
         [[[Attr]]]
-            Description = "10-30 cm deep soil water content of bare soil array 2, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "10-30 cm deep soil water content of bare soil array 2, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_10cm_baresoil_a2 QC flag"
+            standard_name = "soil_moisture_content"
     [[svwc_60cm_baresoil_a2]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_60cm_baresoil_a2
+            sheet    = Data
+            name     = svwc_60cm_baresoil_a2
         [[[Attr]]]
-            Description = "60-80 cm deep soil water content of bare soil array 2, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "60-80 cm deep soil water content of bare soil array 2, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_60cm_baresoil_a2 QC flag"
+            standard_name = "soil_moisture_content"
     [[svwc_100cm_baresoil_a2]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_100cm_baresoil_a2
+            sheet    = Data
+            name     = svwc_100cm_baresoil_a2
         [[[Attr]]]
-            Description = "100-120 cm deep soil water content of bare soil array 2, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "100-120 cm deep soil water content of bare soil array 2, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_100cm_baresoil_a2 QC flag"
+            standard_name = "soil_moisture_content"
     [[svwc_143cm_baresoil_a2]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_143cm_baresoil_a2
+            sheet    = Data
+            name     = svwc_143cm_baresoil_a2
         [[[Attr]]]
-            Description = "143-163 cm deep soil water content of bare soil array 2, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "143-163 cm deep soil water content of bare soil array 2, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_143cm_baresoil_a2 QC flag"
+            standard_name = "soil_moisture_content"
     [[svwc_10cm_a_mulga_a2]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_10cm_a_mulga_a2
+            sheet    = Data
+            name     = svwc_10cm_a_mulga_a2
         [[[Attr]]]
-            Description = "10-30 cm deep soil water content below mulga array 2, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "10-30 cm deep soil water content below mulga array 2, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_10cm_a_mulga_a2 QC flag"
+            standard_name = "soil_moisture_content"
     [[svwc_10cm_b_mulga_a2]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_10cm_b_mulga_a2
+            sheet    = Data
+            name     = svwc_10cm_b_mulga_a2
         [[[Attr]]]
-            Description = "10-30 cm deep soil water content below mulga array 2, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "10-30 cm deep soil water content below mulga array 2, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_10cm_b_mulga_a2 QC flag"
+            standard_name = "soil_moisture_content"
     [[svwc_60cm_mulga_a2]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_60cm_mulga_a2
+            sheet    = Data
+            name     = svwc_60cm_mulga_a2
         [[[Attr]]]
-            Description = "60-80 cm deep soil water content below mulga array 2, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "60-80 cm deep soil water content below mulga array 2, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_60cm_mulga_a2 QC flag"
+            standard_name = "soil_moisture_content"
     [[svwc_100cm_mulga_a2]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_100cm_mulga_a2
+            sheet    = Data
+            name     = svwc_100cm_mulga_a2
         [[[Attr]]]
-            Description = "100-130 cm deep soil water content below mulga array 2, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "100-130 cm deep soil water content below mulga array 2, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_100cm_mulga_a2 QC flag"
+            standard_name = "soil_moisture_content"
     [[svwc_10cm_a_understory_a2]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_10cm_a_understory_a2
+            sheet    = Data
+            name     = svwc_10cm_a_understory_a2
         [[[Attr]]]
-            Description = "10-30 cm deep soil water content below understory array 2, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "10-30 cm deep soil water content below understory array 2, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_10cm_a_understory_a2 QC flag"
+            standard_name = "soil_moisture_content"
     [[svwc_10cm_b_understory_a2]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_10cm_b_understory_a2
+            sheet    = Data
+            name     = svwc_10cm_b_understory_a2
         [[[Attr]]]
-            Description = "10-30 cm deep soil water content below understory array 2, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "10-30 cm deep soil water content below understory array 2, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_10cm_b_understory_a2 QC flag"
+            standard_name = "soil_moisture_content"
     [[svwc_60cm_understory_a2]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_60cm_understory_a2
+            sheet    = Data
+            name     = svwc_60cm_understory_a2
         [[[Attr]]]
-            Description = "60-80 cm deep soil water content below understory array 2, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "60-80 cm deep soil water content below understory array 2, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_60cm_understory_a2 QC flag"
+            standard_name = "soil_moisture_content"
     [[svwc_100cm_understory_a2]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = svwc_100cm_understory_a2
+            sheet    = Data
+            name     = svwc_100cm_understory_a2
         [[[Attr]]]
-            Description = "100-130 cm deep soil water content below understory array 2, empirically corrected to collected samples"
-            Units    = "cm3 water/cm3 soil"
+            long_name = "100-130 cm deep soil water content below understory array 2, empirically corrected to collected samples"
+            units    = "cm3 water/cm3 soil"
+            ancillary_variables = "svwc_100cm_understory_a2 QC flag"
+            standard_name = "soil_moisture_content"
     [[Ah_HMP]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Ah_HMP
+            sheet    = Data
+            name     = Ah_HMP
         [[[Attr]]]
-            Description = "Absolute humidity (HMP) at 11.67m"
-            Units    = "g/m3"
+            long_name = "Absolute humidity (HMP)"
+            units    = "g/m3"
+            ancillary_variables = "Ah_HMP QC flag"
+            standard_name = "not defined"
     [[q]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = q
+            sheet    = Data
+            name     = q
         [[[Attr]]]
-            Description = "Specific humidity"
-            Units    = "kg/m3"
+            long_name = "Specific humidity"
+            units    = "kg/m3"
+            ancillary_variables = "q QC flag"
+            standard_name = "specific_humidity"
     [[e_HMP]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = e_HMP
+            sheet    = Data
+            name     = e_HMP
         [[[Attr]]]
-            Description = "atmospheric vapour pressure (HMP) at 11.67m"
-            Units    = "kPa"
-    [[RH_HMP]]
+            long_name = "atmospheric vapour pressure (HMP)"
+            units    = "kPa"
+            ancillary_variables = "e_HMP QC flag"
+            standard_name = "water_vapor_partial_pressure_in_air"
+    [[RH]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = RH_HMP
+            sheet    = Data
+            name     = RH
         [[[Attr]]]
-            Description = "Relative humidity (HMP) at 11.67m"
-            Units    = "fraction"
+            long_name = "Relative humidity (HMP)"
+            units    = "fraction"
+            ancillary_variables = "RH QC flag"
+            standard_name = "relative_humidity"
     [[rho_a]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = rho_a
+            sheet    = Data
+            name     = rho_a
         [[[Attr]]]
-            Description = "moist air density"
-            Units    = "kg/m3"
+            long_name = "moist air density"
+            units    = "kg/m3"
+            ancillary_variables = "rho_a QC flag"
+            standard_name = "air_density"
     [[rho_d]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = rho_d
+            sheet    = Data
+            name     = rho_d
         [[[Attr]]]
-            Description = "density of dry air"
-            Units    = "kg/m3"
+            long_name = "density of dry air"
+            units    = "kg/m3"
+            ancillary_variables = "rho_d QC flag"
+            standard_name = "air_density"
     [[es_HMP]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = es_HMP
+            sheet    = Data
+            name     = es_HMP
         [[[Attr]]]
-            Description = "saturation vapour pressure (HMP) at 11.67m"
-            Units    = "kPa"
+            long_name = "saturation vapour pressure (HMP)"
+            units    = "kPa"
+            ancillary_variables = "es_HMP QC flag"
+            standard_name = "not defined"
     [[Ta_HMP]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Ta_HMP
+            sheet    = Data
+            name     = Ta_HMP
         [[[Attr]]]
-            Description = "Air temperature (HMP) at 11.67m"
-            Units    = "C"
-    [[Ah_HMP_200cm]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = Ah_HMP_200cm
-        [[[Attr]]]
-            Description = "Absolute humidity (HMP) at 2m"
-            Units    = "g/m3"
-    [[e_HMP_200cm]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = e_HMP_200cm
-        [[[Attr]]]
-            Description = "atmospheric vapour pressure (HMP) at 2m"
-            Units    = "kPa"
-    [[RH_HMP_200cm]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = RH_HMP_200cm
-        [[[Attr]]]
-            Description = "Relative humidity (HMP) at 2m"
-            Units    = "fraction"
-    [[es_HMP_200cm]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = es_HMP_200cm
-        [[[Attr]]]
-            Description = "saturation vapour pressure (HMP) at 2m"
-            Units    = "kPa"
-    [[Ta_HMP_200cm]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = Ta_HMP_200cm
-        [[[Attr]]]
-            Description = "Air temperature (HMP) at 2m"
-            Units    = "C"
-    [[Ah_HMP_425cm]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = Ah_HMP_425cm
-        [[[Attr]]]
-            Description = "Absolute humidity (HMP) at 4.25m"
-            Units    = "g/m3"
-    [[e_HMP_425cm]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = e_HMP_425cm
-        [[[Attr]]]
-            Description = "atmospheric vapour pressure (HMP) at 4.25m"
-            Units    = "kPa"
-    [[RH_HMP_425cm]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = RH_HMP_425cm
-        [[[Attr]]]
-            Description = "Relative humidity (HMP) at 4.25m"
-            Units    = "fraction"
-    [[es_HMP_425cm]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = es_HMP_425cm
-        [[[Attr]]]
-            Description = "saturation vapour pressure (HMP) at 4.25m"
-            Units    = "kPa"
-    [[Ta_HMP_425cm]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = Ta_HMP_425cm
-        [[[Attr]]]
-            Description = "Air temperature (HMP) at 4.25m"
-            Units    = "C"
-    [[Ah_HMP_657cm]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = Ah_HMP_657cm
-        [[[Attr]]]
-            Description = "Absolute humidity (HMP) at 6.57m"
-            Units    = "g/m3"
-    [[e_HMP_657cm]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = e_HMP_657cm
-        [[[Attr]]]
-            Description = "atmospheric vapour pressure (HMP) at 6.57m"
-            Units    = "kPa"
-    [[RH_HMP_657cm]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = RH_HMP_657cm
-        [[[Attr]]]
-            Description = "Relative humidity (HMP) at 6.57m"
-            Units    = "fraction"
-    [[es_HMP_657cm]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = es_HMP_657cm
-        [[[Attr]]]
-            Description = "saturation vapour pressure (HMP) at 6.57m"
-            Units    = "kPa"
-    [[Ta_HMP_657cm]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = Ta_HMP_657cm
-        [[[Attr]]]
-            Description = "Air temperature (HMP) at 6.57m"
-            Units    = "C"
+            long_name = "Air temperature (HMP)"
+            units    = "C"
+            ancillary_variables = "Ta_HMP QC flag"
+            standard_name = "air_temperature"
     [[VPD]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = VPD
+            sheet    = Data
+            name     = VPD
         [[[Attr]]]
-            Description = "Vapour pressure deficit (HMP) at 11.67m"
-            Units    = "C"
+            long_name = "Air temperature (HMP)"
+            units    = "C"
+            ancillary_variables = "VPD QC flag"
+            standard_name = "water_vapor_saturation_deficit_in_air"
     [[ps]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = ps
+            sheet    = Data
+            name     = ps
         [[[Attr]]]
-            Description = "Atmospheric pressure"
-            Units    = "kPa"
+            long_name = "Atmospheric pressure"
+            units    = "kPa"
+            ancillary_variables = "ps QC flag"
+            standard_name = "surface_air_pressure"
    [[Tv_CSAT]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Tv_CSAT
+            sheet    = Data
+            name     = Tv_CSAT
         [[[Attr]]]
-            Description = "Virtual air temperature (CSAT)"
-            Units    = "C"
+            long_name = "Virtual air temperature (CSAT)"
+            units    = "C"
+            ancillary_variables = "Tv_CSAT QC flag"
+            standard_name = "air_potential_temperature"
     [[Ah_7500_Av]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Ah_7500_Av
+            sheet    = Data
+            name     = Ah_7500_Av
         [[[Attr]]]
-            Description = "Absolute humidity (7500)"
-            Units    = "g/m3"
+            long_name = "Absolute humidity (7500)"
+            units    = "g/m3"
+            ancillary_variables = "Ah_7500_Av QC flag"
+            standard_name = "not defined"
     [[H_ppt]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = H_ppt
+            sheet    = Data
+            name     = H_ppt
         [[[Attr]]]
-            Description = "H2O molar concentration (ppt)"
-            Units    = "mmol/mol"
+            long_name = "H2O molar concentration (ppt)"
+            units    = "mmol/mol"
+            ancillary_variables = "H_ppt QC flag"
+            standard_name = "not defined"
     [[Cc_7500_Av]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Cc_7500_Av
+            sheet    = Data
+            name     = Cc_7500_Av
         [[[Attr]]]
-            Description = "CO2 concentration"
-            Units    = "mg/m3"
+            long_name = "CO2 concentration"
+            units    = "mg/m3"
+            ancillary_variables = "Cc_7500 QC flag"
+            standard_name = "mass_concentration_of_carbon_dioxide_in_air"
     [[C_ppm]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = C_ppm
+            sheet    = Data
+            name     = C_ppm
         [[[Attr]]]
-            Description = "CO2 molar concentration (ppm)"
-            Units    = "umol/mol"
+            long_name = "CO2 molar concentration (ppm)"
+            units    = "umol/mol"
+            ancillary_variables = "Cc_ppm QC flag"
+            standard_name = "mole_concentration_of_carbon_dioxide_in_air"
     [[Ws_CSAT]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Ws_CSAT
+            sheet    = Data
+            name     = Ws_CSAT
         [[[Attr]]]
-            Description = "Wind speed (CSAT)"
-            Units    = "m/s"
+            long_name = "Wind speed (CSAT)"
+            units    = "m/s"
+            ancillary_variables = "Ws_CSAT QC flag"
+            standard_name = "wind_speed"
     [[Wd_CSAT_Compass]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Wd_CSAT_Compass
+            sheet    = Data
+            name     = Wd_CSAT_Compass
         [[[Attr]]]
-            Description = "Wind direction (CSAT)"
-            Units    = "deg"
-    [[Ws_WS_925cm]]
+            long_name = "Wind direction (CSAT)"
+            units    = "deg"
+            ancillary_variables = "Wd_CSAT_Compass QC flag"
+            standard_name = "wind_from_direction"
+    [[Ws_WS]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Ws_WS_925cm
+            sheet    = Data
+            name     = Ws_WS
         [[[Attr]]]
-            Description = "Wind speed (Wind Sentry)"
-            Units    = "m/s"
-    [[Wd_WS_925cm]]
+            long_name = "Wind speed (Wind Sentry)"
+            units    = "m/s"
+            ancillary_variables = "Ws_WS QC flag"
+            standard_name = "wind_speed"
+    [[Wd_WS]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Wd_WS_925cm
+            sheet    = Data
+            name     = Wd_WS
         [[[Attr]]]
-            Description = "Wind direction (Wind Sentry)"
-            Units    = "deg"
+            long_name = "Wind direction (Wind Sentry)"
+            units    = "deg"
+            ancillary_variables = "Wd_WS QC flag"
+            standard_name = "wind_from_direction"
    [[Ws_CSAT_Sd]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Ws_CSAT_Sd
+            sheet    = Data
+            name     = Ws_CSAT_Sd
         [[[Attr]]]
-            Description = "Standard deviation of wind speed (CSAT)"
-            Units    = "m/s"
+            long_name = "Standard deviation of wind speed (CSAT)"
+            units    = "m/s"
+            ancillary_variables = "Ws_CSAT_Sd QC flag"
+            standard_name = "not defined"
     [[Wd_CSAT_Sd]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Wd_CSAT_Sd
+            sheet    = Data
+            name     = Wd_CSAT_Sd
         [[[Attr]]]
-            Description = "Standard deviation of wind direction (CSAT)"
-            Units    = "deg"
-    [[Ws_WS_925cm_Sd]]
+            long_name = "Standard deviation of wind direction (CSAT)"
+            units    = "deg"
+            ancillary_variables = "Wd_CSAT_Sd QC flag"
+            standard_name = "not defined"
+    [[Ws_WS_Sd]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Ws_WS_925cm_Sd
+            sheet    = Data
+            name     = Ws_WS_Sd
         [[[Attr]]]
-            Description = "Standard deviation of wind speed (Wind Sentry)"
-            Units    = "m/s"
-    [[Wd_WS_925cm_Sd]]
+            long_name = "Standard deviation of wind speed (Wind Sentry)"
+            units    = "m/s"
+            ancillary_variables = "Ws_WS_Sd QC flag"
+            standard_name = "not defined"
+    [[Wd_WS_Sd]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Wd_WS_925cm_Sd
+            sheet    = Data
+            name     = Wd_WS_Sd
         [[[Attr]]]
-            Description = "Standard deviation of wind direction (Wind Sentry)"
-            Units    = "deg"
-    [[Ws_WS_200cm]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = Ws_WS_200cm
-        [[[Attr]]]
-            Description = "Wind speed (Wind Sentry) at 2m"
-            Units    = "m/s"
-    [[Ws_WS_200cm_Sd]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = Ws_WS_200cm_Sd
-        [[[Attr]]]
-            Description = "Standard deviation of wind speed (Wind Sentry) at 2m"
-            Units    = "m/s"
-    [[Ws_WS_425cm]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = Ws_WS_425cm
-        [[[Attr]]]
-            Description = "Wind speed (Wind Sentry) at 4.25m"
-            Units    = "m/s"
-    [[Ws_WS_425cm_Sd]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = Ws_WS_425cm_Sd
-        [[[Attr]]]
-            Description = "Standard deviation of wind speed (Wind Sentry) at 4.25m"
-            Units    = "m/s"
-    [[Ws_WS_662cm]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = Ws_WS_662cm
-        [[[Attr]]]
-            Description = "Wind speed (Wind Sentry) at 6.62m"
-            Units    = "m/s"
-    [[Ws_WS_662cm_Sd]]
-        [[[xl]]]
-            Sheet    = Data
-            Name     = Ws_WS_662cm_Sd
-        [[[Attr]]]
-            Description = "Standard deviation of wind speed (Wind Sentry) at 6.62m"
-            Units    = "m/s"
+            long_name = "Standard deviation of wind direction (Wind Sentry)"
+            units    = "deg"
+            ancillary_variables = "Wd_WS_Sd QC flag"
+            standard_name = "not defined"
     [[Rain]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Rain
+            sheet    = Data
+            name     = Rain
         [[[Attr]]]
-            Description = "Rainfall, 30 minute total"
-            Units    = "mm"
+            long_name = "Rainfall, 30 minute total"
+            units    = "mm"
+            ancillary_variables = "Rain QC flag"
+            standard_name = "rainfall_amount"
     [[Re_night]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Re_night
+            sheet    = Data
+            name     = Re_night
         [[[Attr]]]
-            Description = "Nocturnal carbon flux gapfilled using modelled from Q10 response curve binned by soil volumetric moisture content"
-            Units    = "umol/(m2 s)"
+            long_name = "Nocturnal carbon flux gapfilled using modelled from Q10 response curve binned by soil volumetric moisture content"
+            units    = "umol/(m2 s)"
+            ancillary_variables = "Re_night QC flag"
+            standard_name = "not defined"
     [[Re_day]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Re_day
+            sheet    = Data
+            name     = Re_day
         [[[Attr]]]
-            Description = "Diurnal ecosystem respiration from temperature and intercept of light response curve binned by temperature class"
-            Units    = "umol/(m2 s)"
+            long_name = "Diurnal ecosystem respiration from temperature and intercept of light response curve binned by temperature class"
+            units    = "umol/(m2 s)"
+            ancillary_variables = "Re_day QC flag"
+            standard_name = "not defined"
     [[Re_umol]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = Re_umol
+            sheet    = Data
+            name     = Re_umol
         [[[Attr]]]
-            Description = "Ecosystem respiration gapfilled using modelled from Q10 response curve binned by soil volumetric moisture content class (night) and intercept of light response curve binned by temperature class (day)"
-            Units    = "umol/(m2 s)"
+            long_name = "Ecosystem respiration gapfilled using modelled from Q10 response curve binned by soil volumetric moisture content class (night) and intercept of light response curve binned by temperature class (day)"
+            units    = "umol/(m2 s)"
+            ancillary_variables = "Re_umol QC flag"
+            standard_name = "not defined"
     [[GPP]]
         [[[xl]]]
-            Sheet    = Data
-            Name     = GPP
+            sheet    = Data
+            name     = GPP
         [[[Attr]]]
-            Description = "Gross primary production, determined as Re - Fc (day)"
-            Units    = "umol/(m2 s)"
+            long_name = "Gross primary production, determined as Re - Fc (day)"
+            units    = "umol/(m2 s)"
+            ancillary_variables = "GPP QC flag"
+            standard_name = "gross_primary_productivity_of_carbon"

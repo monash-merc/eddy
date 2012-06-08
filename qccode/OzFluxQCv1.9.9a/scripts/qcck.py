@@ -45,22 +45,21 @@ def do_7500check(cf,ds):
         else:
             log.error('  qcck.do_7500check: series '+str(ThisOne)+' in LI75List not found in ds.series')
 
-def do_Ah7500check(cf,ds):
+def do_Ah7500check(cf,ds,Fcvar='Fc'):
     '''Cleans up Ah_7500_Av based upon Fc_wpl gaps to for QA check on Ah_7500_Av v Ah_HMP.'''
     log.info(' Doing the Ah_7500 check')
-    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='FunctionArgs',key='AhcheckFc'):
-        Fcvar = ast.literal_eval(cf['FunctionArgs']['AhcheckFc'])
-    else:
-        Fcvar = ['Fc_wpl']
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='AhcheckFc'):
+        Fclist = ast.literal_eval(cf['FunctionArgs']['AhcheckFc'])
+        Fcvar = Fclist[0]
     
     # index1  Index of bad Ah_7500_Av observations
     index1 = numpy.where((ds.series['Ah_7500_Av']['Flag']!=0) & (ds.series['Ah_7500_Av']['Flag']!=10))
     
     # index2  Index of bad Fc observations
-    index2 = numpy.where((ds.series[Fcvar[0]]['Flag']!=0) & (ds.series[Fcvar[0]]['Flag']!=10))
+    index2 = numpy.where((ds.series[Fcvar]['Flag']!=0) & (ds.series[Fcvar]['Flag']!=10))
     
     ds.series['Ah_7500_Av']['Data'][index2] = numpy.float64(-9999)
-    ds.series['Ah_7500_Av']['Flag'][index2] = ds.series[Fcvar[0]]['Flag'][index2]
+    ds.series['Ah_7500_Av']['Flag'][index2] = ds.series[Fcvar]['Flag'][index2]
     ds.series['Ah_7500_Av']['Flag'][index1] = ds.series['Ah_7500_Av']['Flag'][index1]
 
 def do_CSATcheck(cf,ds):
@@ -69,7 +68,11 @@ def do_CSATcheck(cf,ds):
        to this routine, it is constructed from the QC flags of the series specified in
        CSATList.'''
     log.info(' Doing the CSAT check')
-    CSATList = ['Ux','Uy','Uz','Ws_CSAT','Wd_CSAT_Compass','Tv_CSAT',
+    if 'Wd_CSAT_Compass' in ds.series.keys():
+        Wd = 'Wd_CSAT_Compass'
+    else:
+        Wd = 'Wd_CSAT'
+    CSATList = ['Ux','Uy','Uz','Ws_CSAT',Wd,'Tv_CSAT',
                 'UzT','UxT','UyT','UzA','UxA','UyA','UzC','UxC','UyC',
                 'UxUz','UyUz','UxUy','UxUx','UyUy']
     if 'Diag_CSAT' not in cf['Variables'].keys():
@@ -91,7 +94,7 @@ def do_CSATcheck(cf,ds):
             log.error('  qcck.do_CSATcheck: series '+str(ThisOne)+' in CSATList not found in ds.series')
 
 def do_diurnalcheck(cf,ds,ThisOne,code=5):
-    dt = float(ds.globalattributes['TimeStep'])
+    dt = float(ds.globalattributes['time_step'])
     n = int((60./dt) + 0.5)             #Number of timesteps per hour
     nInts = int((1440.0/dt)+0.5)        #Number of timesteps per day
     Av = numpy.array([-9999]*nInts,dtype=numpy.float64)
@@ -201,15 +204,21 @@ def do_rangecheck(cf,ds,ThisOne,code=2):
 
 def do_qcchecks(cf,ds,series=''):
     level = ds.globalattributes['Level']
+    if level == 'L3':
+        range_code = 16
+        diurnal_code = 17
+    if level == 'L4':
+        range_code = 38
+        diurnal_code = 39
     if len(series)==0:
         series = cf['Variables'].keys()
     # do the range check
     for ThisOne in series:
-        do_rangecheck(cf,ds,ThisOne,16)
+        do_rangecheck(cf,ds,ThisOne,range_code)
     log.info(' Finished the range check at level '+level)
     # do the diurnal check
     for ThisOne in series:
-        do_diurnalcheck(cf,ds,ThisOne,17)
+        do_diurnalcheck(cf,ds,ThisOne,diurnal_code)
     log.info(' Finished the diurnal average check at level '+level)
 
 def gaps(cf,ds):
@@ -222,15 +231,15 @@ def gaps(cf,ds):
         if Fc.mask[j]==False:
             Fc.mask[j]=True
             Fc[j] = numpy.float64(-9999)
-            ds.series['Fc_wpl']['Flag'][j] = 20
+            ds.series['Fc_wpl']['Flag'][j] = 19
         if Fe.mask[j]==False:
             Fe.mask[j]=True
             Fe[j] = numpy.float64(-9999)
-            ds.series['Fe_wpl']['Flag'][j] = 20            
+            ds.series['Fe_wpl']['Flag'][j] = 19            
         if Fh.mask[j]==False:
             Fh.mask[j]=True
             Fh[j] = numpy.float64(-9999)
-            ds.series['Fh_rmv']['Flag'][j] = 20
+            ds.series['Fh_rmv']['Flag'][j] = 19
     ds.series['Fc_wpl']['Data']=numpy.ma.filled(Fc,float(-9999))
     ds.series['Fe_wpl']['Data']=numpy.ma.filled(Fe,float(-9999))
     ds.series['Fh_rmv']['Data']=numpy.ma.filled(Fh,float(-9999))

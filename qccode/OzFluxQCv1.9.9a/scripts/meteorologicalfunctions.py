@@ -77,7 +77,7 @@ def mixingratio(ps,vp):
 
 def molen(T,Ah,p,ustar,Fh):
     # Calculate the Monin-Obukhov length
-    ustar = numpy.sqrt(ustar*ustar)
+    ustar = (ustar**2)**.5
     L = -theta(T, p)*densitydryair(T, p)*c.Cp*(ustar**3)/(c.g*c.k*Fh)
     return L
 

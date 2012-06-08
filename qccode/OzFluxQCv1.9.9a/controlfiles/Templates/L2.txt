@@ -45,7 +45,8 @@ Platform = PC    # Mac or PC
         xlFlagFileName = ASM_EC_2012_1Jan-Mar_flagstats_L2.xls
 
 [Output]
-L2 = "['Ah_7500_Av','Ah_HMP_01','Cc_7500_Av','Tv_CSAT','Ta_HMP_01']"
+#***
+L2 = "['Ah_7500_Av','Ah_HMP_EC','Cc_7500_Av','Tv_CSAT','Ta_HMP_EC']"
 
 [Variables]
 # Radiation
@@ -150,7 +151,8 @@ L2 = "['Ah_7500_Av','Ah_HMP_01','Cc_7500_Av','Tv_CSAT','Ta_HMP_01']"
         [[[RangeCheck]]]
             Lower      = "[0]*12"
             Upper      = "[50]*12"
-    [[Wd_CSAT_Compass]]
+#***
+    [[Wd_CSAT]]
         [[[RangeCheck]]]
             Lower      = "[0]*12"
             Upper      = "[360]*12"
@@ -204,13 +206,15 @@ L2 = "['Ah_7500_Av','Ah_HMP_01','Cc_7500_Av','Tv_CSAT','Ta_HMP_01']"
             Lower      = "[0]*12"
             Upper      = "[65]*12"
 # Meteorology: HMP45c
-    [[Ah_HMP_01]]
+#***
+    [[Ah_HMP_EC]]
         [[[RangeCheck]]]
             Lower      = "[0]*12"
             Upper      = "[25]*12"
 #        [[[ExcludeDates]]]
 #            0      = "['2010-1-1 00:00','2010-9-16 00:00']"
-    [[Ta_HMP_01]]
+#***
+    [[Ta_HMP_EC]]
         [[[RangeCheck]]]
             Lower      = "[0]*12"
             Upper      = "[50]*12"
@@ -239,33 +243,40 @@ L2 = "['Ah_7500_Av','Ah_HMP_01','Cc_7500_Av','Tv_CSAT','Ta_HMP_01']"
             Lower      = "[0]*12"
             Upper      = "[20]*12"
 # Soil: Ground heat flux
-    [[Fg_01]]
+#***
+    [[Fg_01a]]
         [[[RangeCheck]]]
             Lower      = "[-100]*12"
             Upper      = "[100]*12"
-    [[Fg_02]]
+#***
+    [[Fg_01b]]
         [[[RangeCheck]]]
             Lower      = "[-100]*12"
             Upper      = "[100]*12"
 # Soil: Soil moisture
-    [[Sws_01]]
+#***
+    [[Sws_01a]]
         [[[RangeCheck]]]
             Lower      = "[0]*12"
             Upper      = "[0.5]*12"
-    [[Sws_02]]
+#***
+    [[Sws_01a]]
         [[[RangeCheck]]]
             Lower      = "[0]*12"
             Upper      = "[0.5]*12"
 # Soil: Soil temperature
-    [[Ts_01]]
+#***
+    [[Ts_01a]]
         [[[RangeCheck]]]
             Lower      = "[0]*12"
             Upper      = "[60]*12"
-    [[Ts_02]]
+#***
+    [[Ts_01b]]
         [[[RangeCheck]]]
             Lower      = "[0]*12"
             Upper      = "[60]*12"
-    [[Ts_03]]
+#***
+    [[Ts_01c]]
         [[[RangeCheck]]]
             Lower      = "[0]*12"
             Upper      = "[60]*12"
@@ -291,13 +302,14 @@ L2 = "['Ah_7500_Av','Ah_HMP_01','Cc_7500_Av','Tv_CSAT','Ta_HMP_01']"
         Variables = "['UzA','UxA','UyA','UzC','UxC','UyC']"
     [[4]]
         Title = "Air temperature, humidity and CO2"
-        Variables = "['Ta_HMP_01','Tv_CSAT','Ah_HMP_01','Ah_7500_Av','Cc_7500_Av']"
+        Variables = "['Ta_HMP_EC','Tv_CSAT','Ah_HMP_EC','Ah_7500_Av','Cc_7500_Av']"
     [[5]]
         Title = "Rainfall and diagnostics"
         Variables = "['Rain','Ah_7500_Sd','Cc_7500_Sd','AGC_7500','Diag_7500','Diag_CSAT']"
     [[6]]
         Title = "Soil temperature, water content and heat flux"
-        Variables = "['Ts_01','Ts_02','Sws_01','Sws_02','Fg_01','Fg_02','Fg_03']"
+#***
+        Variables = "['Ts_01a','Ts_01b','Sws_01a','Sws_01b','Fg_01a','Fg_01b','Fg_01c']"
     [[7]]
         Title = "Pressure, wind components and rainfall"
         Variables = "['ps','Ux','Uy','Uz','Rain','Vbat','Tpanel']"
@@ -307,5 +319,5 @@ L2 = "['Ah_7500_Av','Ah_HMP_01','Cc_7500_Av','Tv_CSAT','Ta_HMP_01']"
     [[9]]
         Type = xy
         Title = "xy plots:  Ah"
-        XSeries = "['Ah_HMP_01']"
+        XSeries = "['Ah_HMP_EC']"
         YSeries = "['Ah_7500_Av']"

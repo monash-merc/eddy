@@ -6,830 +6,892 @@ netCDFv3 = False
 
 [Files]
     [[L1]]
-        xlFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level1/
-        xlFileName = ASM_EC_2012_2Apr-Jun.xls
+        xlFilePath = ../AliceSpringsMulga/level1/
+        xlFileName = ASM_EC_2010.xls
         xlHeaderRow  = 2
         xl1stDataRow = 5
-        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
-        ncFileName = ASM_EC_2012_2Apr-Jun_L1.nc
+        ncFilePath = ncData/ASM/
+        ncFileName = ASM_EC_2010_L1.nc
 
 [Global]
-    SiteName = AliceSpringsMulga
-    Site = "Alice Springs Mulga, Northern Territory, Australia"
-    Location = "Latitude: -22.283, Longitude: 133.249"
-    Contact  = James.Cleverly@UTS.edu.au
-    TimeStep = 30
+    contact  = "james.cleverly@uts.edu.au"
+    canopy_height = "6.5m"
+    comment = "CF convention version"
+    data_url = "http://ozflux.its.monash.edu.au/"
+    end_datetime = "2010-12-31 23:30"
+    history = ""
+    institution = "University of Technology, Sydney"
+    latitude = -22.283
+    location = "Latitude: -22.283, Longitude: 133.249"
+    longitude = 133.249
+    metadata_url = "http://www.ozflux.org.au/monitoringsites/alicesprings/index.html"
+    ozflux_url = "http://ozflux.org.au/"
+    references = "None"
+    site_name = "AliceSpringsMulga"
+    site = "Alice Springs Mulga, Northern Territory, Australia"
+    soil_type = "Red Sandy Loam"
+    source = "13.7m flux tower plus array of soil sensors"
+    start_datetime = "2010-09-02 00:00"
+    title = "Flux tower data set from the Alice Springs Mulga site for the calendar year 2010"
+    time_step = 30
+    vegetation = "Mulga canopy, grass+herb+shrub understory"
 
 [Variables]
     [[xlDateTime]]
         [[[xl]]]
-            Sheet    = slow_core
-            Name     = TIMESTAMP
+            sheet    = slow_core
+            name     = TIMESTAMP
         [[[Attr]]]
-            Description = "Date/time in Excel format"
-            Units    = "days"
+            ancillary_variables = ""
+            long_name = "Date/time in Excel format"
+            units    = ""
+            standard_name = "not defined"
     [[Fc_raw]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = Fc_raw_Avg
+            sheet    = slow_flux
+            name     = Fc_raw_Avg
         [[[Attr]]]
-            Description = "Flux of carbon"
-            Units    = "mg/(m2 s)"
+            ancillary_variables = "Fc_raw QC flag"
+            long_name = "Flux of carbon, Raw uncorrected"
+            units    = "mg/(m2 s)"
+            standard_name = "not defined"
     [[Fe_raw]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = Fe_raw_Avg
+            sheet    = slow_flux
+            name     = Fe_raw_Avg
         [[[Attr]]]
-            Description = "Latent heat flux"
-            Units    = "W/m2"
+            ancillary_variables = "Fe_raw QC flag"
+            long_name = "Latent heat flux, Raw uncorrected"
+            units    = "W/m2"
+            standard_name = "surface_upward_latent_heat_flux"
     [[Fh]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = Fh_Avg
+            sheet    = slow_flux
+            name     = Fh_Avg
         [[[Attr]]]
-            Description = "Sensible heat flux"
-            Units    = "W/m2"
+            ancillary_variables = "Fh QC flag"
+            long_name = "Sensible heat flux, Raw uncorrected"
+            units    = "W/m2"
+            standard_name = "surface_upward_latent_heat_flux"
     [[Fnr]]
         [[[xl]]]
-            Sheet    = slow_rad
-            Name     = Fn_CNR1_Avg
+            sheet    = slow_rad
+            name     = Fn_CNR1_Avg
         [[[Attr]]]
-            Description = "Net radiation (Kipp&Zonen)"
-            Units    = "W/m2"
+            ancillary_variables = "Fnr QC flag"
+            long_name = "Net radiation"
+            units    = "W/m2"
+            instrument = "Kipp and Zonen CNR1"
+            standard_name = "not defined"
     [[Flu]]
         [[[xl]]]
-            Sheet    = slow_rad
-            Name     = Flu_CNR1_Avg
+            sheet    = slow_rad
+            name     = Flu_CNR1_Avg
         [[[Attr]]]
-            Description = "Up-welling long wave (Kipp&Zonen)"
-            Units    = "W/m2"
+            ancillary_variables = "Flu QC flag"
+            instrument = "Kipp and Zonen CNR1"
+            long_name = "Up-welling long wave"
+            standard_name = "surface_upwelling_longwave_flux_in_air"
+            units = "W/m2"
     [[Fld]]
         [[[xl]]]
-            Sheet    = slow_rad
-            Name     = Fld_CNR1_Avg
+            sheet    = slow_rad
+            name     = Fld_CNR1_Avg
         [[[Attr]]]
-            Description = "Down-welling long wave (Kipp&Zonen)"
-            Units    = "W/m2"
+            ancillary_variables = "Fld QC flag"
+            instrument = "Kipp and Zonen CNR1"
+            long_name = "Down-welling long wave"
+            standard_name = "surface_downwelling_longwave_flux_in_air"
+            units = "W/m2"
     [[Fsd]]
         [[[xl]]]
-            Sheet    = slow_rad
-            Name     = Fsd_CNR1_Avg
+            sheet    = slow_rad
+            name     = Fsd_CNR1_Avg
         [[[Attr]]]
-            Description = "Down-welling short wave (Kipp&Zonen)"
-            Units    = "W/m2"
+            ancillary_variables = "Fsd QC flag"
+            instrument = "Kipp and Zonen CNR1"
+            long_name = "Down-welling short wave"
+            standard_name = "surface_downwelling_shortwave_flux_in_air"
+            units = "W/m2"
     [[Fsu]]
         [[[xl]]]
-            Sheet    = slow_rad
-            Name     = Fsu_CNR1_Avg
+            sheet    = slow_rad
+            name     = Fsu_CNR1_Avg
         [[[Attr]]]
-            Description = "Up-welling short wave (Kipp&Zonen)"
-            Units    = "W/m2"
+            ancillary_variables = "Fsu QC flag"
+            instrument = "Kipp and Zonen CNR1"
+            long_name = "Up-welling short wave"
+            standard_name = "surface_upwelling_shortwave_flux_in_air"
+            units = "W/m2"
     [[UzT]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = covUzTv
+            sheet    = slow_flux
+            name     = covUzTv
         [[[Attr]]]
-            Description = "Covariance of Uz and T (CSAT)"
-            Units    = "mC/s"
+            instrument = "CSAT"
+            long_name = "Covariance of Uz and T"
+            units = "mC/s"
+            ancillary_variables = "UzT QC flag"
+            standard_name = "not defined"
     [[UxT]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = covUxTv
+            sheet    = slow_flux
+            name     = covUxTv
         [[[Attr]]]
-            Description = "Covariance of Ux and T (CSAT)"
-            Units    = "mC/s"
+            ancillary_variables = "UxT QC flag"
+            units    = "mC/s"
+            long_name = "Covariance of Ux and T"
+            standard_name = "not defined"
     [[UyT]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = covUyTv
+            sheet    = slow_flux
+            name     = covUyTv
         [[[Attr]]]
-            Description = "Covariance of Uy and T (CSAT)"
-            Units    = "mC/s"
+            long_name = "Covariance of Uy and T (CSAT)"
+            units    = "mC/s"
+            ancillary_variables = "UyT QC flag"
+            standard_name = "not defined"
     [[UzA]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = covUzAh
+            sheet    = slow_flux
+            name     = covUzAh
         [[[Attr]]]
-            Description = "Covariance of w and H2O (7500)"
-            Units    = "g/m2/s"
+            long_name = "Covariance of w and H2O (7500)"
+            units    = "g/m2/s"
+            ancillary_variables = "UzA QC flag"
+            standard_name = "not defined"
     [[UxA]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = covUxAh
+            sheet    = slow_flux
+            name     = covUxAh
         [[[Attr]]]
-            Description = "Covariance of Ux and H2O (7500)"
-            Units    = "g/m2/s"
+            long_name = "Covariance of Ux and H2O (7500)"
+            units    = "g/m2/s"
+            ancillary_variables = "UxA QC flag"
+            standard_name = "not defined"
     [[UyA]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = covUyAh
+            sheet    = slow_flux
+            name     = covUyAh
         [[[Attr]]]
-            Description = "Covariance of Uy and H2O (7500)"
-            Units    = "g/m2/s"
+            long_name = "Covariance of Uy and H2O (7500)"
+            units    = "g/m2/s"
+            ancillary_variables = "UyA QC flag"
+            standard_name = "not defined"
     [[UzC]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = covUzCc
+            sheet    = slow_flux
+            name     = covUzCc
         [[[Attr]]]
-            Description = "Covariance of Uz and CO2 (7500)"
-            Units    = "mg/m2/s"
+            long_name = "Covariance of Uz and CO2 (7500)"
+            units    = "mg/m2/s"
+            ancillary_variables = "UzC QC flag"
+            standard_name = "not defined"
     [[UxC]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = covUxCc
+            sheet    = slow_flux
+            name     = covUxCc
         [[[Attr]]]
-            Description = "Covariance of Ux and CO2 (7500)"
-            Units    = "mg/m2/s"
+            long_name = "Covariance of Ux and CO2 (7500)"
+            units    = "mg/m2/s"
+            ancillary_variables = "UxC QC flag"
+            standard_name = "not defined"
     [[UyC]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = covUyCc
+            sheet    = slow_flux
+            name     = covUyCc
         [[[Attr]]]
-            Description = "Covariance of Uy and CO2 (7500)"
-            Units    = "mg/m2/s"
+            long_name = "Covariance of Uy and CO2 (7500)"
+            units    = "mg/m2/s"
+            ancillary_variables = "UyC QC flag"
+            standard_name = "not defined"
     [[UxUz]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = covUzUx
+            sheet    = slow_flux
+            name     = covUzUx
         [[[Attr]]]
-            Description = "Covariance of Ux and Uz"
-            Units    = "m2/s2"
+            long_name = "Covariance of Ux and Uz"
+            units    = "m2/s2"
+            ancillary_variables = "UxUz QC flag"
+            standard_name = "not defined"
     [[UyUz]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = covUzUy
+            sheet    = slow_flux
+            name     = covUzUy
         [[[Attr]]]
-            Description = "Covariance of Uy and Uz"
-            Units    = "m2/s2"
+            long_name = "Covariance of Uy and Uz"
+            units    = "m2/s2"
+            ancillary_variables = "UyUz QC flag"
+            standard_name = "not defined"
     [[UxUy]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = covUxUy
+            sheet    = slow_flux
+            name     = covUxUy
         [[[Attr]]]
-            Description = "Covariance of Ux and Uy"
-            Units    = "m2/s2"
+            long_name = "Covariance of Ux and Uy"
+            units    = "m2/s2"
+            ancillary_variables = "UxUy QC flag"
+            standard_name = "not defined"
     [[UxUx]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = covUxUx
+            sheet    = slow_flux
+            name     = covUxUx
         [[[Attr]]]
-            Description = "Variance of Ux"
-            Units    = "m2/s2"
+            long_name = "Variance of Ux"
+            units    = "m2/s2"
+            ancillary_variables = "UxUx QC flag"
+            standard_name = "not defined"
     [[UyUy]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = covUyUy
+            sheet    = slow_flux
+            name     = covUyUy
         [[[Attr]]]
-            Description = "Variance of Uy"
-            Units    = "m2/s2"
+            long_name = "Variance of Uy"
+            units    = "m2/s2"
+            ancillary_variables = "UyUy QC flag"
+            standard_name = "not defined"
     [[Cc_7500_Av]]
         [[[xl]]]
-            Sheet    = slow_core
-            Name     = Cc_7500_Avg
+            sheet    = slow_core
+            name     = Cc_7500_Avg
         [[[Attr]]]
-            Description = "CO2 concentration"
-            Units    = "mg/m3"
+            long_name = "CO2 concentration"
+            units    = "mg/m3"
+            ancillary_variables = "Cc_7500 QC flag"
+            standard_name = "mass_concentration_of_carbon_dioxide_in_air"
     [[Ah_7500_Av]]
         [[[xl]]]
-            Sheet    = slow_core
-            Name     = Ah_7500_Avg
+            sheet    = slow_core
+            name     = Ah_7500_Avg
         [[[Attr]]]
-            Description = "Absolute humidity (7500)"
-            Units    = "g/m3"
+            long_name = "Absolute humidity (7500)"
+            units    = "g/m3"
+            ancillary_variables = "Ah_7500_Av QC flag"
+            standard_name = "not defined"
     [[Ah_HMP]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = Ah_HMP_01_Avg
+            sheet    = slow_met
+            name     = Ah_HMP_01_Avg
         [[[Attr]]]
-            Description = "Absolute humidity (HMP) at 11.67m"
-            Units    = "g/m3"
-    [[Ah_HMP_200cm]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = Ah_HMP_02_Avg
-        [[[Attr]]]
-            Description = "Absolute humidity (HMP) at 2m"
-            Units    = "g/m3"
-    [[Ah_HMP_425cm]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = Ah_HMP_03_Avg
-        [[[Attr]]]
-            Description = "Absolute humidity (HMP) at 4.25m"
-            Units    = "g/m3"
-    [[Ah_HMP_657cm]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = Ah_HMP_04_Avg
-        [[[Attr]]]
-            Description = "Absolute humidity (HMP) at 6.57m"
-            Units    = "g/m3"
+            long_name = "Absolute humidity (HMP)"
+            units    = "g/m3"
+            ancillary_variables = "Ah_HMP QC flag"
+            standard_name = "not defined"
     [[Tv_CSAT]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = Tv_CSAT_Avg
+            sheet    = slow_met
+            name     = Tv_CSAT_Avg
         [[[Attr]]]
-            Description = "Virtual air temperature (CSAT)"
-            Units    = "C"
+            long_name = "Virtual air temperature (CSAT)"
+            units    = "C"
+            ancillary_variables = "Tv_CSAT QC flag"
+            standard_name = "air_potential_temperature"
     [[Ta_HMP]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = Ta_HMP_01_Avg
+            sheet    = slow_met
+            name     = Ta_HMP_01_Avg
         [[[Attr]]]
-            Description = "Air temperature (HMP) at 11.67m"
-            Units    = "C"
-    [[Ta_HMP_200cm]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = Ta_HMP_02_Avg
-        [[[Attr]]]
-            Description = "Air temperature (HMP) at 2m"
-            Units    = "C"
-    [[Ta_HMP_425cm]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = Ta_HMP_03_Avg
-        [[[Attr]]]
-            Description = "Air temperature (HMP) at 4.25m"
-            Units    = "C"
-    [[Ta_HMP_657cm]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = Ta_HMP_04_Avg
-        [[[Attr]]]
-            Description = "Air temperature (HMP) at 6.57m"
-            Units    = "C"
+            long_name = "Air temperature (HMP)"
+            units    = "C"
+            ancillary_variables = "Ta_HMP QC flag"
+            standard_name = "air_temperature"
     [[AhAh]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = covAhAh
+            sheet    = slow_flux
+            name     = covAhAh
         [[[Attr]]]
-            Description = "Variance of Absolute humidity (7500)"
-            Units    = "g2/m6"
+            long_name = "Variance of Absolute humidity (7500)"
+            units    = "g2/m6"
+            ancillary_variables = "AhAh QC flag"
+            standard_name = "not defined"
     [[CcCc]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = covCcCc
+            sheet    = slow_flux
+            name     = covCcCc
         [[[Attr]]]
-            Description = "Variance of CO2 concentration"
-            Units    = "mg2/m6"
+            long_name = "Variance of CO2 concentration"
+            units    = "mg2/m6"
+            ancillary_variables = "CcCc QC flag"
+            standard_name = "not defined"
     [[Fg_bs]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = Fg_CN3_01_Avg
+            sheet    = slow_flux
+            name     = Fg_CN3_01_Avg
         [[[Attr]]]
-            Description = "Ground heat flux in bare soil"
-            Units    = "W/m2"
+            ancillary_variables = "Fg_bs QC flag"
+            long_name = "Ground heat flux in bare soil"
+            units    = "W/m2"
+            standard_name = "downward_heat_flux_in_soil"
     [[Fg_ms]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = Fg_CN3_02_Avg
+            sheet    = slow_flux
+            name     = Fg_CN3_02_Avg
         [[[Attr]]]
-            Description = "Ground heat flux under mulga and soil"
-            Units    = "W/m2"
+            ancillary_variables = "Fg_ms QC flag"
+            long_name = "Ground heat flux under mulga and soil"
+            units    = "W/m2"
+            standard_name = "downward_heat_flux_in_soil"
     [[Fg_mu]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = Fg_CN3_03_Avg
+            sheet    = slow_flux
+            name     = Fg_CN3_03_Avg
         [[[Attr]]]
-            Description = "Ground heat flux under mulla and ground-cover understory"
-            Units    = "W/m2"
+            ancillary_variables = "Fg_mu QC flag"
+            long_name = "Ground heat flux under mulla and ground-cover understory"
+            units    = "W/m2"
+            standard_name = "downward_heat_flux_in_soil"
     [[Sws_bs]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = Sws_616_01
+            sheet    = slow_met
+            name     = Sws_616_01
         [[[Attr]]]
-            Description = "Soil water content in bare soil"
-            Units    = "frac"
+            long_name = "Soil water content in bare soil"
+            units    = "frac"
+            ancillary_variables = "Sws_bs QC flag"
+            standard_name = "soil_moisture_content"
     [[Sws_ms]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = Sws_616_02
+            sheet    = slow_met
+            name     = Sws_616_02
         [[[Attr]]]
-            Description = "Soil water content under mulga and soil"
-            Units    = "frac"
+            long_name = "Soil water content under mulga and soil"
+            units    = "frac"
+            ancillary_variables = "Sws_ms QC flag"
+            standard_name = "soil_moisture_content"
     [[Sws_mu]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = Sws_616_03
+            sheet    = slow_met
+            name     = Sws_616_03
         [[[Attr]]]
-            Description = "Soil water content under mulga and ground-cover understory"
-            Units    = "frac"
+            long_name = "Soil water content under mulga and ground-cover understory"
+            units    = "frac"
+            ancillary_variables = "Sws_mu QC flag"
+            standard_name = "soil_moisture_content"
     [[Ts_bs]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = Ts_TCAV_01_Avg
+            sheet    = slow_met
+            name     = Ts_TCAV_01_Avg
         [[[Attr]]]
-            Description = "Soil temperature in bare soil"
-            Units    = "C"
+            long_name = "Soil temperature in bare soil"
+            units    = "C"
+            ancillary_variables = "Ts_bs QC flag"
+            standard_name = "soil_temperature"
     [[Ts_ms]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = Ts_TCAV_02_Avg
+            sheet    = slow_met
+            name     = Ts_TCAV_02_Avg
         [[[Attr]]]
-            Description = "Soil temperature under mulga and soil"
-            Units    = "C"
+            long_name = "Soil temperature under mulga and soil"
+            units    = "C"
+            ancillary_variables = "Ts_ms QC flag"
+            standard_name = "soil_temperature"
     [[Ts_mu]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = Ts_TCAV_03_Avg
+            sheet    = slow_met
+            name     = Ts_TCAV_03_Avg
         [[[Attr]]]
-            Description = "Soil temperature under mulga and ground-cover understory"
-            Units    = "C"
+            long_name = "Soil temperature under mulga and ground-cover understory"
+            units    = "C"
+            ancillary_variables = "Ts_mu QC flag"
+            standard_name = "soil_temperature"
     [[Rain]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = Rain_Tot
+            sheet    = slow_met
+            name     = Rain_Tot
         [[[Attr]]]
-            Description = "Rainfall, 30 minute total"
-            Units    = "mm"
+            long_name = "Rainfall, 30 minute total"
+            units    = "mm"
+            ancillary_variables = "Rain QC flag"
+            standard_name = "rainfall_amount"
     [[Wd_CSAT_Compass]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = WD_CSAT_Compass_Avg
+            sheet    = slow_met
+            name     = WD_CSAT_Compass_Avg
         [[[Attr]]]
-            Description = "Wind direction (CSAT)"
-            Units    = "deg"
+            long_name = "Wind direction (CSAT)"
+            units    = "deg"
+            ancillary_variables = "Wd_CSAT_Compass QC flag"
+            standard_name = "wind_from_direction"
     [[Ws_CSAT]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = WS_CSAT_Avg
+            sheet    = slow_met
+            name     = WS_CSAT_Avg
         [[[Attr]]]
-            Description = "Wind speed (CSAT)"
-            Units    = "m/s"
+            long_name = "Wind speed (CSAT)"
+            units    = "m/s"
+            ancillary_variables = "Ws_CSAT QC flag"
+            standard_name = "wind_speed"
     [[Ux]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = Ux_CSAT_Avg
+            sheet    = slow_met
+            name     = Ux_CSAT_Avg
         [[[Attr]]]
-            Description = "Ux (CSAT)"
-            Units    = "m/s"
+            long_name = "Ux (CSAT)"
+            units    = "m/s"
+            ancillary_variables = "Ux QC flag"
+            standard_name = "not defined"
     [[Uy]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = Uy_CSAT_Avg
+            sheet    = slow_met
+            name     = Uy_CSAT_Avg
         [[[Attr]]]
-            Description = "Uy (CSAT)"
-            Units    = "m/s"
+            long_name = "Uy (CSAT)"
+            units    = "m/s"
+            ancillary_variables = "Uy QC flag"
+            standard_name = "not defined"
     [[Uz]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = Uz_CSAT_Avg
+            sheet    = slow_met
+            name     = Uz_CSAT_Avg
         [[[Attr]]]
-            Description = "Uz (CSAT)"
-            Units    = "m/s"
+            long_name = "Uz (CSAT)"
+            units    = "m/s"
+            ancillary_variables = "Uz QC flag"
+            standard_name = "not defined"
     [[ps]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ps_CS106_Avg
+            sheet    = ex_met
+            name     = ps_CS106_Avg
         [[[Attr]]]
-            Description = "Atmospheric pressure"
-            Units    = "kPa"
+            long_name = "Atmospheric pressure"
+            units    = "kPa"
+            ancillary_variables = "ps QC flag"
+            standard_name = "surface_air_pressure"
     [[Diag_CSAT]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = CSAT_Warn
+            sheet    = slow_flux
+            name     = CSAT_Warn
         [[[Attr]]]
-            Description = "CSAT diagnostic value"
-            Units    = "none"
+            long_name = "CSAT diagnostic value"
+            units    = "none"
+            ancillary_variables = "Diag_CSAT QC flag"
+            standard_name = "not defined"
     [[Diag_7500]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = 7500_Warn
+            sheet    = slow_flux
+            name     = 7500_Warn
         [[[Attr]]]
-            Description = "7500 diagnostic value"
-            Units    = "none"
+            long_name = "7500 diagnostic value"
+            units    = "none"
+            ancillary_variables = "Diag_7500 QC flag"
+            standard_name = "not defined"
     [[AGC_7500]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = AGC_7500_Avg
+            sheet    = slow_flux
+            name     = AGC_7500_Avg
         [[[Attr]]]
-            Description = "7500 AGC"
-            Units    = "none"
+            long_name = "7500 AGC"
+            units    = "none"
+            ancillary_variables = "AGC_7500 QC flag"
+            standard_name = "not defined"
     [[albedo]]
         [[[xl]]]
-            Sheet    = slow_rad
-            Name     = albedo_Avg
+            sheet    = slow_rad
+            name     = albedo_Avg
         [[[Attr]]]
-            Description = "solar albedo"
-            Units    = "unitless"
+            ancillary_variables = "albedo QC flag"
+            long_name = "solar albedo"
+            units    = "unitless"
+            standard_name = "surface_albedo"
     [[Fm]]
         [[[xl]]]
-            Sheet    = slow_flux
-            Name     = Fm_Avg
+            sheet    = slow_flux
+            name     = Fm_Avg
         [[[Attr]]]
-            Description = "Momentum flux"
-            Units    = "kg/(m s2)"
-    [[RH_HMP]]
+            ancillary_variables = "Fm QC flag"
+            long_name = "Momentum flux, raw uncorrected"
+            units    = "kg/(m s2)"
+            standard_name = "not defined"
+    [[RH]]
         [[[xl]]]
-            Sheet    = slow_core
-            Name     = RH_HMP_01_Avg
+            sheet    = slow_core
+            name     = RH_HMP_01_Avg
         [[[Attr]]]
-            Description = "Relative humidity (HMP) at 11.67m"
-            Units    = "fraction"
-    [[RH_HMP_200cm]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = RH_HMP_02_Avg
-        [[[Attr]]]
-            Description = "Relative humidity (HMP) at 2m"
-            Units    = "fraction"
-    [[RH_HMP_425cm]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = RH_HMP_03_Avg
-        [[[Attr]]]
-            Description = "Relative humidity (HMP) at 4.25m"
-            Units    = "fraction"
-    [[RH_HMP_657cm]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = RH_HMP_04_Avg
-        [[[Attr]]]
-            Description = "Relative humidity (HMP) at 6.57m"
-            Units    = "fraction"
+            long_name = "Relative humidity (HMP)"
+            units    = "fraction"
+            ancillary_variables = "RH QC flag"
+            standard_name = "relative_humidity"
     [[delTs_bs]]
         [[[xl]]]
-            Sheet    = slow_core
-            Name     = del_Tsoil(1)
+            sheet    = slow_core
+            name     = del_Tsoil(1)
         [[[Attr]]]
-            Description = "30-min change in soil temperature in bare soil"
-            Units    = "C"
+            long_name = "30-min change in soil temperature in bare soil"
+            units    = "C"
+            ancillary_variables = "delTs_bs QC flag"
+            standard_name = "not defined"
     [[delTs_ms]]
         [[[xl]]]
-            Sheet    = slow_core
-            Name     = del_Tsoil(2)
+            sheet    = slow_core
+            name     = del_Tsoil(2)
         [[[Attr]]]
-            Description = "30-min change in soil temperature under mulga and soil"
-            Units    = "C"
+            long_name = "30-min change in soil temperature under mulga and soil"
+            units    = "C"
+            ancillary_variables = "delTs_ms QC flag"
+            standard_name = "not defined"
     [[delTs_mu]]
         [[[xl]]]
-            Sheet    = slow_core
-            Name     = del_Tsoil(3)
+            sheet    = slow_core
+            name     = del_Tsoil(3)
         [[[Attr]]]
-            Description = "30-min change in soil temperature under mulga and ground-cover understory"
-            Units    = "C"
-    [[Ws_WS_925cm]]
+            long_name = "30-min change in soil temperature under mulga and ground-cover understory"
+            units    = "C"
+            ancillary_variables = "delTs_mu QC flag"
+            standard_name = "not defined"
+    [[Ws_WS]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = WS_WS_01_Avg
+            sheet    = slow_met
+            name     = WS_WS_Avg
         [[[Attr]]]
-            Description = "Wind speed (Wind Sentry) at 9.25m"
-            Units    = "m/s"
-    [[Wd_WS_925cm]]
+            long_name = "Wind speed (Wind Sentry)"
+            units    = "m/s"
+            ancillary_variables = "Ws_WS QC flag"
+            standard_name = "wind_speed"
+    [[Wd_WS]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = WD_WS_01_Avg
+            sheet    = slow_met
+            name     = WD_WS_Avg
         [[[Attr]]]
-            Description = "Wind direction (Wind Sentry) at 9.25m"
-            Units    = "deg"
-    [[Ws_WS_200cm]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = WS_WS_02_Avg
-        [[[Attr]]]
-            Description = "Wind speed (Wind Sentry) at 2m"
-            Units    = "m/s"
-    [[Ws_WS_425cm]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = WS_WS_03_Avg
-        [[[Attr]]]
-            Description = "Wind speed (Wind Sentry) at 4.25m"
-            Units    = "m/s"
-    [[Ws_WS_662cm]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = WS_WS_04_Avg
-        [[[Attr]]]
-            Description = "Wind speed (Wind Sentry) at 6.62m"
-            Units    = "m/s"
+            long_name = "Wind direction (Wind Sentry)"
+            units    = "deg"
+            ancillary_variables = "Wd_WS QC flag"
+            standard_name = "wind_from_direction"
     [[Ws_CSAT_Sd]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = WS_CSAT_Sd
+            sheet    = ex_met
+            name     = WS_CSAT_Sd
         [[[Attr]]]
-            Description = "Standard deviation of wind speed (CSAT)"
-            Units    = "m/s"
+            long_name = "Standard deviation of wind speed (CSAT)"
+            units    = "m/s"
+            ancillary_variables = "Ws_CSAT_Sd QC flag"
+            standard_name = "not defined"
     [[Wd_CSAT_Sd]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = WD_CSAT_Sd
+            sheet    = slow_met
+            name     = WD_CSAT_Sd
         [[[Attr]]]
-            Description = "Standard deviation of wind direction (CSAT)"
-            Units    = "deg"
-    [[Ws_WS_925cm_Sd]]
+            long_name = "Standard deviation of wind direction (CSAT)"
+            units    = "deg"
+            ancillary_variables = "Wd_CSAT_Sd QC flag"
+            standard_name = "not defined"
+    [[Ws_WS_Sd]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = WS_WS_01_Sd
+            sheet    = ex_met
+            name     = WS_WS_Sd
         [[[Attr]]]
-            Description = "Standard deviation of wind speed (Wind Sentry) at 9.25m"
-            Units    = "m/s"
-    [[Wd_WS_925cm_Sd]]
+            long_name = "Standard deviation of wind speed (Wind Sentry)"
+            units    = "m/s"
+            ancillary_variables = "Ws_WS_Sd QC flag"
+            standard_name = "not defined"
+    [[Wd_WS_Sd]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = WD_WS_01_Sd
+            sheet    = slow_met
+            name     = WD_WS_Sd
         [[[Attr]]]
-            Description = "Standard deviation of wind direction (Wind Sentry) at 9.25m"
-            Units    = "deg"
-    [[Ws_WS_200cm_Sd]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = WS_WS_02_Std
-        [[[Attr]]]
-            Description = "Standard deviation of wind speed (Wind Sentry) at 2m"
-            Units    = "m/s"
-    [[Ws_WS_425cm_Sd]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = WS_WS_03_Std
-        [[[Attr]]]
-            Description = "Standard deviation of wind speed (Wind Sentry) at 4.25m"
-            Units    = "m/s"
-    [[Ws_WS_662cm_Sd]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = WS_WS_04_Std
-        [[[Attr]]]
-            Description = "Standard deviation of wind speed (Wind Sentry) at 6.62m"
-            Units    = "m/s"
+            long_name = "Standard deviation of wind direction (Wind Sentry)"
+            units    = "deg"
+            ancillary_variables = "Wd_WS_Sd QC flag"
+            standard_name = "not defined"
     [[rho_a]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = rho_a_Avg
+            sheet    = slow_met
+            name     = rho_a_Avg
         [[[Attr]]]
-            Description = "moist air density"
-            Units    = "kg/m3"
+            long_name = "moist air density"
+            units    = "kg/m3"
+            ancillary_variables = "rho_a QC flag"
+            standard_name = "air_density"
     [[Tpanel]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = Tpanel_Avg
+            sheet    = slow_met
+            name     = Tpanel_Avg
         [[[Attr]]]
-            Description = "CR3000 datalogger panel temperature"
-            Units    = "C"
+            long_name = "CR3000 datalogger panel temperature"
+            units    = "C"
+            ancillary_variables = "Tpanel QC flag"
+            standard_name = "not defined"
     [[Vbat]]
         [[[xl]]]
-            Sheet    = slow_met
-            Name     = Vbat_Avg
+            sheet    = slow_met
+            name     = Vbat_Avg
         [[[Attr]]]
-            Description = "Battery voltage"
-            Units    = "V"
+            long_name = "Battery voltage"
+            units    = "V"
+            ancillary_variables = "Vbat QC flag"
+            standard_name = "not defined"
     [[C_ppm]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = co2_um_m_Avg
+            sheet    = ex_met
+            name     = co2_um_m_Avg
         [[[Attr]]]
-            Description = "CO2 molar concentration (ppm)"
-            Units    = "umol/mol"
+            long_name = "CO2 molar concentration (ppm)"
+            units    = "umol/mol"
+            ancillary_variables = "Cc_ppm QC flag"
+            standard_name = "mole_concentration_of_carbon_dioxide_in_air"
     [[H_ppt]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = h2o_mm_m_Avg
+            sheet    = ex_met
+            name     = h2o_mm_m_Avg
         [[[Attr]]]
-            Description = "H2O molar concentration (ppt)"
-            Units    = "mmol/mol"
+            long_name = "H2O molar concentration (ppt)"
+            units    = "mmol/mol"
+            ancillary_variables = "H_ppt QC flag"
+            standard_name = "not defined"
     [[es_HMP]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = es_HMP_01_Avg
+            sheet    = ex_met
+            name     = es_HMP_01_Avg
         [[[Attr]]]
-            Description = "saturation vapour pressure (HMP) at 11.67m"
-            Units    = "kPa"
-    [[es_HMP_200cm]]
+            long_name = "saturation vapour pressure (HMP)"
+            units    = "kPa"
+            ancillary_variables = "es_HMP QC flag"
+            standard_name = "not defined"
+    [[e]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = es_HMP_02_Avg
+            sheet    = ex_met
+            name     = e_HMP_01_Avg
         [[[Attr]]]
-            Description = "saturation vapour pressure (HMP) at 2m"
-            Units    = "kPa"
-    [[es_HMP_425cm]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = es_HMP_03_Avg
-        [[[Attr]]]
-            Description = "saturation vapour pressure (HMP) at 4.25m"
-            Units    = "kPa"
-    [[es_HMP_657cm]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = es_HMP_04_Avg
-        [[[Attr]]]
-            Description = "saturation vapour pressure (HMP) at 6.57m"
-            Units    = "kPa"
-    [[e_HMP]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = e_HMP_01_Avg
-        [[[Attr]]]
-            Description = "atmospheric vapour pressure (HMP) at 11.67m"
-            Units    = "kPa"
-    [[e_HMP_200cm]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = e_HMP_02_Avg
-        [[[Attr]]]
-            Description = "atmospheric vapour pressure (HMP) at 2m"
-            Units    = "kPa"
-    [[e_HMP_425cm]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = e_HMP_03_Avg
-        [[[Attr]]]
-            Description = "atmospheric vapour pressure (HMP) at 4.25m"
-            Units    = "kPa"
-    [[e_HMP_657cm]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = e_HMP_04_Avg
-        [[[Attr]]]
-            Description = "atmospheric vapour pressure (HMP) at 6.57m"
-            Units    = "kPa"
+            long_name = "atmospheric vapour pressure (HMP)"
+            units    = "kPa"
+            ancillary_variables = "e_HMP QC flag"
+            standard_name = "water_vapor_partial_pressure_in_air"
     [[rho_d]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = rho_d_Avg
+            sheet    = ex_met
+            name     = rho_d_Avg
         [[[Attr]]]
-            Description = "density of dry air"
-            Units    = "kg/m3"
+            long_name = "density of dry air"
+            units    = "kg/m3"
+            ancillary_variables = "rho_d QC flag"
+            standard_name = "air_density"
     [[Tpanel_CR1000]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = Tpanel_CR1000_Avg
+            sheet    = ex_met
+            name     = Tpanel_CR1000_Avg
         [[[Attr]]]
-            Description = "soil datalogger panel temperature (CR1000)"
-            Units    = "C"
-    [[Tpanel_CR3000b]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = Tpanel_storage_Avg
+            long_name = "soil datalogger panel temperature (CR1000)"
+            units    = "C"
+            ancillary_variables = "Tpanel_CR1000 QC flag"
+            standard_name = "not defined"
+    [[Ah_7500_Sd]]
+        # Variance logged, need standard deviation for QC
+        [[[Function]]]
+            [[[[0]]]]
+                [[[[[SquareRoot]]]]]
+                    Parent = AhAh
         [[[Attr]]]
-            Description = "vertical gradient datalogger panel temperature (CR3000)"
-            Units    = "C"
+            ancillary_variables = "Ah_7500_Sd QC flag"
+            instrument = "Li-7500"
+            long_name = "Absolute humidity, standard deviation"
+            standard_name = "not defined"
+            units = "g/m3"
+    [[Cc_7500_Sd]]
+        # Variance logged, need standard deviation for QC
+        [[[Function]]]
+            [[[[0]]]]
+                [[[[[SquareRoot]]]]]
+                    Parent = CcCc
+        [[[Attr]]]
+            ancillary_variables = "Cc_7500_Sd QC flag"
+            instrument = "Li-7500"
+            long_name = "CO2 concentration, standard deviation"
+            standard_name = "not defined"
+            units = "mg/m3"
     [[TDR_bs1_60cm]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(1)
+            sheet    = ex_met
+            name     = ToppVWC(1)
         [[[Attr]]]
-            Description = "TDR soil water content in bare soil at 60cm"
-            Units    = "fraction"
+            long_name = "TDR soil water content in bare soil at 60cm"
+            units    = "fraction"
+            ancillary_variables = "TDR_bs1_60cm QC flag"
+            standard_name = "soil_moisture_content"
     [[TDR_bs1_10cm]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(2)
+            sheet    = ex_met
+            name     = ToppVWC(2)
         [[[Attr]]]
-            Description = "TDR soil water content in bare soil at 10cm"
-            Units    = "fraction"
+            long_name = "TDR soil water content in bare soil at 10cm"
+            units    = "fraction"
+            ancillary_variables = "TDR_bs1_10cm QC flag"
+            standard_name = "soil_moisture_content"
     [[TDR_bs1_100cm]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(3)
+            sheet    = ex_met
+            name     = ToppVWC(3)
         [[[Attr]]]
-            Description = "TDR soil water content in bare soil at 100cm"
-            Units    = "fraction"
+            long_name = "TDR soil water content in bare soil at 100cm"
+            units    = "fraction"
+            ancillary_variables = "TDR_bs1_100cm QC flag"
+            standard_name = "soil_moisture_content"
     [[TDR_ms1_100cm]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(4)
+            sheet    = ex_met
+            name     = ToppVWC(4)
         [[[Attr]]]
-            Description = "TDR soil water content under mulga and soil at 100cm"
-            Units    = "fraction"
+            long_name = "TDR soil water content under mulga and soil at 100cm"
+            units    = "fraction"
+            ancillary_variables = "TDR_ms1_100cm QC flag"
+            standard_name = "soil_moisture_content"
     [[TDR_ms1_10cm]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(5)
+            sheet    = ex_met
+            name     = ToppVWC(5)
         [[[Attr]]]
-            Description = "TDR soil water content under mulga and soil at 10cm"
-            Units    = "fraction"
+            long_name = "TDR soil water content under mulga and soil at 10cm"
+            units    = "fraction"
+            ancillary_variables = "TDR_ms1_10cm QC flag"
+            standard_name = "soil_moisture_content"
     [[TDR_ms1_60cm]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(6)
+            sheet    = ex_met
+            name     = ToppVWC(6)
         [[[Attr]]]
-            Description = "TDR soil water content under mulga and soil at 60cm"
-            Units    = "fraction"
+            long_name = "TDR soil water content under mulga and soil at 60cm"
+            units    = "fraction"
+            ancillary_variables = "TDR_ms1_60cm QC flag"
+            standard_name = "soil_moisture_content"
     [[TDR_rain_0cm]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(7)
+            sheet    = ex_met
+            name     = ToppVWC(7)
         [[[Attr]]]
-            Description = "TDR soil water content at soil surface near raingage"
-            Units    = "fraction"
+            long_name = "TDR soil water content at soil surface near raingage"
+            units    = "fraction"
+            ancillary_variables = "TDR_rain_0cm QC flag"
+            standard_name = "soil_moisture_content"
     [[TDR_mu1_100cm]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(8)
+            sheet    = ex_met
+            name     = ToppVWC(8)
         [[[Attr]]]
-            Description = "TDR soil water content under mulga and understory at 100cm"
-            Units    = "fraction"
+            long_name = "TDR soil water content under mulga and understory at 100cm"
+            units    = "fraction"
+            ancillary_variables = "TDR_mu1_100cm QC flag"
+            standard_name = "soil_moisture_content"
     [[TDR_mu1_60cm]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(9)
+            sheet    = ex_met
+            name     = ToppVWC(9)
         [[[Attr]]]
-            Description = "TDR soil water content under mulga and understory at 60cm"
-            Units    = "fraction"
+            long_name = "TDR soil water content under mulga and understory at 60cm"
+            units    = "fraction"
+            ancillary_variables = "TDR_mu1_60cm QC flag"
+            standard_name = "soil_moisture_content"
     [[TDR_mu1_10cm]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(10)
+            sheet    = ex_met
+            name     = ToppVWC(10)
         [[[Attr]]]
-            Description = "TDR soil water content under mulga and understory at 10cm"
-            Units    = "fraction"
+            long_name = "TDR soil water content under mulga and understory at 10cm"
+            units    = "fraction"
+            ancillary_variables = "TDR_mu1_10cm QC flag"
+            standard_name = "soil_moisture_content"
     [[TDR_bs2_143cm]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(11)
+            sheet    = ex_met
+            name     = ToppVWC(11)
         [[[Attr]]]
-            Description = "TDR soil water content under bare soil at 143cm"
-            Units    = "fraction"
+            long_name = "TDR soil water content under bare soil at 143cm"
+            units    = "fraction"
+            ancillary_variables = "TDR_bs2_143cm QC flag"
+            standard_name = "soil_moisture_content"
     [[TDR_bs2_100cm]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(12)
+            sheet    = ex_met
+            name     = ToppVWC(12)
         [[[Attr]]]
-            Description = "TDR soil water content under bare soil at 100cm"
-            Units    = "fraction"
+            long_name = "TDR soil water content under bare soil at 100cm"
+            units    = "fraction"
+            ancillary_variables = "TDR_bs2_100cm QC flag"
+            standard_name = "soil_moisture_content"
     [[TDR_bs2_60cm]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(13)
+            sheet    = ex_met
+            name     = ToppVWC(13)
         [[[Attr]]]
-            Description = "TDR soil water content under bare soil at 60cm"
-            Units    = "fraction"
+            long_name = "TDR soil water content under bare soil at 60cm"
+            units    = "fraction"
+            ancillary_variables = "TDR_bs2_60cm QC flag"
+            standard_name = "soil_moisture_content"
     [[TDR_bs2_10cm]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(14)
+            sheet    = ex_met
+            name     = ToppVWC(14)
         [[[Attr]]]
-            Description = "TDR soil water content under bare soil at 10cm"
-            Units    = "fraction"
+            long_name = "TDR soil water content under bare soil at 10cm"
+            units    = "fraction"
+            ancillary_variables = "TDR_bs2_10cm QC flag"
+            standard_name = "soil_moisture_content"
     [[TDR_mu2_100cm]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(15)
+            sheet    = ex_met
+            name     = ToppVWC(15)
         [[[Attr]]]
-            Description = "TDR soil water content under mulga and understory at 100cm"
-            Units    = "fraction"
+            long_name = "TDR soil water content under mulga and understory at 100cm"
+            units    = "fraction"
+            ancillary_variables = "TDR_mu2_100cm QC flag"
+            standard_name = "soil_moisture_content"
     [[TDR_mu2_60cm]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(16)
+            sheet    = ex_met
+            name     = ToppVWC(16)
         [[[Attr]]]
-            Description = "TDR soil water content under mulga and understory at 60cm"
-            Units    = "fraction"
+            long_name = "TDR soil water content under mulga and understory at 60cm"
+            units    = "fraction"
+            ancillary_variables = "TDR_mu2_60cm QC flag"
+            standard_name = "soil_moisture_content"
     [[TDR_mu2_10cm_a]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(17)
+            sheet    = ex_met
+            name     = ToppVWC(17)
         [[[Attr]]]
-            Description = "TDR soil water content under mulga and understory at 10cm"
-            Units    = "fraction"
+            long_name = "TDR soil water content under mulga and understory at 10cm"
+            units    = "fraction"
+            ancillary_variables = "TDR_mu2_10cm_a QC flag"
+            standard_name = "soil_moisture_content"
     [[TDR_mu2_10cm_b]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(18)
+            sheet    = ex_met
+            name     = ToppVWC(18)
         [[[Attr]]]
-            Description = "TDR soil water content under mulga and understory at 10cm"
-            Units    = "fraction"
+            long_name = "TDR soil water content under mulga and understory at 10cm"
+            units    = "fraction"
+            ancillary_variables = "TDR_mu2_10cm_b QC flag"
+            standard_name = "soil_moisture_content"
     [[TDR_ms2_100cm]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(19)
+            sheet    = ex_met
+            name     = ToppVWC(19)
         [[[Attr]]]
-            Description = "TDR soil water content under mulga and soil at 100cm"
-            Units    = "fraction"
+            long_name = "TDR soil water content under mulga and soil at 100cm"
+            units    = "fraction"
+            ancillary_variables = "TDR_ms2_100cm QC flag"
+            standard_name = "soil_moisture_content"
     [[TDR_ms2_60cm]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(20)
+            sheet    = ex_met
+            name     = ToppVWC(20)
         [[[Attr]]]
-            Description = "TDR soil water content under mulga and soil at 60cm"
-            Units    = "fraction"
+            long_name = "TDR soil water content under mulga and soil at 60cm"
+            units    = "fraction"
+            ancillary_variables = "TDR_ms2_60cm QC flag"
+            standard_name = "soil_moisture_content"
     [[TDR_ms2_10cm_a]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(21)
+            sheet    = ex_met
+            name     = ToppVWC(21)
         [[[Attr]]]
-            Description = "TDR soil water content under mulga and soil at 10cm"
-            Units    = "fraction"
+            long_name = "TDR soil water content under mulga and soil at 10cm"
+            units    = "fraction"
+            ancillary_variables = "TDR_ms2_10cm_a QC flag"
+            standard_name = "soil_moisture_content"
     [[TDR_ms2_10cm_b]]
         [[[xl]]]
-            Sheet    = ex_met
-            Name     = ToppVWC(22)
+            sheet    = ex_met
+            name     = ToppVWC(22)
         [[[Attr]]]
-            Description = "TDR soil water content under mulga and soil at 10cm"
-            Units    = "fraction"
-    [[Vbat_TopPanel]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = Vbat_check_Avg(1)
-        [[[Attr]]]
-            Description = "Battery voltage check for upper PV panel"
-            Units    = "V"
-    [[Vbat_BotPanel]]
-        [[[xl]]]
-            Sheet    = ex_met
-            Name     = Vbat_check_Avg(2)
-        [[[Attr]]]
-            Description = "Battery voltage check for lower PV panel"
-            Units    = "V"
+            long_name = "TDR soil water content under mulga and soil at 10cm"
+            units    = "fraction"
+            ancillary_variables = "TDR_ms2_10cm_b QC flag"
+            standard_name = "soil_moisture_content"

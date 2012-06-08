@@ -24,16 +24,45 @@ def cfkeycheck(cf,Base='Variables',ThisOne=[],key=[]):
         else:
             return
 
-def CreateSeries(ds,Label,Data,FList=[''],Flag=None,Descr='',Units=''):
-    ds.series[unicode(Label)] = {}
-    ds.series[Label]['Data'] = numpy.ma.filled(Data,float(-9999))
+def CreateSeries(ds,Label,Data,FList=[''],Flag=None,Descr='',Units='',Standard='not defined'):
+    """
+    Create a series (1d array) of data in the data structure.
+    
+    If the series already exists in the data structure, data values and QC flags will be
+    overwritten but attributes will be preserved.  However, the long_name and Units attributes
+    are treated differently.  The existing long_name will have Descr appended to it.  The
+    existing units will be overwritten with units.
+    
+    This utility is the prefered method for creating or updating a data series because
+    it imnplements a consistent method for creating series in the data structure.  Direct
+    writes to the contents of the data structure are discouraged (unless PRI wrote the code!).
+    """
+    ds.series['_tmp_'] = {}                       # create a temporary series to avoid premature overwrites
+    # put the data into the temporary series
+    ds.series['_tmp_']['Data'] = numpy.ma.filled(Data,float(-9999))
+    # copy or make the QC flag
     if Flag == None:
-        ds.series[Label]['Flag'] = MakeQCFlag(ds,FList)
+        ds.series['_tmp_']['Flag'] = MakeQCFlag(ds,FList)
     else:
-        ds.series[Label]['Flag'] = Flag
-    ds.series[Label]['Attr'] = {}
-    ds.series[Label]['Attr']['Description'] = Descr
-    ds.series[Label]['Attr']['Units'] = Units
+        ds.series['_tmp_']['Flag'] = Flag
+    # do the attributes
+    ds.series['_tmp_']['Attr'] = {}
+    if Label in ds.series.keys():                 # check to see if the series already exists
+        for attr in ds.series[Label]['Attr']:     # if it does, copy the existing attributes
+            if attr=='long_name':               # append new description to existing one
+                attr_value = ds.series[Label]['Attr']['long_name']
+                attr_value = attr_value + ', ' + Descr
+                ds.series['_tmp_']['Attr'][attr] = attr_value
+            elif attr=='units':                   # overwrite existing units with new ones
+                ds.series['_tmp_']['Attr']['units'] = Units
+            else:                                 # otherwise do a straight copy
+                ds.series['_tmp_']['Attr'][attr] = ds.series[Label]['Attr'][attr]
+    else:
+        ds.series['_tmp_']['Attr']['long_name'] = Descr
+        ds.series['_tmp_']['Attr']['units'] = Units
+        ds.series['_tmp_']['Attr']['standard_name'] = Standard
+    ds.series[unicode(Label)] = ds.series['_tmp_']     # copt temporary series to new series
+    del ds.series['_tmp_']                        # delete the temporary series
 
 def Fm(z, z0, L):
     ''' Integral form of the adiabatic correction to the wind speed profile.'''
@@ -73,40 +102,144 @@ def Fustar(T, Ah, p, Fh, u, z, z0, ustar):
     Fustar = u*c.k/(Fm(z, z0, MO))
     return Fustar
     
-def GetAverageList(cf,ThisOne,default=""):
+def GetAverageList(cf,ThisOne,default=['']):
     if cfkeycheck(cf,ThisOne=ThisOne):
-        if default == "":
+        if default == ['']:
             log.error(' GetAverageList: no "Source" series provided for '+ThisOne)
-        
-        alist = default
+            return []
+        if cfkeycheck(cf,ThisOne=ThisOne,key='AverageSeries'):
+            alist = ast.literal_eval(cf['Variables'][ThisOne]['AverageSeries']['Source'])
+            if alist == ['']:
+                return []
+        else:
+            alist = default
     else:
         log.error('  GetAverageList: '+ThisOne+' not in control file')
-        alist = ""
+        return []
     
     return alist
 
-def GetDateIndex(datetimeseries,date,default):
+def GetAltName(cf,ds,ThisOne):
+    '''
+    Check to see if the specified variable name is in the data structure (ds).
+    If it is, return the variable name unchanged.
+    If it isn't, check the control file to see if an alternate name has been specified
+     and return the alternate name if one exists.
+    '''
+    if ThisOne not in ds.series.keys():
+        if ThisOne in cf['Variables'].keys():
+            ThisOne = cf['Variables'][ThisOne]['AltVarName']
+            if ThisOne not in ds.series.keys():
+                print 'GetAltName: alternate variable name not in ds'
+        else:
+            print 'GetAltName: cant find ',ThisOne,' in ds or control file'
+    return ThisOne
+
+def GetAltNameFromCF(cf,ThisOne):
+    '''
+    Get an alternate variable name from the control file.
+    '''
+    if ThisOne in cf['Variables'].keys():
+        if 'AltVarName' in cf['Variables'][ThisOne].keys():
+            ThisOne = str(cf['Variables'][ThisOne]['AltVarName'])
+        else:
+            print 'GetAltNameFromCF: AltVarName key not in control file for '+str(ThisOne)
+    else:
+        print 'GetAltNameFromCF: '+str(ThisOne)+' not in control file'
+    return ThisOne
+
+def GetcbTicksFromCF(cf,ThisOne):
+    '''
+    Get colour bar tick labels from the control file.
+    '''
+    if ThisOne in cf['Variables'].keys():
+        if 'Ticks' in cf['Variables'][ThisOne].keys():
+            Ticks = eval(cf['Variables'][ThisOne]['Ticks'])
+        else:
+            print 'GetcbTicksFromCF: Ticks key not in control file for '+str(ThisOne)
+    else:
+        print 'GetcbTicksFromCF: '+str(ThisOne)+' not in control file'
+    return Ticks
+
+def GetRangesFromCF(cf,ThisOne):
+    '''
+    Get lower and upper range limits from the control file.
+    '''
+    if ThisOne in cf['Variables'].keys():
+        if 'Lower' in cf['Variables'][ThisOne].keys():
+            lower = float(cf['Variables'][ThisOne]['Lower'])
+        else:
+            print 'GetRangesFromCF: Lower key not in control file for '+str(ThisOne)
+            lower = None
+        if 'Upper' in cf['Variables'][ThisOne].keys():
+            upper = float(cf['Variables'][ThisOne]['Upper'])
+        else:
+            print 'GetRangesFromCF: Upper key not in control file for '+str(ThisOne)
+            upper = None
+    else:
+        print 'GetRangesFromCF: '+str(ThisOne)+' not in control file'
+        lower, upper = None
+    return lower, upper
+
+def GetDateIndex(datetimeseries,date,ts=30,default=0,match='exact'):
     # return the index of a date/datetime string in an array of datetime objects
     #  datetimeseries - array of datetime objects
     #  date - a date or date/time string in a format dateutils can parse
     #  default - default value, integer
     try:
-        dateindex = datetimeseries.index(dateutil.parser.parse(date))
+        i = datetimeseries.index(dateutil.parser.parse(date))
     except ValueError:
-        dateindex = default
-    return dateindex
+        i = default
+    if match=='startnextday':
+        while abs(datetimeseries[i].hour+float(datetimeseries[i].minute)/60-float(ts)/60)>c.eps:
+            i = i + 1
+    if match=='endpreviousday':
+        while abs(datetimeseries[i].hour+float(datetimeseries[i].minute)/60)>c.eps:
+            i = i - 1
+    return i
 
-def GetMergeList(cf,ThisOne,default=""):
+def GetMergeList(cf,ThisOne,default=['']):
     if cfkeycheck(cf,ThisOne=ThisOne):
-        if default == "":
+        if default == ['']:
             log.error(' GetMergeList: no "Source" series provided for '+ThisOne)
-        
-        mlist = default
+            return []
+        if cfkeycheck(cf,ThisOne=ThisOne,key='MergeSeries'):
+            mlist = ast.literal_eval(cf['Variables'][ThisOne]['MergeSeries']['Source'])
+            if mlist == ['']:
+                return []
+        else:
+            mlist = default
     else:
         log.error('  GetMergeList: '+ThisOne+' not in control file')
-        mlist = ""
+        return []
     
     return mlist
+
+def GetPlotTitleFromCF(cf, nFig):
+    if 'Plots' in cf:
+        if str(nFig) in cf['Plots']:
+            if 'Title' in cf['Plots'][str(nFig)]:
+                Title = str(cf['Plots'][str(nFig)]['Title'])
+            else:
+                print 'GetPlotTitleFromCF: Variables key not in control file for plot '+str(nFig)
+        else:
+            print 'GetPlotTitleFromCF: '+str(nFig)+' key not in Plots section of control file'
+    else:
+        print 'GetPlotTitleFromCF: Plots key not in control file'
+    return Title
+
+def GetPlotVariableNamesFromCF(cf, n):
+    if 'Plots' in cf:
+        if str(n) in cf['Plots']:
+            if 'Variables' in cf['Plots'][str(n)]:
+                SeriesList = eval(cf['Plots'][str(n)]['Variables'])
+            else:
+                print 'GetPlotVariableNamesFromCF: Variables key not in control file for plot '+str(n)
+        else:
+            print 'GetPlotVariableNamesFromCF: '+str(n)+' key not in Plots section of control file'
+    else:
+        print 'GetPlotVariableNamesFromCF: Plots key not in control file'
+    return SeriesList
 
 def GetSeries(ds,ThisOne,si=0,ei=-1):
     Series = ds.series[ThisOne]['Data']
@@ -124,19 +257,73 @@ def GetSeries(ds,ThisOne,si=0,ei=-1):
     return Series,Flag
 
 def GetSeriesasMA(ds,ThisOne,si=0,ei=-1):
-    Series = numpy.ma.masked_where(ds.series[ThisOne]['Data']==float(-9999),ds.series[ThisOne]['Data'])
-    if 'Flag' in ds.series[ThisOne].keys():
-        Flag = ds.series[ThisOne]['Flag']
-    else:
-        nRecs = numpy.size(ds.series[ThisOne]['Data'])
-        Flag = numpy.zeros(nRecs,dtype=int)
-    if ei==-1:
-        Series = Series[si:]
-        Flag = Flag[si:]
-    else:
-        Series = Series[si:ei+1]
-        Flag = Flag[si:ei+1]
+    Series,Flag = GetSeries(ds,ThisOne,si,ei)
+    Series,WasND = SeriestoMA(Series)
     return Series,Flag
+
+def GetUnitsFromds(ds, ThisOne):
+    units = ds.series[ThisOne]['Attr']['units']
+    return units
+
+def MAtoSeries(Series):
+    """
+    Convert a masked array to a numpy ndarray with masked elements set to -9999.
+    Useage:
+     Series, WasMA = MAtoSeries(Series)
+     where:
+      Series (input)    is the data series to be converted.
+      WasMA  (returned) is a logical, True if the input series was a masked array.
+      Series (output)   is the input series convered to an ndarray with -9999 values
+                        for missing data.
+    """
+    WasMA = False
+    if numpy.ma.isMA(Series):
+        WasMA = True
+        Series = numpy.ma.filled(Series,float(-9999))
+    return Series, WasMA
+
+def rMom(bMom, pMom, alpha):
+    """
+    Function to calculate the rMom coeficient of the Massman frequency correction.
+    """
+    rMom = ((bMom ** alpha) / (bMom ** alpha + 1)) * \
+           ((bMom ** alpha) / (bMom ** alpha + pMom ** alpha)) * \
+           (1 / (pMom ** alpha + 1))
+    return rMom
+
+def rwIRGA(bScalar, pwIRGA, alpha):
+    rwIRGA = ((bScalar ** alpha) / (bScalar ** alpha + 1)) * \
+             ((bScalar ** alpha) / (bScalar ** alpha + pwIRGA ** alpha)) * \
+             (1 / (pwIRGA ** alpha + 1))
+    return rwIRGA
+
+def rwT(bScalar, pwT, alpha):
+    """
+    Function to calculate the rwT coeficient of the Massman frequency correction.
+    """
+    rwT = ((bScalar ** alpha) / (bScalar ** alpha + 1)) * \
+          ((bScalar ** alpha) / (bScalar ** alpha + pwT ** alpha)) * \
+          (1 / (pwT ** alpha + 1))
+    return rwT
+
+def SeriestoMA(Series):
+    """
+    Convert a numpy ndarray to a masked array.
+    Useage:
+     Series, WasND = SeriestoMA(Series)
+     where:
+      Series (input)    is the data series to be converted.
+      WasND  (returned) is a logical, True if the input series was an ndarray
+      Series (output)   is the input series convered to a masked array.
+    """
+    WasND = False
+    if not numpy.ma.isMA(Series):
+        WasND = True
+        Series = numpy.ma.masked_where(abs(Series-numpy.float64(-9999))<c.eps,Series)
+    return Series, WasND
+
+def SetUnitsInds(ds, ThisOne, units):
+    ds.series[ThisOne]['Attr']['units'] = units
 
 def GetSeriesStats(cf,ds):
     # open an Excel file for the flag statistics
@@ -177,17 +364,37 @@ def GetSeriesStats(cf,ds):
     xlFlagSheet.write(xlRow,xlCol+7,ds.globalattributes['Flag13'])
     xlFlagSheet.write(xlRow,xlCol+8,'14:')
     xlFlagSheet.write(xlRow,xlCol+9,ds.globalattributes['Flag14'])
-    xlFlagSheet.write(xlRow,xlCol+10,'16:')
-    xlFlagSheet.write(xlRow,xlCol+11,ds.globalattributes['Flag16'])
-    xlFlagSheet.write(xlRow,xlCol+12,'17:')
-    xlFlagSheet.write(xlRow,xlCol+13,ds.globalattributes['Flag17'])
+    xlFlagSheet.write(xlRow,xlCol+10,'15:')
+    xlFlagSheet.write(xlRow,xlCol+11,ds.globalattributes['Flag15'])
+    xlFlagSheet.write(xlRow,xlCol+12,'16:')
+    xlFlagSheet.write(xlRow,xlCol+13,ds.globalattributes['Flag16'])
+    xlFlagSheet.write(xlRow,xlCol+14,'17:')
+    xlFlagSheet.write(xlRow,xlCol+15,ds.globalattributes['Flag17'])
+    xlFlagSheet.write(xlRow,xlCol+16,'18:')
+    xlFlagSheet.write(xlRow,xlCol+17,ds.globalattributes['Flag18'])
+    xlFlagSheet.write(xlRow,xlCol+18,'19:')
+    xlFlagSheet.write(xlRow,xlCol+19,ds.globalattributes['Flag19'])
     xlRow = xlRow + 1
-    xlFlagSheet.write(xlRow,xlCol,'20:')
-    xlFlagSheet.write(xlRow,xlCol+1,ds.globalattributes['Flag20'])
-    xlFlagSheet.write(xlRow,xlCol+2,'21:')
-    xlFlagSheet.write(xlRow,xlCol+3,ds.globalattributes['Flag21'])
-    xlFlagSheet.write(xlRow,xlCol+4,'22:')
-    xlFlagSheet.write(xlRow,xlCol+5,ds.globalattributes['Flag22'])
+    xlFlagSheet.write(xlRow,xlCol,'30:')
+    xlFlagSheet.write(xlRow,xlCol+1,ds.globalattributes['Flag30'])
+    xlFlagSheet.write(xlRow,xlCol+2,'31:')
+    xlFlagSheet.write(xlRow,xlCol+3,ds.globalattributes['Flag31'])
+    xlFlagSheet.write(xlRow,xlCol+4,'32:')
+    xlFlagSheet.write(xlRow,xlCol+5,ds.globalattributes['Flag32'])
+    xlFlagSheet.write(xlRow,xlCol+6,'33:')
+    xlFlagSheet.write(xlRow,xlCol+7,ds.globalattributes['Flag33'])
+    xlFlagSheet.write(xlRow,xlCol+8,'34:')
+    xlFlagSheet.write(xlRow,xlCol+9,ds.globalattributes['Flag34'])
+    xlFlagSheet.write(xlRow,xlCol+10,'35:')
+    xlFlagSheet.write(xlRow,xlCol+11,ds.globalattributes['Flag35'])
+    xlFlagSheet.write(xlRow,xlCol+12,'36:')
+    xlFlagSheet.write(xlRow,xlCol+13,ds.globalattributes['Flag36'])
+    xlFlagSheet.write(xlRow,xlCol+14,'37:')
+    xlFlagSheet.write(xlRow,xlCol+15,ds.globalattributes['Flag37'])
+    xlFlagSheet.write(xlRow,xlCol+16,'38:')
+    xlFlagSheet.write(xlRow,xlCol+17,ds.globalattributes['Flag38'])
+    xlFlagSheet.write(xlRow,xlCol+18,'39:')
+    xlFlagSheet.write(xlRow,xlCol+19,ds.globalattributes['Flag39'])
     bins = numpy.arange(-0.5,23.5)
     xlRow = 5
     xlCol = 1
@@ -241,6 +448,19 @@ def MakeQCFlag(ds,SeriesList):
                 log.error('  MakeQCFlag: series '+ThisOne+' not in ds.series')
     return flag
 
+def nxMom_nxScalar_alpha(zoL):
+    nRecs = numpy.size(zoL)
+    nxMom = numpy.ma.ones(nRecs) * 0.079
+    nxScalar = numpy.ma.ones(nRecs) * 0.085
+    alpha = numpy.ma.ones(nRecs) * 0.925
+    #  get the index of stable conditions
+    stable = numpy.ma.where(zoL>0)[0]
+    #  now set the series to their stable values
+    nxMom[stable] = 0.079 * (1 + 7.9 * zoL[stable]) ** 0.75
+    nxScalar[stable] = 2.0 - 1.915 / (1 + 0.5 * zoL[stable])
+    alpha[stable] = 1
+    return nxMom, nxScalar, alpha
+
 def polyval(p,x):
     """
     Replacement for the polyval routine in numpy.  This version doesnt check the
@@ -268,6 +488,20 @@ def polyval(p,x):
     for i in range(len(p)):
         y = x*y + p[i]
     return y
+
+def startlog(loggername,loggerfile):
+    logger = logging.getLogger(loggername)
+    logger.setLevel(logging.DEBUG)
+    fh = logging.FileHandler(loggerfile)
+    fh.setLevel(logging.DEBUG)
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s %(name)-8s %(levelname)-6s %(message)s', '%d-%m-%y %H:%M')
+    fh.setFormatter(formatter)
+    ch.setFormatter(formatter)
+    logger.addHandler(fh)
+    logger.addHandler(ch)
+    return logger
 
 def Wegstein(T, Ah, p, Fh, u, z, z0):
 
