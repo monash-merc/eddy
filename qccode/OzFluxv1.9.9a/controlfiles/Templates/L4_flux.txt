@@ -1,0 +1,56 @@
+# AAHYWEH
+# Control file for L4 (input) to L5 (daily sums) ingestion of SOLO (ANN) gap filling of fluxes.
+#
+# [General]   - Contains general flags and information
+# [Files]     - contains paths and file names
+# [Output]    - define optional variable lists for OzFluxL3 output data
+#             - define variable list for output to excel
+# [Params]    - define parameter values for daily sums stats
+# [Sums]      - lists for sorting daily sums
+# [Variables] - variable names and quality control keys, only those variables
+#               corrected or calculated at this level need to be specified in
+#               this control file.
+# [PlotSpec]  - Definition of plot window size.  Adjust until the plots fit comfortably in your display. Optional
+# [Plots]     - definition of time series plots
+[General]
+Platform = PC    # Mac or PC
+FunctionList = "['SOLO','Sums']"
+# FunctionList alternate:  FunctionList = "['SOLO','Sums','MergeSeriesWS','rstFromPenmanMonteith']"
+# FunctionList alternate:  FunctionList = "['SOLO']"
+
+[Files]
+    [[L3]]
+        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
+        ncFileName = ASM_EC_2012_1Jan-Mar_L3.nc
+    [[L4]]
+        xlSumFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level5_summaries/
+        xlSumFileName = ASM_EC_2012_1Jan-Mar_Daily_sums.xls
+        ncFilePath = /Volumes/TERGDATA/EC/qc_py/ncData/ASM/
+        ncFileName = ASM_EC_2012_1Jan-Mar_L4.nc
+        xlFlagFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level4/
+        xlFlagFileName = ASM_EC_2012_1Jan-Mar_flagstats_L4.xls
+    [[L4_GapFilled]]
+        ncFilePath = /Volumes/TERGDATA/EC/AliceSpringsMulga/level4/
+        ncFileName = ASM_EC_2012_1Jan-Mar_L4_GapFilled.nc
+
+[Output]
+L4 = "['Fm', 'Fc_gapfilled', 'Fe_gapfilled', 'Fh_gapfilled', 'Fg_Av', 'Fnr', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustarM', 'LM', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'theta', 'eta', 'Ux', 'u', 'Uy', 'v', 'Uz', 'w', 'UxUx', 'UxUy', 'uw', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'vw', 'AhAh', 'CcCc', 'UxUz', 'UyUz', 'UzT', 'UzA', 'UzC', 'wA', 'wC', 'wT', 'Ts_Av', 'Sws_Av', 'Ah_EC', 'q', 'e_HMP', 'RH_HMP', 'rho_a', 'rho_d', 'es_HMP', 'Ta_EC', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Rain']"
+
+[Variables]
+    [[Fh_rmv]]
+    [[Fe_wpl]]
+    [[Fc_wpl]]
+
+
+#[PlotSpec]      # Specify the height and width of plot windows by uncommenting all three lines.  Defaults are PlotWidth = 13 and PlotHeight = 9
+#Width = 23.5
+#Height = 11.5
+
+[Plots]
+    [[31]]
+        Title = "Fluxes"
+        Variables = "['Fh_rv','Fe_wpl','Fc_wpl']"
+#        YLMin = "['-50','-50','-1']"     # dimensions of the individual plots
+#        YLMax = "['750','500','1']"      # all four lines must be uncommented to use
+#        YRMin = "['-50','-50','-1']"     # the number of items in these four lists must be equal
+#        YRMax = "['750','500','1']"      #     to the number of items in the Variables list
