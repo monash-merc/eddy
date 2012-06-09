@@ -47,6 +47,7 @@
 #
 [General]
 Platform = PC    # Mac or PC
+#FunctionList = "['do_linear', 'MergeSeriesAhTa', 'TaFromTv', 'CalculateMetVars', 'CoordRotation2D', 'MassmanStandard', 'CalculateFluxes', 'FhvtoFh', 'WPL', 'CalculateNetRadiation', 'MergeSeriesFn', 'PreCorrectSoilAverage', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks','do_Ah7500check']"
 
 [Files]
     [[L2]]
@@ -66,6 +67,13 @@ Platform = PC    # Mac or PC
     OrganicContent = 0.01  # fraction  (% divided by 100)
     SwsDefault = 0.15
     SwsSeries = "['Sws_01a']"	
+
+#[Massman]
+#zmd =   # instrument height above displacement plane, z-d; d = 2 / 3 * h; h = canopy height, z = measurement height
+#z0 =  # roughness length from Brutseart 1982, eqn 5.7: h / z = 3 * e  z0 = 3eh; h = canopy height, ln(e) = 1
+#angle =  # angle between CSAT3 mounting point and IRGA sensor head mid-path, degrees
+#CSATarm =  # distance from CSAT mounting point to CSAT sensor, m
+#IRGAarm =  # distance from CSAT mounting point to IRGA sensor, m
 
 [Output]
 #***
