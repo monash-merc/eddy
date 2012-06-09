@@ -232,6 +232,9 @@ def l3qc(cf,ds2):
     qcck.do_Ah7500check(cf,ds3)
     
     qcutils.GetSeriesStats(cf,ds3)
+    
+    qcutils.prepOzFluxVars(cf,ds3)
+    
     return ds3
 
 def l4qc(cf,ds3):

@@ -489,6 +489,13 @@ def polyval(p,x):
         y = x*y + p[i]
     return y
 
+def prepOzFluxVars(cf,ds):
+    invars = ['Ux', 'Uy', 'Uz', 'UxUx', 'UxUy', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'AhAh', 'CcCc', 'UxUz', 'UyUz', 'UzA', 'UzC', 'UzT']
+    outvars = ['u', 'v', 'w', 'uu', 'uv', 'uA', 'uC', 'uT', 'vA', 'vC', 'vT', 'vv', 'AhAh', 'CcCc', 'uw', 'vw', 'wA', 'wC', 'wT']
+    for i in range(len(invars)):
+        if invars[i] in ds.series.keys() and outvars[i] not in ds.series.keys():
+            CreateSeries(ds,outvars[i],ds.series[invars[i]]['Data'],Flag=ds.series[invars[i]]['Flag'],Descr=ds.series[invars[i]]['Attr']['long_name'],Units=ds.series[invars[i]]['Attr']['units'])
+
 def startlog(loggername,loggerfile):
     logger = logging.getLogger(loggername)
     logger.setLevel(logging.DEBUG)
