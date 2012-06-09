@@ -490,8 +490,8 @@ def polyval(p,x):
     return y
 
 def prepOzFluxVars(cf,ds):
-    invars = ['Ux', 'Uy', 'Uz', 'UxUx', 'UxUy', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'AhAh', 'CcCc', 'UxUz', 'UyUz', 'UzA', 'UzC', 'UzT']
-    outvars = ['u', 'v', 'w', 'uu', 'uv', 'uA', 'uC', 'uT', 'vA', 'vC', 'vT', 'vv', 'AhAh', 'CcCc', 'uw', 'vw', 'wA', 'wC', 'wT']
+    invars = ['Ux', 'Uy', 'Uz', 'UxUx', 'UxUy', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'AhAh', 'CcCc', 'UxUz', 'UyUz', 'UzA', 'UzC', 'UzT', 'Re_umol']
+    outvars = ['u', 'v', 'w', 'uu', 'uv', 'uA', 'uC', 'uT', 'vA', 'vC', 'vT', 'vv', 'AhAh', 'CcCc', 'uw', 'vw', 'wA', 'wC', 'wT', 'Re']
     for i in range(len(invars)):
         if invars[i] in ds.series.keys() and outvars[i] not in ds.series.keys():
             CreateSeries(ds,outvars[i],ds.series[invars[i]]['Data'],Flag=ds.series[invars[i]]['Flag'],Descr=ds.series[invars[i]]['Attr']['long_name'],Units=ds.series[invars[i]]['Attr']['units'])

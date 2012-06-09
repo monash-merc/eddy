@@ -275,4 +275,7 @@ def l4qc(cf,ds3):
     ds4.globalattributes['QCVersion'] = __doc__
         
     qcutils.GetSeriesStats(cf,ds4)
+    
+    qcutils.prepOzFluxVars(cf,ds4)
+    
     return ds4
