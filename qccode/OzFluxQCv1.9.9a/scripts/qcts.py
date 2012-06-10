@@ -445,8 +445,12 @@ def CalculateMeteorologicalVariables(cf,ds,Ta_name='Ta',ps_name='ps',Ah_name='Ah
     else:
         esat = mf.es(Ta)
         qcutils.CreateSeries(ds,'esat',esat,FList=[Ta_name],Descr='saturation vapour pressure (HMP)',Units='kPa')
-    rhod = mf.densitydryair(Ta,ps)
-    rhom = mf.densitymoistair(Ta,ps,Ah)
+    if 'rhod' not in ds.series.keys():
+        rhod = mf.densitydryair(Ta,ps)
+        qcutils.CreateSeries(ds,'rhod',rhod,FList=[Ta_name,ps_name],Descr='Density of dry air',Units='kg/m3')
+    if 'rhom' not in ds.series.keys():
+        rhom = mf.densitymoistair(Ta,ps,Ah)
+        qcutils.CreateSeries(ds,'rhom',rhom,FList=[Ta_name,ps_name,Ah_name],Descr='Density of moist air',Units='kg/m3',Standard='air_density')
     Lv = mf.Lv(Ta)
     mr = mf.mixingratio(ps,e)
     mrsat = mf.mixingratio(ps,esat)
@@ -455,8 +459,6 @@ def CalculateMeteorologicalVariables(cf,ds,Ta_name='Ta',ps_name='ps',Ah_name='Ah
     Cpm = mf.specificheatmoistair(q)
     VPD = esat - e
     SHD = qsat - q
-    qcutils.CreateSeries(ds,'rhod',rhod,FList=[Ta_name,ps_name],Descr='Density of dry air',Units='kg/m3')
-    qcutils.CreateSeries(ds,'rhom',rhom,FList=[Ta_name,ps_name,Ah_name],Descr='Density of moist air',Units='kg/m3',Standard='air_density')
     qcutils.CreateSeries(ds,'Lv',Lv,FList=[Ta_name],Descr='Latent heat of vapourisation',Units='J/kg')
     qcutils.CreateSeries(ds,'Cpm',Cpm,FList=[Ta_name,ps_name,Ah_name],Descr='Specific heat of moist air',Units='J/kg-K')
     qcutils.CreateSeries(ds,'q',q,FList=[Ta_name,ps_name,Ah_name],Descr='Specific humidity',Units='kg/kg',Standard='specific_humidity')

@@ -592,14 +592,14 @@ netCDFv3 = False
             units    = "deg"
             ancillary_variables = "Wd_WS_Sd QC flag"
             standard_name = "not defined"
-    [[rho_a]]
+    [[rhom]]
         [[[xl]]]
             sheet    = slow_met
             name     = rho_a_Avg
         [[[Attr]]]
             long_name = "moist air density"
             units    = "kg/m3"
-            ancillary_variables = "rho_a QC flag"
+            ancillary_variables = "rhom QC flag"
             standard_name = "air_density"
     [[Tpanel]]
         [[[xl]]]
@@ -655,15 +655,15 @@ netCDFv3 = False
             units    = "kPa"
             ancillary_variables = "e QC flag"
             standard_name = "water_vapor_partial_pressure_in_air"
-    [[rho_d]]
+    [[rhod]]
         [[[xl]]]
             sheet    = ex_met
             name     = rho_d_Avg
         [[[Attr]]]
             long_name = "density of dry air"
             units    = "kg/m3"
-            ancillary_variables = "rho_d QC flag"
-            standard_name = "air_density"
+            ancillary_variables = "rhod QC flag"
+            standard_name = "not defined"
     [[Tpanel_CR1000]]
         [[[xl]]]
             sheet    = ex_met
