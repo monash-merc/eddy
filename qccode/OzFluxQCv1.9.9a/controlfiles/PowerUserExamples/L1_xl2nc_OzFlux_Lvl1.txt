@@ -637,14 +637,14 @@ netCDFv3 = False
             units    = "mmol/mol"
             ancillary_variables = "H_ppt QC flag"
             standard_name = "not defined"
-    [[es_HMP]]
+    [[esat]]
         [[[xl]]]
             sheet    = ex_met
             name     = es_HMP_01_Avg
         [[[Attr]]]
             long_name = "saturation vapour pressure (HMP)"
             units    = "kPa"
-            ancillary_variables = "es_HMP QC flag"
+            ancillary_variables = "esat QC flag"
             standard_name = "not defined"
     [[e]]
         [[[xl]]]
@@ -653,7 +653,7 @@ netCDFv3 = False
         [[[Attr]]]
             long_name = "atmospheric vapour pressure (HMP)"
             units    = "kPa"
-            ancillary_variables = "e_HMP QC flag"
+            ancillary_variables = "e QC flag"
             standard_name = "water_vapor_partial_pressure_in_air"
     [[rho_d]]
         [[[xl]]]

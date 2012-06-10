@@ -158,7 +158,7 @@ def l3qc(cf,ds2):
     
     # calculate the fluxes
     if 'Massman' not in l3functions:
-        qcts.CalculateFluxes(cf,ds3)
+        qcts.CalculateFluxes(cf,ds3,l3functions)
     
     # calculate the fluxes from covariances
     if 'Massman' in l3functions:

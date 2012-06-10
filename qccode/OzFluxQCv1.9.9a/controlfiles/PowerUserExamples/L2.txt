@@ -882,11 +882,11 @@ noDefaultXl = True   # uncomment to load controlfile for excel output
         [[[RangeCheck]]]
             Lower      = [0]*12
             Upper      = [25]*12
-    [[es_HMP]]
+    [[esat]]
         [[[RangeCheck]]]
             Lower      = [0]*12
             Upper      = [7]*12
-    [[e_HMP]]
+    [[e]]
         [[[RangeCheck]]]
             Lower      = [0]*12
             Upper      = [5]*12
@@ -1080,7 +1080,7 @@ Height = 9.5    # field
         Variables = "['Ta_HMP','Tv_CSAT','Ah_HMP','Ah_7500_Av','Cc_7500_Av']"
     [[6]]
         Title = "Atmospheric carbon and humidity stats"
-        Variables = "['C_ppm','RH','H_ppt','es_HMP','e_HMP']"
+        Variables = "['C_ppm','RH','H_ppt','esat','e']"
     [[7]]
         Title = "Pressure, wind speed and direction"
         Variables = "['TDR_rain_0cm','Rain','ps','Ws_CSAT','Ws_WS','Wd_CSAT_Compass','Wd_WS']"
