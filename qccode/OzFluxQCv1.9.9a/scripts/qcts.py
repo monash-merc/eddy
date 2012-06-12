@@ -820,28 +820,13 @@ def CoordRotation2D(cf,ds):
                          Descr='Momentum flux X component, corrected to natural wind coordinates',Units='m2/s2')
     qcutils.CreateSeries(ds,'vw',vw,FList=['Ux','Uy','Uz','UyUz','UxUy','UyUy'],
                          Descr='Momentum flux Y component, corrected to natural wind coordinates',Units='m2/s2')
-    if qcutils.cfkeycheck(cf,Base='General',ThisOne='RotateFlag') and cf['General']['RotateFlag'] == 'Yes':
-        for i in range(nRecs):
-            if ds.series['eta']['Flag'][i] > 0:
-                ds.series['eta']['Flag'][i] = 11
-            if ds.series['theta']['Flag'][i] > 0:
-                ds.series['theta']['Flag'][i] = 11
-            if ds.series['u']['Flag'][i] > 0:
-                ds.series['u']['Flag'][i] = 11
-            if ds.series['v']['Flag'][i] > 0:
-                ds.series['v']['Flag'][i] = 11
-            if ds.series['w']['Flag'][i] > 0:
-                ds.series['w']['Flag'][i] = 11
-            if ds.series['wT']['Flag'][i] > 0:
-                ds.series['wT']['Flag'][i] = 11
-            if ds.series['wA']['Flag'][i] > 0:
-                ds.series['wA']['Flag'][i] = 11
-            if ds.series['wC']['Flag'][i] > 0:
-                ds.series['wC']['Flag'][i] = 11
-            if ds.series['uw']['Flag'][i] > 0:
-                ds.series['uw']['Flag'][i] = 11
-            if ds.series['vw']['Flag'][i] > 0:
-                ds.series['vw']['Flag'][i] = 11
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='RotateFlag') and cf['General']['RotateFlag'] == 'True':
+        keys = ['eta','theta','u','v','w','wT','wA','wC','uw','vw']
+        for ThisOne in keys:
+            testseries,f = qcutils.GetSeriesasMA(ds,ThisOne)
+            mask = numpy.ma.getmask(testseries)
+            index = numpy.where(mask.astype(int)==1)
+            ds.series[ThisOne]['Flag'][index] = 11
 
 def CorrectFcForStorage(cf,ds,Fc_out,Fc_in,CO2_in):
     """
@@ -1481,9 +1466,9 @@ def Fc_WPLcov(cf,ds,Fc_wpl_out='Fc',wC_in='wC',Fh_in='Fh',wA_in='wA',Ta_in='Ta',
     qcutils.CreateSeries(ds,Fc_wpl_out,Fc_wpl_data,FList=[wC_in,Fh_in,wA_in,Ta_in,Ah_in,Cc_in,ps_in],
                          Descr='Fc, rotated to natural wind coordinates, frequency response corrected, and density flux corrected (wpl)',
                          Units='mg/m2/s')
-    for i in range(nRecs):
-        if (ds.series[Fc_wpl_out]['Flag'][i] > 0) & (ds.series[Fc_wpl_out]['Flag'][i] != 10):
-            ds.series[Fc_wpl_out]['Flag'][i] = 14
+    mask = numpy.ma.getmask(Fc_wpl_data)
+    index = numpy.where(mask.astype(int)==1)
+    ds.series[Fc_wpl_out]['Flag'][index] = 14
 
 def Fe_WPL(cf,ds,Fe_wpl_out='Fe',Fe_raw_in='Fe',Fh_in='Fh',Ta_in='Ta',Ah_in='Ah',ps_in='ps'):
     """
@@ -1631,11 +1616,12 @@ def Fe_WPLcov(cf,ds,Fe_wpl_out='Fe',wA_in='wA',Fh_in='Fh',Ta_in='Ta',Ah_in='Ah',
     qcutils.CreateSeries(ds,'wAwpl',wAwpl,FList=[wA_in,Fh_in,Ta_in,Ah_in,ps_in],
                          Descr='Cov(wA), rotated to natural wind coordinates, frequency response corrected, and density flux corrected (wpl)',
                          Units='g/(m2 s)')
-    for i in range(nRecs):
-        if ds.series[Fe_wpl_out]['Flag'][i] > 0:
-            ds.series[Fe_wpl_out]['Flag'][i] = 14
-        if ds.series['wAwpl']['Flag'][i] > 0:
-            ds.series['wAwpl']['Flag'][i] = 14
+    keys = [Fe_wpl_out,wA_out]
+    for ThisOne in keys:
+        testseries,f = qcutils.GetSeriesasMA(ds,ThisOne)
+        mask = numpy.ma.getmask(testseries)
+        index = numpy.where(mask.astype(int)==1)
+        ds.series[ThisOne]['Flag'][index] = 14
 
 def FhvtoFh(cf,ds,Ta_in='Ta',Fh_in='Fh',Tv_in='Tv_CSAT',Fe_in='Fe',ps_in='ps',Ah_in='Ah',Fh_out='Fh',attr='Fh rotated and converted from virtual heat flux'):
     """
@@ -1702,9 +1688,10 @@ def FhvtoFh(cf,ds,Ta_in='Ta',Fh_in='Fh',Tv_in='Tv_CSAT',Fe_in='Fe',ps_in='ps',Ah
     
     qcutils.CreateSeries(ds,Fh_out,Fh_o,FList=[Ta_in, Fh_in, Tv_in, Fe_in, ps_in, Ah_in], 
                          Descr=attr, Units='W/m2',Standard='surface_upward_sensible_heat_flux')
-    for i in range(nRecs):
-        if ds.series[Fh_out]['Flag'][i] > 0:
-            ds.series[Fh_out]['Flag'][i] = 13
+    testseries = qcutils.GetSeriesasMA(ds,Fh_out)
+    mask = numpy.ma.getmask(testseries)
+    index = numpy.where(mask.astype(int)==1)
+    ds.series[Fh_out]['Flag'][index] = 13
 
 def FilterFcByUstar(cf, ds, Fc_out, Fc_in, ustar_in):
     """
@@ -2553,7 +2540,7 @@ def MassmanApprox(cf,ds):
         if ds.series['wTa']['Flag'][i] > 0:
             ds.series['wTa']['Flag'][i] = 12
 
-def MassmanStandard(cf,ds):
+def MassmanStandard(cf,ds,Ta_in='Ta',Ah_in='Ah',ps_in='ps',ustar_out='ustar',L_out ='L',uw_out='uw',vw_out='vw',wT_out='wT',wA_out='wA',wC_out='wC'):
     """
        Massman corrections.
        The steps involved are as follows:
@@ -2562,6 +2549,20 @@ def MassmanStandard(cf,ds):
     if 'Massman' not in cf:
         log.info(' Massman section not found in control file, no corrections applied')
         return
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='MassmanVars'):
+        MArgs = ast.literal_eval(cf['FunctionArgs']['MassmanVars'])
+        Ta_in = MArgs[0]
+        Ah_in = MArgs[1]
+        ps_in = MArgs[2]
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='MassmanOuts'):
+        MOut = ast.literal_eval(cf['FunctionArgs']['MassmanOuts'])
+        ustar_out = MOut[0]
+        L_out = MOut[1]
+        uw_out = MOut[2]
+        vw_out = MOut[3]
+        wT_out = MOut[4]
+        wA_out = MOut[5]
+        wC_out = MOut[6]
     log.info(' Correcting for flux loss from spectral attenuation')
     zmd = float(cf['Massman']['zmd'])             # z-d for site
     angle = float(cf['Massman']['angle'])         # CSAT3-IRGA separation angle
@@ -2573,9 +2574,9 @@ def MassmanStandard(cf,ds):
     #  The code for the first and second passes is very similar.  It would be useful to make them the
     #  same and put into a loop to reduce the nu,ber of lines in this function.
     # calculate ustar and Monin-Obukhov length from rotated but otherwise uncorrected covariances
-    Ta,f = qcutils.GetSeriesasMA(ds,'Ta_EC')
-    Ah,f = qcutils.GetSeriesasMA(ds,'Ah_EC')
-    ps,f = qcutils.GetSeriesasMA(ds,'ps')
+    Ta,f = qcutils.GetSeriesasMA(ds,Ta_in)
+    Ah,f = qcutils.GetSeriesasMA(ds,Ah_in)
+    ps,f = qcutils.GetSeriesasMA(ds,ps_in)
     nRecs = numpy.size(Ta)
     u,f = qcutils.GetSeriesasMA(ds,'u')
     uw,f = qcutils.GetSeriesasMA(ds,'uw')
@@ -2596,6 +2597,8 @@ def MassmanStandard(cf,ds):
     # compute spectral filters
     tao_eMom = ((c.lwVert / (5.7 * u)) ** 2) + ((c.lwHor / (2.8 * u)) ** 2)
     tao_ewT = ((c.lwVert / (8.4 * u)) ** 2) + ((c.lTv / (4.0 * u)) ** 2)
+    tao_ewIRGA = ((c.lwVert / (8.4 * u)) ** 2) + ((c.lIRGA / (4.0 * u)) ** 2) \
+                 + ((lLat / (1.1 * u)) ** 2) + ((lLong / (1.05 * u)) ** 2)
     tao_b = c.Tb / 2.8
     # calculate coefficients
     bMom = 2 * c.Pi * fxMom * tao_b
@@ -2609,12 +2612,6 @@ def MassmanStandard(cf,ds):
     uwm = uw / rMom
     vwm = vw / rMom
     wTm = wT / rwT
-    # write the approximate Massman correction fluxes to the data structure
-    #qcutils.CreateSeries(ds,'ustarm',ustarm,FList=['uw','vw'],Descr='Friction velocity (intermediate Massman)',Units='m/s')
-    #qcutils.CreateSeries(ds,'Lm',Lm,FList=['wT','ustarm','Ta_EC'],Descr='Monin-Obukhov length (intermediate Massman)',Units='m')
-    #qcutils.CreateSeries(ds,'uwm',uwm,FList=['uw','Lm'],Descr='Approximate Massman uw covariance',Units='m2/s2')
-    #qcutils.CreateSeries(ds,'vwm',vwm,FList=['vw','Lm'],Descr='Approximate Massman vw covariance',Units='m2/s2')
-    #qcutils.CreateSeries(ds,'wTm',wTm,FList=['wT','Lm'],Descr='Approximate Massman wT covariance',Units='mC/s')
     # *** Massman_1stpass ends here ***
     # *** Massman_2ndpass starts here ***
     # we have calculated the first pass corrected momentum and temperature covariances, now we use
@@ -2626,12 +2623,6 @@ def MassmanStandard(cf,ds):
     nxMom, nxScalar, alpha = qcutils.nxMom_nxScalar_alpha(zoLm)
     fxMom = nxMom * (u / zmd)
     fxScalar = nxScalar * (u / zmd)
-    # compute Massman functions
-    tao_eMom = ((c.lwVert / (5.7 * u)) ** 2) + ((c.lwHor / (2.8 * u)) ** 2)
-    tao_ewT = ((c.lwVert / (8.4 * u)) ** 2) + ((c.lTv / (4.0 * u)) ** 2)
-    tao_ewIRGA = ((c.lwVert / (8.4 * u)) ** 2) + ((c.lIRGA / (4.0 * u)) ** 2) \
-                 + ((lLat / (1.1 * u)) ** 2) + ((lLong / (1.05 * u)) ** 2)
-    tao_b = c.Tb / 2.8
     # calculate coefficients
     bMom = 2 * c.Pi * fxMom * tao_b
     bScalar = 2 * c.Pi * fxScalar * tao_b
@@ -2651,14 +2642,22 @@ def MassmanStandard(cf,ds):
     ustarM = numpy.ma.sqrt(numpy.ma.sqrt(uwM ** 2 + vwM ** 2))
     LM = mf.molen(Ta, Ah, ps, ustarM, wTM)
     # write the 2nd pass Massman corrected covariances to the data structure
-    qcutils.CreateSeries(ds,'ustar',ustarM,FList=['uw','vw'],Descr='Massman true ustar',Units='m/s')
-    qcutils.CreateSeries(ds,'L',LM,FList=['Ta_EC','Ah_EC','ps','wT'],Descr='Massman true Obukhov Length',Units='m')
-    qcutils.CreateSeries(ds,'uw',uwM,FList=['uw','L'],Descr='Massman true Cov(uw)',Units='m2/s2')
-    qcutils.CreateSeries(ds,'vw',vwM,FList=['vw','L'],Descr='Massman true Cov(vw)',Units='m2/s2')
-    qcutils.CreateSeries(ds,'wT',wTM,FList=['wT','L'],Descr='Massman true Cov(wT)',Units='mC/s')
-    qcutils.CreateSeries(ds,'wA',wAM,FList=['wA','L'],Descr='Massman true Cov(wA)',Units='g/m2/s')
-    qcutils.CreateSeries(ds,'wC',wCM,FList=['wC','L'],Descr='Massman true Cov(wC)',Units='mg/m2/s')
+    qcutils.CreateSeries(ds,ustar_out,ustarM,FList=['uw','vw'],Descr='Massman true ustar',Units='m/s')
+    qcutils.CreateSeries(ds,L_out,LM,FList=[Ta_in,Ah_in,ps_in,'wT'],Descr='Massman true Obukhov Length',Units='m')
+    qcutils.CreateSeries(ds,uw_out,uwM,FList=['uw',L_out],Descr='Massman true Cov(uw)',Units='m2/s2')
+    qcutils.CreateSeries(ds,vw_out,vwM,FList=['vw',L_out],Descr='Massman true Cov(vw)',Units='m2/s2')
+    qcutils.CreateSeries(ds,wT_out,wTM,FList=['wT',L_out],Descr='Massman true Cov(wT)',Units='mC/s')
+    qcutils.CreateSeries(ds,wA_out,wAM,FList=['wA',L_out],Descr='Massman true Cov(wA)',Units='g/m2/s')
+    qcutils.CreateSeries(ds,wC_out,wCM,FList=['wC',L_out],Descr='Massman true Cov(wC)',Units='mg/m2/s')
     # *** Massman_2ndpass ends here ***
+    
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='MassmanFlag') and cf['General']['MassmanFlag'] == 'True':
+        keys = [ustar_out,L_out,uw_out,vw_out,wT_out,wA_out,wC_out]
+        for ThisOne in keys:
+            testseries,f = qcutils.GetSeriesasMA(ds,ThisOne)
+            mask = numpy.ma.getmask(testseries)
+            index = numpy.where(mask.astype(int)==1)
+            ds.series[ThisOne]['Flag'][index] = 12
 
 def MergeSeries(ds,Destination,Source,QCFlag_OK):
     """
