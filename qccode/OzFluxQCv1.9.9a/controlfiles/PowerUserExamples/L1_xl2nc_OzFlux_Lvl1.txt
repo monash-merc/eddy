@@ -22,7 +22,6 @@ netCDFv3 = False
     history = ""
     institution = "University of Technology, Sydney"
     latitude = -22.283
-    location = "Latitude: -22.283, Longitude: 133.249"
     longitude = 133.249
     metadata_url = "http://www.ozflux.org.au/monitoringsites/alicesprings/index.html"
     ozflux_url = "http://ozflux.org.au/"

@@ -843,19 +843,19 @@ netCDFv3 = False
             units    = "fraction"
             ancillary_variables = "RH QC flag"
             standard_name = "relative_humidity"
-    [[rho_a]]
+    [[rhom]]
         [[[xl]]]
             sheet    = Data
-            name     = rho_a
+            name     = rhom
         [[[Attr]]]
             long_name = "moist air density"
             units    = "kg/m3"
             ancillary_variables = "rho_a QC flag"
             standard_name = "air_density"
-    [[rho_d]]
+    [[rhod]]
         [[[xl]]]
             sheet    = Data
-            name     = rho_d
+            name     = rhod
         [[[Attr]]]
             long_name = "density of dry air"
             units    = "kg/m3"

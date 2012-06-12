@@ -398,7 +398,7 @@ class qcgui(Tkinter.Frame):
                                      str(self.ds3.series['DateTime']['Data'][-1]))
         self.do_progress(text='Plotting L3 and L4 QC ...')
         for nFig in self.cf['Plots'].keys():
-            SeriesList = eval(self.cf['Plots'][str(nFig)]['Variables'])
+            SeriesList = ast.literal_eval(self.cf['Plots'][str(nFig)]['Variables'])
             si = qcutils.GetDateIndex(self.ds3.series['DateTime']['Data'],self.plotstartEntry.get(),
                                       ts=self.ds3.globalattributes['time_step'],default=0,match='exact')
             ei = qcutils.GetDateIndex(self.ds3.series['DateTime']['Data'],self.plotendEntry.get(),

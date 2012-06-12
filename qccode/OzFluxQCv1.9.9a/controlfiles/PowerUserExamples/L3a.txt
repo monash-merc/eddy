@@ -21,7 +21,7 @@ Platform = Mac    # Mac or PC
 [FunctionArgs]
 # Site- and process-specific variable and parameter lists
 # Flags are named as abbreviated forms of functions in FunctionList
-# CFg: CorrectFgForStorage, A3SBE: AverageSeriesByElements, IOM: IntegrateOverMissing
+# CFg: CorrectFgForStorage, ASBE: AverageSeriesByElements
 # CF:  CalculateFluxes, EWPL: FeWPLCov, CWPL: FcWPLCov
 #
 # Default FhvtoFhArgs:  "['Ta_EC','Fh','Tv_CSAT','Fe_raw','ps','Ah_EC','Fh_rv','Fh rotated and converted from virtual heat flux']"
