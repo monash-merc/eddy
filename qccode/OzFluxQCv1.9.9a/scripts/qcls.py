@@ -153,16 +153,11 @@ def l3qc(cf,ds2):
     qcts.CoordRotation2D(cf,ds3)
     
     # do the Massman frequency attenuation correction
-    if 'Massman' in l3functions or 'MassmanStandard' in l3functions:
-        qcts.Massman(cf,ds3)
+    if 'Massman' in l3functions:
+        qcts.MassmanStandard(cf,ds3)
     
     # calculate the fluxes
-    if 'Massman' not in l3functions:
-        qcts.CalculateFluxes(cf,ds3,l3functions)
-    
-    # calculate the fluxes from covariances
-    if 'Massman' in l3functions:
-        qcts.CalculateFluxesRM(cf,ds3)
+    qcts.CalculateFluxes(cf,ds3,l3functions)
     
     # approximate wT from virtual wT using wA (ref: Campbell OPECSystem manual)
     qcts.FhvtoFh(cf,ds3)

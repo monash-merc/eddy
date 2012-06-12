@@ -247,7 +247,7 @@ def CalculateAvailableEnergy(cf,ds,Fa_out='Fa',Fn_in='Fn',Fg_in='Fg'):
                          Descr='Available energy using '+Fn_in+','+Fg_in,
                          Units='W/m2')
 
-def CalculateFluxes(cf,ds,l3functions,Ta_name='Ta',ps_name='ps',Ah_name='Ah'):
+def CalculateFluxes(cf,ds,l3functions,Ta_name='Ta',ps_name='ps',Ah_name='Ah',wT_in='wT',wA_in='wA',wC_in='wC',uw_in='uw',vw_in='vw'):
     """
         Calculate the fluxes from the rotated covariances.
         
@@ -263,55 +263,54 @@ def CalculateFluxes(cf,ds,l3functions,Ta_name='Ta',ps_name='ps',Ah_name='Ah'):
         Ta_name = args[0]
         Ah_name = args[1]
         ps_name = args[2]
+        wT_in = args[3]
+        wA_in = args[4]
+        wC_in = args[5]
+        uw_in = args[6]
+        vw_in = args[7]
     long_name = ''
     if 'Massman' in l3functions:
         long_name = ' and frequency response corrected'
+    Ta,f = qcutils.GetSeriesasMA(ds,Ta_name)
+    ps,f = qcutils.GetSeriesasMA(ds,ps_name)
+    Ah,f = qcutils.GetSeriesasMA(ds,Ah_name)
+    if 'rhom' in ds.series.keys():
+        rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
+    else:
+        rhom = mf.densitymoistair(Ta,ps,Ah)
         
     log.info(' Calculating fluxes from covariances')
-    if 'wT' in ds.series.keys():
-        wT,f = qcutils.GetSeriesasMA(ds,'wT')
-        Ta,f = qcutils.GetSeriesasMA(ds,Ta_name)
-        ps,f = qcutils.GetSeriesasMA(ds,ps_name)
-        Ah,f = qcutils.GetSeriesasMA(ds,Ah_name)
-        if 'rhom' in ds.series.keys():
-            rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
-            Cpm,f = qcutils.GetSeriesasMA(ds,'Cpm')
-        else:
-            rhom = mf.densitymoistair(Ta,ps,Ah)
+    if wT_in in ds.series.keys():
+        wT,f = qcutils.GetSeriesasMA(ds,wT_in)
         Fh = rhom * c.Cpd * wT
-        qcutils.CreateSeries(ds,'Fh',Fh,FList=['wT'],Descr='Sensible heat flux, rotated to natural wind coordinates'+long_name,Units='W/m2',Standard='surface_upward_sensible_heat_flux')
+        qcutils.CreateSeries(ds,'Fh',Fh,FList=[wT_in],Descr='Sensible heat flux, rotated to natural wind coordinates'+long_name,Units='W/m2',Standard='surface_upward_sensible_heat_flux')
     else:
         log.error('  CalculateFluxes: wT not found in ds.series, Fh not calculated')
-    if 'wA' in ds.series.keys():
-        wA,f = qcutils.GetSeriesasMA(ds,'wA')
+    if wA_in in ds.series.keys():
+        wA,f = qcutils.GetSeriesasMA(ds,wA_in)
         if 'Lv' in ds.series.keys():
             Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
             Fe = Lv * wA / float(1000)
         else:
             Fe = c.Lv * wA / float(1000)
-        qcutils.CreateSeries(ds,'Fe',Fe,FList=['wA'],Descr='Latent heat flux, rotated to natural wind coordinates'+long_name,Units='W/m2',Standard='surface_upward_latent_heat_flux')
+        qcutils.CreateSeries(ds,'Fe',Fe,FList=[wA_in],Descr='Latent heat flux, rotated to natural wind coordinates'+long_name,Units='W/m2',Standard='surface_upward_latent_heat_flux')
     else:
         log.error('  CalculateFluxes: wA not found in ds.series, Fe not calculated')
-    if 'wC' in ds.series.keys():
-        wC,f = qcutils.GetSeriesasMA(ds,'wC')
+    if wC_in in ds.series.keys():
+        wC,f = qcutils.GetSeriesasMA(ds,wC_in)
         Fc = wC
-        qcutils.CreateSeries(ds,'Fc',Fc,FList=['wC'],Descr='CO2 flux, rotated to natural wind coordinates'+long_name,Units='mg/m2/s')
+        qcutils.CreateSeries(ds,'Fc',Fc,FList=[wC_in],Descr='CO2 flux, rotated to natural wind coordinates'+long_name,Units='mg/m2/s')
     else:
         log.error('  CalculateFluxes: wC not found in ds.series, Fc_raw not calculated')
-    if 'uw' in ds.series.keys():
-        if 'vw' in ds.series.keys():
-            uw,f = qcutils.GetSeriesasMA(ds,'uw')
-            vw,f = qcutils.GetSeriesasMA(ds,'vw')
+    if uw_in in ds.series.keys():
+        if vw_in in ds.series.keys():
+            uw,f = qcutils.GetSeriesasMA(ds,uw_in)
+            vw,f = qcutils.GetSeriesasMA(ds,vw_in)
             vs = uw*uw + vw*vw
-            if 'wT' not in ds.series.keys():
-                if 'rhom' not in ds.series.keys():
-                        rhom = mf.densitymoistair(Ta,ps,Ah)
-                else:
-                    rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
             Fm = rhom * numpy.ma.sqrt(vs)
             us = numpy.ma.sqrt(numpy.ma.sqrt(vs))
-            qcutils.CreateSeries(ds,'Fm',Fm,FList=['uw','vw'],Descr='Momentum flux, rotated to natural wind coordinates'+long_name,Units='kg/m/s2')
-            qcutils.CreateSeries(ds,'ustar',us,FList=['uw','vw'],Descr='Friction velocity, rotated to natural wind coordinates'+long_name,Units='m/s')
+            qcutils.CreateSeries(ds,'Fm',Fm,FList=[uw_in,vw_in],Descr='Momentum flux, rotated to natural wind coordinates'+long_name,Units='kg/m/s2')
+            qcutils.CreateSeries(ds,'ustar',us,FList=[uw_in,vw_in],Descr='Friction velocity, rotated to natural wind coordinates'+long_name,Units='m/s')
         else:
             log.error('  CalculateFluxes: wy not found in ds.series, Fm and ustar not calculated')
     else:
@@ -345,7 +344,7 @@ def CalculateFluxesRM(cf,ds,Ta_name='Ta_HMP_EC',ps_name='ps',Ah_name='Ah_HMP_EC'
             rhom = mf.densitymoistair(Ta,ps,Ah)
         Fh_rm = rhom * c.Cpd * wT
         qcutils.CreateSeries(ds,'Fh_rm',Fh_rm,FList=['wTM'],
-                             Descr='Sensible heat flux, rotated to natural wind coordinates, frequency response corrected',
+                             Descr='Sensible heat flux, rotated to natural wind coordinates and frequency response corrected',
                              Units='W/m2',Standard='surface_upward_sensible_heat_flux')
     else:
         log.error('  CalculateFluxes: wTc not found in ds.series, Fh not calculated')
