@@ -153,7 +153,7 @@ def l3qc(cf,ds2):
     qcts.CoordRotation2D(cf,ds3)
     
     # do the Massman frequency attenuation correction
-    if 'Massman' in l3functions:
+    if 'Massman' in l3functions or 'MassmanStandard' in l3functions:
         qcts.MassmanStandard(cf,ds3)
     
     # calculate the fluxes
