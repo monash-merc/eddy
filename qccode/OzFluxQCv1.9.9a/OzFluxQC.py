@@ -451,10 +451,12 @@ class qcgui(Tkinter.Frame):
             if len(self.cf)==0:
                 self.do_progress(text='Waiting for input ...')
                 return
-        if qcutils.cfkeycheck(self.cf,Base='General',ThisOne='InputLevel'):
+        if qcutils.cfkeycheck(self.cf,Base='General',ThisOne='InputLevel') and qcutils.cfkeycheck(self.cf,Base='General',ThisOne='OutputLevel'):
             InLevel = self.cf['General']['InputLevel']
+            OutLevel = self.cf['General']['OutputLevel']
         else:
             InLevel = 'L2'
+            OutLevel = 'L2'
         qcio.autonc2xl(self.cf,InLevel)
         self.do_progress(text='Finished L2 Data Export')              # tell the user we are done
         log.info(' Finished saving L2 data')
@@ -484,11 +486,13 @@ class qcgui(Tkinter.Frame):
             if len(self.cf)==0:
                 self.do_progress(text='Waiting for input ...')
                 return
-        if qcutils.cfkeycheck(self.cf,Base='General',ThisOne='InputLevel'):
+        if qcutils.cfkeycheck(self.cf,Base='General',ThisOne='InputLevel') and qcutils.cfkeycheck(self.cf,Base='General',ThisOne='OutputLevel'):
             InLevel = self.cf['General']['InputLevel']
+            OutLevel = self.cf['General']['OutputLevel']
         else:
             InLevel = 'L3'
-        qcio.autonc2xl(self.cf,InLevel)
+            OutLevel = 'L3'
+        qcio.autonc2xl(self.cf,InLevel,OutLevel)
         self.do_progress(text='Finished L3 Data Export')              # tell the user we are done
         log.info(' Finished saving L3 data')
 
@@ -517,11 +521,13 @@ class qcgui(Tkinter.Frame):
             if len(self.cf)==0:
                 self.do_progress(text='Waiting for input ...')
                 return
-        if qcutils.cfkeycheck(self.cf,Base='General',ThisOne='InputLevel'):
+        if qcutils.cfkeycheck(self.cf,Base='General',ThisOne='InputLevel') and qcutils.cfkeycheck(self.cf,Base='General',ThisOne='OutputLevel'):
             InLevel = self.cf['General']['InputLevel']
+            OutLevel = self.cf['General']['OutputLevel']
         else:
             InLevel = 'L4'
-        qcio.autonc2xl(self.cf,InLevel)
+            OutLevel = 'L4'
+        qcio.autonc2xl(self.cf,InLevel,OutLevel)
         self.do_progress(text='Finished L4 Data Export')              # tell the user we are done
         log.info(' Finished saving L4 data')
 

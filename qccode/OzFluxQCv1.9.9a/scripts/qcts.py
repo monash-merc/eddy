@@ -247,7 +247,7 @@ def CalculateAvailableEnergy(cf,ds,Fa_out='Fa',Fn_in='Fn',Fg_in='Fg'):
                          Descr='Available energy using '+Fn_in+','+Fg_in,
                          Units='W/m2')
 
-def CalculateFluxes(cf,ds,l3functions,Ta_name='Ta',ps_name='ps',Ah_name='Ah',wT_in='wT',wA_in='wA',wC_in='wC',uw_in='uw',vw_in='vw'):
+def CalculateFluxes(cf,ds,l3functions,Ta_name='Ta',ps_name='ps',Ah_name='Ah',wT_in='wT',wA_in='wA',wC_in='wC',uw_in='uw',vw_in='vw',Fh_out='Fh',Fe_out='Fe',Fc_out='Fc',Fm_out='Fm',ustar_out='ustar'):
     """
         Calculate the fluxes from the rotated covariances.
         
@@ -268,6 +268,11 @@ def CalculateFluxes(cf,ds,l3functions,Ta_name='Ta',ps_name='ps',Ah_name='Ah',wT_
         wC_in = args[5]
         uw_in = args[6]
         vw_in = args[7]
+        Fh_out = args[8]
+        Fe_out = args[9]
+        Fc_out = args[10]
+        Fm_out = args[11]
+        ustar_out = args[12]
     long_name = ''
     if 'Massman' in l3functions:
         long_name = ' and frequency response corrected'
@@ -283,7 +288,7 @@ def CalculateFluxes(cf,ds,l3functions,Ta_name='Ta',ps_name='ps',Ah_name='Ah',wT_
     if wT_in in ds.series.keys():
         wT,f = qcutils.GetSeriesasMA(ds,wT_in)
         Fh = rhom * c.Cpd * wT
-        qcutils.CreateSeries(ds,'Fh',Fh,FList=[wT_in],Descr='Sensible heat flux, rotated to natural wind coordinates'+long_name,Units='W/m2',Standard='surface_upward_sensible_heat_flux')
+        qcutils.CreateSeries(ds,Fh_out,Fh,FList=[wT_in],Descr='Sensible heat flux, rotated to natural wind coordinates'+long_name,Units='W/m2',Standard='surface_upward_sensible_heat_flux')
     else:
         log.error('  CalculateFluxes: wT not found in ds.series, Fh not calculated')
     if wA_in in ds.series.keys():
@@ -293,15 +298,15 @@ def CalculateFluxes(cf,ds,l3functions,Ta_name='Ta',ps_name='ps',Ah_name='Ah',wT_
             Fe = Lv * wA / float(1000)
         else:
             Fe = c.Lv * wA / float(1000)
-        qcutils.CreateSeries(ds,'Fe',Fe,FList=[wA_in],Descr='Latent heat flux, rotated to natural wind coordinates'+long_name,Units='W/m2',Standard='surface_upward_latent_heat_flux')
+        qcutils.CreateSeries(ds,Fe_out,Fe,FList=[wA_in],Descr='Latent heat flux, rotated to natural wind coordinates'+long_name,Units='W/m2',Standard='surface_upward_latent_heat_flux')
     else:
-        log.error('  CalculateFluxes: wA not found in ds.series, Fe not calculated')
+        log.error('  CalculateFluxes: '+wA_in+' not found in ds.series, Fe not calculated')
     if wC_in in ds.series.keys():
         wC,f = qcutils.GetSeriesasMA(ds,wC_in)
         Fc = wC
-        qcutils.CreateSeries(ds,'Fc',Fc,FList=[wC_in],Descr='CO2 flux, rotated to natural wind coordinates'+long_name,Units='mg/m2/s')
+        qcutils.CreateSeries(ds,Fc_out,Fc,FList=[wC_in],Descr='CO2 flux, rotated to natural wind coordinates'+long_name,Units='mg/m2/s')
     else:
-        log.error('  CalculateFluxes: wC not found in ds.series, Fc_raw not calculated')
+        log.error('  CalculateFluxes: '+wC_in+' not found in ds.series, Fc_raw not calculated')
     if uw_in in ds.series.keys():
         if vw_in in ds.series.keys():
             uw,f = qcutils.GetSeriesasMA(ds,uw_in)
@@ -309,83 +314,12 @@ def CalculateFluxes(cf,ds,l3functions,Ta_name='Ta',ps_name='ps',Ah_name='Ah',wT_
             vs = uw*uw + vw*vw
             Fm = rhom * numpy.ma.sqrt(vs)
             us = numpy.ma.sqrt(numpy.ma.sqrt(vs))
-            qcutils.CreateSeries(ds,'Fm',Fm,FList=[uw_in,vw_in],Descr='Momentum flux, rotated to natural wind coordinates'+long_name,Units='kg/m/s2')
-            qcutils.CreateSeries(ds,'ustar',us,FList=[uw_in,vw_in],Descr='Friction velocity, rotated to natural wind coordinates'+long_name,Units='m/s')
+            qcutils.CreateSeries(ds,Fm_out,Fm,FList=[uw_in,vw_in],Descr='Momentum flux, rotated to natural wind coordinates'+long_name,Units='kg/m/s2')
+            qcutils.CreateSeries(ds,ustar_out,us,FList=[uw_in,vw_in],Descr='Friction velocity, rotated to natural wind coordinates'+long_name,Units='m/s')
         else:
             log.error('  CalculateFluxes: wy not found in ds.series, Fm and ustar not calculated')
     else:
         log.error('  CalculateFluxes: wx not found in ds.series, Fm and ustar not calculated')
-
-def CalculateFluxesRM(cf,ds,Ta_name='Ta_HMP_EC',ps_name='ps',Ah_name='Ah_HMP_EC'):
-    """
-        Calculate the fluxes from the rotated and Massman corrected covariances.
-        
-        Usage qcts.CalculateFluxesRM(ds)
-        ds: data structure
-        
-        Pre-requisites: CoordRotation2D, MassmanApprox, Massman
-        
-        Accepts meteorological constants or variables
-        """
-    log.info(' Calculating fluxes from covariances')
-    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='CF'):
-        args = ast.literal_eval(cf['FunctionArgs']['CF'])
-        Ta_name = args[0]
-        Ah_name = args[1]
-        ps_name = args[2]
-    if 'wTM' in ds.series.keys():
-        wT,f = qcutils.GetSeriesasMA(ds,'wTM')
-        Ta,f = qcutils.GetSeriesasMA(ds,Ta_name)
-        ps,f = qcutils.GetSeriesasMA(ds,ps_name)
-        Ah,f = qcutils.GetSeriesasMA(ds,Ah_name)
-        if 'rhom' in ds.series.keys():
-            rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
-        else:
-            rhom = mf.densitymoistair(Ta,ps,Ah)
-        Fh_rm = rhom * c.Cpd * wT
-        qcutils.CreateSeries(ds,'Fh_rm',Fh_rm,FList=['wTM'],
-                             Descr='Sensible heat flux, rotated to natural wind coordinates and frequency response corrected',
-                             Units='W/m2',Standard='surface_upward_sensible_heat_flux')
-    else:
-        log.error('  CalculateFluxes: wTc not found in ds.series, Fh not calculated')
-    if 'wAM' in ds.series.keys():
-        wA,f = qcutils.GetSeriesasMA(ds,'wAM')
-        if 'Lv' in ds.series.keys():
-            Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
-            Fe_rm = Lv * wA / float(1000)
-        else:
-            Fe_rm = c.Lv * wA / float(1000)
-        qcutils.CreateSeries(ds,'Fe_rm',Fe_rm,FList=['wAM'],
-                             Descr='Latent heat flux, rotated to natural wind coordinates and frequency response corrected',
-                             Units='W/m2',Standard='surface_upward_latent_heat_flux')
-    else:
-        log.error('  CalculateFluxes: wAM not found in ds.series, Fe_raw not calculated')
-    if 'wCM' in ds.series.keys():
-        wC,f = qcutils.GetSeriesasMA(ds,'wCM')
-        Fc_rm = wC
-        qcutils.CreateSeries(ds,'Fc_rm',Fc_rm,FList=['wCM'],
-                             Descr='CO2 flux, rotated to natural wind coordinates and frequency response corrected',
-                             Units='mg/(m2 s)')
-    else:
-        log.error('  CalculateFluxes: wCM not found in ds.series, Fc_raw not calculated')
-    if 'uwM' in ds.series.keys():
-        if 'vwM' in ds.series.keys():
-            uw,f = qcutils.GetSeriesasMA(ds,'uwM')
-            vw,f = qcutils.GetSeriesasMA(ds,'vwM')
-            vs = uw * uw + vw * vw
-            if 'Fh_rm' not in ds.series.keys():
-                if 'rhom' not in ds.series.keys():
-                        rhom = mf.densitymoistair(Ta,ps,Ah)
-                else:
-                    rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
-            Fm_rm = rhom * numpy.ma.sqrt(vs)
-            qcutils.CreateSeries(ds,'Fm_rm',Fm_rm,FList=['uw','vw'],
-                                 Descr='Momentum flux, rotated to natural wind coordinates and frequency response corrected',
-                                 Units='kg/(m s2)')
-        else:
-            log.error('  CalculateFluxes: vwM not found in ds.series, Fm not calculated')
-    else:
-        log.error('  CalculateFluxes: uwM not found in ds.series, Fm not calculated')
 
 def CalculateLongwave(ds,Fl_out,Fl_in,Tbody_in):
     """
@@ -806,9 +740,9 @@ def CoordRotation2D(cf,ds):
     # store the rotated quantities in the nc object
     qcutils.CreateSeries(ds,'eta',eta,FList=['Ux','Uy','Uz'],Descr='Horizontal rotation angle',Units='deg')
     qcutils.CreateSeries(ds,'theta',theta,FList=['Ux','Uy','Uz'],Descr='Vertical rotation angle',Units='deg')
-    qcutils.CreateSeries(ds,'u',u,FList=['Ux','Uy','Uz'],Descr='Longitudinal component in natural wind coordinates',Units='m/s')
-    qcutils.CreateSeries(ds,'v',v,FList=['Ux','Uy','Uz'],Descr='Lateral component in natural wind coordinates',Units='m/s')
-    qcutils.CreateSeries(ds,'w',w,FList=['Ux','Uy','Uz'],Descr='Vertical component in natural wind coordinates',Units='m/s')
+    qcutils.CreateSeries(ds,'u',u,FList=['Ux','Uy','Uz'],Descr='Longitudinal component of wind-speed in natural wind coordinates',Units='m/s')
+    qcutils.CreateSeries(ds,'v',v,FList=['Ux','Uy','Uz'],Descr='Lateral component of wind-speed in natural wind coordinates',Units='m/s')
+    qcutils.CreateSeries(ds,'w',w,FList=['Ux','Uy','Uz'],Descr='Vertical component of wind-speed in natural wind coordinates',Units='m/s')
     qcutils.CreateSeries(ds,'wT',wT,FList=['Ux','Uy','Uz','UxT','UyT','UzT'],
                          Descr='Kinematic heat flux, rotated to natural wind coordinates',Units='mC/s')
     qcutils.CreateSeries(ds,'wA',wA,FList=['Ux','Uy','Uz','UxA','UyA','UzA'],
@@ -1270,9 +1204,9 @@ def do_solo(cf,ds4,Fc_in='Fc',Fe_in='Fe',Fh_in='Fh',Fc_out='Fc',Fe_out='Fe',Fh_o
 
 def do_sums(cf,ds,l4functions,WorkList):
     if 'MergeSeriesWS' in l4functions:
-        srclist = qcutils.GetMergeList(cf,'Ws_EC',default=['Ws_WS_01','Ws_CSAT'])
+        srclist = qcutils.GetMergeList(cf,'Ws',default=['Ws_WS_01','Ws_CSAT'])
         if len(srclist) > 0:
-            qcts.MergeSeries(ds,'Ws_EC',srclist,[0,10])
+            qcts.MergeSeries(ds,'Ws',srclist,[0,10])
             
             # compute daily statistics
             if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SumList'):
@@ -1465,7 +1399,8 @@ def Fc_WPLcov(cf,ds,Fc_wpl_out='Fc',wC_in='wC',Fh_in='Fh',wA_in='wA',Ta_in='Ta',
     qcutils.CreateSeries(ds,Fc_wpl_out,Fc_wpl_data,FList=[wC_in,Fh_in,wA_in,Ta_in,Ah_in,Cc_in,ps_in],
                          Descr='Fc, rotated to natural wind coordinates, frequency response corrected, and density flux corrected (wpl)',
                          Units='mg/m2/s')
-    mask = numpy.ma.getmask(Fc_wpl_data)
+    testseries = qcutils.GetSeriesasMA(ds,Fc_wpl_out)
+    mask = numpy.ma.getmask(testseries)
     index = numpy.where(mask.astype(int)==1)
     ds.series[Fc_wpl_out]['Flag'][index] = 14
 
@@ -1540,7 +1475,7 @@ def Fe_WPL(cf,ds,Fe_wpl_out='Fe',Fe_raw_in='Fe',Fh_in='Fh',Ta_in='Ta',Ah_in='Ah'
                          Descr='WPL corrected Fe',Units='W/m2',Standard='surface_upward_latent_heat_flux')
     #ds.series[Fe_wpl_out]['Flag'] = Fe_wpl_flag
 
-def Fe_WPLcov(cf,ds,Fe_wpl_out='Fe',wA_in='wA',Fh_in='Fh',Ta_in='Ta',Ah_in='Ah',ps_in='ps'):
+def Fe_WPLcov(cf,ds,Fe_wpl_out='Fe',wA_in='wA',Fh_in='Fh',Ta_in='Ta',Ah_in='Ah',ps_in='ps',wA_out='wA'):
     """
         Apply Webb, Pearman and Leuning correction to vapour flux using the
         original formulation (WPL80).  This correction is necessary to account
@@ -1572,6 +1507,7 @@ def Fe_WPLcov(cf,ds,Fe_wpl_out='Fe',wA_in='wA',Fh_in='Fh',Ta_in='Ta',Ah_in='Ah',
         Ta_in = Eargs[3]
         Ah_in = Eargs[4]
         ps_in = Eargs[5]
+        wA_out = Eargs[6]
     wA,f = qcutils.GetSeriesasMA(ds,wA_in)
     Fh,f = qcutils.GetSeriesasMA(ds,Fh_in)
     Ta,f = qcutils.GetSeriesasMA(ds,Ta_in)
@@ -1612,7 +1548,7 @@ def Fe_WPLcov(cf,ds,Fe_wpl_out='Fe',wA_in='wA',Fh_in='Fh',Ta_in='Ta',Ah_in='Ah',
     qcutils.CreateSeries(ds,Fe_wpl_out,Fe_wpl_data,FList=[wA_in,Fh_in,Ta_in,Ah_in,ps_in],
                          Descr='Fe, rotated to natural wind coordinates, frequency response corrected, and density flux corrected (wpl)',
                          Units='W/m2',Standard='surface_upward_latent_heat_flux')
-    qcutils.CreateSeries(ds,'wAwpl',wAwpl,FList=[wA_in,Fh_in,Ta_in,Ah_in,ps_in],
+    qcutils.CreateSeries(ds,wA_out,wAwpl,FList=[wA_in,Fh_in,Ta_in,Ah_in,ps_in],
                          Descr='Cov(wA), rotated to natural wind coordinates, frequency response corrected, and density flux corrected (wpl)',
                          Units='g/(m2 s)')
     keys = [Fe_wpl_out,wA_out]
@@ -2229,317 +2165,7 @@ def InterpolateOverMissing(cf,ds,series='',maxlen=1000):
             ds.series[ThisOne]['Data'][iom_new] = f(DateNum[iom_new]).astype(numpy.float32)        # fill missing values with linear interpolations
             ds.series[ThisOne]['Flag'][iom_new] = 34
 
-def Massman(cf,ds):
-    """
-        Massman:  use L recalculated from corrected ustar and wT to correct 
-        for flux loss from spectral attenuation
-        
-        Usage qcts.Massman(cf,ds)
-        cf: control file
-        ds: data structure
-        
-        Parameters loaded from control file:
-            zmd: z-d
-            angle: CSAT-IRGA separation angle (x)
-            CSATarm: CSAT sensor distance from CSAT mount (C)
-            IRGAarm: IRGA sensor distance from CSAT mount (I, hypotenuse)
-        
-        Correct covariances for flux loss from spectral attenuation using 
-        analytical expression in Eqn 4.3, Massman & Clement 2004.  z is referenced
-        to the z0 as z - d.  Time constants are as defined in Massman 2000:
-            alpha = 1;  0 < z / L <= 2, stable conditions
-            alpha = 0.925;  z / L <= 0, neutral or unstable conditions
-            b = 2 * pi * fx * tau_b
-            p = 2 * pi * fx * tau_e
-            fx = nx * (u / z)
-            for scalars:
-                nx = 0.085;   z / L <= 0
-                nx = 2.0 - 1.915 / (1 + 0.5 * (z / L));  z / L > 0
-            for momentum:
-                nx = 0.079;  z / L <= 0
-                nx = 0.079 * (1 + 7.9 * (z / L)) ^ 0.75;  z / L > 0
-            tau_b = Tb / 2.8;  equivalent time constant associated with averaging
-                               Tb is measurement interval in seconds
-            tau_e = sqrt(sum(tau_i ^ 2));  equivalent time constant associated with
-                                           sonic line averaging, scalar sensor line
-                                           averaging, and sensor separation
-            tau_i:
-                sonic line averaging (momentum flux):
-                    lw / (2.8 * u)  horizontal
-                    lw / (5.7 * u)  vertical
-                sonic line averaging (scalar flux):
-                    lw / (8.4 * u)
-                scalar sensor line averaging:
-                    l_irga / (4.0 * u)
-                lateral separation:
-                    l_lat / (1.1 * u)
-                longitudinal separation:
-                    l_long / (1.05 * u)
-                lwVert = 0.1 m
-                lwHor = 0.058 m
-                lwTv = 0.1155 m
-                lIRGA = 0.125 m
-        """
-    
-    log.info(' Correcting for flux loss from spectral attenuation')
-    
-    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList') and 'MassmanStandard' in cf['General']['FunctionList']:
-        MassmanStandard(cf,ds)
-        return
-    
-    MassmanApprox(cf,ds)
-    
-    zmd = float(cf['Massman']['zmd'])   # z-d for site
-    angle = float(cf['Massman']['angle'])     # CSAT3-IRGA separation angle
-    CSATarm = float(cf['Massman']['CSATarm'])  # CSAT3 mounting distance
-    IRGAarm = float(cf['Massman']['IRGAarm'])  # IRGA mountain distance
-
-    # prepare parameters, add to dataset, and form masked matrices
-    uwa,f = qcutils.GetSeriesasMA(ds,'uwa')
-    vwa,f = qcutils.GetSeriesasMA(ds,'vwa')
-    ustara = numpy.ma.sqrt(numpy.ma.sqrt(uwa ** 2 + vwa ** 2))
-    nRecs = len(uwa)
-    
-    qcutils.CreateSeries(ds,'ustara',ustara,FList=['uwa','vwa'],
-                         Descr='Friction coefficient Massman approximately corrected',
-                         Units='m/s')
-    for i in range(nRecs):
-        if ds.series['ustara']['Flag'][i] > 0:
-            ds.series['ustara']['Flag'][i] = 12
-    
-    Tv,f = qcutils.GetSeriesasMA(ds,'Tv_CSAT')
-    ustara,f = qcutils.GetSeriesasMA(ds,'ustara')
-    wTa,f = qcutils.GetSeriesasMA(ds,'wTa')
-    La = mf.molenv(Tv, ustara, wTa)
-    qcutils.CreateSeries(ds,'La',La,FList=['Tv_CSAT','ps','wTa'], 
-                         Descr='Massman approximately corrected Obukhov Length', Units='m')
-    for i in range(nRecs):
-        if ds.series['La']['Flag'][i] > 0:
-            ds.series['La']['Flag'][i] = 12
-    
-    u,f = qcutils.GetSeriesasMA(ds,'u')
-    uw,f = qcutils.GetSeriesasMA(ds,'uw')
-    vw,f = qcutils.GetSeriesasMA(ds,'vw')
-    wT,f = qcutils.GetSeriesasMA(ds,'wT')
-    wC,f = qcutils.GetSeriesasMA(ds,'wC')
-    wA,f = qcutils.GetSeriesasMA(ds,'wA')
-    zoL = zmd / La
-    
-    mask = numpy.ma.getmask(u)
-    index = numpy.where(mask.astype(int)==0)
-    
-    lLat = numpy.ma.sin(numpy.deg2rad(angle)) * IRGAarm
-    lLong = CSATarm - (numpy.ma.cos(numpy.deg2rad(angle)) * IRGAarm)
-    
-    alpha = numpy.ma.zeros(nRecs)
-    nxMom = numpy.ma.zeros(nRecs)
-    nxScalar = numpy.ma.zeros(nRecs)
-    fxMom = numpy.ma.zeros(nRecs)
-    fxScalar = numpy.ma.zeros(nRecs)
-    
-    for i in range(nRecs):
-        if zoL[i] > 0:
-            nxMom[i] = 0.079 * (1 + 7.9 * zoL[i]) ** 0.75
-            nxScalar[i] = 2.0 - 1.915 / (1 + 0.5 * zoL[i])
-            alpha[i] = 1
-        else:
-            nxMom[i] = 0.079
-            nxScalar[i] = 0.085
-            alpha[i] = 0.925
-        fxMom[i] = nxMom[i] * (u[i] / zmd)
-        fxScalar[i] = nxScalar[i] * (u[i] / zmd)
-    
-    # compute Massman functions
-    tao_eMom = ((c.lwVert / (5.7 * u)) ** 2) + ((c.lwHor / (2.8 * u)) ** 2)
-    tao_ewT = ((c.lwVert / (8.4 * u)) ** 2) + ((c.lTv / (4.0 * u)) ** 2)
-    tao_ewIRGA = ((c.lwVert / (8.4 * u)) ** 2) + ((c.lIRGA / (4.0 * u)) ** 2) \
-                 + ((lLat / (1.1 * u)) ** 2) + ((lLong / (1.05 * u)) ** 2)
-    tao_b = c.Tb / 2.8
-    
-    bMom = 2 * c.Pi * fxMom * tao_b
-    bScalar = 2 * c.Pi * fxScalar * tao_b
-    pMom = 2 * c.Pi * fxMom * tao_eMom
-    pwT = 2 * c.Pi * fxScalar * tao_ewT
-    pwIRGA = 2 * c.Pi * fxScalar * tao_ewIRGA
-    
-    rMom = numpy.ma.zeros(nRecs)
-    rwT = numpy.ma.zeros(nRecs)
-    rwIRGA = numpy.ma.zeros(nRecs)
-
-    rMom[index] = ((bMom[index] ** alpha[index]) / (bMom[index] ** \
-           alpha[index] + 1)) * ((bMom[index] ** alpha[index]) \
-           / (bMom[index] ** alpha[index] + pMom[index] ** alpha[index])) \
-           * (1 / (pMom[index] ** alpha[index] + 1))
-    rwT[index] = ((bScalar[index] ** alpha[index]) / (bScalar[index] ** \
-           alpha[index] + 1)) * ((bScalar[index] ** alpha[index]) \
-           / (bScalar[index] ** alpha[index] + pwT[index] ** alpha[index])) * \
-           (1 / (pwT[index] ** alpha[index] + 1))
-    rwIRGA[index] = ((bScalar[index] ** alpha[index]) / (bScalar[index] ** \
-           alpha[index] + 1)) * ((bScalar[index] ** \
-           alpha[index]) / (bScalar[index] ** alpha[index] + pwIRGA[index] ** \
-           alpha[index])) * (1 / (pwIRGA[index] ** \
-           alpha[index] + 1))
-    
-    # determine true fluxes
-    uwM = uw / rMom
-    vwM = vw / rMom
-    wTM = wT / rwT
-    wCM = wC / rwIRGA
-    wAM = wA / rwIRGA
-    ustarM = numpy.ma.sqrt(numpy.ma.sqrt(uwM ** 2 + vwM ** 2))
-    
-    qcutils.CreateSeries(ds,'uwM',uwM,FList=['uw','L'],Descr='Massman true Cov(uw)',Units='m2/s2')
-    qcutils.CreateSeries(ds,'vwM',vwM,FList=['vw','L'],Descr='Massman true Cov(vw)',Units='m2/s2')
-    qcutils.CreateSeries(ds,'wTM',wTM,FList=['wT','L'],Descr='Massman true Cov(wT)',Units='mC/s')
-    qcutils.CreateSeries(ds,'wAM',wAM,FList=['wA','L'],Descr='Massman true Cov(wA)',Units='g/m2/s')
-    qcutils.CreateSeries(ds,'wCM',wCM,FList=['wC','L'],Descr='Massman true Cov(wC)',Units='mg/m2/s')
-    qcutils.CreateSeries(ds,'ustarM',ustarM,FList=['uwM','vwM'],Descr='Massman true ustar',Units='m/s')
-    for i in range(nRecs):
-        if ds.series['uwM']['Flag'][i] > 0:
-            ds.series['uwM']['Flag'][i] = 12
-        if ds.series['vwM']['Flag'][i] > 0:
-            ds.series['vwM']['Flag'][i] = 12
-        if ds.series['wTM']['Flag'][i] > 0:
-            ds.series['wTM']['Flag'][i] = 12
-        if ds.series['wAM']['Flag'][i] > 0:
-            ds.series['wAM']['Flag'][i] = 12
-        if ds.series['wCM']['Flag'][i] > 0:
-            ds.series['wCM']['Flag'][i] = 12
-        if ds.series['ustarM']['Flag'][i] > 0:
-            ds.series['ustarM']['Flag'][i] = 12
-    
-    LM = mf.molenv(Tv, ustarM, wTM)
-    qcutils.CreateSeries(ds,'LM',LM,FList=['Tv_CSAT','ps','wTM'],
-                         Descr='Massman true Obukhov Length',Units='m')
-    for i in range(nRecs):
-        if ds.series['LM']['Flag'][i] > 0:
-            ds.series['LM']['Flag'][i] = 12
-
-def MassmanApprox(cf,ds):
-    """
-        MassmanApprox:  use uncorrected L to approximate L_massman
-        
-        Usage qcts.MassmanApprox(cf,ds)
-        cf: control file
-        ds: data structure
-        
-        Parameters loaded from control file:
-            zmd: z-d
-        
-        Correct covariances for flux loss from spectral attenuation using 
-        analytical expression in Eqn 4.3, Massman & Clement 2004.  z is referenced
-        to the z0 as z - d.  Time constants are as defined in Massman 2000:
-            alpha = 1;  0 < z / L <= 2, stable conditions
-            alpha = 0.925;  z / L <= 0, neutral or unstable conditions
-            b = 2 * pi * fx * tau_b
-            p = 2 * pi * fx * tau_e
-            fx = nx * (u / z)
-            for scalars:
-                nx = 0.085;   z / L <= 0
-                nx = 2.0 - 1.915 / (1 + 0.5 * (z / L));  z / L > 0
-            for momentum:
-                nx = 0.079;  z / L <= 0
-                nx = 0.079 * (1 + 7.9 * (z / L)) ^ 0.75;  z / L > 0
-            tau_b = Tb / 2.8;  equivalent time constant associated with averaging
-                               Tb is measurement interval in seconds
-            tau_e = sqrt(sum(tau_i ^ 2));  equivalent time constant associated with
-                                           sonic line averaging, scalar sensor line
-                                           averaging, and sensor separation
-            tau_i:
-                sonic line averaging (momentum flux):
-                    lw / (2.8 * u)  horizontal
-                    lw / (5.7 * u)  vertical
-                sonic line averaging (scalar flux):
-                    lw / (8.4 * u)
-                lwVert = 0.1 m
-                lwHor = 0.058 m
-                lTv = 0.1155 m
-        """
-    
-    log.info(' Approximating L to correct for flux loss from spectral attenuation')
-    zmd = float(cf['Massman']['zmd'])   # z-d for site
-
-    # prepare parameters, save in dataset, and form masked matrices
-    if 'ustar' not in ds.series.keys():
-        uw,f = qcutils.GetSeriesasMA(ds,'uw')
-        vw,f = qcutils.GetSeriesasMA(ds,'vw')
-        ustar = numpy.ma.sqrt(numpy.ma.sqrt(uw ** 2 + vw ** 2))
-        qcutils.CreateSeries(ds,'ustar',ustar,FList=['uw','vw'],
-                             Descr='Friction coefficient corrected in natural wind coordinates',
-                             Units='m/s')
-    
-    if 'L' not in ds.series.keys():
-        Tv,f = qcutils.GetSeriesasMA(ds,'Tv_CSAT')
-        ustar,f = qcutils.GetSeriesasMA(ds,'ustar')
-        wT,f = qcutils.GetSeriesasMA(ds,'wT')
-        L = mf.molenv(Tv, ustar, wT)
-        qcutils.CreateSeries(ds,'L',L,FList=['Tv_CSAT','ps','wT'],
-                             Descr='Uncorrected Obukhov Length',Units='m')
-    
-    u,f = qcutils.GetSeriesasMA(ds,'u')
-    wT,f = qcutils.GetSeriesasMA(ds,'wT')
-    zoL = zmd / L
-    nRecs = len(zoL)
-
-    mask = numpy.ma.getmask(u)
-    index = numpy.ma.where(mask.astype(int)==0)
-    
-    alpha = numpy.ma.zeros(nRecs)
-    nxMom = numpy.ma.zeros(nRecs)
-    nxScalar = numpy.ma.zeros(nRecs)
-    fxMom = numpy.ma.zeros(nRecs)
-    fxScalar = numpy.ma.zeros(nRecs)
-    for i in range(nRecs):
-        if zoL[i] > 0:
-            nxMom[i] = 0.079 * (1 + 7.9 * zoL[i]) ** 0.75
-            nxScalar[i] = 2.0 - 1.915 / (1 + 0.5 * zoL[i])
-            alpha[i] = 1
-        else:
-            nxMom[i] = 0.079
-            nxScalar[i] = 0.085
-            alpha[i] = 0.925
-        fxMom[i] = nxMom[i] * (u[i] / zmd)
-        fxScalar[i] = nxScalar[i] * (u[i] / zmd)
-    
-    # compute spectral filters
-    tao_eMom = ((c.lwVert / (5.7 * u)) ** 2) + ((c.lwHor / (2.8 * u)) ** 2)
-    tao_ewT = ((c.lwVert / (8.4 * u)) ** 2) + ((c.lTv / (4.0 * u)) ** 2)
-    tao_b = c.Tb / 2.8
-    
-    bMom = 2 * c.Pi * fxMom * tao_b
-    bScalar = 2 * c.Pi * fxScalar * tao_b
-    pMom = 2 * c.Pi * fxMom * tao_eMom
-    pwT = 2 * c.Pi * fxScalar * tao_ewT
-    
-    rMom = numpy.ma.zeros(nRecs)
-    rwT = numpy.ma.zeros(nRecs)
-    
-    rMom[index] = ((bMom[index] ** alpha[index]) / (bMom[index] ** \
-           alpha[index] + 1)) * ((bMom[index] ** alpha[index]) \
-           / (bMom[index] ** alpha[index] + pMom[index] ** alpha[index])) \
-           * (1 / (pMom[index] ** alpha[index] + 1))
-    rwT[index] = ((bScalar[index] ** alpha[index]) / (bScalar[index] ** \
-           alpha[index] + 1)) * ((bScalar[index] ** alpha[index]) \
-           / (bScalar[index] ** alpha[index] + pwT[index] ** alpha[index])) * \
-           (1 / (pwT[index] ** alpha[index] + 1))
-    
-    # determine approximately-true Massman fluxes
-    uwa = uw / rMom
-    vwa = vw / rMom
-    wTa = wT / rwT
-    
-    qcutils.CreateSeries(ds,'uwa',uwa,FList=['uw','L'],Descr='Approximate Massman uw covariance',Units='m2/s2')
-    qcutils.CreateSeries(ds,'vwa',vwa,FList=['vw','L'],Descr='Approximate Massman vw covariance',Units='m2/s2')
-    qcutils.CreateSeries(ds,'wTa',wTa,FList=['wT','L'],Descr='Approximate Massman wT covariance',Units='mC/s')
-    for i in range(nRecs):
-        if ds.series['uwa']['Flag'][i] > 0:
-            ds.series['uwa']['Flag'][i] = 12
-        if ds.series['vwa']['Flag'][i] > 0:
-            ds.series['vwa']['Flag'][i] = 12
-        if ds.series['wTa']['Flag'][i] > 0:
-            ds.series['wTa']['Flag'][i] = 12
-
-def MassmanStandard(cf,ds,Ta_in='Ta',Ah_in='Ah',ps_in='ps',ustar_out='ustar',L_out ='L',uw_out='uw',vw_out='vw',wT_out='wT',wA_out='wA',wC_out='wC'):
+def MassmanStandard(cf,ds,Ta_in='Ta',Ah_in='Ah',ps_in='ps',ustar_in='ustar',ustar_out='ustar',L_in='L',L_out ='L',uw_out='uw',vw_out='vw',wT_out='wT',wA_out='wA',wC_out='wC'):
     """
        Massman corrections.
        The steps involved are as follows:
@@ -2555,13 +2181,15 @@ def MassmanStandard(cf,ds,Ta_in='Ta',Ah_in='Ah',ps_in='ps',ustar_out='ustar',L_o
         ps_in = MArgs[2]
     if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='MassmanOuts'):
         MOut = ast.literal_eval(cf['FunctionArgs']['MassmanOuts'])
-        ustar_out = MOut[0]
-        L_out = MOut[1]
-        uw_out = MOut[2]
-        vw_out = MOut[3]
-        wT_out = MOut[4]
-        wA_out = MOut[5]
-        wC_out = MOut[6]
+        ustar_in = MOut[0]
+        ustar_out = MOut[1]
+        L_in = MOut[2]
+        L_out = MOut[3]
+        uw_out = MOut[4]
+        vw_out = MOut[5]
+        wT_out = MOut[6]
+        wA_out = MOut[7]
+        wC_out = MOut[8]
     log.info(' Correcting for flux loss from spectral attenuation')
     zmd = float(cf['Massman']['zmd'])             # z-d for site
     angle = float(cf['Massman']['angle'])         # CSAT3-IRGA separation angle
@@ -2583,8 +2211,14 @@ def MassmanStandard(cf,ds,Ta_in='Ta',Ah_in='Ah',ps_in='ps',ustar_out='ustar',L_o
     wT,f = qcutils.GetSeriesasMA(ds,'wT')
     wC,f = qcutils.GetSeriesasMA(ds,'wC')
     wA,f = qcutils.GetSeriesasMA(ds,'wA')
-    ustarm = numpy.ma.sqrt(numpy.ma.sqrt(uw ** 2 + vw ** 2))
-    Lm = mf.molen(Ta, Ah, ps, ustarm, wT)
+    if ustar_in not in ds.series.keys():
+        ustarm = numpy.ma.sqrt(numpy.ma.sqrt(uw ** 2 + vw ** 2))
+    else:
+        ustarm,f = qcutils.GetSeriesasMA(ds,ustar_in)
+    if L_in not in ds.series.keys():
+        Lm = mf.molen(Ta, Ah, ps, ustarm, wT)
+    else:
+        Lm,f = qcutils.GetSeriesasMA(ds,Lm_in)
     # now calculate z on L
     zoLm = zmd / Lm
     # start calculating the correction coefficients for approximate corrections

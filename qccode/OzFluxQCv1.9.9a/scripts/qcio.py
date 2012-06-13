@@ -20,11 +20,11 @@ class DataStructure(object):
         self.series = {}
         self.globalattributes = {}
 
-def autonc2xl(cf,Level):
+def autonc2xl(cf,InLevel,OutLevel):
     # get the variables
-    ds = nc_read_series(cf,Level)
+    ds = nc_read_series(cf,InLevel)
     # write the variables to the excel file
-    xl_write_series(cf,ds,Level)
+    xl_write_series(cf,ds,OutLevel)
 
 def autoxl2nc(cf,InLevel,OutLevel):
     # get the data series from the Excel file
@@ -42,7 +42,7 @@ def autoxl2nc(cf,InLevel,OutLevel):
                 VariablesInFile.remove(ThisOne)
         ds1 = xl_read_flags(cf,ds,InLevel,VariablesInFile)
         if InLevel == 'L4':
-            for ThisOne in ['Fc_gapfilled','Fe_gapfilled','Fh_gapfilled']:
+            for ThisOne in ['Fc_gapfilled','Fe_gapfilled','Fh_gapfilled','Fc','Fe','Fh']:
                 if ThisOne in ds.series.keys():
                     ds1.series[ThisOne]['Flag'] = ds.series['Gap']['Data']
         ds = ds1
