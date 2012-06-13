@@ -50,7 +50,6 @@
             long_name = "Date/time in Excel format"                            # variable attribute - description
             units = "days"                                                     # variable attribute - units
             standard_name = "not defined"
-            ancillary_variables = ""
 # Radiation: Kipp and Zonen CNR4
     [[Flu]]
         [[[xl]]]
@@ -58,10 +57,8 @@
             name     = Flu_CNR4_Avg
         [[[Attr]]]
             ancillary_variables = "Flu QC flag"                           # strongly recommended
-            height = "20m"
             instrument = "Kipp and Zonen CNR4"                            # recommended
             long_name = "Up-welling long wave"                            # required
-            serial_number = ""
             standard_name = "surface_upwelling_longwave_flux_in_air"      # required
             units = "W/m2"                                                # required
     [[Fld]]
@@ -70,10 +67,8 @@
             name     = Fld_CNR4_Avg
         [[[Attr]]]
             ancillary_variables = "Fld QC flag"
-            height = "20m"
             instrument = "Kipp and Zonen CNR4"
             long_name = "Down-welling long wave"
-            serial_number = ""
             standard_name = "surface_downwelling_longwave_flux_in_air"
             units = "W/m2"
     [[Fsu]]
@@ -82,10 +77,8 @@
             name     = Fsu_CNR4_Avg
         [[[Attr]]]
             ancillary_variables = "Fsu QC flag"
-            height = "20m"
             instrument = "Kipp and Zonen CNR4"
             long_name = "Up-welling short wave"
-            serial_number = ""
             standard_name = "surface_upwelling_shortwave_flux_in_air"
             units = "W/m2"
     [[Fsd]]
@@ -94,10 +87,8 @@
             name     = Fsd_CNR4_Avg
         [[[Attr]]]
             ancillary_variables = "Fsd QC flag"
-            height = "20m"
             instrument = "Kipp and Zonen CNR4"
             long_name = "Down-welling short wave"
-            serial_number = ""
             standard_name = "surface_downwelling_shortwave_flux_in_air"
             units = "W/m2"
     [[Rs_CNR4]]
@@ -106,10 +97,8 @@
             name     = Rs_CNR4_Avg
         [[[Attr]]]
             ancillary_variables = "Rs_CNR4 QC flag"
-            height = "20m"
             instrument = "Kipp and Zonen CNR4"
             long_name = "Resistance of body temperature PT100"
-            serial_number = ""
             standard_name = "not defined"
             units = "ohms"
     [[Fsd_Li]]
@@ -118,11 +107,8 @@
             name     = SlrW_Avg
         [[[Attr]]]
             ancillary_variables = "Fsd_Li QC flag"
-            height = "20m"
-            instrument = "Li-cor ???"
             long_name = "Down-welling short wave"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "surface_downwelling_shortwave_flux_in_air"
             units = "W/m2"
 # Covariances: Temperature
     [[UzT]]
@@ -131,10 +117,8 @@
             name     = covUzTv
         [[[Attr]]]
             ancillary_variables = "UzT QC flag"
-            height = "20m"
             instrument = "CSAT"
             long_name = "Covariance of Uz and T"
-            serial_number = ""
             standard_name = "not defined"
             units = "mC/s"
     [[UxT]]
@@ -143,10 +127,8 @@
             name     = covUxTv
         [[[Attr]]]
             ancillary_variables = "UxT QC flag"
-            height = "20m"
             instrument = "CSAT"
             long_name = "Covariance of Ux and T"
-            serial_number = ""
             standard_name = "not defined"
             units = "mC/s"
     [[UyT]]
@@ -155,10 +137,7 @@
             name     = covUyTv
         [[[Attr]]]
             ancillary_variables = "UyT QC flag"
-            height = "20m"
-            instrument = "CSAT"
             long_name = "Covariance of Uy and T"
-            serial_number = ""
             standard_name = "not defined"
             units = "mC/s"
 # Covariances: H2O
@@ -168,10 +147,8 @@
             name     = covUzAh
         [[[Attr]]]
             ancillary_variables = "UzA QC flag"
-            height = "20m"
             instrument = "CSAT, Li-7500"
             long_name = "Covariance of Uz and H2O"
-            serial_number = ""
             standard_name = "not defined"
             units = "g/m2/s"
     [[UxA]]
@@ -180,10 +157,8 @@
             name     = covUxAh
         [[[Attr]]]
             ancillary_variables = "UxA QC flag"
-            height = "20m"
             instrument = "CSAT, Li-7500"
             long_name = "Covariance of Ux and H2O"
-            serial_number = ""
             standard_name = "not defined"
             units = "g/m2/s"
     [[UyA]]
@@ -192,10 +167,8 @@
             name     = covUyAh
         [[[Attr]]]
             ancillary_variables = "UyA QC flag"
-            height = "20m"
             instrument = "CSAT, Li-7500"
             long_name = "Covariance of Uy and H2O"
-            serial_number = ""
             standard_name = "not defined"
             units = "g/m2/s"
 # Covariances: CO2
@@ -205,10 +178,8 @@
             name     = covUzCc
         [[[Attr]]]
             ancillary_variables = "UzC QC flag"
-            height = "20m"
             instrument = "CSAT, Li-7500"
             long_name = "Covariance of Uz and CO2"
-            serial_number = ""
             standard_name = "not defined"
             units = "mg/m2/s"
     [[UxC]]
@@ -217,10 +188,8 @@
             name     = covUxCc
         [[[Attr]]]
             ancillary_variables = "UxC QC flag"
-            height = "20m"
             instrument = "CSAT, Li-7500"
             long_name = "Covariance of Ux and CO2"
-            serial_number = ""
             standard_name = "not defined"
             units = "mg/m2/s"
     [[UyC]]
@@ -229,10 +198,8 @@
             name     = covUyCc
         [[[Attr]]]
             ancillary_variables = "UyC QC flag"
-            height = "20m"
             instrument = "CSAT, Li-7500"
             long_name = "Covariance of Uy and CO2"
-            serial_number = ""
             standard_name = "not defined"
             units = "mg/m2/s"
 # Covariances and variances: Momentum
@@ -242,10 +209,8 @@
             name     = covUzUx
         [[[Attr]]]
             ancillary_variables = "UxUz QC flag"
-            height = "20m"
             instrument = "CSAT"
             long_name = "Covariance of Ux and Uz"
-            serial_number = ""
             standard_name = "not defined"
             units = "m2/s2"
     [[UyUz]]
@@ -254,10 +219,8 @@
             name     = covUzUy
         [[[Attr]]]
             ancillary_variables = "UyUz QC flag"
-            height = "20m"
             instrument = "CSAT"
             long_name = "Covariance of Uy and Uz"
-            serial_number = ""
             standard_name = "not defined"
             units = "m2/s2"
     [[UxUy]]
@@ -266,10 +229,8 @@
             name     = covUxUy
         [[[Attr]]]
             ancillary_variables = "UxUy QC flag"
-            height = "20m"
             instrument = "CSAT"
             long_name = "Covariance of Ux and Uy"
-            serial_number = ""
             standard_name = "not defined"
             units = "m2/s2"
     [[UzUz]]
@@ -278,10 +239,8 @@
             name     = covUzUz
         [[[Attr]]]
             ancillary_variables = "UzUz QC flag"
-            height = "20m"
             instrument = "CSAT"
             long_name = "Vertical wind speed (CSAT coordinates), variance"
-            serial_number = ""
             standard_name = "not defined"
             units = "m2/s2"
     [[UxUx]]
@@ -290,10 +249,8 @@
             name     = covUxUx
         [[[Attr]]]
             ancillary_variables = "UxUx QC flag"
-            height = "20m"
             instrument = "CSAT"
             long_name = "Longitudinal wind speed (CSAT coordinates), variance"
-            serial_number = ""
             standard_name = "not defined"
             units = "m2/s2"
     [[UyUy]]
@@ -302,10 +259,8 @@
             name     = covUyUy
         [[[Attr]]]
             ancillary_variables = "UyUy QC flag"
-            height = "20m"
             instrument = "CSAT"
             long_name = "Lateral wind speed component (CSAT coordinates), variance"
-            serial_number = ""
             standard_name = "not defined"
             units = "m2/s2"
 # Variances: Li-7500
@@ -315,10 +270,8 @@
             name     = covAhAh
         [[[Attr]]]
             ancillary_variables = "AhAh QC flag"
-            height = "20m"
             instrument = "Li-7500"
             long_name = "Absolute humidity, variance"
-            serial_number = ""
             standard_name = "not defined"
             units = "(g/m3)2"
     [[CcCc]]
@@ -327,10 +280,8 @@
             name     = covCcCc
         [[[Attr]]]
             ancillary_variables = "CcCc QC flag"
-            height = "20m"
             instrument = "Li-7500"
             long_name = "CO2 concentration, variance"
-            serial_number = ""
             standard_name = "not defined"
             units = "(mg/m3)2"
 # Meteorology: CSAT
@@ -340,11 +291,9 @@
             name     = Tv_CSAT_Avg
         [[[Attr]]]
             ancillary_variables = "Tv_CSAT QC flag"
-            height = "20m"
             instrument = "CSAT"
             long_name = "Virtual air temperature"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "air_potential_temperature"
             units = "C"
     [[Wd_CSAT]]
         [[[xl]]]
@@ -352,10 +301,8 @@
             name     = WD_CSAT_Compass_Avg
         [[[Attr]]]
             ancillary_variables = "Wd_CSAT QC flag"
-            height = "20m"
             instrument = "CSAT"
             long_name = "Wind direction"
-            serial_number = ""
             standard_name = "wind_from_direction"
             units = "deg"
     [[Ws_CSAT]]
@@ -364,10 +311,8 @@
             name     = WS_CSAT_Avg
         [[[Attr]]]
             ancillary_variables = "Ws_CSAT QC flag"
-            height = "20m"
             instrument = "CSAT"
             long_name = "Wind speed"
-            serial_number = ""
             standard_name = "wind_speed"
             units = "m/s"
     [[Ux]]
@@ -376,10 +321,8 @@
             name     = Ux_CSAT_Avg
         [[[Attr]]]
             ancillary_variables = "Ux QC flag"
-            height = "20m"
             instrument = "CSAT"
             long_name = "Wind speed, longitudinal component"
-            serial_number = ""
             standard_name = "not defined"
             units = "m/s"
     [[Uy]]
@@ -388,10 +331,8 @@
             name     = Uy_CSAT_Avg
         [[[Attr]]]
             ancillary_variables = "Uy QC flag"
-            height = "20m"
             instrument = "CSAT"
             long_name = "Wind speed, lateral component"
-            serial_number = ""
             standard_name = "not defined"
             units = "m/s"
     [[Uz]]
@@ -400,10 +341,8 @@
             name     = Uz_CSAT_Avg
         [[[Attr]]]
             ancillary_variables = "Uz QC flag"
-            height = "20m"
             instrument = "CSAT"
             long_name = "Wind speed, vertical component"
-            serial_number = ""
             standard_name = "not defined"
             units = "m/s"
     [[Diag_CSAT]]
@@ -412,10 +351,8 @@
             name     = CSAT_Warn
         [[[Attr]]]
             ancillary_variables = "Diag_CSAT QC flag"
-            height = "20m"
             instrument = "CSAT"
             long_name = "CSAT diagnostic value"
-            serial_number = ""
             standard_name = "not defined"
             units = "none"
 # Meteorology: LI-7500
@@ -425,10 +362,8 @@
             name     = Ah_7500_Avg
         [[[Attr]]]
             ancillary_variables = "Ah_7500 QC flag"
-            height = "20m"
             instrument = "Li-7500"
             long_name = "Absolute humidity, average"
-            serial_number = ""
             standard_name = "not defined"
             units = "g/m3"
     [[Cc_7500_Av]]
@@ -437,10 +372,8 @@
             name     = Cc_7500_Avg
         [[[Attr]]]
             ancillary_variables = "Cc_7500 QC flag"
-            height = "20m"
             instrument = "Li-7500"
             long_name = "CO2 concentration, average"
-            serial_number = ""
             standard_name = "not defined"
             units = "mg/m3"
     [[Ah_7500_Sd]]
@@ -451,10 +384,8 @@
                     Parent = AhAh
         [[[Attr]]]
             ancillary_variables = "Ah_7500_Sd QC flag"
-            height = "20m"
             instrument = "Li-7500"
             long_name = "Absolute humidity, standard deviation"
-            serial_number = ""
             standard_name = "not defined"
             units = "g/m3"
     [[Cc_7500_Sd]]
@@ -465,10 +396,8 @@
                     Parent = CcCc
         [[[Attr]]]
             ancillary_variables = "Cc_7500_Sd QC flag"
-            height = "20m"
             instrument = "Li-7500"
             long_name = "CO2 concentration, standard deviation"
-            serial_number = ""
             standard_name = "not defined"
             units = "mg/m3"
     [[ps]]
@@ -477,10 +406,8 @@
             name     = ps_7500_Avg
         [[[Attr]]]
             ancillary_variables = "ps QC flag"
-            height = "20m"
             instrument = "Li-7500"
             long_name = "Air pressure, standard deviation"
-            serial_number = ""
             standard_name = "surface_air_pressure"
             units = "kPa"
     [[Diag_7500]]
@@ -489,10 +416,8 @@
             name     = 7500_Warn
         [[[Attr]]]
             ancillary_variables = "Diag_7500 QC flag"
-            height = "20m"
             instrument = "Li-7500"
             long_name = "Li-7500 diagnostic value"
-            serial_number = ""
             standard_name = "not defined"
             units = "none"
     [[AGC_7500]]
@@ -501,10 +426,8 @@
             name     = AGC_7500_Avg
         [[[Attr]]]
             ancillary_variables = "AGC_7500 QC flag"
-            height = "20m"
             instrument = "Li-7500"
             long_name = "Li-7500 automatic gain control"
-            serial_number = ""
             standard_name = "not defined"
             units = "none"
 # Meteorology: HMP45c
@@ -519,7 +442,6 @@
             height = "2m"
             instrument = "HMP45C"
             long_name = "Absolute humidity, average"
-            serial_number = ""
             standard_name = "not defined"
             units = "g/m3"
 #***
@@ -533,8 +455,7 @@
             height = "2m"
             instrument = "HMP45C"
             long_name = "Air temperature, average"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "air_temperature"
             units = "C"
 # Meteorology: RMYoung
     [[Ws_RMY_01]]
@@ -546,8 +467,7 @@
             height = "2m"
             instrument = "RM Young Wind Sentry"
             long_name = "Wind speed, average"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "wind_speed"
             units = "m/s"
     [[Wd_RMY_01]]
         [[[xl]]]
@@ -558,8 +478,7 @@
             height = "2m"
             instrument = "RM Young Wind Sentry"
             long_name = "Wind direction, average"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "wind_from_direction"
             units = "deg"
     [[Ws_RMY_02]]
         [[[xl]]]
@@ -570,8 +489,7 @@
             height = "10m"
             instrument = "RM Young Wind Sentry"
             long_name = "Wind speed, average"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "wind_speed"
             units = "m/s"
     [[Wd_RMY_02]]
         [[[xl]]]
@@ -582,8 +500,7 @@
             height = "10m"
             instrument = "RM Young Wind Sentry"
             long_name = "Wind direction, average"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "wind_from_direction"
             units = "deg"
 # Meteorology: Rain
     [[Rain]]
@@ -595,8 +512,7 @@
             height = "0.6m"
             instrument = "Hydrological Services CS7000"
             long_name = "Rainfall, 30 minute total"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "rainfall_amount"
             units = "mm"
 # Soil: Ground heat flux
     [[Fg_01a]]
@@ -608,8 +524,7 @@
             height = "-0.08m"
             instrument = "Huskeflux HFP01"
             long_name = "Ground heat flux, sensor 1a"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "downward_heat_flux_in_soil"
             units = "W/m2"
     [[Fg_01b]]
         [[[xl]]]
@@ -620,8 +535,7 @@
             height = "-0.08m"
             instrument = "Huskeflux HFP01"
             long_name = "Ground heat flux, sensor 1b"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "downward_heat_flux_in_soil"
             units = "W/m2"
     [[Fg_01c]]
         [[[xl]]]
@@ -632,8 +546,7 @@
             height = "-0.08m"
             instrument = "Huskeflux HFP01"
             long_name = "Ground heat flux, sensor 1c"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "downward_heat_flux_in_soil"
             units = "W/m2"
 # Soil: Soil moisture
 #***
@@ -646,8 +559,7 @@
             height = "??m"
             instrument = "Campbell Scientific CS616"
             long_name = "Soil water fraction, sensor 1"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "soil_moisture_content"
             units = "frac"
 #***
     [[Sws_01b]]
@@ -659,8 +571,7 @@
             height = "??m"
             instrument = "Campbell Scientific CS616"
             long_name = "Soil water fraction, sensor 2"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "soil_moisture_content"
             units = "frac"
 #***
     [[Sws_01c]]
@@ -672,8 +583,7 @@
             height = "??m"
             instrument = "Campbell Scientific CS616"
             long_name = "Soil water fraction, sensor 3"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "soil_moisture_content"
             units = "frac"
     [[Sws_04]]
         [[[xl]]]
@@ -684,8 +594,7 @@
             height = "??m"
             instrument = "Campbell Scientific CS616"
             long_name = "Soil water fraction, sensor 4"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "soil_moisture_content"
             units = "frac"
     [[Sws_05]]
         [[[xl]]]
@@ -696,8 +605,7 @@
             height = "??m"
             instrument = "Campbell Scientific CS616"
             long_name = "Soil water fraction, sensor 5"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "soil_moisture_content"
             units = "frac"
     [[Sws_06]]
         [[[xl]]]
@@ -708,8 +616,7 @@
             height = "??m"
             instrument = "Campbell Scientific CS616"
             long_name = "Soil water fraction, sensor 6"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "soil_moisture_content"
             units = "frac"
     [[Sws_07]]
         [[[xl]]]
@@ -720,8 +627,7 @@
             height = "??m"
             instrument = "Campbell Scientific CS616"
             long_name = "Soil water fraction, sensor 7"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "soil_moisture_content"
             units = "frac"
     [[Sws_08]]
         [[[xl]]]
@@ -732,8 +638,7 @@
             height = "??m"
             instrument = "Campbell Scientific CS616"
             long_name = "Soil water fraction, sensor 8"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "soil_moisture_content"
             units = "frac"
     [[Sws_09]]
         [[[xl]]]
@@ -744,8 +649,7 @@
             height = "??m"
             instrument = "Campbell Scientific CS616"
             long_name = "Soil water fraction, sensor 9"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "soil_moisture_content"
             units = "frac"
     [[Sws_10]]
         [[[xl]]]
@@ -756,8 +660,7 @@
             height = "??m"
             instrument = "Campbell Scientific CS616"
             long_name = "Soil water fraction, sensor 10"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "soil_moisture_content"
             units = "frac"
     [[Sws_11]]
         [[[xl]]]
@@ -768,8 +671,7 @@
             height = "??m"
             instrument = "Campbell Scientific CS616"
             long_name = "Soil water fraction, sensor 11"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "soil_moisture_content"
             units = "frac"
     [[Sws_12]]
         [[[xl]]]
@@ -780,8 +682,7 @@
             height = "??m"
             instrument = "Campbell Scientific CS616"
             long_name = "Soil water fraction, sensor 12"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "soil_moisture_content"
             units = "frac"
     [[Sws_13]]
         [[[xl]]]
@@ -792,8 +693,7 @@
             height = "??m"
             instrument = "Campbell Scientific CS616"
             long_name = "Soil water fraction, sensor 13"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "soil_moisture_content"
             units = "frac"
     [[Sws_14]]
         [[[xl]]]
@@ -804,8 +704,7 @@
             height = "??m"
             instrument = "Campbell Scientific CS616"
             long_name = "Soil water fraction, sensor 14"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "soil_moisture_content"
             units = "frac"
     [[Sws_15]]
         [[[xl]]]
@@ -816,8 +715,7 @@
             height = "??m"
             instrument = "Campbell Scientific CS616"
             long_name = "Soil water fraction, sensor 15"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "soil_moisture_content"
             units = "frac"
     [[Sws_16]]
         [[[xl]]]
@@ -828,8 +726,7 @@
             height = "??m"
             instrument = "Campbell Scientific CS616"
             long_name = "Soil water fraction, sensor 16"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "soil_moisture_content"
             units = "frac"
 # Soil: Soil temperature
     [[Ts_01a]]
@@ -841,8 +738,7 @@
             height = "-0.08m"
             instrument = "Campbell Scientific TCAV"
             long_name = "Soil temperature, sensor 1"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "soil_temperature"
             units = "C"
     [[Ts_01b]]
         [[[xl]]]
@@ -853,8 +749,7 @@
             height = "-0.08m"
             instrument = "Campbell Scientific TCAV"
             long_name = "Soil temperature, sensor 2"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "soil_temperature"
             units = "C"
     [[Ts_01c]]
         [[[xl]]]
@@ -865,8 +760,7 @@
             height = "-0.08m"
             instrument = "Campbell Scientific TCAV"
             long_name = "Soil temperature, sensor 3"
-            serial_number = ""
-            standard_name = "not defined"
+            standard_name = "soil_temperature"
             units = "C"
 # Housekeeping
     [[Vbat]]
@@ -877,7 +771,6 @@
             ancillary_variables = "None"
             instrument = "Campbell Scientific CR3000 logger"
             long_name = "Battery voltage at logger"
-            serial_number = ""
             standard_name = "not defined"
             units    = "V"
     [[Tpanel]]
@@ -888,6 +781,5 @@
             ancillary_variables = "None"
             instrument = "Campbell Scientific CR3000 logger"
             long_name = "Panel temperature at logger"
-            serial_number = ""
             standard_name = "not defined"
             units    = "C"
