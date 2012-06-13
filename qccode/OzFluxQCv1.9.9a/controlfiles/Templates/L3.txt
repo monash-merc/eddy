@@ -47,7 +47,8 @@
 #
 [General]
 Platform = PC    # Mac or PC
-#FunctionList = "['do_linear', 'MergeSeriesAhTa', 'TaFromTv', 'CalculateMetVars', 'CoordRotation2D', 'MassmanStandard', 'CalculateFluxes', 'FhvtoFh', 'WPL', 'CalculateNetRadiation', 'MergeSeriesFn', 'PreCorrectSoilAverage', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks','do_Ah7500check']"
+# To run the Massman correction for spectral attenuation, uncomment the following line:
+#FunctionList = "['do_linear', 'MergeSeriesAhTa', 'TaFromTv', 'CalculateMetVars', 'CoordRotation2D', 'Massman', 'CalculateFluxes', 'FhvtoFh', 'WPL', 'CalculateNetRadiation', 'MergeSeriesFn', 'SoilAverage', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks','do_Ah7500check']"
 
 [Files]
     [[L2]]
@@ -77,13 +78,14 @@ Platform = PC    # Mac or PC
 
 [Output]
 #***
-L3 = "['Fm', 'Fc', 'Fe', 'Fh', 'Fg', 'Fn', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustar', 'L', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'theta', 'eta', 'u', 'v', 'w', 'UxUx', 'UxUy', 'uw', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'vw', 'AhAh', 'CcCc', 'wA', 'wC', 'wT', 'Ts', 'Sws', 'Ah', 'q', 'e', 'rho_a', 'rho_d', 'Ta', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT', 'Rain']"
+L3 = "['Fm', 'Fc', 'Fe', 'Fh', 'Fg', 'Fn', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustar', 'L', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'theta', 'eta', 'u', 'v', 'w', 'uu', 'uv', 'uw', 'uA', 'uC', 'uT', 'vA', 'vC', 'vT', 'vv', 'vw', 'AhAh', 'CcCc', 'wA', 'wC', 'wT', 'Ts', 'Sws', 'Ah', 'q', 'e', 'rhom', 'rhod', 'esat', 'Ta', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'Cc_7500_Av', 'Ws_CSAT', 'Wd_CSAT', 'Rain']"
 
 [Variables]
 # Radiation
     [[Fsd]]
-        [[[MergeSeries]]]
-            Source     = "['Fsd','Fsd_Li']"
+#        [[[MergeSeries]]]
+            Source     = "['Fsd']"
+#            Source     = "['Fsd','Fsd_Li']"
         [[[RangeCheck]]]
             Lower      = "[-10]*12"
             Upper      = "[1500]*12"

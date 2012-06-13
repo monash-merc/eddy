@@ -26,8 +26,9 @@
 #
 [General]
 Platform = PC    # Mac or PC
+# Following is a list of optional pre-sums functions to apply.  No default functions are available at L4
 FunctionList = "['Met','Sums']"
-# FunctionList alternate:  FunctionList = "['Met','Sums','MergeSeriesWS','rstFromPenmanMonteith']"
+# FunctionList alternate:  #FunctionList = "['Met','Sums','MergeSeriesWS','rstFromPenmanMonteith']"
 
 [Files]
     [[L3]]
@@ -50,7 +51,7 @@ zmd = 5           # instrument height above displacement plane
 z0 = 1            # roughness length
 
 [Variables]
-    [[Ah_EC]]
+    [[Ah]]
         [[[GapFillFromClimatology]]]
             FileName = D:/ARCSpatial/Sites/AdelaideRiver/Data/Processed/2009/Climatology_2009_20100713.xls
         [[[RangeCheck]]]
@@ -124,7 +125,7 @@ z0 = 1            # roughness length
     [[Sws_50cm]]
         [[[GapFillFromClimatology]]]
             FileName = D:/ARCSpatial/Sites/AdelaideRiver/Data/Processed/2009/Climatology_2009_20100713.xls
-    [[Ta_EC]]
+    [[Ta]]
         [[[GapFillFromClimatology]]]
             FileName = D:/ARCSpatial/Sites/AdelaideRiver/Data/Processed/2009/Climatology_2009_20100713.xls
         [[[RangeCheck]]]
@@ -211,7 +212,7 @@ z0 = 1            # roughness length
             Variables = "['Fh','Fe_wpl','Fc_wpl','ustar','Fm']"
         [[[3]]]
             Title = "Air temperature, humidity and CO2"
-            Variables = "['Ta_EC','Ah_EC','Cc_7500_Av']"
+            Variables = "['Ta','Ah','Cc_7500_Av']"
         [[[4]]]
             Title = "Soil temperature, water content and heat flux"
             Variables = "['Ts','Sws_5cm','Sws_50cm','Fg']"

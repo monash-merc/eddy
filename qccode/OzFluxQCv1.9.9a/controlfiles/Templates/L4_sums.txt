@@ -32,13 +32,16 @@ FunctionList = "['Sums']"
         xlFlagFileName = Gingin_0332012_flagstats_L4.xls
 
 [Output]
-L4 = "['Fm', 'Fc_gapfilled', 'Fe_gapfilled', 'Fh_gapfilled', 'Fg_Av', 'Fnr', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustarM', 'LM', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'theta', 'eta', 'Ux', 'u', 'Uy', 'v', 'Uz', 'w', 'UxUx', 'UxUy', 'uw', 'UxA', 'UxC', 'UxT', 'UyA', 'UyC', 'UyT', 'UyUy', 'vw', 'AhAh', 'CcCc', 'UxUz', 'UyUz', 'UzT', 'UzA', 'UzC', 'wA', 'wC', 'wT', 'Ts_Av', 'Sws_Av', 'Ah_EC', 'q', 'e_HMP', 'RH_HMP', 'rho_a', 'rho_d', 'es_HMP', 'Ta_EC', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Rain']"
+L4 = "['Fm', 'Fc', 'Fe', 'Fh', 'Fg', 'Fn', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustar', 'L', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'theta', 'eta', 'u', 'v', 'w', 'uu', 'uv', 'uw', 'uA', 'uC', 'uT', 'vA', 'vC', 'vT', 'vv', 'vw', 'AhAh', 'CcCc', 'wA', 'wC', 'wT', 'Ts', 'Sws', 'Ah', 'q', 'e', 'rhom', 'rhod', 'esat', 'Ta', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'Cc_7500_Av', 'Ws_CSAT', 'Wd_CSAT', 'Rain']"
 
 
 [Variables]
     [[Fh_rmv]]
     [[Fe_wpl]]
     [[Fc_wpl]]
+#    [[Ws]]
+#        [[[MergeSeries]]]
+#            Source = "['Ws_WS_01','Ws_CSAT']"      #  Default
 
 
 #[PlotSpec]      # Specify the height and width of plot windows by uncommenting all three lines.  Defaults are PlotWidth = 13 and PlotHeight = 9
@@ -48,7 +51,7 @@ L4 = "['Fm', 'Fc_gapfilled', 'Fe_gapfilled', 'Fh_gapfilled', 'Fg_Av', 'Fnr', 'Fs
 [Plots]
     [[31]]
         Title = "Fluxes"
-        Variables = "['Fh_rv','Fe_wpl','Fc_wpl']"
+        Variables = "['Fh','Fe','Fc']"
 #        YLMin = "['-50','-50','-1']"     # dimensions of the individual plots
 #        YLMax = "['750','500','1']"      # all four lines must be uncommented to use
 #        YRMin = "['-50','-50','-1']"     # the number of items in these four lists must be equal

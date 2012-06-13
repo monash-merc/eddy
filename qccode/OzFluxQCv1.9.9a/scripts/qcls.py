@@ -184,7 +184,7 @@ def l3qc(cf,ds2):
             qcts.MergeSeries(ds3,'Ws',srclist,[0,10])
     
     # average ground heat flux before correcting for storage above sensors
-    if 'PreCorrectSoilAverage' in l3functions:
+    if 'PostCorrectSoilAverage' not in l3functions:
         srclist = qcutils.GetAverageList(cf,'Fg',default=['Fg_01a'])
         if len(srclist) > 0:
             qcts.AverageSeriesByElements(ds3,'Fg',srclist)

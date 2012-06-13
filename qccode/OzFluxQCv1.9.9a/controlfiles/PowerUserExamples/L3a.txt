@@ -1,7 +1,8 @@
 [General]
-#Standard (Default) FunctionList = "['do_linear', 'MergeSeriesAhTa', 'TaFromTv', 'CalculateMetVars', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'WPL', 'CalculateNetRadiation', 'MergeSeriesFn', 'PreCorrectSoilAverage', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks','do_Ah7500check']"
-FunctionList   = "['CorrectSWC', 'do_linear', 'CalculateMetVars', 'CoordRotation2D', 'Massman', 'CalculateFluxesRM', 'FhvtoFh', 'WPLcov', 'MergeSeriesWS', 'CorrectFgForStorage', 'PostCorrectSoilAverage','rstFromPenmanMonteith', 'do_qcchecks', 'gaps','do_Ah7500check']"
-RotateFlag   = Yes
+#Standard (Default) FunctionList = "['do_linear', 'MergeSeriesAhTa', 'TaFromTv', 'CalculateMetVars', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'WPL', 'CalculateNetRadiation', 'MergeSeriesFn', 'SoilAverage', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks','do_Ah7500check']"
+FunctionList   = "['CorrectSWC', 'do_linear', 'CalculateMetVars', 'CoordRotation2D', 'Massman', 'CalculateFluxes', 'FhvtoFh', 'WPLcov', 'MergeSeriesWS', 'CorrectFgForStorage', 'PostCorrectSoilAverage','rstFromPenmanMonteith', 'do_qcchecks', 'gaps','do_Ah7500check']"
+MassmanFlag  = True
+RotateFlag   = True
 netCDFv3 = False
 Platform = Mac    # Mac or PC
 

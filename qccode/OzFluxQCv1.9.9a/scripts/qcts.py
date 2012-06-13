@@ -1109,14 +1109,6 @@ def do_l4qc(cf,ds3,level):
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList'):
         l4functions = ast.literal_eval(cf['General']['FunctionList'])
         WorkList = ast.literal_eval(cf['General']['FunctionList'])
-        if 'Met' in WorkList:
-            WorkList.remove('Met')
-            ds4 = copy.deepcopy(ds3)
-            do_metgaps(cf,ds4)
-            if 'SOLO' in WorkList:
-                l4functions.remove('SOLO')
-                WorkList.remove('SOLO')
-            ds4.globalattributes['Functions'] = ['InterpolateOverMissing', 'GapFillFromAlternate', 'GapFillFromClimatology', 'GapFillFromRatios', 'ReplaceOnDiff', 'UstarFromFh', 'ReplaceWhereMissing', 'do_qcchecks']
         if 'SOLO' in WorkList:
             WorkList.remove('SOLO')
             ds4 = qcio.nc_read_series(cf,level)
@@ -1128,14 +1120,19 @@ def do_l4qc(cf,ds3,level):
             ds4.globalattributes['Functions'].append('CalculateMetVars')
             if 'CalculateMetVars' in WorkList:
                 WorkList.remove('CalculateMetVars')
+        if 'Met' in WorkList:
+            WorkList.remove('Met')
+            if 'SOLO' not in l4functions:
+                ds4 = copy.deepcopy(ds3)
+            do_metgaps(cf,ds4)
+            ds4.globalattributes['Functions'] = ['InterpolateOverMissing', 'GapFillFromAlternate', 'GapFillFromClimatology', 'GapFillFromRatios', 'ReplaceOnDiff', 'UstarFromFh', 'ReplaceWhereMissing', 'do_qcchecks']
         if 'Sums' in WorkList:
-            do_sums(cf,ds4,l4functions,WorkList)
-            if 'Met' in l4functions or 'SOLO' in l4functions:
-                for i in range(len(WorkList)):
-                    ds4.globalattributes['Functions'].append(WorkList[i])
-            else:
+            if 'SOLO' not in l4functions and 'Met' not in l4functions:
                 ds4 = copy.deepcopy(ds3)
                 ds4.globalattributes['Functions'] = l4functions
+            else:
+                ds4.globalattributes['Functions'].append(WorkList[i])
+            do_sums(cf,ds4,l4functions,WorkList)
         if 'Met' not in l4functions and 'SOLO' not in l4functions and 'Sums' not in l4functions:
             log.error('Met, SOLO or Sums not located in FunctionList')
             ds4 = copy.deepcopy(ds3)
