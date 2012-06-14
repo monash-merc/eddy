@@ -10,6 +10,13 @@ import xlwt
 
 log = logging.getLogger('qc.utils')
 
+def bp(fx,tao):
+    """
+    Function to calculate the b and p coeficients of the Massman frequency correction.
+    """
+    bp = 2 * c.Pi * fx * tao
+    return bp
+
 def cfkeycheck(cf,Base='Variables',ThisOne=[],key=[]):
     if len(ThisOne) == 0:
         return
@@ -282,29 +289,14 @@ def MAtoSeries(Series):
         Series = numpy.ma.filled(Series,float(-9999))
     return Series, WasMA
 
-def rMom(bMom, pMom, alpha):
+def r(b, p, alpha):
     """
-    Function to calculate the rMom coeficient of the Massman frequency correction.
+    Function to calculate the r coeficient of the Massman frequency correction.
     """
-    rMom = ((bMom ** alpha) / (bMom ** alpha + 1)) * \
-           ((bMom ** alpha) / (bMom ** alpha + pMom ** alpha)) * \
-           (1 / (pMom ** alpha + 1))
-    return rMom
-
-def rwIRGA(bScalar, pwIRGA, alpha):
-    rwIRGA = ((bScalar ** alpha) / (bScalar ** alpha + 1)) * \
-             ((bScalar ** alpha) / (bScalar ** alpha + pwIRGA ** alpha)) * \
-             (1 / (pwIRGA ** alpha + 1))
-    return rwIRGA
-
-def rwT(bScalar, pwT, alpha):
-    """
-    Function to calculate the rwT coeficient of the Massman frequency correction.
-    """
-    rwT = ((bScalar ** alpha) / (bScalar ** alpha + 1)) * \
-          ((bScalar ** alpha) / (bScalar ** alpha + pwT ** alpha)) * \
-          (1 / (pwT ** alpha + 1))
-    return rwT
+    r = ((b ** alpha) / (b ** alpha + 1)) * \
+           ((b ** alpha) / (b ** alpha + p ** alpha)) * \
+           (1 / (p ** alpha + 1))
+    return r
 
 def SeriestoMA(Series):
     """

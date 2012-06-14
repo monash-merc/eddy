@@ -231,8 +231,21 @@ def gaps(cf,ds,Fc_in='Fc',Fe_in='Fe',Fh_in='Fh'):
     Fe,f = qcutils.GetSeriesasMA(ds,Fe_in)
     Fh,f = qcutils.GetSeriesasMA(ds,Fh_in)
     index = numpy.ma.where((Fc.mask==True) | (Fe.mask==True) | (Fh.mask==True))[0]
+    for i in range(len(index)):
+        j = index[i]
+        if Fc.mask[j]==False:
+            Fc.mask[j]=True
+            Fc[j] = numpy.float64(-9999)
+            ds.series[Fc_in]['Flag'][j] = 19
+        if Fe.mask[j]==False:
+            Fe.mask[j]=True
+            Fe[j] = numpy.float64(-9999)
+            ds.series[Fe_in]['Flag'][j] = 19            
+        if Fh.mask[j]==False:
+            Fh.mask[j]=True
+            Fh[j] = numpy.float64(-9999)
+            ds.series[Fh_in]['Flag'][j] = 19
     for ThisOne in [Fc_in,Fe_in,Fh_in]:
-        ds.series[ThisOne]['Flag'][index] = 19
-        ds.series[ThisOne]['Data'][index] = numpy.float64(-9999)
+        ds.series[ThisOne]['Data']=numpy.ma.filled(Fc,float(-9999))
     log.info(' Finished gap co-ordination')
 

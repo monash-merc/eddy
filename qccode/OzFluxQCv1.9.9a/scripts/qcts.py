@@ -1131,7 +1131,8 @@ def do_l4qc(cf,ds3,level):
                 ds4 = copy.deepcopy(ds3)
                 ds4.globalattributes['Functions'] = l4functions
             else:
-                ds4.globalattributes['Functions'].append(WorkList[i])
+                for i in range(len(WorkList)):
+                    ds4.globalattributes['Functions'].append(WorkList[i])
             do_sums(cf,ds4,l4functions,WorkList)
         if 'Met' not in l4functions and 'SOLO' not in l4functions and 'Sums' not in l4functions:
             log.error('Met, SOLO or Sums not located in FunctionList')
@@ -2231,13 +2232,13 @@ def MassmanStandard(cf,ds,Ta_in='Ta',Ah_in='Ah',ps_in='ps',ustar_in='ustar',usta
                  + ((lLat / (1.1 * u)) ** 2) + ((lLong / (1.05 * u)) ** 2)
     tao_b = c.Tb / 2.8
     # calculate coefficients
-    bMom = 2 * c.Pi * fxMom * tao_b
-    bScalar = 2 * c.Pi * fxScalar * tao_b
-    pMom = 2 * c.Pi * fxMom * tao_eMom
-    pwT = 2 * c.Pi * fxScalar * tao_ewT
+    bMom = qcutils.bp(fxMom,tao_b)
+    bScalar = qcutils.bp(fxScalar,tao_b)
+    pMom = qcutils.bp(fxMom,tao_eMom)
+    pwT = qcutils.bp(fxScalar,tao_ewT)
     # calculate corrections for momentum and scalars
-    rMom = qcutils.rMom(bMom, pMom, alpha)        # I suspect that rMom and rwT are the same functions
-    rwT = qcutils.rwT(bScalar, pwT, alpha)
+    rMom = qcutils.r(bMom, pMom, alpha)        # I suspect that rMom and rwT are the same functions
+    rwT = qcutils.r(bScalar, pwT, alpha)
     # determine approximately-true Massman fluxes
     uwm = uw / rMom
     vwm = vw / rMom
@@ -2254,15 +2255,15 @@ def MassmanStandard(cf,ds,Ta_in='Ta',Ah_in='Ah',ps_in='ps',ustar_in='ustar',usta
     fxMom = nxMom * (u / zmd)
     fxScalar = nxScalar * (u / zmd)
     # calculate coefficients
-    bMom = 2 * c.Pi * fxMom * tao_b
-    bScalar = 2 * c.Pi * fxScalar * tao_b
-    pMom = 2 * c.Pi * fxMom * tao_eMom
-    pwT = 2 * c.Pi * fxScalar * tao_ewT
-    pwIRGA = 2 * c.Pi * fxScalar * tao_ewIRGA
+    bMom = qcutils.bp(fxMom,tao_b)
+    bScalar = qcutils.bp(fxScalar,tao_b)
+    pMom = qcutils.bp(fxMom,tao_eMom)
+    pwT = qcutils.bp(fxScalar,tao_ewT)
+    pwIRGA = qcutils.bp(fxScalar,tao_ewIRGA)
     # calculate corrections for momentum and scalars
-    rMom = qcutils.rMom(bMom, pMom, alpha)
-    rwT = qcutils.rwT(bScalar, pwT, alpha)
-    rwIRGA = qcutils.rwIRGA(bScalar, pwIRGA, alpha)
+    rMom = qcutils.r(bMom, pMom, alpha)
+    rwT = qcutils.r(bScalar, pwT, alpha)
+    rwIRGA = qcutils.r(bScalar, pwIRGA, alpha)
     # determine true fluxes
     uwM = uw / rMom
     vwM = vw / rMom
