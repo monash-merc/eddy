@@ -245,7 +245,8 @@ def gaps(cf,ds,Fc_in='Fc',Fe_in='Fe',Fh_in='Fh'):
             Fh.mask[j]=True
             Fh[j] = numpy.float64(-9999)
             ds.series[Fh_in]['Flag'][j] = 19
-    for ThisOne in [Fc_in,Fe_in,Fh_in]:
-        ds.series[ThisOne]['Data']=numpy.ma.filled(Fc,float(-9999))
+    ds.series[Fc_in]['Data']=numpy.ma.filled(Fc,float(-9999))
+    ds.series[Fe_in]['Data']=numpy.ma.filled(Fe,float(-9999))
+    ds.series[Fh_in]['Data']=numpy.ma.filled(Fh,float(-9999))
     log.info(' Finished gap co-ordination')
 

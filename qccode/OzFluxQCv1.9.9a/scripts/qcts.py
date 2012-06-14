@@ -290,7 +290,7 @@ def CalculateFluxes(cf,ds,l3functions,Ta_name='Ta',ps_name='ps',Ah_name='Ah',wT_
         Fh = rhom * c.Cpd * wT
         qcutils.CreateSeries(ds,Fh_out,Fh,FList=[wT_in],Descr='Sensible heat flux, rotated to natural wind coordinates'+long_name,Units='W/m2',Standard='surface_upward_sensible_heat_flux')
     else:
-        log.error('  CalculateFluxes: wT not found in ds.series, Fh not calculated')
+        log.error('  CalculateFluxes: '+wT_in+' not found in ds.series, Fh not calculated')
     if wA_in in ds.series.keys():
         wA,f = qcutils.GetSeriesasMA(ds,wA_in)
         if 'Lv' in ds.series.keys():
@@ -1353,7 +1353,7 @@ def Fc_WPLcov(cf,ds,Fc_wpl_out='Fc',wC_in='wC',Fh_in='Fh',wA_in='wA',Ta_in='Ta',
         Fc_wpl_out = Cargs[0]
         wC_in = Cargs[1]
         Fh_in = Cargs[2]
-        Fe_wpl_in = Cargs[3]
+        wA_in = Cargs[3]
         Ta_in = Cargs[4]
         Ah_in = Cargs[5]
         Cc_in = Cargs[6]
@@ -1500,7 +1500,7 @@ def Fe_WPLcov(cf,ds,Fe_wpl_out='Fe',wA_in='wA',Fh_in='Fh',Ta_in='Ta',Ah_in='Ah',
     if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='EWPL'):
         Eargs = ast.literal_eval(cf['FunctionArgs']['EWPL'])
         Fe_wpl_out = Eargs[0]
-        Fe_raw_in = Eargs[1]
+        wA_in = Eargs[1]
         Fh_in = Eargs[2]
         Ta_in = Eargs[3]
         Ah_in = Eargs[4]
