@@ -11,6 +11,7 @@ import datetime
 from matplotlib.dates import date2num
 import meteorologicalfunctions as mf
 import numpy
+import qcck
 import qcio
 import qcts
 import qcutils
@@ -553,16 +554,19 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
                     SubOutList.append(COut[listindex])
         elif ThisOne == 'PM':
             if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
-                get_stomatalresistance(cf,ds)
-                Gst_mmol,f = qcutils.GetSeriesasMA(ds,'Gst')   # mmol/m2-s
-                Gst_mol =  Gst_mmol * 1800 / 1000                 # mol/m2-30min for summing
-                qcutils.CreateSeries(ds,'Gst_mol',Gst_mol,FList=['Gst'],Descr='Cumulative 30-min Bulk Stomatal Conductance',Units='mol/m2')
-                PMout = 'Gst_mol'
-                if PMout not in OutList:
-                    OutList.append(PMout)
-                if ThisOne in SubSumList:
-                    log.error('  Subsum: Negative bulk stomatal conductance not defined')
-                SumOutList.append(PMout)
+                if 'Gst' not in ds.series.keys():
+                    SumList.remove('PM')
+                    info.error('  Penman-Monteith Daily sum: input Source not located')
+                else:
+                    Gst_mmol,f = qcutils.GetSeriesasMA(ds,'Gst')   # mmol/m2-s
+                    Gst_mol =  Gst_mmol * 1800 / 1000                 # mol/m2-30min for summing
+                    qcutils.CreateSeries(ds,'Gst_mol',Gst_mol,FList=['Gst'],Descr='Cumulative 30-min Bulk Stomatal Conductance',Units='mol/m2')
+                    PMout = 'Gst_mol'
+                    if PMout not in OutList:
+                        OutList.append(PMout)
+                    if ThisOne in SubSumList:
+                        log.error('  Subsum: Negative bulk stomatal conductance not defined')
+                    SumOutList.append(PMout)
             else:
                 info.error('  Penman-Monteith Daily sums: input Source not defined')
         else:
@@ -585,12 +589,15 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
                 MinMaxOutList.append(COut[listindex])
         elif ThisOne == 'PM':
             if ThisOne not in SumList:
-                if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
-                        get_stomatalresistance(cf,ds,'L4')
+                if 'Gst' not in ds.series.keys() or 'rst' not in ds.series.keys():
+                    MinMaxList.remove('PM')
+                    PMout = []
+                    info.error('  Penman-Monteith Daily min/max: input Source not located')
                 else:
-                    info.error('  Penman-Monteith Daily min/max: input Source not defined')
+                    PMout = ['rst','Gst']
             else:
                 PMout = ['rst','Gst']
+            if len(PMout) > 0:
                 for listindex in range(0,2):
                     if PMout[listindex] not in OutList:
                         OutList.append(PMout[listindex])
@@ -604,18 +611,16 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
         if ThisOne == 'Energy' or ThisOne == 'Carbon' or ThisOne == 'Radiation':
             log.error(' Mean error: '+ThisOne+' to be placed in SumList')
         elif ThisOne == 'PM':
-            if ThisOne not in MinMaxList:
-                if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
-                    get_stomatalresistance(cf,ds,'L4')
-                    PMout = ['rst','Gst']
-                    for listindex in range(0,2):
-                        if PMout[listindex] not in OutList:
-                            OutList.append(PMout[listindex])
-                        MeanOutList.append(PMout[listindex])
+            if ThisOne not in MinMaxList and ThisOne not in SumList:
+                if 'Gst' not in ds.series.keys() or 'rst' not in ds.series.keys():
+                    MeanList.remove('PM')
+                    PMout = []
+                    info.error('  Penman-Monteith Daily mean: input Source not located')
                 else:
-                    info.error('  Penman-Monteith Daily mean: input Source not defined')
+                    PMout = ['rst','Gst']
             else:
                 PMout = ['rst','Gst']
+            if len(PMout) > 0:
                 for listindex in range(0,2):
                     if PMout[listindex] not in OutList:
                         OutList.append(PMout[listindex])
@@ -624,8 +629,7 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
             MeanOutList.append(ThisOne)
             if ThisOne not in OutList:
                 OutList.append(ThisOne)
-
-
+    
     if len(SoilList) > 0:
         for ThisOne in SoilList:
             if qcutils.cfkeycheck(cf,Base='Sums',ThisOne=ThisOne):
@@ -1126,6 +1130,18 @@ def do_l4qc(cf,ds3,level):
                 ds4 = copy.deepcopy(ds3)
             do_metgaps(cf,ds4)
             ds4.globalattributes['Functions'] = ['InterpolateOverMissing', 'GapFillFromAlternate', 'GapFillFromClimatology', 'GapFillFromRatios', 'ReplaceOnDiff', 'UstarFromFh', 'ReplaceWhereMissing', 'do_qcchecks']
+        if 'Met' not in l4functions and 'SOLO' not in l4functions:
+            ds4 = copy.deepcopy(ds3)
+        if 'MergeSeriesWS' in WorkList:
+            srclist = qcutils.GetMergeList(cf,'Ws',default=['Ws_WS_01','Ws_CSAT'])
+            if len(srclist) > 0:
+                qcts.MergeSeries(ds4,'Ws',srclist,[0,10])
+        if 'Gst' in ds4.series.keys():
+            ds4.series['Gst'].remove
+        if 'rst' in ds4.series.keys():
+            ds4.series['rst'].remove
+        if 'rstFromPenmanMonteith' in WorkList and qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
+            qcts.get_stomatalresistance(cf,ds4)
         if 'Sums' in WorkList:
             if 'SOLO' not in l4functions and 'Met' not in l4functions:
                 ds4 = copy.deepcopy(ds3)
@@ -1134,17 +1150,16 @@ def do_l4qc(cf,ds3,level):
                 for i in range(len(WorkList)):
                     ds4.globalattributes['Functions'].append(WorkList[i])
             do_sums(cf,ds4,l4functions,WorkList)
-        if 'Met' not in l4functions and 'SOLO' not in l4functions and 'Sums' not in l4functions:
-            log.error('Met, SOLO or Sums not located in FunctionList')
-            ds4 = copy.deepcopy(ds3)
+        if 'Met' not in l4functions and 'SOLO' not in l4functions:
+            log.warning('Neither Met nor SOLO located in FunctionList, no L4 functions applied')
             ds4.globalattributes['Level'] = 'L3'
-            ds4.globalattributes['Functions'] = ['No functions applied']
+            ds4.globalattributes['Functions'] = ['No L4 functions applied']
             return ds4
     else:
         log.error('FunctionList not found in control file')
         ds4 = copy.deepcopy(ds3)
         ds4.globalattributes['Level'] = 'L3'
-        ds4.globalattributes['Functions'] = ['No functions applied']
+        ds4.globalattributes['Functions'] = ['No L4 functions applied']
         return ds4
     ds4.globalattributes['Level'] = level
     return ds4
@@ -1201,40 +1216,37 @@ def do_solo(cf,ds4,Fc_in='Fc',Fe_in='Fe',Fh_in='Fh',Fc_out='Fc',Fe_out='Fe',Fh_o
         qcutils.CreateSeries(ds4,Fh_out,Fh,Flag=flag,Descr='ANN gapfilled Sensible Heat Flux',Units='W/m2',Standard='surface_upward_sensible_heat_flux')
 
 def do_sums(cf,ds,l4functions,WorkList):
-    if 'MergeSeriesWS' in l4functions:
-        srclist = qcutils.GetMergeList(cf,'Ws',default=['Ws_WS_01','Ws_CSAT'])
-        if len(srclist) > 0:
-            qcts.MergeSeries(ds,'Ws',srclist,[0,10])
-            
-            # compute daily statistics
-            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SumList'):
-                SumList = ast.literal_eval(cf['Sums']['SumList'])
-            else:
-                SumList = ['Rain','ET','Energy','Radiation','Carbon']
-            
-            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SubSumList'):
-                SubSumList = ast.literal_eval(cf['Sums']['SubSumList'])
-            else:
-                SubSumList = []
-            
-            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='MinMaxList'):
-                MinMaxList = ast.literal_eval(cf['Sums']['MinMaxList'])
-            else:
-                MinMaxList = ['Ta_EC','Vbat','Tpanel','Carbon']
-            
-            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='MeanList'):
-                MeanList = ast.literal_eval(cf['Sums']['MeanList'])
-            else:
-                MeanList = ['Ta_EC','Tpanel']
-            
-            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SoilList'):
-                SoilList = ast.literal_eval(cf['Sums']['SoilList'])
-            else:
-                SoilList = []
-        
-        StatsList = SumList + MinMaxList + MeanList + SoilList
-        if len(StatsList) > 0:
-            qcts.ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList)
+    # compute daily statistics
+    if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SumList'):
+        SumList = ast.literal_eval(cf['Sums']['SumList'])
+    else:
+        SumList = ['Rain','ET','Energy','Radiation','Carbon']
+    
+    if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SubSumList'):
+        SubSumList = ast.literal_eval(cf['Sums']['SubSumList'])
+    else:
+        SubSumList = []
+    
+    if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='MinMaxList'):
+        MinMaxList = ast.literal_eval(cf['Sums']['MinMaxList'])
+    else:
+        MinMaxList = ['Ta_EC','Vbat','Tpanel','Carbon']
+    
+    if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='MeanList'):
+        MeanList = ast.literal_eval(cf['Sums']['MeanList'])
+    else:
+        MeanList = ['Ta_EC','Tpanel']
+    
+    if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SoilList'):
+        SoilList = ast.literal_eval(cf['Sums']['SoilList'])
+    else:
+        SoilList = []
+    
+    StatsList = SumList + MinMaxList + MeanList + SoilList
+    if len(StatsList) > 0:
+        qcts.ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList)
+    
+    qcck.do_qcchecks(cf,ds)
 
 def do_WPL(cf,ds,cov=''):
     if cov == 'True':
@@ -1912,8 +1924,6 @@ def get_stomatalresistance(cf,ds):
     else:
         PMin = ['Fe_wpl', 'Ta_EC', 'Ah_EC', 'ps', 'Ws_EC', 'Fnr', 'Fsd', 'Fg']
     
-    if 'Lv' not in ds.series.keys():
-        AddMetVars(ds)
     Fe,f = qcutils.GetSeriesasMA(ds,PMin[0])
     Ta,f = qcutils.GetSeriesasMA(ds,PMin[1])
     Ah,f = qcutils.GetSeriesasMA(ds,PMin[2])
@@ -1926,8 +1936,8 @@ def get_stomatalresistance(cf,ds):
     Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
     q,f = qcutils.GetSeriesasMA(ds,'q')
     Cpm,f = qcutils.GetSeriesasMA(ds,'Cpm')
+    esat,f = qcutils.GetSeriesasMA(ds,'esat')
     
-    esat = mf.es(Ta)
     qsat = mf.qsat(esat,ps)
     gamma = mf.gamma(ps,Cpm,Lv)
     delta = mf.delta(Ta)
