@@ -43,7 +43,7 @@ def l2qc(cf,ds1):
     ds2.globalattributes['Level'] = 'L2'
     ds2.globalattributes['EPDversion'] = sys.version
     ds2.globalattributes['QCVersion'] = __doc__
-    ds2.globalattributes['Functions'] = 'RangeCheck, CSATcheck, 7500check, diurnalcheck, excludedates, excludehours, albedo'
+    ds2.globalattributes['L2Functions'] = 'RangeCheck, CSATcheck, 7500check, diurnalcheck, excludedates, excludehours, albedo'
     # do the range check
     for ThisOne in ds2.series.keys():
         qcck.do_rangecheck(cf,ds2,ThisOne)
@@ -120,7 +120,7 @@ def l3qc(cf,ds2):
         l3functions = ast.literal_eval(cf['General']['FunctionList'])
     else:
         l3functions = ['do_linear', 'MergeSeriesAhTa', 'TaFromTv', 'CalculateMetVars', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'WPL', 'CalculateNetRadiation', 'PreCorrectSoilAverage', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks','do_Ah7500check']
-    ds3.globalattributes['Functions'] = l3functions
+    ds3.globalattributes['L3Functions'] = str(l3functions)
     
     # correct measured soil water content using empirical relationship to collected samples
     if 'CorrectSWC' in l3functions:
@@ -130,6 +130,8 @@ def l3qc(cf,ds2):
     # apply linear corrections to the data
     log.info(' Applying linear corrections ...')
     qcck.do_linear(cf,ds3)
+    if 'do_linear' not in l3functions:
+        ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', do_linear'
     
     # merge the HMP and corrected 7500 data
     if 'MergeSeriesAhTa' in l3functions:
@@ -139,6 +141,8 @@ def l3qc(cf,ds2):
     
     # get the air temperature from the CSAT virtual temperature
         qcts.TaFromTv(cf,ds3)
+        if 'TaFromTv' not in l3functions:
+            ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', TaFromTv'
     
     # merge the HMP and corrected CSAT data
         srclist = qcutils.GetMergeList(cf,'Ta',default=['Ta_HMP_01'])
@@ -148,9 +152,13 @@ def l3qc(cf,ds2):
     # add relevant meteorological values to L3 data
     log.info(' Adding standard met variables to database')
     qcts.CalculateMeteorologicalVariables(cf,ds3)
+    if 'CalculateMetVars' not in l3functions:
+        ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', CalculateMetVars'
     
     # do the 2D coordinate rotation
     qcts.CoordRotation2D(cf,ds3)
+    if 'CoordRotation2D' not in l3functions:
+        ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', CoordRotation2D'
     
     # do the Massman frequency attenuation correction
     if 'Massman' in l3functions or 'MassmanStandard' in l3functions:
@@ -158,15 +166,21 @@ def l3qc(cf,ds2):
     
     # calculate the fluxes
     qcts.CalculateFluxes(cf,ds3,l3functions)
+    if 'CalculateFluxes' not in l3functions:
+        ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', CalculateFluxes'
     
     # approximate wT from virtual wT using wA (ref: Campbell OPECSystem manual)
     qcts.FhvtoFh(cf,ds3)
+    if 'FhvtoFh' not in l3functions:
+        ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', FhvtoFh'
     
     # correct the H2O & CO2 flux due to effects of flux on density measurements
     if 'WPLcov' in l3functions:
         qcts.do_WPL(cf,ds3,cov='True')
     else:
         qcts.do_WPL(cf,ds3)
+        if 'WPL' not in l3functions:
+            ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', WPL'
     
     # calculate the net radiation from the Kipp and Zonen CNR1
     if 'CalculateNetRadiation' in l3functions:
@@ -188,6 +202,8 @@ def l3qc(cf,ds2):
         srclist = qcutils.GetAverageList(cf,'Fg',default=['Fg_01a'])
         if len(srclist) > 0:
             qcts.AverageSeriesByElements(ds3,'Fg',srclist)
+        if 'SoilAverage' not in l3functions:
+            ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', SoilAverage'
     
     # average the soil temperature data
     srclist = qcutils.GetAverageList(cf,'Ts',default=['Ts_01a'])
@@ -201,6 +217,8 @@ def l3qc(cf,ds2):
         
     # correct the measured soil heat flux for storage in the soil layer above the sensor
     qcts.CorrectFg(cf,ds3)
+    if 'CorrectFgForStorage' not in l3functions:
+        ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', CorrectFgForStorage'
     
     # average ground heat flux after correcting for storage above sensors
     if 'PostCorrectSoilAverage' in l3functions:
@@ -218,6 +236,8 @@ def l3qc(cf,ds2):
     
     # re-apply the quality control checks (range, diurnal and rules)
     qcck.do_qcchecks(cf,ds3)
+    if 'do_qcchecks' not in l3functions:
+        ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', do_qcchecks'
     
     # coordinate gaps in the three main fluxes
     if 'gaps' in l3functions:
@@ -225,6 +245,8 @@ def l3qc(cf,ds2):
     
     # coordinate gaps in Ah_7500_Av with Fc_wpl
     qcck.do_Ah7500check(cf,ds3)
+    if 'do_Ah7500check' not in l3functions:
+        ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', do_Ah7500check'
     
     qcutils.GetSeriesStats(cf,ds3)
     
@@ -263,12 +285,92 @@ def l4qc(cf,ds3):
             qcts.ReplaceWhereMissing (Ustar)
             qcck.do_qcchecks
         """
-    level = 'L4'    # level of processing
-    ds4 = qcts.do_l4qc(cf,ds3,level)
-    ds4.globalattributes['Level'] = level
+    # check to ensure L4 functions are defined in controlfile
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList'):
+        l4functions = ast.literal_eval(cf['General']['FunctionList'])
+        x=0
+    else:
+        log.error('FunctionList not found in control file')
+        ds4 = copy.deepcopy(ds3)
+        ds4.globalattributes['Level'] = 'L3'
+        ds4.globalattributes['L4Functions'] = 'No L4 functions applied'
+        return ds4
+    
+    # import SOFM/SOLO ANN gap-filled fluxes from external process
+    if 'SOLO' in l4functions:
+        ds4 = qcio.nc_read_series(cf,'L4')
+        ds4.globalattributes['L4Functions'] = 'SOLO ANN GapFilling 10-day window'
+        l4functions.remove('SOLO')
+        qcts.do_solo(cf,ds4)
+        ds4.globalattributes['L4Functions'] = ds4.globalattributes['L4Functions']+', '+str(l4functions)
+        x=x+1
+    # copy L3 database if not generated from external file
+    else:
+        ds4 = copy.deepcopy(ds3)
+        ds4.globalattributes['L4Functions'] = str(l4functions)
+    
+    ds4.globalattributes['Level'] = 'L4'
     ds4.globalattributes['EPDversion'] = sys.version
     ds4.globalattributes['QCVersion'] = __doc__
-        
+    
+    # linear interpolation to fill missing values over gaps of 1 hour
+    if 'InterpolateOverMissing' in l4functions:
+        qcts.InterpolateOverMissing(cf,ds4,maxlen=2)
+        x=x+1
+    
+    # gap fill meteorological and radiation data from the alternate site(s)
+    if 'GapFillFromAlternate' in l4functions:
+        log.info(' Gap filling using data from alternate sites')
+        qcts.GapFillFromAlternate(cf,ds4)
+        x=x+1
+    
+    # gap fill meteorological, radiation and soil data using climatology
+    if 'GapFillFromClimatology' in l4functions:
+        log.info(' Gap filling using site climatology')
+        qcts.GapFillFromClimatology(cf,ds4)
+        x=x+1
+    
+    # gap fill using evaporative fraction (Fe/Fa), Bowen ratio (Fh/Fe) and ecosystem water use efficiency (Fc/Fe)
+    if 'GapFillFromRatios' in l4functions:
+        log.info(' Gap filling Fe, Fh and Fc using ratios')
+        qcts.GapFillFromRatios(cf,ds4)
+        x=x+1
+    
+    # calculate u* from Fh and corrected wind speed
+    if 'UstarFromFh' in l4functions:
+        us_in,us_out = qcts.UstarFromFh(cf,ds4)
+    
+    # merge CSAT and wind sentry wind speed
+    if 'MergeSeriesWS' in l4functions:
+        srclist = qcutils.GetMergeList(cf,'Ws',default=['Ws_WS_01','Ws_CSAT'])
+        if len(srclist) > 0:
+            qcts.MergeSeries(ds4,'Ws',srclist,[0,10])
+    
+    # calculate rst and Gst from Penman-Monteith inversion
+    if 'rstFromPenmanMonteith' in l4functions and qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
+        qcts.get_stomatalresistance(cf,ds4)
+    
+    # re-apply the quality control checks (range, diurnal and rules)
+    log.info(' Doing QC checks on L4 data')
+    qcck.do_qcchecks(cf,ds4)
+    
+    # interpolate over any ramaining gaps up to 3 hours in length
+    if 'InterpolateOverMissing' in l4functions:
+        qcts.InterpolateOverMissing(cf,ds4,maxlen=6)
+    
+    # fill any remaining gaps climatology
+    if 'GapFillFromClimatology' in l4functions:
+        qcts.GapFillFromClimatology(cf,ds4)
+    
+    if x == 0:
+        log.warning('Neither Met nor SOLO located in FunctionList, no L4 functions applied')
+        ds4.globalattributes['Level'] = 'L3'
+        ds4.globalattributes['L4Functions'] = 'No L4 functions applied'
+    
+    # calculate daily statistics
+    if 'Sums' in l4functions:
+        qcts.do_sums(cf,ds4)
+    
     qcutils.GetSeriesStats(cf,ds4)
     
     qcutils.prepOzFluxVars(cf,ds4)

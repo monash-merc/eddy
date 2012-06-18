@@ -1109,90 +1109,6 @@ def do_functions(cf,ds):
                         log.error ('Function missing or unknown for variable'+ThisOne)
                         return
 
-def do_l4qc(cf,ds3,level):
-    if qcutils.cfkeycheck(cf,Base='General',ThisOne='FunctionList'):
-        l4functions = ast.literal_eval(cf['General']['FunctionList'])
-        WorkList = ast.literal_eval(cf['General']['FunctionList'])
-        if 'SOLO' in WorkList:
-            WorkList.remove('SOLO')
-            ds4 = qcio.nc_read_series(cf,level)
-            do_solo(cf,ds4)
-            ds4.globalattributes['Functions'] = ['SOLO ANN GapFilling 10-day window']
-            # add relevant meteorological values to L3 data
-            log.info(' Adding standard met variables to database')
-            CalculateMeteorologicalVariables(cf,ds4)
-            ds4.globalattributes['Functions'].append('CalculateMetVars')
-            if 'CalculateMetVars' in WorkList:
-                WorkList.remove('CalculateMetVars')
-        if 'Met' in WorkList:
-            WorkList.remove('Met')
-            if 'SOLO' not in l4functions:
-                ds4 = copy.deepcopy(ds3)
-            do_metgaps(cf,ds4)
-            ds4.globalattributes['Functions'] = ['InterpolateOverMissing', 'GapFillFromAlternate', 'GapFillFromClimatology', 'GapFillFromRatios', 'ReplaceOnDiff', 'UstarFromFh', 'ReplaceWhereMissing', 'do_qcchecks']
-        if 'Met' not in l4functions and 'SOLO' not in l4functions:
-            ds4 = copy.deepcopy(ds3)
-        if 'MergeSeriesWS' in WorkList:
-            srclist = qcutils.GetMergeList(cf,'Ws',default=['Ws_WS_01','Ws_CSAT'])
-            if len(srclist) > 0:
-                qcts.MergeSeries(ds4,'Ws',srclist,[0,10])
-        if 'Gst' in ds4.series.keys():
-            ds4.series['Gst'].remove
-        if 'rst' in ds4.series.keys():
-            ds4.series['rst'].remove
-        if 'rstFromPenmanMonteith' in WorkList and qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
-            qcts.get_stomatalresistance(cf,ds4)
-        if 'Sums' in WorkList:
-            if 'SOLO' not in l4functions and 'Met' not in l4functions:
-                ds4 = copy.deepcopy(ds3)
-                ds4.globalattributes['Functions'] = l4functions
-            else:
-                for i in range(len(WorkList)):
-                    ds4.globalattributes['Functions'].append(WorkList[i])
-            do_sums(cf,ds4,l4functions,WorkList)
-        if 'Met' not in l4functions and 'SOLO' not in l4functions:
-            log.warning('Neither Met nor SOLO located in FunctionList, no L4 functions applied')
-            ds4.globalattributes['Level'] = 'L3'
-            ds4.globalattributes['Functions'] = ['No L4 functions applied']
-            return ds4
-    else:
-        log.error('FunctionList not found in control file')
-        ds4 = copy.deepcopy(ds3)
-        ds4.globalattributes['Level'] = 'L3'
-        ds4.globalattributes['Functions'] = ['No L4 functions applied']
-        return ds4
-    ds4.globalattributes['Level'] = level
-    return ds4
-
-def do_metgaps(cf,ds4):
-    # get z-d (measurement height minus displacement height) and z0 from the control file
-    if qcutils.cfkeycheck(cf,Base='Params',ThisOne='zmd') and qcutils.cfkeycheck(cf,Base='Params',ThisOne='z0'):
-        zmd = float(cf['Params']['zmd'])   # z-d for site
-        z0 = float(cf['Params']['z0'])     # z0 for site
-            
-        # make a copy of the L4 data, data from the alternate sites will be merged with this copy
-        # linear interpolation to fill missing values over gaps of 1 hour
-        qcts.InterpolateOverMissing(cf,ds4,maxlen=2)
-        # gap fill meteorological and radiation data from the alternate site(s)
-        log.info(' Gap filling using data from alternate sites')
-        qcts.GapFillFromAlternate(cf,ds4)
-        # gap fill meteorological, radiation and soil data using climatology
-        log.info(' Gap filling using site climatology')
-        qcts.GapFillFromClimatology(cf,ds4)
-        # gap fill using evaporative fraction (Fe/Fa), Bowen ratio (Fh/Fe) and ecosystem water use efficiency (Fc/Fe)
-        log.info(' Gap filling Fe, Fh and Fc using ratios')
-        qcts.GapFillFromRatios(cf,ds4)
-        # calculate u* from Fh and corrected wind speed
-        us_in,us_out = qcts.UstarFromFh(cf,ds4, zmd, z0)
-        qcts.ReplaceWhereMissing(ds4.series[us_in],ds4.series[us_in],ds4.series[us_out],0)
-        # re-apply the quality control checks (range, diurnal and rules)
-        log.info(' Doing QC checks on L4 data')
-        qcck.do_qcchecks(cf,ds4)
-        # interpolate over any ramaining gaps up to 3 hours in length
-        qcts.InterpolateOverMissing(cf,ds4,maxlen=6)
-        # fill any remaining gaps climatology
-        qcts.GapFillFromClimatology(cf,ds4)
-
 def do_solo(cf,ds4,Fc_in='Fc',Fe_in='Fe',Fh_in='Fh',Fc_out='Fc',Fe_out='Fe',Fh_out='Fh'):
     ''' duplicate gapfilled fluxes for graphing comparison'''
     if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='SOLOvars'):
@@ -1205,6 +1121,10 @@ def do_solo(cf,ds4,Fc_in='Fc',Fe_in='Fe',Fh_in='Fh',Fc_out='Fc',Fe_out='Fe',Fh_o
         Fc_out = outvars[0]
         Fe_out = outvars[1]
         Fh_out = outvars[2]
+    # add relevant meteorological values to L3 data
+    log.info(' Adding standard met variables to database')
+    CalculateMeteorologicalVariables(cf,ds4)
+    ds4.globalattributes['L4Functions'] = ds4.globalattributes['L4Functions']+', CalculateMetVars'
     if Fe_in in ds4.series.keys():
         Fe,flag = qcutils.GetSeriesasMA(ds4,Fe_in)
         qcutils.CreateSeries(ds4,Fe_out,Fe,Flag=flag,Descr='ANN gapfilled Latent Heat Flux',Units='W/m2',Standard='surface_upward_latent_heat_flux')
@@ -1215,7 +1135,7 @@ def do_solo(cf,ds4,Fc_in='Fc',Fe_in='Fe',Fh_in='Fh',Fc_out='Fc',Fe_out='Fe',Fh_o
         Fh,flag = qcutils.GetSeriesasMA(ds4,Fh_in)
         qcutils.CreateSeries(ds4,Fh_out,Fh,Flag=flag,Descr='ANN gapfilled Sensible Heat Flux',Units='W/m2',Standard='surface_upward_sensible_heat_flux')
 
-def do_sums(cf,ds,l4functions,WorkList):
+def do_sums(cf,ds):
     # compute daily statistics
     if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='SumList'):
         SumList = ast.literal_eval(cf['Sums']['SumList'])
@@ -1245,8 +1165,6 @@ def do_sums(cf,ds,l4functions,WorkList):
     StatsList = SumList + MinMaxList + MeanList + SoilList
     if len(StatsList) > 0:
         qcts.ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList)
-    
-    qcck.do_qcchecks(cf,ds)
 
 def do_WPL(cf,ds,cov=''):
     if cov == 'True':
@@ -2542,7 +2460,7 @@ def TransformAlternate(TList,DateTime,Series,ts=30):
     Series[si:ei] = qcutils.polyval(TList[2],Series[si:ei])
     Series = numpy.ma.filled(Series,float(-9999))
 
-def UstarFromFh(cf,ds,z,z0,us_out='uscalc',T_in='Ta', Ah_in='Ah', p_in='ps', Fh_in='Fh', u_in='Ws_CSAT', us_in='ustar'):
+def UstarFromFh(cf,ds,us_out='uscalc',T_in='Ta', Ah_in='Ah', p_in='ps', Fh_in='Fh', u_in='Ws_CSAT', us_in='ustar'):
     # Calculate ustar from sensible heat flux, wind speed and
     # roughness length using Wegstein's iterative method.
     #  T is the air temperature, C
@@ -2552,6 +2470,13 @@ def UstarFromFh(cf,ds,z,z0,us_out='uscalc',T_in='Ta', Ah_in='Ah', p_in='ps', Fh_
     #  z is the measurement height minus the displacement height, m
     #  z0 is the momentum roughness length, m
     log.info(' Calculating ustar from (Fh,Ta,Ah,p,u)')
+    # get z-d (measurement height minus displacement height) and z0 from the control file
+    if qcutils.cfkeycheck(cf,Base='Params',ThisOne='zmd') and qcutils.cfkeycheck(cf,Base='Params',ThisOne='z0'):
+        zmd = float(cf['Params']['zmd'])   # z-d for site
+        z0 = float(cf['Params']['z0'])     # z0 for site
+    else:
+        log.error('Parameters zmd or z0 not found in control file.  u* not determined from Fh')
+        return
     if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='ustarFh'):
         args = ast.literal_eval(cf['FunctionArgs']['ustarFh'])
         us_out = args[0]
