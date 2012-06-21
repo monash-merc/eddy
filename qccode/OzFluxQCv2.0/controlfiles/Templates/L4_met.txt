@@ -27,8 +27,8 @@
 [General]
 Platform = PC    # Mac or PC
 # Following is a list of optional pre-sums functions to apply.  No default functions are available at L4
-FunctionList = "['Met','Sums']"
-# FunctionList alternate:  #FunctionList = "['Met','Sums','MergeSeriesWS','rstFromPenmanMonteith']"
+FunctionList = "['InterpolateOverMissing','GapFillFromAlternate','GapFillFromClimatology','GapFillFromRatios','UstarFromFh','Sums']"
+# FunctionList alternate:  #FunctionList = "['SOLO','InterpolateOverMissing','GapFillFromAlternate','GapFillFromClimatology','GapFillFromRatios','UstarFromFh','MergeSeriesWS','rstFromPenmanMonteith','Sums']"
 
 [Files]
     [[L3]]
