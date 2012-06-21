@@ -50,6 +50,9 @@ FunctionList = "['InterpolateOverMissing','GapFillFromAlternate','GapFillFromCli
 zmd = 5           # instrument height above displacement plane
 z0 = 1            # roughness length
 
+[Output]
+L4 = "['Fm', 'Fc', 'Fe', 'Fh', 'Fg', 'Fn', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustar', 'L', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'theta', 'eta', 'u', 'v', 'w', 'uu', 'uv', 'uw', 'uA', 'uC', 'uT', 'vA', 'vC', 'vT', 'vv', 'vw', 'AhAh', 'CcCc', 'wA', 'wC', 'wT', 'Ts', 'Sws', 'Ah', 'q', 'e', 'rhom', 'rhod', 'esat', 'Ta', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'Cc_7500_Av', 'Ws_CSAT', 'Wd_CSAT', 'Rain']"
+
 [Variables]
     [[Ah]]
         [[[GapFillFromClimatology]]]
