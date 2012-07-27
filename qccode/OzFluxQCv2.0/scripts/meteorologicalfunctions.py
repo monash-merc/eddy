@@ -77,7 +77,7 @@ def mixingratio(ps,vp):
 
 def molen(T,Ah,p,ustar,Fh):
     # Calculate the Monin-Obukhov length
-    ustar = (ustar**2)**.5
+    ustar = numpy.sqrt(ustar*ustar)
     L = -theta(T, p)*densitydryair(T, p)*c.Cp*(ustar**3)/(c.g*c.k*Fh)
     return L
 
@@ -140,6 +140,6 @@ def vapourpressure(Ah,Ta):
     #  Ta - air temperature, C
     # Returns
     #  vp - vapour pressure, kPa
-    vp = 0.0000001*Ah*(Ta+273.15)*c.R/c.Mv
+    vp = 0.000001*Ah*(Ta+273.15)*c.R/c.Mv
     return vp
 
