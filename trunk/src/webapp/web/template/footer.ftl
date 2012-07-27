@@ -10,6 +10,7 @@
     <a href="http://www.monash.edu" target="_blank"><img src="${base}/images/logo/logo_monash.png" alt="Monash University"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <a href="http://www.monash.edu/eresearch" target="_blank"><img src="${base}/images/logo/logo_merc.png" alt="Monash MeRC"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <a href="http://ozflux.org.au" target="_blank"><img src="${base}/images/logo/ozflux_small.gif" alt="OzFlux Australia"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="http://www.tern.org.au/" target="_blank"><img src="${base}/images/logo/tern_logo.jpg" alt="Terrestrial Ecosystem Research Network"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </div>
 <div class="blank_separator"></div>
 <div class="footer">
