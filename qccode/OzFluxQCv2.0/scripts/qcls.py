@@ -1,10 +1,10 @@
 """
-    OzFlux QC v2.0 7 Jun 2012;
+    OzFlux QC v2.0 8 Jun 2012;
 
     Version History:
     <<v1.0: 21 July 2011, code diversion reconciliation>>
     <<v1.4 30 Sep 2011, final version arrising from OzFlux Black Mountain data workshop>>
-    <<v1.9.9a 8 June 2012, version arrising from conclusion of OzFlux UTS data workshop>>
+    <<v2.0 8 June 2012, version arrising from conclusion of OzFlux UTS data workshop>>
 """
 
 import sys
