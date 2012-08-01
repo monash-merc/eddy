@@ -133,6 +133,11 @@ def l3qc(cf,ds2):
     if 'do_linear' not in l3functions:
         ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', do_linear'
     
+    # determine HMP Ah if not output by datalogger
+    if 'CalculateAh' in l3functions:
+        log.info(' Adding HMP Ah to database')
+        qcts.CalculateAhHMP(cf,ds3)
+    
     # merge the HMP and corrected 7500 data
     if 'MergeSeriesAhTa' in l3functions:
         srclist = qcutils.GetMergeList(cf,'Ah',default=['Ah_HMP_01'])

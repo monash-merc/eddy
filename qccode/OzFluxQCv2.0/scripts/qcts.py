@@ -35,6 +35,12 @@ def albedo(cf,ds):
         ds: data structure
         """
     log.info(' Applying albedo constraints')
+    if 'Fsd' in ds.series.keys() and 'Fsu' in ds.series.keys() and 'albedo' in ds.series.keys():
+        nightindex = numpy.ma.where((ds.series['Fsd']['Data'] < 5) | (ds.series['Fsu']['Data'] < 2))[0]
+        ds.series['Fsd']['Data'][nightindex] = 0.
+        ds.series['Fsu']['Data'][nightindex] = 0.
+        ds.series['albedo']['Data'][nightindex] = 0.
+    
     if 'albedo' not in ds.series.keys():
         if 'Fsd' in ds.series.keys() and 'Fsu' in ds.series.keys():
             Fsd,f = qcutils.GetSeriesasMA(ds,'Fsd')
@@ -224,6 +230,22 @@ def AverageSeriesByElements(ds,Av_out,Series_in):
     UStr = ds.series[Series_in[0]]['Attr']['units']
     SStr = ds.series[Series_in[0]]['Attr']['standard_name']
     qcutils.CreateSeries(ds,Av_out,Av_data,FList=Series_in,Descr=DStr,Units=UStr,Standard=SStr)
+
+def CalculateAhHMP(cf,ds,e_name='e',Ta_name='Ta_HMP',Ah_name='Ah_HMP'):
+    """
+        Calculate the absolute humidity from vapour pressure and temperature.
+        
+        """
+    log.info(' Calculating Ah from vapour pressure and air temperature')
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='AhVars'):
+        vars = ast.literal_eval(cf['FunctionArgs']['AhVars'])
+        e_name = vars[0]
+        Ta_name = vars[1]
+        Ah_name = vars[2]
+    Ta,f = qcutils.GetSeriesasMA(ds,Ta_name)
+    e,f = qcutils.GetSeriesasMA(ds,e_name)
+    Ah = mf.absolutehumidity(Ta,e)
+    qcutils.CreateSeries(ds,Ah_name,Ah,FList=[Ta_name,e_name],Descr='Absolute humidity (HMP)',Units='g/m3')
 
 def CalculateAvailableEnergy(cf,ds,Fa_out='Fa',Fn_in='Fn',Fg_in='Fg'):
     """

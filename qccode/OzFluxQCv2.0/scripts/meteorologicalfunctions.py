@@ -1,6 +1,13 @@
 import constants as c
 import numpy
 
+def absolutehumidity(Ta,e):
+    # Calculate absolute humidity from vapour pressure and temperature
+    # Ah [g/m3] = e [kPa] / ((Ta [C] + C2K) * RV [J/(mg K)]
+    # RV = 0.0004615  Gas constant for water vapor
+    Ah = e / ((Ta + 273.15) * 0.0004615)
+    return Ah
+
 def aerodynamicresistance(Uavg,Ce):
     # Calculate the aerodynamic resistance, Stull 1988
     #  U - wind speed
@@ -77,7 +84,7 @@ def mixingratio(ps,vp):
 
 def molen(T,Ah,p,ustar,Fh):
     # Calculate the Monin-Obukhov length
-    ustar = numpy.sqrt(ustar*ustar)
+    ustar = numpy.sqrt(ustar**2)
     L = -theta(T, p)*densitydryair(T, p)*c.Cp*(ustar**3)/(c.g*c.k*Fh)
     return L
 
