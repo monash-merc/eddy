@@ -180,6 +180,15 @@ def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
             #if n > 0: plt.setp(bar_ax.get_xticklabels(), visible=False)
         else:
             log.error('  plttimeseries: series '+ThisOne+' not in data structure')
+    STList = []
+    ETList = []
+    for fmt in ['%Y','%m','%d','%H','%M']:
+        STList.append(L1XArray[0].strftime(fmt))
+        ETList.append(L1XArray[-1].strftime(fmt))
+    if qcutils.cfkeycheck(cf, Base='Output', ThisOne='PNGFile') and cf['Output']['PNGFile'] == 'True':
+        log.info('  Generating a PNG file of the plot')
+        PNGFileName = cf['Files']['PNG']['PNGFilePath']+'Fig'+nFig+'_'+''.join(STList)+'_'+''.join(ETList)+'.png'
+        plt.savefig(PNGFileName)
     fig.show()
 
 def plotxy(cf,nFig,plt_cf,dsa,dsb,si,ei):
@@ -205,6 +214,15 @@ def plotxy(cf,nFig,plt_cf,dsa,dsb,si,ei):
             yb,flag = qcutils.GetSeriesasMA(dsb,yname,si=si,ei=ei)
             xyplot(xa,ya,sub=[1,2,1],xlabel=xname,ylabel=yname)
             xyplot(xb,yb,sub=[1,2,2],regr=1,xlabel=xname,ylabel=yname)
+    STList = []
+    ETList = []
+    for fmt in ['%Y','%m','%d','%H','%M']:
+        STList.append(dsa.series['DateTime']['Data'][0].strftime(fmt))
+        ETList.append(dsa.series['DateTime']['Data'][-1].strftime(fmt))
+    if qcutils.cfkeycheck(cf, Base='Output', ThisOne='PNGFile') and cf['Output']['PNGFile'] == 'True':
+        log.info('  Generating a PNG file of the plot')
+        PNGFileName = cf['Files']['PNG']['PNGFilePath']+'Fig'+nFig+'_'+''.join(STList)+'_'+''.join(ETList)+'.png'
+        plt.savefig(PNGFileName)
     fig.show()
 
 def xyplot(x,y,sub=[1,1,1],regr=0,title=None,xlabel=None,ylabel=None):
