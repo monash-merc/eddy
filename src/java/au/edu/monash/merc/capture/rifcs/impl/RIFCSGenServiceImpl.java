@@ -149,9 +149,9 @@ public class RIFCSGenServiceImpl implements RIFCSGenService {
 		if (collection.getDateFrom() != null) {
 			rifcsBuilder.append("<temporal>");
 			rifcsBuilder.append(lineSeparator);
-			rifcsBuilder.append("<date type=\"dateFrom\" dateFormat=\"UTC\">" + CaptureUtil.formatDateToUTC(collection.getDateFrom()) + "</date>");
+			rifcsBuilder.append("<date type=\"dateFrom\" dateFormat=\"W3CDTF\">" + CaptureUtil.formateDateToW3CDTF(collection.getDateFrom()) + "</date>");
 			rifcsBuilder.append(lineSeparator);
-			rifcsBuilder.append("<date type=\"dateTo\" dateFormat=\"UTC\">" + CaptureUtil.formatDateToUTC(collection.getDateTo()) + "</date>");
+			rifcsBuilder.append("<date type=\"dateTo\" dateFormat=\"W3CDTF\">" + CaptureUtil.formateDateToW3CDTF(collection.getDateTo()) + "</date>");
 			rifcsBuilder.append(lineSeparator);
 			rifcsBuilder.append("</temporal>");
 			rifcsBuilder.append(lineSeparator);
