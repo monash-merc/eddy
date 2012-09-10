@@ -59,7 +59,7 @@ public class CaptureUtil {
 
     private static final String DATE_UTC_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
-    private static final String DATE_W3CDTF = "yyyy-MM-dd'T'HH:mm:ss.SS'Z'";
+    private static final String DATE_W3CDTF = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
     public static Date formatDate(final String dateStr) {
         Date date = null;
@@ -78,8 +78,10 @@ public class CaptureUtil {
     }
 
     public static String formateDateToW3CDTF(final Date date) {
-        DateFormat simpleDateFormat = new SimpleDateFormat(DATE_W3CDTF, Locale.US);
-        return simpleDateFormat.format(date);
+        SimpleDateFormat w3cdtf = new SimpleDateFormat(DATE_W3CDTF);
+        return w3cdtf.format(date);
+        //int index = s.length() - 2;
+        //return s.substring(0, index) + ":" + s.substring(index);
     }
 
     public static String genCurrentTimestamp() {
