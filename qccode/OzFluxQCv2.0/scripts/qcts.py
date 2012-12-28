@@ -787,6 +787,22 @@ def CoordRotation2D(cf,ds):
             index = numpy.where(mask.astype(int)==1)
             ds.series[ThisOne]['Flag'][index] = 11
 
+def ConvertFc(cf,ds,Fc_in='Fc'):
+    """
+    Converts CO2 flux (Fc) [mg m-2 s-1] to metabolic units [umol m-2 s-1]
+    Calculates NEE [umol m-2 s-1] and NEP
+    Fc = NEE = -NEP
+    """
+    log.info(' Converting Fc units')
+    if qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='convertFc'):
+        Fc_list = ast.literal_eval(cf['FunctionArgs']['convertFc'])
+        Fc_in = Fc_list[0]
+    Fc,f = qcutils.GetSeriesasMA(ds,Fc_in)
+    NEE = Fc * 1e6 / (1000 * 44)
+    NEP = -NEE
+    qcutils.CreateSeries(ds,'NEE',NEE,FList=[Fc_in],Descr='NEE (Net ecosystem exchange of carbon), rotated to natural wind coordinates, frequency response corrected, and density flux corrected (wpl)',Units='umol/m2/s')
+    qcutils.CreateSeries(ds,'NEP',NEP,FList=[Fc_in],Descr='NEP (Net ecosystem photosynthesis), rotated to natural wind coordinates, frequency response corrected, and density flux corrected (wpl)',Units='umol/m2/s')
+
 def CorrectFcForStorage(cf,ds,Fc_out,Fc_in,CO2_in):
     """
     Correct CO2 flux for storage in the air column beneath the CO2 instrument.  This
@@ -1877,6 +1893,7 @@ def get_stomatalresistance(cf,ds):
     q,f = qcutils.GetSeriesasMA(ds,'q')
     Cpm,f = qcutils.GetSeriesasMA(ds,'Cpm')
     esat,f = qcutils.GetSeriesasMA(ds,'esat')
+    rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
     
     qsat = mf.qsat(esat,ps)
     gamma = mf.gamma(ps,Cpm,Lv)
@@ -1886,7 +1903,7 @@ def get_stomatalresistance(cf,ds):
     Uavg[uindex] = 0.000000000000001
     rav = mf.aerodynamicresistance(Uavg,Ce)
     rav[uindex] = numpy.float64(-9999)
-    rst = ((((((delta * (Fnr - Fg) / (Lv / 1000)) + (c.rho_water * Cpm * (VPD / ((Lv / 1000) * rav)))) / (Fe / (Lv / 1000))) - delta) / gamma) - 1) * rav
+    rst = ((((((delta * (Fnr - Fg) / (Lv)) + (rhom * Cpm * (VPD / ((Lv) * rav)))) / (Fe / (Lv))) - delta) / gamma) - 1) * rav
     rst[uindex] = numpy.float64(-9999)
     Gst = (1 / rst) * (Ah * 1000) / 18
     Gst[uindex] = numpy.float64(-9999)
@@ -2294,7 +2311,7 @@ def MergeSeries(ds,Destination,Source,QCFlag_OK):
     else:
         ds.series[Destination]['Data'] = data.copy()
         ds.series[Destination]['Flag'] = flag.copy()
-        ds.series[Destination]['Attr']['Description'] = 'Merged from '+SeriesNameString
+        ds.series[Destination]['Attr']['long_name'] = 'Merged from '+SeriesNameString
         ds.series[Destination]['Attr']['units'] = SeriesUnitString
 
 def PT100(ds,T_out,R_in,m):

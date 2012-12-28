@@ -19,7 +19,7 @@ def aerodynamicresistance(Uavg,Ce):
 
 def bulktransfercoefficient(Fe,Lv,Uavg,q,qsat):
     # Calculate the bulk transfer coefficient to be used in aerodynamic resistance, Stull 1988
-    Ce = (0 - (Fe / (Lv / 1000))) / (Uavg * (q - qsat))
+    Ce = (0 - (Fe / Lv)) / (Uavg * (q - qsat))
     return Ce
 
 def delta(Ta):
@@ -62,7 +62,7 @@ def gamma(ps,Cpm,Lv):
     #  ps - atmopsheric pressure, kPa
     # Returns
     #  gamma, kPa/K
-    gamma = (Cpm * ps) / (0.622 * (Lv / 1000))
+    gamma = (Cpm * ps) / (0.622 * Lv)
     return gamma
 
 def Lv(Ta):
