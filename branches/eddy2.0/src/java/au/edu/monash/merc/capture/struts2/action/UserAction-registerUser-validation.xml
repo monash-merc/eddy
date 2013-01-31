@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC 
+  		"-//OpenSymphony Group//XWork Validator 1.0.2//EN" 
+  		"http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+<validators>
+	<field name="user.firstName">
+		<field-validator type="requiredstring" short-circuit="true">
+			<param name="trim">true</param>
+			<message>${getText("user.reg.firstName.required")}</message>
+		</field-validator>
+		<field-validator type="displayname" short-circuit="true">
+			<message>${getText("user.reg.firstName.spec")}</message>
+		</field-validator>
+		<field-validator type="stringlength">
+			<param name="maxLength">10</param>
+			<param name="minLength">1</param>
+			<message>${getText("user.reg.firstName.range")}</message>
+		</field-validator>
+	</field>
+	<field name="user.lastName">
+		<field-validator type="requiredstring" short-circuit="true">
+			<param name="trim">true</param>
+			<message>${getText("user.reg.lastName.required")}</message>
+		</field-validator>
+		<field-validator type="displayname" short-circuit="true">
+			<message>${getText("user.reg.lastName.spec")}</message>
+		</field-validator>
+		<field-validator type="stringlength">
+			<param name="maxLength">10</param>
+			<param name="minLength">1</param>
+			<message>${getText("user.reg.lastName.range")}</message>
+		</field-validator>
+	</field>
+
+	<field name="user.email">
+		<field-validator type="requiredstring" short-circuit="true">
+			<param name="trim">true</param>
+			<message>${getText("user.reg.email.required")}</message>
+		</field-validator>
+		<field-validator type="email">
+			<message>${getText("user.reg.email.regex.invalid")}</message>
+		</field-validator>
+	</field>
+
+	<field name="user.password">
+		<field-validator type="requiredstring" short-circuit="true">
+			<param name="trim">true</param>
+			<message>${getText("user.reg.password.required")}</message>
+		</field-validator>
+		<field-validator type="passwordintegrity" short-circuit="true">
+			<message>${getText("user.reg.password.spec")}</message>
+		</field-validator>
+		<field-validator type="stringlength">
+			<param name="maxLength">10</param>
+			<param name="minLength">6</param>
+			<message>${getText("user.reg.password.range")}</message>
+		</field-validator>
+	</field>
+	
+	<field name="organization">
+		<field-validator type="requiredstring">
+			<param name="trim">true</param>
+			<message>${getText("user.reg.organization.required")}</message>
+		</field-validator>
+	</field>
+
+	<field name="securityCode">
+		<field-validator type="requiredstring">
+			<param name="trim">true</param>
+			<message>${getText("security.code.required")}</message>
+		</field-validator>
+	</field>
+</validators>  		
+
+
