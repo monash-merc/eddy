@@ -21,6 +21,9 @@ import xlrd
 from matplotlib.mlab import griddata
 import xlwt
 import logging
+import math
+import csv
+
 
 log = logging.getLogger('qc.ts')
 
@@ -1081,14 +1084,136 @@ def do_attributes(cf,ds):
         ds.globalattributes['Flag64'] = 'Penman-Monteith: Uavg == 0 (undefined aerodynamic resistance under calm conditions) only if bad Fe (33) and bad Fsd (34) flags not set'
         ds.globalattributes['Flag70'] = 'Partitioning Night: Re computed from exponential temperature response curves'
         ds.globalattributes['Flag80'] = 'Partitioning Day: GPP/Re computed from light-response curves, GPP = Re - Fc'
-        ds.globalattributes['Flag81'] = 'Partitioning Day: GPP night mask'
-        ds.globalattributes['Flag82'] = 'Partitioning Day: Fc > Re, GPP = 0, Re = Fc'
+        ds.globalattributes['Flag90'] = 'Partitioning Day: GPP night mask'
+        ds.globalattributes['Flag91'] = 'Partitioning Day: Fc > Re, GPP = 0, Re = Fc'
+        ds.globalattributes['Flag101'] = 'Footprint: Date filter'
+        ds.globalattributes['Flag102'] = 'Footprint: u* < 0.2 m/s'
+        ds.globalattributes['Flag103'] = 'Footprint: out of range: L, ww, vv'
     for ThisOne in ds.series.keys():
         if ThisOne in cf['Variables']:
             if 'Attr' in cf['Variables'][ThisOne].keys():
                 ds.series[ThisOne]['Attr'] = {}
                 for attr in cf['Variables'][ThisOne]['Attr'].keys():
                     ds.series[ThisOne]['Attr'][attr] = cf['Variables'][ThisOne]['Attr'][attr]
+
+def do_footprint_2d(cf,ds):
+    log.info(' Calculating 2D footprint')
+    if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='zm'):
+        zm = float(cf['Footprint']['zm'])
+    
+    if zm<1.0:
+        log.error('zm needs to be larger than 1 m')
+        return
+    
+    if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='zc'):
+        zc = float(cf['Footprint']['zc'])
+    
+    d = 2 / 3 * zc
+    if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='z0'):
+        znot = float(cf['Footprint']['z0'])
+    
+    if znot<0.0:
+        log.error('z0 needs to be larger than 0 m')
+        return
+    
+    if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='r'):
+        r = int(cf['Footprint']['r'])
+    
+    if r>96.0:
+        log.error('r needs to be smaller than 96')
+        return
+    
+    sigmaw,f = qcutils.GetSeriesasMA(ds,'ww')
+    sigmav,f = qcutils.GetSeriesasMA(ds,'vv')
+    ustar,f = qcutils.GetSeriesasMA(ds,'ustar')
+    L,Lf = qcutils.GetSeriesasMA(ds,'L')
+    n = len(L)
+    if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='AnalysisDates'):
+        ldt = ds.series['DateTime']['Data']
+        IncludeList = cf['Footprint']['AnalysisDates'].keys()
+        NumDates = len(IncludeList)
+        for i in range(NumDates):
+            IncludeDateList = ast.literal_eval(cf['Footprint']['AnalysisDates'][str(i)])
+            try:
+                si = ldt.index(datetime.datetime.strptime(IncludeDateList[0],'%Y-%m-%d %H:%M'))
+                if si > 0:
+                    Lf[0:si] = numpy.float(9999)
+            except ValueError:
+                si = -1
+            try:
+                ei = ldt.index(datetime.datetime.strptime(IncludeDateList[1],'%Y-%m-%d %H:%M')) + 1
+                if ei < n:
+                    Lf[ei:n] = numpy.float(9999)
+            except ValueError:
+                ei = -1
+    
+    zeta = numpy.ma.zeros(n,dtype=float)
+    for i in range(n):
+        if Lf[i] > 0:
+            zeta[i] = 9999999
+        else:
+            zeta[i] = (zm - d) / L[i]
+    
+    index_zero_L = numpy.ma.where(zeta > 9999998)[0]
+    index_neutral = numpy.ma.where((zeta > -0.1) & (zeta < 0.1))[0]
+    index_slight_stable = numpy.ma.where((zeta > 0.1) & (zeta < 1))[0]
+    index_stable = numpy.ma.where((zeta > 1) & (zeta < 2))[0]
+    index_very_stable = numpy.ma.where((zeta > 2) & (zeta < 9999999))[0]
+    index_slight_unstable = numpy.ma.where((zeta < -0.1) & (zeta > -1))[0]
+    index_unstable = numpy.ma.where((zeta < -1) & (zeta > -2))[0]
+    index_very_unstable = numpy.ma.where(zeta < -2)[0]
+    h = numpy.ma.zeros(n,dtype=float)
+    log.info('  '+str(len(index_zero_L))+':  masked L (incl gaps and not dates)')
+    log.info('  '+str(len(index_neutral))+':  neutral, -0.1 < zeta < 0.1')
+    log.info('  '+str(len(index_slight_stable))+':  slightly stable, 0.1 < zeta < 1')
+    log.info('  '+str(len(index_stable))+':  stable, 1 < zeta < 2')
+    log.info('  '+str(len(index_very_stable))+':  very stable, zeta > 2')
+    log.info('  '+str(len(index_slight_unstable))+':  slightly unstable, -0.1 > zeta > -1')
+    log.info('  '+str(len(index_unstable))+':  unstable, -1 > zeta > -2')
+    log.info('  '+str(len(index_very_unstable))+':  very unstable, zeta < -2')
+    h[index_zero_L] = numpy.float(0)
+    h[index_very_unstable] = numpy.float(2000)
+    h[index_unstable] = numpy.float(1500)
+    h[index_slight_unstable] = numpy.float(1200)
+    h[index_neutral] = numpy.float(1000)
+    h[index_slight_stable] = numpy.float(800)
+    h[index_stable] = numpy.float(250)
+    h[index_very_stable] = numpy.float(200)
+    
+    if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='wd'):
+        wdin = cf['Footprint']['wd']
+    else:
+        wdin = 'Wd_CSAT'
+    
+    wd,f = qcutils.GetSeriesasMA(ds,wdin)
+    xr = numpy.ma.zeros(n,dtype=float)
+    for i in range(n):
+        if (sigmaw[i] > 0):
+            if (sigmav[i] > 0):
+                if (ustar[i] > 0.2):
+                    if (h[i] > 1):
+                        if (h[i] > zm):
+                            log.info('    Footprint: '+str(ds.series['DateTime']['Data'][i]))
+                            xr[i] = footprint_2d(cf,sigmaw[i],sigmav[i],ustar[i],zm,h[i],znot,r,wd[i],zeta[i],L[i],zc,ds.series['DateTime']['Data'][i])
+                        else:
+                            xr[i] = -9999
+                    else:
+                        xr[i] = -9999
+                else:
+                    xr[i] = -9999
+            else:
+                xr[i] = -9999
+        else:
+            xr[i] = -9999
+    
+    qcutils.CreateSeries(ds,'xr',xr,FList=['L','ww','vv','ustar'],Descr='integrated footprint in the direction of the wind',Units='m')
+    
+    flag_index = numpy.ma.where((xr == -9999) & (ds.series['xr']['Flag'] == 0))[0]
+    ustar_index = numpy.ma.where(ustar < 0.2)[0]
+    date_index = numpy.ma.where(Lf == 9999)[0]
+    ds.series['xr']['Flag'][flag_index] = 103
+    ds.series['xr']['Flag'][ustar_index] = 102
+    ds.series['xr']['Flag'][date_index] = 101
 
 def do_functions(cf,ds):
     log.info(' Resolving functions given in control file')
@@ -1630,6 +1755,238 @@ def FilterFcByUstar(cf, ds, Fc_out, Fc_in, ustar_in):
             print 'FilterFcByUstar: ustar_threshold expected but not found in General section of control file'
     else:
         print 'FilterFcByUstar: section General expected but not found in control file'
+
+def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp):
+    """
+        footprint_2d.py
+        
+        Derive a footprint estimate based on a simple parameterisation
+        
+        Details see Kljun, N., Calanca, P., Rotach, M.W., Schmid, H.P., 2004:
+        Boundary-Layer Meteorology 112, 503-532.
+         
+        online version: http://footprint.kljun.net
+        contact: n.kljun@swansea.ac.uk
+        
+        Usage: footprint_2d.py <measurement height[m]> <roughness length [m]> <planetary boundary
+                              layer height [m]> <sigma_w [m s-1]> <sigma_v [m s-1]> <u* [m s-1]> <r [%]> 
+         Output: crosswind integrated footprint: x,f
+                 extent of footprint up to r%: xr
+                 matrix of 2d footprint: x_2d, y_2d, f_2d
+        
+         Created: May 15 2012, natascha kljun
+         Last change: May 15 2012, nk
+        """
+    
+    # -----------------------------------------------
+    # Initialize local variables
+    n = 400
+    nr = 96
+    af = 0.175
+    bb = 3.418
+    ac = 4.277
+    ad = 1.685
+    b = 3.69895
+    xstep = 0.5
+    a3 = 0.08
+    k  = 0.4
+    sqrt2pi = math.sqrt(2*math.pi)
+    a4 = 3.25
+    
+    lall  = (0.000000, 0.302000, 0.368000, 0.414000, 0.450000,
+        0.482000, 0.510000, 0.536000, 0.560000, 0.579999,
+        0.601999, 0.621999, 0.639999, 0.657998, 0.675998,
+        0.691998, 0.709998, 0.725998, 0.741997, 0.755997,
+        0.771997, 0.785997, 0.801997, 0.815996, 0.829996,
+        0.843996, 0.857996, 0.871996, 0.885995, 0.899995,
+        0.911995, 0.925995, 0.939995, 0.953995, 0.965994,
+        0.979994, 0.993994, 1.005994, 1.019994, 1.033994,
+        1.045993, 1.059993, 1.073993, 1.085993, 1.099993,
+        1.113993, 1.127992, 1.141992, 1.155992, 1.169992,
+        1.183992, 1.197991, 1.211991, 1.225991, 1.239991,
+        1.253991, 1.269991, 1.283990, 1.299990, 1.315990,
+        1.329990, 1.345990, 1.361989, 1.379989, 1.395989,
+        1.411989, 1.429989, 1.447988, 1.465988, 1.483988,
+        1.501988, 1.521987, 1.539987, 1.559987, 1.581987,
+        1.601986, 1.623986, 1.647986, 1.669985, 1.693985,
+        1.719985, 1.745984, 1.773984, 1.801984, 1.831983,
+        1.863983, 1.895983, 1.931982, 1.969982, 2.009982,
+        2.053984, 2.101986, 2.153988, 2.211991, 2.279994,
+        2.355998, 2.450002, 2.566008, 2.724015, 2.978027, 
+        3.864068)
+    
+    a = (af/(bb-math.log(znot)))
+    c = (ac*(bb-math.log(znot)))
+    d = (ad*(bb-math.log(znot)))
+    
+    xstar = numpy.ones(n, dtype=float)
+    fstar = numpy.ones(n, dtype=float)
+    x = numpy.ones(n, dtype=float)
+    f_ci = numpy.ones(n, dtype=float)
+    
+    xstar[0] = -5
+    while xstar[0] < -d:
+        xstar[0] = xstar[0]+1
+    
+    for i in range(0, n):
+        # Calculate X*
+        if i>0:
+            xstar[i] = xstar[i-1] + xstep
+        
+        # Calculate F*
+        fstar[i] = a*((xstar[i]+d)/c)**b * math.exp(b*(1-(xstar[i]+d)/c))
+    
+        # Calculate x and f
+        x[i] = xstar[i] * zm * (sigmaw/ustar)**(-0.8)
+        f_ci[i] = fstar[i] / zm * (1-(zm/h)) * (sigmaw/ustar)**(0.8)
+        
+    # Calculate maximum location of influence (peak location)
+    xstarmax = c-d
+    xmax = xstarmax * zm *(sigmaw/ustar)**(-0.8)
+    
+    # Get l corresponding to r
+    lr = lall[r]
+    
+    # Calculate distance including R percentage of the footprint
+    xstarr = lr*c - d
+    xr = xstarr * zm *(sigmaw/ustar)**(-0.8)
+    
+    # Calculate lateral dispersion
+    u = ustar/k *(math.log(zm/znot) - (zm-znot)/zm)
+    tau = numpy.sqrt((x/u)**2 + (a4*(zm-znot)/sigmaw)**2)
+    tly = a3*h**2 /((h-zm)*ustar)
+    fy_disp = 1/(1 + numpy.sqrt(tau/(2*tly)))
+    sigmay = sigmav * tau * fy_disp
+    
+    x_lim = numpy.max(x)
+    y0 = (x[x>0])
+    y1 = (y0[y0<=x_lim/2])
+    y2 = -(y1[::-1])
+    y  = numpy.concatenate((y2,[0],y1))
+    
+    m = len(y)
+    x_2d = numpy.zeros((n,m), dtype=float)
+    y_2d = numpy.zeros((n,m), dtype=float)
+    f_2d = numpy.zeros((n,m), dtype=float)
+    for i in range(0, n):
+        for j in range(0, m):
+            x_2d[i,j] = x[i]
+            y_2d[i,j] = y[j]
+            f_2d[i,j] = f_ci[i] * 1/(sqrt2pi*sigmay[i]) *  math.exp(-y[j]**2 / (2*sigmay[i]**2))
+    
+    STList = []
+    for fmt in ['%Y','%m','%d','%H','%M']:
+        STList.append(timestamp.strftime(fmt))
+        if qcutils.cfkeycheck(cf, Base='Output', ThisOne='FootprintFile') and cf['Output']['FootprintFile'] == 'True':
+            summaryFileName = cf['Files']['Footprint']['FootprintFilePath']+'footprint_2d_summary_'+''.join(STList)+'.xls'
+            vectorFileName = cf['Files']['Footprint']['FootprintFilePath']+'footprint_2d_vectors_'+''.join(STList)+'.xls'
+            matrixFileName = cf['Files']['Footprint']['FootprintFilePath']+'footprint_2d_matrix_'+''.join(STList)+'.xls'
+    
+    xlFile = xlwt.Workbook()
+    xlSheet = xlFile.add_sheet('summary')
+    xlCol = 1
+    xlRow = 0
+    xlSheet.write(xlRow,xlCol,'Measurement height (zm)')
+    xlCol = xlCol - 1
+    xlSheet.write(xlRow,xlCol,zm)
+    xlRow = xlRow + 1
+    xlCol = 1
+    xlSheet.write(xlRow,xlCol,'Canopy height (zc)')
+    xlCol = xlCol - 1
+    xlSheet.write(xlRow,xlCol,zc)
+    xlRow = xlRow + 1
+    xlCol = 1
+    xlSheet.write(xlRow,xlCol,'Roughness length (z0)')
+    xlCol = xlCol - 1
+    xlSheet.write(xlRow,xlCol,znot)
+    xlRow = xlRow + 1
+    xlCol = 1
+    xlSheet.write(xlRow,xlCol,'PBL height (zi)')
+    xlCol = xlCol - 1
+    xlSheet.write(xlRow,xlCol,h)
+    xlRow = xlRow + 1
+    xlCol = 1
+    xlSheet.write(xlRow,xlCol,'Monin-Obukhov length (L)')
+    xlCol = xlCol - 1
+    xlSheet.write(xlRow,xlCol,L)
+    xlRow = xlRow + 1
+    xlCol = 1
+    xlSheet.write(xlRow,xlCol,'Stability coefficient (z-d/L, zeta)')
+    xlCol = xlCol - 1
+    xlSheet.write(xlRow,xlCol,zeta)
+    xlRow = xlRow + 1
+    xlCol = 1
+    xlSheet.write(xlRow,xlCol,'Friction coefficient (ustar)')
+    xlCol = xlCol - 1
+    xlSheet.write(xlRow,xlCol,ustar)
+    xlRow = xlRow + 1
+    xlCol = 1
+    xlSheet.write(xlRow,xlCol,'sd(w) (sigma_w)')
+    xlCol = xlCol - 1
+    xlSheet.write(xlRow,xlCol,sigmaw)
+    xlRow = xlRow + 1
+    xlCol = 1
+    xlSheet.write(xlRow,xlCol,'sd(v) (sigma_v)')
+    xlCol = xlCol - 1
+    xlSheet.write(xlRow,xlCol,sigmav)
+    xlRow = xlRow + 1
+    xlCol = 1
+    
+    xlCol = 3
+    xlRow = 0
+    xlSheet.write(xlRow,xlCol,'Wind direction (wd)')
+    xlCol = xlCol - 1
+    xlSheet.write(xlRow,xlCol,wd)
+    xlRow = xlRow + 1
+    xlCol = 3
+    xlSheet.write(xlRow,xlCol,'% of flux footprint (r)')
+    xlCol = xlCol - 1
+    xlSheet.write(xlRow,xlCol,r)
+    xlRow = xlRow + 1
+    xlCol = 3
+    xlSheet.write(xlRow,xlCol,'Extent of footprint up to r% (xr)')
+    xlCol = xlCol - 1
+    xlSheet.write(xlRow,xlCol,xr)
+    xlRow = xlRow + 1
+    
+    xlSheet = xlFile.add_sheet('crosswind_integrated')
+    for i in range(0,n):
+        xlSheet.write(i,0,x[i])
+        xlSheet.write(i,1,f_ci[i])
+    
+    xlFile.save(summaryFileName)
+    vectorout = open(vectorFileName, 'w')
+    csvSheet = csv.writer(vectorout, dialect='excel-tab')
+    csvSheet.writerow(['x','y','f'])
+    for i in range(0,n):
+        for j in range(0,m):
+            xout = x_2d[i,j]
+            yout = y_2d[i,j]
+            fout = f_2d[i,j]
+            csvSheet.writerow([xout,yout,fout])
+    
+    vectorout.close()
+    matrixout = open(matrixFileName, 'w')
+    csvSheet = csv.writer(matrixout, dialect='excel-tab')
+    xout = numpy.zeros(n+1,dtype=float)
+    xout[0] = -9999
+    for i in range(0,n):
+        xout[i+1] = x_2d[i,0]
+    
+    csvSheet.writerow(xout)
+    for j in range(0,m):
+        yout = y_2d[0,j]
+        dataout = f_2d[j]
+        ydataout = numpy.zeros(n+1,dtype=float)
+        ydataout[0] = yout
+        for i in range(0,n):
+            ydataout[i+1] = f_2d[i,j]
+        
+        csvSheet.writerow(ydataout)
+    
+    matrixout.close()
+    
+    return xr
 
 def GapFillFromAlternate(cf,ds,series=''):
     """

@@ -1,7 +1,7 @@
 [General]
 InLevel = L1
 OutLevel = L1
-Platform = Mac    # comment out if PC excel
+Platform = Mac    # Mac or PC
 netCDFv3 = False
 
 [Files]
@@ -51,16 +51,16 @@ netCDFv3 = False
             sheet    = slow_flux
             name     = Fc_raw_Avg
         [[[Attr]]]
-            ancillary_variables = "Fc_raw QC flag"
+            ancillary_variables = "Fc QC flag"
             long_name = "Flux of carbon, Raw uncorrected"
             units    = "mg/(m2 s)"
-            standard_name = "not defined"
+            standard_name = "surface_upward_mass_flux_of_carbon_dioxide_expressed_as_carbon_due_to_emission_from_natural_sources"
     [[Fe]]
         [[[xl]]]
             sheet    = slow_flux
             name     = Fe_raw_Avg
         [[[Attr]]]
-            ancillary_variables = "Fe_raw QC flag"
+            ancillary_variables = "Fe QC flag"
             long_name = "Latent heat flux, Raw uncorrected"
             units    = "W/m2"
             standard_name = "surface_upward_latent_heat_flux"
@@ -78,7 +78,7 @@ netCDFv3 = False
             sheet    = slow_rad
             name     = Fn_CNR1_Avg
         [[[Attr]]]
-            ancillary_variables = "Fnr QC flag"
+            ancillary_variables = "Fn QC flag"
             long_name = "Net radiation"
             units    = "W/m2"
             instrument = "Kipp and Zonen CNR1"
@@ -223,6 +223,16 @@ netCDFv3 = False
             units    = "m2/s2"
             ancillary_variables = "UyUz QC flag"
             standard_name = "not defined"
+    [[UzUz]]
+        [[[xl]]]
+            sheet    = slow_flux
+            name     = covUzUz
+        [[[Attr]]]
+            ancillary_variables = "UzUz QC flag"
+            instrument = "CSAT"
+            long_name = "Variance of Uz"
+            standard_name = "not defined"
+            units = "m2/s2"
     [[UxUy]]
         [[[xl]]]
             sheet    = slow_flux

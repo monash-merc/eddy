@@ -248,6 +248,10 @@ def l3qc(cf,ds2):
     if 'gaps' in l3functions:
         qcck.gaps(cf,ds3)
     
+    # convert Fc [mg m-2 s-1] to NEE [umol m-2 s-1] and NEP = - NEE
+    if 'convertFc' in l3functions:
+        qcts.ConvertFc(cf,ds3)
+    
     # coordinate gaps in Ah_7500_Av with Fc_wpl
     qcck.do_Ah7500check(cf,ds3)
     if 'do_Ah7500check' not in l3functions:
@@ -256,6 +260,10 @@ def l3qc(cf,ds2):
     qcutils.GetSeriesStats(cf,ds3)
     
     qcutils.prepOzFluxVars(cf,ds3)
+    
+    # run MOST (Buckingham Pi) 2d footprint model (Kljun et al. 2004)
+    if 'footprint' in l3functions:
+        qcts.do_footprint_2d(cf,ds3)
     
     return ds3
 
@@ -367,10 +375,20 @@ def l4qc(cf,ds3):
     if 'GapFillFromClimatology' in l4functions:
         qcts.GapFillFromClimatology(cf,ds4)
     
+    # convert Fc [mg m-2 s-1] to NEE [umol m-2 s-1] and NEP = - NEE
+    if 'convertFc' in l4functions:
+        qcts.ConvertFc(cf,ds4)
+    
     if x == 0:
         log.warning('Neither Met nor SOLO located in FunctionList, no L4 functions applied')
         ds4.globalattributes['Level'] = 'L3'
         ds4.globalattributes['L4Functions'] = 'No L4 functions applied'
+    
+    # add relevant meteorological values to L4 data
+    if 'CalculateMetVars' in l4functions:
+        log.info(' Adding standard met variables to database')
+        qcts.CalculateMeteorologicalVariables(cf,ds4)
+        ds4.globalattributes['L4Functions'] = ds4.globalattributes['L4Functions']+', CalculateMetVars'
     
     # calculate daily statistics
     if 'Sums' in l4functions:

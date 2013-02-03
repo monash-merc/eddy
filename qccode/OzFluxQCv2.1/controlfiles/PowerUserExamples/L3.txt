@@ -1,6 +1,6 @@
 [General]
 #Standard (Default) FunctionList = "['do_linear', 'MergeSeriesAhTa', 'TaFromTv', 'CalculateMetVars', 'CoordRotation2D', 'CalculateFluxes', 'FhvtoFh', 'WPL', 'CalculateNetRadiation', 'MergeSeriesFn', 'SoilAverage', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks', 'do_Ah7500check']"
-FunctionList   = "['CorrectSWC', 'do_linear', 'MergeSeriesAhTa', 'TaFromTv', 'CalculateMetVars', 'CoordRotation2D', 'Massman', 'CalculateFluxes', 'FhvtoFh', 'WPLcov', 'MergeSeriesWS', 'CorrectFgForStorage', 'PostCorrectSoilAverage','rstFromPenmanMonteith', 'do_qcchecks', 'gaps', 'do_Ah7500check']"
+FunctionList   = "['CorrectSWC', 'do_linear', 'MergeSeriesAhTa', 'TaFromTv', 'CalculateMetVars', 'CoordRotation2D', 'Massman', 'CalculateFluxes', 'FhvtoFh', 'WPLcov', 'MergeSeriesWS', 'CorrectFgForStorage', 'PostCorrectSoilAverage','rstFromPenmanMonteith', 'do_qcchecks', 'gaps', 'do_Ah7500check', 'footprint']"
 RotateFlag   = True
 MassmanFlag   = True
 netCDFv3 = False
@@ -24,6 +24,24 @@ OutputLevel = L3_Corrected
         xlFileName = ASM_EC_2010_L3_Corrected.xls
     [[PNG]]
         PNGFilePath = ../AliceSpringsMulga/level3/PNG/
+    [[Footprint]]
+        FootprintFilePath = ../AliceSpringsMulga/level3_footprint/
+
+[Output]
+OFL2 = "['Fm', 'Fc', 'Fe', 'Fh', 'Fg', 'Fn', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustar', 'L', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'theta', 'eta', 'u', 'v', 'w', 'uu', 'uv', 'uw', 'uA', 'uC', 'uT', 'vA', 'vC', 'vT', 'vv', 'vw', 'ww', 'AhAh', 'CcCc', 'wT', 'wA', 'wC', 'Ts', 'Sws', 'svwc_s_baresoil', 'Ts_bs', 'delTs_bs', 'Fgc_bs', 'svwc_s_understory', 'Ts_mu', 'delTs_mu', 'Fgc_mu', 'svwc_s_mulga', 'Ts_ms', 'delTs_ms', 'Fgc_ms', 'svwc_10cm_baresoil_a1', 'svwc_60cm_baresoil_a1', 'svwc_100cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_60cm_mulga_a1', 'svwc_100cm_mulga_a1', 'svwc_10cm_understory_a1', 'svwc_60cm_understory_a1', 'svwc_100cm_understory_a1', 'svwc_10cm_baresoil_a2', 'svwc_60cm_baresoil_a2', 'svwc_100cm_baresoil_a2', 'svwc_143cm_baresoil_a2', 'svwc_10cm_a_mulga_a2', 'svwc_10cm_b_mulga_a2', 'svwc_60cm_mulga_a2', 'svwc_100cm_mulga_a2', 'svwc_10cm_a_understory_a2', 'svwc_10cm_b_understory_a2', 'svwc_60cm_understory_a2', 'svwc_100cm_understory_a2', 'Ah', 'q', 'e', 'RH', 'rhom', 'rhod', 'esat', 'Ta', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Ws_WS', 'Wd_WS', 'Ws_CSAT_Sd', 'Wd_CSAT_Sd', 'Ws_WS_Sd', 'Wd_WS_Sd', 'Rain', 'rst', 'Gst','xr']"
+L3_Corrected = "['Fm', 'Fc', 'Fe', 'Fh', 'Fg', 'Fn', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustar', 'L', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'Tpanel_CR1000', 'theta', 'eta', 'u', 'v', 'w', 'uu', 'uv', 'uw', 'uA', 'uC', 'uT', 'vA', 'vC', 'vT', 'vv', 'vw', 'ww', 'AhAh', 'CcCc', 'wT', 'wA', 'wC', 'Ts', 'Sws', 'svwc_s_baresoil', 'Ts_bs', 'delTs_bs', 'Fgc_bs', 'svwc_s_understory', 'Ts_mu', 'delTs_mu', 'Fgc_mu', 'svwc_s_mulga', 'Ts_ms', 'delTs_ms', 'Fgc_ms', 'svwc_10cm_baresoil_a1', 'svwc_60cm_baresoil_a1', 'svwc_100cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_60cm_mulga_a1', 'svwc_100cm_mulga_a1', 'svwc_10cm_understory_a1', 'svwc_60cm_understory_a1', 'svwc_100cm_understory_a1', 'svwc_10cm_baresoil_a2', 'svwc_60cm_baresoil_a2', 'svwc_100cm_baresoil_a2', 'svwc_143cm_baresoil_a2', 'svwc_10cm_a_mulga_a2', 'svwc_10cm_b_mulga_a2', 'svwc_60cm_mulga_a2', 'svwc_100cm_mulga_a2', 'svwc_10cm_a_understory_a2', 'svwc_10cm_b_understory_a2', 'svwc_60cm_understory_a2', 'svwc_100cm_understory_a2', 'Ah', 'q', 'e', 'RH', 'rhom', 'rhod', 'esat', 'Ta', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Ws_WS', 'Wd_WS', 'Ws_CSAT_Sd', 'Wd_CSAT_Sd', 'Ws_WS_Sd', 'Wd_WS_Sd', 'Rain', 'rst', 'Gst','xr']"
+#noDefaultXl = True
+FootprintFile = True
+
+[Footprint]
+zm = 11.67                   # measurement height, m
+zc = 6.5                     # canopoy height, m
+z0 = 0.8                     # roughness length, z0 = zc / 3e (Brutseart 1982, eqn 5.7), m
+r = 90                       # % of flux footprint
+#default wd = "['Wd_CSAT']"
+wd = Wd_CSAT_Compass
+    [[AnalysisDates]]
+            0          = "['2011-1-24 0:00','2011-1-24 0:30']"
 
 [FunctionArgs]
 # Site- and process-specific variable and parameter lists
@@ -89,14 +107,8 @@ TDR_a1 = 0.3260003
 TDR_b0 = 0.002642436
 TDR_b1 = 24.65178
 TDR_t = 0.182
-SWCattr = "['Surface soil water content of bare soil, empirically corrected to collected samples', 'Surface soil water content below mulga, empirically corrected to collected samples','cm3 water/cm3 soil', 'Surface soil water content below understory, empirically corrected to collected samples']"
+SWCattr = "['Surface soil water content of bare soil, empirically corrected to collected samples', 'Surface soil water content below mulga, empirically corrected to collected samples', 'Surface soil water content below understory, empirically corrected to collected samples']"
 TDRattr = "['Surface soil water content of bare soil near raingage, empirically corrected to collected samples', '10-30 cm deep soil water content of bare soil array 1, empirically corrected to collected samples', '60-80 cm deep soil water content of bare soil array 1, empirically corrected to collected samples', '100-130 cm deep soil water content of bare soil array 1, empirically corrected to collected samples', '10-30 cm deep soil water content below mulga array 1, empirically corrected to collected samples', '60-80 cm deep soil water content below mulga array 1, empirically corrected to collected samples', '100-130 cm deep soil water content below mulga array 1, empirically corrected to collected samples', '10-30 cm deep soil water content below understory array 1, empirically corrected to collected samples', '60-80 cm deep soil water content below understory array 1, empirically corrected to collected samples', '100-130 cm deep soil water content below understory array 1, empirically corrected to collected samples', '10-30 cm deep soil water content of bare soil array 2, empirically corrected to collected samples', '60-80 cm deep soil water content of bare soil array 2, empirically corrected to collected samples', '100-120 cm deep soil water content of bare soil array 2, empirically corrected to collected samples', '143-163 cm deep soil water content of bare soil array 2, empirically corrected to collected samples', '10-30 cm deep soil water content below mulga array 2, empirically corrected to collected samples', '10-30 cm deep soil water content below mulga array 2, empirically corrected to collected samples', '60-80 cm deep soil water content below mulga array 2, empirically corrected to collected samples', '100-130 cm deep soil water content below mulga array 2, empirically corrected to collected samples', '10-30 cm deep soil water content below understory array 2, empirically corrected to collected samples', '10-30 cm deep soil water content below understory array 2, empirically corrected to collected samples', '60-80 cm deep soil water content below understory array 2, empirically corrected to collected samples', '100-130 cm deep soil water content below understory array 2, empirically corrected to collected samples']"
-
-[Output]
-OFL2 = "['Fm', 'Fc', 'Fe', 'Fh', 'Fg', 'Fn', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustar', 'L', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'theta', 'eta', 'u', 'v', 'w', 'uu', 'uv', 'uw', 'uA', 'uC', 'uT', 'vA', 'vC', 'vT', 'vv', 'vw', 'AhAh', 'CcCc', 'wT', 'wA', 'wC', 'Ts', 'Sws', 'svwc_s_baresoil', 'Ts_bs', 'delTs_bs', 'Fgc_bs', 'svwc_s_understory', 'Ts_mu', 'delTs_mu', 'Fgc_mu', 'svwc_s_mulga', 'Ts_ms', 'delTs_ms', 'Fgc_ms', 'svwc_10cm_baresoil_a1', 'svwc_60cm_baresoil_a1', 'svwc_100cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_60cm_mulga_a1', 'svwc_100cm_mulga_a1', 'svwc_10cm_understory_a1', 'svwc_60cm_understory_a1', 'svwc_100cm_understory_a1', 'svwc_10cm_baresoil_a2', 'svwc_60cm_baresoil_a2', 'svwc_100cm_baresoil_a2', 'svwc_143cm_baresoil_a2', 'svwc_10cm_a_mulga_a2', 'svwc_10cm_b_mulga_a2', 'svwc_60cm_mulga_a2', 'svwc_100cm_mulga_a2', 'svwc_10cm_a_understory_a2', 'svwc_10cm_b_understory_a2', 'svwc_60cm_understory_a2', 'svwc_100cm_understory_a2', 'Ah', 'q', 'e', 'RH', 'rhom', 'rhod', 'esat', 'Ta', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Ws_WS', 'Wd_WS', 'Ws_CSAT_Sd', 'Wd_CSAT_Sd', 'Ws_WS_Sd', 'Wd_WS_Sd', 'Rain', 'rst', 'Gst']"
-L3_Corrected = "['Fm', 'Fc', 'Fe', 'Fh', 'Fg', 'Fn', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustar', 'L', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'Tpanel_CR1000', 'theta', 'eta', 'u', 'v', 'w', 'uu', 'uv', 'uw', 'uA', 'uC', 'uT', 'vA', 'vC', 'vT', 'vv', 'vw', 'AhAh', 'CcCc', 'wT', 'wA', 'wC', 'Ts', 'Sws', 'svwc_s_baresoil', 'Ts_bs', 'delTs_bs', 'Fgc_bs', 'svwc_s_understory', 'Ts_mu', 'delTs_mu', 'Fgc_mu', 'svwc_s_mulga', 'Ts_ms', 'delTs_ms', 'Fgc_ms', 'svwc_10cm_baresoil_a1', 'svwc_60cm_baresoil_a1', 'svwc_100cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_60cm_mulga_a1', 'svwc_100cm_mulga_a1', 'svwc_10cm_understory_a1', 'svwc_60cm_understory_a1', 'svwc_100cm_understory_a1', 'svwc_10cm_baresoil_a2', 'svwc_60cm_baresoil_a2', 'svwc_100cm_baresoil_a2', 'svwc_143cm_baresoil_a2', 'svwc_10cm_a_mulga_a2', 'svwc_10cm_b_mulga_a2', 'svwc_60cm_mulga_a2', 'svwc_100cm_mulga_a2', 'svwc_10cm_a_understory_a2', 'svwc_10cm_b_understory_a2', 'svwc_60cm_understory_a2', 'svwc_100cm_understory_a2', 'Ah', 'q', 'e', 'RH', 'rhom', 'rhod', 'esat', 'Ta', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Ws_WS', 'Wd_WS', 'Ws_CSAT_Sd', 'Wd_CSAT_Sd', 'Ws_WS_Sd', 'Wd_WS_Sd', 'Rain', 'rst', 'Gst']"
-#noDefaultXl = True
-PNGFile = True
 
 [Variables]
     [[Fh]]
@@ -379,50 +391,50 @@ Height = 11.4   # home
 #Height = 9.5    # field
 
 [Plots]
-    [[21]]
+    [[31]]
         Title = "Fluxes"
         Variables = "['Fh','ustar','Fm','Fg','Fe','Fc']"
-    [[22]]
+    [[32]]
         Title = "Penman-Monteith"
         Variables = "['rst','Gst']"
-    [[23]]
+    [[33]]
         Title = "Radiation"
         Variables = "['Fsd','Fsu','Fld','Flu','Fn','albedo']"
-    [[24]]
+    [[34]]
         Title = "Meteorology"
         Variables = "['Ta','Ah','Rain','ps','Sws','Ts']"
-    [[25]]
+    [[35]]
         Title = "Diagnostics"
         Variables = "['Ux','Tpanel','Tpanel_CR1000','Vbat','C_ppm','H_ppt']"
-    [[26]]
+    [[36]]
         Title = "Surface soil water content"
         Variables = "['svwc_s_baresoil','svwc_s_mulga','svwc_s_understory','svwc_s_raingage']"
         YLMin = "['.01','.01','.01','.01']"
         YLMax = "['.4','.4','.4','.4']"
         YRMin = "['.01','.01','.01','.01']"
         YRMax = "['.4','.4','.4','.4']"
-    [[27]]
+    [[37]]
         Title = "10-30 cm soil water content"
         Variables = "['svwc_10cm_baresoil_a1','svwc_10cm_mulga_a1','svwc_10cm_understory_a1','svwc_10cm_baresoil_a2','svwc_10cm_a_mulga_a2','svwc_10cm_b_mulga_a2','svwc_10cm_a_understory_a2','svwc_10cm_b_understory_a2']"
         YLMin = "['.01','.01','.01','.01','.01','.01','.01','.01']"
         YLMax = "['.4','.4','.4','.4','.4','.4','.4','.4']"
         YRMin = "['.01','.01','.01','.01','.01','.01','.01','.01']"
         YRMax = "['.4','.4','.4','.4','.4','.4','.4','.4']"
-    [[28]]
+    [[38]]
         Title = "60-80 cm soil water content"
         Variables = "['svwc_60cm_baresoil_a1','svwc_60cm_mulga_a1','svwc_60cm_understory_a1','svwc_60cm_baresoil_a2','svwc_60cm_mulga_a2','svwc_60cm_understory_a2']"
         YLMin = "['.01','.01','.01','.01','.01','.01']"
         YLMax = "['.4','.4','.4','.4','.4','.4']"
         YRMin = "['.01','.01','.01','.01','.01','.01']"
         YRMax = "['.4','.4','.4','.4','.4','.4']"
-    [[29]]
+    [[39]]
         Title = "deeper than 99 cm soil water content"
         Variables = "['svwc_100cm_baresoil_a1','svwc_100cm_mulga_a1','svwc_100cm_understory_a1','svwc_100cm_baresoil_a2','svwc_143cm_baresoil_a2','svwc_100cm_mulga_a2','svwc_100cm_understory_a2']"
         YLMin = "['.01','.01','.01','.01','.01','.01','.01']"
         YLMax = "['.4','.4','.4','.4','.4','.4','.4']"
         YRMin = "['.01','.01','.01','.01','.01','.01','.01']"
         YRMax = "['.4','.4','.4','.4','.4','.4','.4']"
-    [[30]]
+    [[40]]
         Type = xy
         Title = "xy plots:  Ah"
         XSeries = "['Ah_HMP']"

@@ -281,7 +281,7 @@ netCDFv3 = False
             sheet    = Data
             name     = uu
         [[[Attr]]]
-            long_name = "Variance of Ux"
+            long_name = "Variance of u"
             units    = "m2/s2"
             ancillary_variables = "uu QC flag"
             standard_name = "not defined"
@@ -290,7 +290,7 @@ netCDFv3 = False
             sheet    = Data
             name     = uv
         [[[Attr]]]
-            long_name = "Covariance of Ux and Uy"
+            long_name = "Covariance of u and v"
             units    = "m2/s2"
             ancillary_variables = "uv QC flag"
             standard_name = "not defined"
@@ -308,7 +308,7 @@ netCDFv3 = False
             sheet    = Data
             name     = uA
         [[[Attr]]]
-            long_name = "Covariance of Ux and H2O (7500)"
+            long_name = "Covariance of u and H2O (7500)"
             units    = "g/m2/s"
             ancillary_variables = "uA QC flag"
             standard_name = "not defined"
@@ -317,7 +317,7 @@ netCDFv3 = False
             sheet    = Data
             name     = uC
         [[[Attr]]]
-            long_name = "Covariance of Ux and CO2 (7500)"
+            long_name = "Covariance of u and CO2 (7500)"
             units    = "mg/m2/s"
             ancillary_variables = "uC QC flag"
             standard_name = "not defined"
@@ -326,7 +326,7 @@ netCDFv3 = False
             sheet    = Data
             name     = uT
         [[[Attr]]]
-            long_name = "Covariance of Ux and T (CSAT)"
+            long_name = "Covariance of u and T (CSAT)"
             units    = "mC/s"
             ancillary_variables = "uT QC flag"
             standard_name = "not defined"
@@ -335,7 +335,7 @@ netCDFv3 = False
             sheet    = Data
             name     = vA
         [[[Attr]]]
-            long_name = "Covariance of Uy and H2O (7500)"
+            long_name = "Covariance of v and H2O (7500)"
             units    = "g/m2/s"
             ancillary_variables = "vA QC flag"
             standard_name = "not defined"
@@ -344,7 +344,7 @@ netCDFv3 = False
             sheet    = Data
             name     = vC
         [[[Attr]]]
-            long_name = "Covariance of Uy and CO2 (7500)"
+            long_name = "Covariance of v and CO2 (7500)"
             units    = "mg/m2/s"
             ancillary_variables = "vC QC flag"
             standard_name = "not defined"
@@ -353,7 +353,7 @@ netCDFv3 = False
             sheet    = Data
             name     = vT
         [[[Attr]]]
-            long_name = "Covariance of Uy and T (CSAT)"
+            long_name = "Covariance of v and T (CSAT)"
             units    = "mC/s"
             ancillary_variables = "vT QC flag"
             standard_name = "not defined"
@@ -362,7 +362,7 @@ netCDFv3 = False
             sheet    = Data
             name     = vv
         [[[Attr]]]
-            long_name = "Variance of Uy"
+            long_name = "Variance of v"
             units    = "m2/s2"
             ancillary_variables = "vv QC flag"
             standard_name = "not defined"
@@ -374,6 +374,15 @@ netCDFv3 = False
             long_name = "Momentum flux Y component, corrected to natural wind coordinates, Massman true Cov(vw)"
             units    = "m2/s2"
             ancillary_variables = "vw QC flag"
+            standard_name = "not defined"
+    [[ww]]
+        [[[xl]]]
+            sheet    = Data
+            name     = ww
+        [[[Attr]]]
+            long_name = "Variance of w"
+            units    = "m2/s2"
+            ancillary_variables = "ww QC flag"
             standard_name = "not defined"
     [[AhAh]]
         [[[xl]]]
@@ -742,7 +751,7 @@ netCDFv3 = False
         [[[Attr]]]
             long_name = "Absolute humidity (HMP)"
             units    = "g/m3"
-            ancillary_variables = "Ah_HMP QC flag"
+            ancillary_variables = "Ah QC flag"
             standard_name = "not defined"
     [[q]]
         [[[xl]]]
@@ -969,14 +978,14 @@ netCDFv3 = False
             units    = "umol/(m2 s)"
             ancillary_variables = "Re_day QC flag"
             standard_name = "not defined"
-    [[Re_umol]]
+    [[Re]]
         [[[xl]]]
             sheet    = Data
-            name     = Re_umol
+            name     = Re
         [[[Attr]]]
             long_name = "Ecosystem respiration gapfilled using modelled from Q10 response curve binned by soil volumetric moisture content class (night) and intercept of light response curve binned by temperature class (day)"
             units    = "umol/(m2 s)"
-            ancillary_variables = "Re_umol QC flag"
+            ancillary_variables = "Re QC flag"
             standard_name = "not defined"
     [[GPP]]
         [[[xl]]]
