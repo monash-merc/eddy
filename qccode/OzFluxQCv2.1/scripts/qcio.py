@@ -463,8 +463,6 @@ def xl_write_series(cf,ds,level):
     xlFlagSheet.write(6,xlCol+1,ds.globalattributes['Flag101'])
     xlFlagSheet.write(6,xlCol+2,'102:')
     xlFlagSheet.write(6,xlCol+3,ds.globalattributes['Flag102'])
-    xlFlagSheet.write(6,xlCol+4,'103:')
-    xlFlagSheet.write(6,xlCol+5,ds.globalattributes['Flag103'])
     #d_xf = xlwt.easyxf('font: height 160',num_format_str='dd/mm/yyyy hh:mm')
     d_xf = xlwt.easyxf(num_format_str='dd/mm/yyyy hh:mm')
     for j in range(nRecs):
@@ -513,7 +511,7 @@ def xl_write_series(cf,ds,level):
             # increment the column pointer
             xlCol = xlCol + 1
     # tell the user what we are doing
-    log.info(' Saving the Excel file ')
+    log.info(' Saving the Excel file '+xlFileName)
     # save the xl file
     xlFile.save(xlFileName)
 

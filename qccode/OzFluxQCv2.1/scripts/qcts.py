@@ -789,6 +789,13 @@ def CoordRotation2D(cf,ds):
             mask = numpy.ma.getmask(testseries)
             index = numpy.where(mask.astype(int)==1)
             ds.series[ThisOne]['Flag'][index] = 11
+    else:
+        keys = ['eta','theta','u','v','w','wT','wA','wC','uw','vw']
+        for ThisOne in keys:
+            testseries,f = qcutils.GetSeriesasMA(ds,ThisOne)
+            mask = numpy.ma.getmask(testseries)
+            index = numpy.where((numpy.mod(f,10)==0) & (mask.astype(int)==1))    # find the elements with flag = 0, 10, 20 etc and masked (check for masked data with good data flag)
+            ds.series[ThisOne]['Flag'][index] = 11
 
 def ConvertFc(cf,ds,Fc_in='Fc'):
     """
@@ -1087,8 +1094,7 @@ def do_attributes(cf,ds):
         ds.globalattributes['Flag90'] = 'Partitioning Day: GPP night mask'
         ds.globalattributes['Flag91'] = 'Partitioning Day: Fc > Re, GPP = 0, Re = Fc'
         ds.globalattributes['Flag101'] = 'Footprint: Date filter'
-        ds.globalattributes['Flag102'] = 'Footprint: u* < 0.2 m/s'
-        ds.globalattributes['Flag103'] = 'Footprint: out of range: L, ww, vv'
+        ds.globalattributes['Flag102'] = 'Footprint: no solution'
     for ThisOne in ds.series.keys():
         if ThisOne in cf['Variables']:
             if 'Attr' in cf['Variables'][ThisOne].keys():
@@ -1187,33 +1193,20 @@ def do_footprint_2d(cf,ds):
     
     wd,f = qcutils.GetSeriesasMA(ds,wdin)
     xr = numpy.ma.zeros(n,dtype=float)
-    for i in range(n):
-        if (sigmaw[i] > 0):
-            if (sigmav[i] > 0):
-                if (ustar[i] > 0.2):
-                    if (h[i] > 1):
-                        if (h[i] > zm):
-                            log.info('    Footprint: '+str(ds.series['DateTime']['Data'][i]))
-                            xr[i] = footprint_2d(cf,sigmaw[i],sigmav[i],ustar[i],zm,h[i],znot,r,wd[i],zeta[i],L[i],zc,ds.series['DateTime']['Data'][i])
-                        else:
-                            xr[i] = -9999
-                    else:
-                        xr[i] = -9999
-                else:
-                    xr[i] = -9999
-            else:
-                xr[i] = -9999
-        else:
-            xr[i] = -9999
+    do_index = numpy.where((sigmaw > 0) & (sigmav > 0) & (ustar > 0.2) & (h > 1) & (h > zm))[0]
+    for i in range(len(do_index)):
+        log.info('    Footprint: '+str(ds.series['DateTime']['Data'][do_index[i]]))
+        xr[do_index[i]] = footprint_2d(cf,sigmaw[do_index[i]],sigmav[do_index[i]],ustar[do_index[i]],zm,h[do_index[i]],znot,r,wd[do_index[i]],zeta[do_index[i]],L[do_index[i]],zc,ds.series['DateTime']['Data'][do_index[i]])
     
     qcutils.CreateSeries(ds,'xr',xr,FList=['L','ww','vv','ustar'],Descr='integrated footprint in the direction of the wind',Units='m')
-    
-    flag_index = numpy.ma.where((xr == -9999) & (ds.series['xr']['Flag'] == 0))[0]
+    flag_index = numpy.ma.where((xr == 0) & (numpy.mod(ds.series['xr']['Flag'],10)==0))[0]
     ustar_index = numpy.ma.where(ustar < 0.2)[0]
     date_index = numpy.ma.where(Lf == 9999)[0]
-    ds.series['xr']['Flag'][flag_index] = 103
-    ds.series['xr']['Flag'][ustar_index] = 102
+    ds.series['xr']['Flag'][flag_index] = 102
+    ds.series['xr']['Flag'][ustar_index] = 18
     ds.series['xr']['Flag'][date_index] = 101
+    index = numpy.where((numpy.mod(ds.series['xr']['Flag'],10)!=0))[0]    # find the elements with flag != 0, 10, 20 etc
+    ds.series['xr']['Data'][index] = -9999
 
 def do_functions(cf,ds):
     log.info(' Resolving functions given in control file')
@@ -1384,6 +1377,7 @@ def Fc_WPL(cf,ds,Fc_wpl_out='Fc',Fc_raw_in='Fc',Fh_in='Fh',Fe_wpl_in='Fe',Ta_in=
     nRecs = numpy.size(Fh)
     Fc_wpl_flag = numpy.zeros(nRecs,int)
     rhod = mf.densitydryair(Ta,ps)            # Density of dry air, kg/m3
+    rhom = rhod+Ah                            # Density of moist air, kg/m3
     Ah = Ah/float(1000)                       # Absolute humidity from g/m3 to kg/m3
     sigma_wpl = Ah/rhod
     if 'Cpm' not in ds.series.keys():
@@ -1399,21 +1393,26 @@ def Fc_WPL(cf,ds,Fc_wpl_out='Fc',Fc_raw_in='Fc',Fh_in='Fh',Fe_wpl_in='Fe',Ta_in=
             Cpm = mf.specificheatmoistair(q)
     else:
         Cpm,f = qcutils.GetSeriesasMA(ds,'Cpm')
-    if 'rhom' in ds.series.keys() and 'Lv' in ds.series.keys():
+    if 'Lv' in ds.series.keys():
         rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
         Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
         co2_wpl_Fe = 1.61*(Cc/rhod)*(Fe_wpl/Lv)
         co2_wpl_Fh = (1+(1.61*sigma_wpl))*Cc/(Ta+273.15)*Fh/(rhom*Cpm)
     else:
-        rhom = rhod+Ah                            # Density of moist air, kg/m3
         co2_wpl_Fe = 1.61*(Cc/rhod)*(Fe_wpl/c.Lv)
         co2_wpl_Fh = (1+(1.61*sigma_wpl))*Cc/(Ta+273.15)*Fh/(rhom*Cpm)
     Fc_wpl_data = Fc_raw+co2_wpl_Fe+co2_wpl_Fh
-    mask = numpy.ma.getmask(Fc_wpl_data)
-    index = numpy.where(mask.astype(int)==1)
-    Fc_wpl_flag[index] = 14
-    qcutils.CreateSeries(ds,Fc_wpl_out,Fc_wpl_data,Flag=Fc_wpl_flag,
-                         Descr='WPL corrected Fc',Units='mg/m2/s')
+    qcutils.CreateSeries(ds,Fc_wpl_out,Fc_wpl_data,FList=[Fc_raw_in,Fh_in,Fe_wpl_in,Ta_in,Ah_in,Cc_in,ps_in],Descr='WPL corrected Fc',Units='mg/m2/s')
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='WPLFlag') and cf['General']['WPLFlag'] == 'True':
+        testseries,f = qcutils.GetSeriesasMA(ds,Fc_wpl_out)
+        mask = numpy.ma.getmask(testseries)
+        index = numpy.where(mask.astype(int)==1)
+        ds.series[Fc_wpl_out]['Flag'][index] = 14
+    else:
+        testseries,f = qcutils.GetSeriesasMA(ds,Fc_wpl_out)
+        mask = numpy.ma.getmask(testseries)
+        index = numpy.where((numpy.mod(f,10)==0) & (mask.astype(int)==1))    # find the elements with flag = 0, 10, 20 etc and masked (check for masked data with good data flag)
+        ds.series[Fc_wpl_out]['Flag'][index] = 14
 
 def Fc_WPLcov(cf,ds,Fc_wpl_out='Fc',wC_in='wC',Fh_in='Fh',wA_in='wA',Ta_in='Ta',Ah_in='Ah',Cc_in='Cc_7500_Av',ps_in='ps'):
     """
@@ -1463,6 +1462,7 @@ def Fc_WPLcov(cf,ds,Fc_wpl_out='Fc',wC_in='wC',Fh_in='Fh',wA_in='wA',Ta_in='Ta',
     nRecs = numpy.size(wC)
     TaK = Ta + 273.15
     rhod = mf.densitydryair(Ta,ps)            # Density of dry air, kg/m3
+    rhom = rhod+Ah                            # Density of moist air, kg/m3
     Ah = Ah/float(1000)                       # Absolute humidity from g/m3 to kg/m3
     Cckg = Cc/float(1000000)                  # CO2 from mg/m3 to kg/m3
     sigma_wpl = Ah/rhod
@@ -1479,21 +1479,20 @@ def Fc_WPLcov(cf,ds,Fc_wpl_out='Fc',wC_in='wC',Fh_in='Fh',wA_in='wA',Ta_in='Ta',
             Cpm = mf.specificheatmoistair(q)
     else:
         Cpm,f = qcutils.GetSeriesasMA(ds,'Cpm')
-    if 'rhom' in ds.series.keys():
-        rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
-        wT = Fh / (rhom * Cpm)
-    else:
-        rhom = rhod+Ah                            # Density of moist air, kg/m3
-        wT = Fh / (rhom * Cpm)
+    wT = Fh / (rhom * Cpm)
     Fc_wpl_data = wC + (1.61 * (Cckg / rhod) * wA) \
                      + ((1 + (1.61 * sigma_wpl)) * (Cc / TaK) * wT)
-    qcutils.CreateSeries(ds,Fc_wpl_out,Fc_wpl_data,FList=[wC_in,Fh_in,wA_in,Ta_in,Ah_in,Cc_in,ps_in],
-                         Descr='Fc, rotated to natural wind coordinates, frequency response corrected, and density flux corrected (wpl)',
-                         Units='mg/m2/s')
-    testseries = qcutils.GetSeriesasMA(ds,Fc_wpl_out)
-    mask = numpy.ma.getmask(testseries)
-    index = numpy.where(mask.astype(int)==1)
-    ds.series[Fc_wpl_out]['Flag'][index] = 14
+    qcutils.CreateSeries(ds,Fc_wpl_out,Fc_wpl_data,FList=[wC_in,Fh_in,wA_in,Ta_in,Ah_in,Cc_in,ps_in],Descr='WPL corrected Fc',Units='mg/m2/s')
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='WPLFlag') and cf['General']['WPLFlag'] == 'True':
+        testseries,f = qcutils.GetSeriesasMA(ds,Fc_wpl_out)
+        mask = numpy.ma.getmask(testseries)
+        index = numpy.where(mask.astype(int)==1)
+        ds.series[Fc_wpl_out]['Flag'][index] = 14
+    else:
+        testseries,f = qcutils.GetSeriesasMA(ds,Fc_wpl_out)
+        mask = numpy.ma.getmask(testseries)
+        index = numpy.where((numpy.mod(f,10)==0) & (mask.astype(int)==1))    # find the elements with flag = 0, 10, 20 etc and masked (check for masked data with good data flag)
+        ds.series[Fc_wpl_out]['Flag'][index] = 14
 
 def Fe_WPL(cf,ds,Fe_wpl_out='Fe',Fe_raw_in='Fe',Fh_in='Fh',Ta_in='Ta',Ah_in='Ah',ps_in='ps'):
     """
@@ -1534,6 +1533,7 @@ def Fe_WPL(cf,ds,Fe_wpl_out='Fe',Fe_raw_in='Fe',Fh_in='Fh',Ta_in='Ta',Ah_in='Ah'
     nRecs = numpy.size(Fh)
     Fe_wpl_flag = numpy.zeros(nRecs,int)
     rhod = mf.densitydryair(Ta,ps)            # Density of dry air, kg/m3
+    rhom = rhod+Ah                            # Density of moist air, kg/m3
     Ah = Ah/float(1000)                       # Absolute humidity from g/m3 to kg/m3
     sigma_wpl = Ah/rhod
     if 'Cpm' not in ds.series.keys():
@@ -1549,22 +1549,25 @@ def Fe_WPL(cf,ds,Fe_wpl_out='Fe',Fe_raw_in='Fe',Fh_in='Fh',Ta_in='Ta',Ah_in='Ah'
             Cpm = mf.specificheatmoistair(q)
     else:
         Cpm,f = qcutils.GetSeriesasMA(ds,'Cpm')
-    if 'rhom' in ds.series.keys() and 'Lv' in ds.series.keys():
-        rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
+    if 'Lv' in ds.series.keys():
         Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
         h2o_wpl_Fe = 1.61*sigma_wpl*Fe_raw
         h2o_wpl_Fh = (1+(1.61*sigma_wpl))*Ah*Lv*(Fh/(rhom*Cpm))/(Ta+273.15)
     else:
-        rhom = rhod+Ah                            # Density of moist air, kg/m3
         h2o_wpl_Fe = 1.61*sigma_wpl*Fe_raw
         h2o_wpl_Fh = (1+(1.61*sigma_wpl))*Ah*c.Lv*(Fh/(rhom*Cpm))/(Ta+273.15)
     Fe_wpl_data = Fe_raw+h2o_wpl_Fe+h2o_wpl_Fh
-    mask = numpy.ma.getmask(Fe_wpl_data)
-    index = numpy.where(mask.astype(int)==1)
-    Fe_wpl_flag[index] = 14
-    qcutils.CreateSeries(ds,Fe_wpl_out,Fe_wpl_data,Flag=Fe_wpl_flag,
-                         Descr='WPL corrected Fe',Units='W/m2',Standard='surface_upward_latent_heat_flux')
-    #ds.series[Fe_wpl_out]['Flag'] = Fe_wpl_flag
+    qcutils.CreateSeries(ds,Fe_wpl_out,Fe_wpl_data,FList=[Fe_raw_in,Fh_in,Ta_in,Ah_in,ps_in],Descr='WPL corrected Fe',Units='W/m2',Standard='surface_upward_latent_heat_flux')
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='WPLFlag') and cf['General']['WPLFlag'] == 'True':
+        testseries,f = qcutils.GetSeriesasMA(ds,Fe_wpl_out)
+        mask = numpy.ma.getmask(testseries)
+        index = numpy.where(mask.astype(int)==1)
+        ds.series[Fe_wpl_out]['Flag'][index] = 14
+    else:
+        testseries,f = qcutils.GetSeriesasMA(ds,Fe_wpl_out)
+        mask = numpy.ma.getmask(testseries)
+        index = numpy.where((numpy.mod(f,10)==0) & (mask.astype(int)==1))    # find the elements with flag = 0, 10, 20 etc and masked (check for masked data with good data flag)
+        ds.series[Fe_wpl_out]['Flag'][index] = 14
 
 def Fe_WPLcov(cf,ds,Fe_wpl_out='Fe',wA_in='wA',Fh_in='Fh',Ta_in='Ta',Ah_in='Ah',ps_in='ps',wA_out='wA'):
     """
@@ -1610,6 +1613,7 @@ def Fe_WPLcov(cf,ds,Fe_wpl_out='Fe',wA_in='wA',Fh_in='Fh',Ta_in='Ta',Ah_in='Ah',
     nRecs = numpy.size(wA)
     TaK = Ta + 273.15
     rhod = mf.densitydryair(Ta,ps)            # Density of dry air, kg/m3
+    rhom = rhod+Ah                            # Density of moist air, kg/m3
     Ah = Ah/float(1000)                       # Absolute humidity from g/m3 to kg/m3
     sigma_wpl = Ah/rhod
     if 'Cpm' not in ds.series.keys():
@@ -1625,29 +1629,31 @@ def Fe_WPLcov(cf,ds,Fe_wpl_out='Fe',wA_in='wA',Fh_in='Fh',Ta_in='Ta',Ah_in='Ah',
             Cpm = mf.specificheatmoistair(q)
     else:
         Cpm,f = qcutils.GetSeriesasMA(ds,'Cpm')
-    if 'rhom' in ds.series.keys() and 'Lv' in ds.series.keys():
-        rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
+    if 'Lv' in ds.series.keys():
         Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
         wT = Fh / (rhom * Cpm)
         Fe_wpl_data = (Lv / 1000) * (1 + (1.61 * sigma_wpl)) * (wA + ((Ah / TaK) * wT))
         wAwpl = Fe_wpl_data * 1000 / Lv
     else:
-        rhom = rhod+Ah                            # Density of moist air, kg/m3
         wT = Fh / (rhom * Cpm)
         Fe_wpl_data = (c.Lv / 1000) * (1 + (1.61 * sigma_wpl)) * (wA + ((Ah / TaK) * wT))
         wAwpl = Fe_wpl_data * 1000 / c.Lv
-    qcutils.CreateSeries(ds,Fe_wpl_out,Fe_wpl_data,FList=[wA_in,Fh_in,Ta_in,Ah_in,ps_in],
-                         Descr='Fe, rotated to natural wind coordinates, frequency response corrected, and density flux corrected (wpl)',
-                         Units='W/m2',Standard='surface_upward_latent_heat_flux')
-    qcutils.CreateSeries(ds,wA_out,wAwpl,FList=[wA_in,Fh_in,Ta_in,Ah_in,ps_in],
-                         Descr='Cov(wA), rotated to natural wind coordinates, frequency response corrected, and density flux corrected (wpl)',
-                         Units='g/(m2 s)')
-    keys = [Fe_wpl_out,wA_out]
-    for ThisOne in keys:
-        testseries,f = qcutils.GetSeriesasMA(ds,ThisOne)
-        mask = numpy.ma.getmask(testseries)
-        index = numpy.where(mask.astype(int)==1)
-        ds.series[ThisOne]['Flag'][index] = 14
+    qcutils.CreateSeries(ds,Fe_wpl_out,Fe_wpl_data,FList=[wA_in,Fh_in,Ta_in,Ah_in,ps_in],Descr='WPL corrected Fe',Units='W/m2',Standard='surface_upward_latent_heat_flux')
+    qcutils.CreateSeries(ds,wA_out,wAwpl,FList=[wA_in,Fh_in,Ta_in,Ah_in,ps_in],Descr='WPL corrected Cov(wA)',Units='g/(m2 s)')
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='WPLFlag') and cf['General']['WPLFlag'] == 'True':
+        keys = [Fe_wpl_out,wA_out]
+        for ThisOne in keys:
+            testseries,f = qcutils.GetSeriesasMA(ds,ThisOne)
+            mask = numpy.ma.getmask(testseries)
+            index = numpy.where(mask.astype(int)==1)
+            ds.series[ThisOne]['Flag'][index] = 14
+    else:
+        keys = [Fe_wpl_out,wA_out]
+        for ThisOne in keys:
+            testseries,f = qcutils.GetSeriesasMA(ds,ThisOne)
+            mask = numpy.ma.getmask(testseries)
+            index = numpy.where((numpy.mod(f,10)==0) & (mask.astype(int)==1))    # find the elements with flag = 0, 10, 20 etc and masked (check for masked data with good data flag)
+            ds.series[Fe_wpl_out]['Flag'][index] = 14
 
 def FhvtoFh(cf,ds,Ta_in='Ta',Fh_in='Fh',Tv_in='Tv_CSAT',Fe_in='Fe',ps_in='ps',Ah_in='Ah',Fh_out='Fh',attr='Fh rotated and converted from virtual heat flux'):
     """
@@ -1818,6 +1824,16 @@ def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp):
     a = (af/(bb-math.log(znot)))
     c = (ac*(bb-math.log(znot)))
     d = (ad*(bb-math.log(znot)))
+    axa = numpy.zeros(n) + a
+    bxb = numpy.zeros(n) + b
+    cxc = numpy.zeros(n) + c
+    dxd = numpy.zeros(n) + d
+    zmxzm = numpy.zeros(n) + zm
+    sigmawxsigmaw = numpy.zeros(n) + sigmaw
+    ustarxustar = numpy.zeros(n) + ustar
+    coeff8xcoeff = numpy.zeros(n) + 0.8
+    negcoeff8x = numpy.zeros(n) - 0.8
+    hxh = numpy.zeros(n) + h
     
     xstar = numpy.ones(n, dtype=float)
     fstar = numpy.ones(n, dtype=float)
@@ -1832,14 +1848,14 @@ def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp):
         # Calculate X*
         if i>0:
             xstar[i] = xstar[i-1] + xstep
-        
-        # Calculate F*
-        fstar[i] = a*((xstar[i]+d)/c)**b * math.exp(b*(1-(xstar[i]+d)/c))
     
-        # Calculate x and f
-        x[i] = xstar[i] * zm * (sigmaw/ustar)**(-0.8)
-        f_ci[i] = fstar[i] / zm * (1-(zm/h)) * (sigmaw/ustar)**(0.8)
-        
+    # Calculate F*
+    fstar = axa*((xstar+dxd)/cxc)**bxb * numpy.exp(bxb*(1-(xstar+dxd)/cxc))
+    
+    # Calculate x and f
+    x = xstar * zmxzm * (sigmawxsigmaw/ustar)**(negcoeff8x)
+    f_ci = fstar / zmxzm * (1-(zmxzm/hxh)) * (sigmawxsigmaw/ustar)**(coeff8xcoeff)
+    
     # Calculate maximum location of influence (peak location)
     xstarmax = c-d
     xmax = xstarmax * zm *(sigmaw/ustar)**(-0.8)
@@ -1851,140 +1867,154 @@ def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp):
     xstarr = lr*c - d
     xr = xstarr * zm *(sigmaw/ustar)**(-0.8)
     
-    # Calculate lateral dispersion
-    u = ustar/k *(math.log(zm/znot) - (zm-znot)/zm)
-    tau = numpy.sqrt((x/u)**2 + (a4*(zm-znot)/sigmaw)**2)
-    tly = a3*h**2 /((h-zm)*ustar)
-    fy_disp = 1/(1 + numpy.sqrt(tau/(2*tly)))
-    sigmay = sigmav * tau * fy_disp
-    
-    x_lim = numpy.max(x)
-    y0 = (x[x>0])
-    y1 = (y0[y0<=x_lim/2])
-    y2 = -(y1[::-1])
-    y  = numpy.concatenate((y2,[0],y1))
-    
-    m = len(y)
-    x_2d = numpy.zeros((n,m), dtype=float)
-    y_2d = numpy.zeros((n,m), dtype=float)
-    f_2d = numpy.zeros((n,m), dtype=float)
-    for i in range(0, n):
-        for j in range(0, m):
-            x_2d[i,j] = x[i]
-            y_2d[i,j] = y[j]
-            f_2d[i,j] = f_ci[i] * 1/(sqrt2pi*sigmay[i]) *  math.exp(-y[j]**2 / (2*sigmay[i]**2))
-    
-    STList = []
-    for fmt in ['%Y','%m','%d','%H','%M']:
-        STList.append(timestamp.strftime(fmt))
-        if qcutils.cfkeycheck(cf, Base='Output', ThisOne='FootprintFile') and cf['Output']['FootprintFile'] == 'True':
+    if qcutils.cfkeycheck(cf, Base='Output', ThisOne='FootprintFile') and cf['Output']['FootprintFile'] == 'True':
+        # Calculate lateral dispersion
+        u = ustar/k *(math.log(zm/znot) - (zm-znot)/zm)
+        tau = numpy.sqrt((x/u)**2 + (a4*(zm-znot)/sigmaw)**2)
+        tly = a3*h**2 /((h-zm)*ustar)
+        fy_disp = 1/(1 + numpy.sqrt(tau/(2*tly)))
+        sigmay = sigmav * tau * fy_disp
+        
+        x_lim = numpy.max(x)
+        y0 = (x[x>0])
+        y1 = (y0[y0<=x_lim/2])
+        y2 = -(y1[::-1])
+        y  = numpy.concatenate((y2,[0],y1))
+        
+        m = len(y)
+        x_2d = numpy.zeros((n,m), dtype=float)
+        y_2d = numpy.zeros((n,m), dtype=float)
+        f_2d = numpy.zeros((n,m), dtype=float)
+        #sqrt2pi2d = numpy.zeros((n,m), dtype=float) + sqrt2pi
+        #f_ci2d = numpy.zeros((n,m), dtype=float)
+        #sigmay2d = numpy.zeros((n,m), dtype=float)
+        #
+        #for i in range(0, n):
+        #    x_2d[i,:] = x[i]
+        #    f_ci2d[i,:] = f_ci[i]
+        #    sigmay2d[i,:] = sigmay[i]
+        #
+        #for j in range(0, m):
+        #    y_2d[:,j] = y[j]
+        #
+        #f_2d = f_ci2d * 1/(sqrt2pi2d*sigmay2d) *  numpy.exp(-y_2d**2 / (2*sigmay2d**2))
+        #
+        for i in range(0, n):
+            for j in range(0, m):
+                x_2d[i,j] = x[i]
+                y_2d[i,j] = y[j]
+                f_2d[i,j] = f_ci[i] * 1/(sqrt2pi*sigmay[i]) *  math.exp(-y[j]**2 / (2*sigmay[i]**2))
+        
+        STList = []
+        for fmt in ['%Y','%m','%d','%H','%M']:
+            STList.append(timestamp.strftime(fmt))
             summaryFileName = cf['Files']['Footprint']['FootprintFilePath']+'footprint_2d_summary_'+''.join(STList)+'.xls'
             vectorFileName = cf['Files']['Footprint']['FootprintFilePath']+'footprint_2d_vectors_'+''.join(STList)+'.xls'
             matrixFileName = cf['Files']['Footprint']['FootprintFilePath']+'footprint_2d_matrix_'+''.join(STList)+'.xls'
-    
-    xlFile = xlwt.Workbook()
-    xlSheet = xlFile.add_sheet('summary')
-    xlCol = 1
-    xlRow = 0
-    xlSheet.write(xlRow,xlCol,'Measurement height (zm)')
-    xlCol = xlCol - 1
-    xlSheet.write(xlRow,xlCol,zm)
-    xlRow = xlRow + 1
-    xlCol = 1
-    xlSheet.write(xlRow,xlCol,'Canopy height (zc)')
-    xlCol = xlCol - 1
-    xlSheet.write(xlRow,xlCol,zc)
-    xlRow = xlRow + 1
-    xlCol = 1
-    xlSheet.write(xlRow,xlCol,'Roughness length (z0)')
-    xlCol = xlCol - 1
-    xlSheet.write(xlRow,xlCol,znot)
-    xlRow = xlRow + 1
-    xlCol = 1
-    xlSheet.write(xlRow,xlCol,'PBL height (zi)')
-    xlCol = xlCol - 1
-    xlSheet.write(xlRow,xlCol,h)
-    xlRow = xlRow + 1
-    xlCol = 1
-    xlSheet.write(xlRow,xlCol,'Monin-Obukhov length (L)')
-    xlCol = xlCol - 1
-    xlSheet.write(xlRow,xlCol,L)
-    xlRow = xlRow + 1
-    xlCol = 1
-    xlSheet.write(xlRow,xlCol,'Stability coefficient (z-d/L, zeta)')
-    xlCol = xlCol - 1
-    xlSheet.write(xlRow,xlCol,zeta)
-    xlRow = xlRow + 1
-    xlCol = 1
-    xlSheet.write(xlRow,xlCol,'Friction coefficient (ustar)')
-    xlCol = xlCol - 1
-    xlSheet.write(xlRow,xlCol,ustar)
-    xlRow = xlRow + 1
-    xlCol = 1
-    xlSheet.write(xlRow,xlCol,'sd(w) (sigma_w)')
-    xlCol = xlCol - 1
-    xlSheet.write(xlRow,xlCol,sigmaw)
-    xlRow = xlRow + 1
-    xlCol = 1
-    xlSheet.write(xlRow,xlCol,'sd(v) (sigma_v)')
-    xlCol = xlCol - 1
-    xlSheet.write(xlRow,xlCol,sigmav)
-    xlRow = xlRow + 1
-    xlCol = 1
-    
-    xlCol = 3
-    xlRow = 0
-    xlSheet.write(xlRow,xlCol,'Wind direction (wd)')
-    xlCol = xlCol - 1
-    xlSheet.write(xlRow,xlCol,wd)
-    xlRow = xlRow + 1
-    xlCol = 3
-    xlSheet.write(xlRow,xlCol,'% of flux footprint (r)')
-    xlCol = xlCol - 1
-    xlSheet.write(xlRow,xlCol,r)
-    xlRow = xlRow + 1
-    xlCol = 3
-    xlSheet.write(xlRow,xlCol,'Extent of footprint up to r% (xr)')
-    xlCol = xlCol - 1
-    xlSheet.write(xlRow,xlCol,xr)
-    xlRow = xlRow + 1
-    
-    xlSheet = xlFile.add_sheet('crosswind_integrated')
-    for i in range(0,n):
-        xlSheet.write(i,0,x[i])
-        xlSheet.write(i,1,f_ci[i])
-    
-    xlFile.save(summaryFileName)
-    vectorout = open(vectorFileName, 'w')
-    csvSheet = csv.writer(vectorout, dialect='excel-tab')
-    csvSheet.writerow(['x','y','f'])
-    for i in range(0,n):
-        for j in range(0,m):
-            xout = x_2d[i,j]
-            yout = y_2d[i,j]
-            fout = f_2d[i,j]
-            csvSheet.writerow([xout,yout,fout])
-    
-    vectorout.close()
-    matrixout = open(matrixFileName, 'w')
-    csvSheet = csv.writer(matrixout, dialect='excel-tab')
-    xout = numpy.zeros(n+1,dtype=float)
-    xout[0] = -9999
-    for i in range(0,n):
-        xout[i+1] = x_2d[i,0]
-    
-    csvSheet.writerow(xout)
-    for j in range(0,m):
-        yout = y_2d[0,j]
-        dataout = f_2d[j]
-        ydataout = numpy.zeros(n+1,dtype=float)
-        ydataout[0] = yout
-        for i in range(0,n):
-            ydataout[i+1] = f_2d[i,j]
         
-        csvSheet.writerow(ydataout)
-    
-    matrixout.close()
+        xlFile = xlwt.Workbook()
+        xlSheet = xlFile.add_sheet('summary')
+        xlCol = 1
+        xlRow = 0
+        xlSheet.write(xlRow,xlCol,'Measurement height (zm)')
+        xlCol = xlCol - 1
+        xlSheet.write(xlRow,xlCol,zm)
+        xlRow = xlRow + 1
+        xlCol = 1
+        xlSheet.write(xlRow,xlCol,'Canopy height (zc)')
+        xlCol = xlCol - 1
+        xlSheet.write(xlRow,xlCol,zc)
+        xlRow = xlRow + 1
+        xlCol = 1
+        xlSheet.write(xlRow,xlCol,'Roughness length (z0)')
+        xlCol = xlCol - 1
+        xlSheet.write(xlRow,xlCol,znot)
+        xlRow = xlRow + 1
+        xlCol = 1
+        xlSheet.write(xlRow,xlCol,'PBL height (zi)')
+        xlCol = xlCol - 1
+        xlSheet.write(xlRow,xlCol,h)
+        xlRow = xlRow + 1
+        xlCol = 1
+        xlSheet.write(xlRow,xlCol,'Monin-Obukhov length (L)')
+        xlCol = xlCol - 1
+        xlSheet.write(xlRow,xlCol,L)
+        xlRow = xlRow + 1
+        xlCol = 1
+        xlSheet.write(xlRow,xlCol,'Stability coefficient (z-d/L, zeta)')
+        xlCol = xlCol - 1
+        xlSheet.write(xlRow,xlCol,zeta)
+        xlRow = xlRow + 1
+        xlCol = 1
+        xlSheet.write(xlRow,xlCol,'Friction coefficient (ustar)')
+        xlCol = xlCol - 1
+        xlSheet.write(xlRow,xlCol,ustar)
+        xlRow = xlRow + 1
+        xlCol = 1
+        xlSheet.write(xlRow,xlCol,'sd(w) (sigma_w)')
+        xlCol = xlCol - 1
+        xlSheet.write(xlRow,xlCol,sigmaw)
+        xlRow = xlRow + 1
+        xlCol = 1
+        xlSheet.write(xlRow,xlCol,'sd(v) (sigma_v)')
+        xlCol = xlCol - 1
+        xlSheet.write(xlRow,xlCol,sigmav)
+        xlRow = xlRow + 1
+        xlCol = 1
+        
+        xlCol = 3
+        xlRow = 0
+        xlSheet.write(xlRow,xlCol,'Wind direction (wd)')
+        xlCol = xlCol - 1
+        xlSheet.write(xlRow,xlCol,wd)
+        xlRow = xlRow + 1
+        xlCol = 3
+        xlSheet.write(xlRow,xlCol,'% of flux footprint (r)')
+        xlCol = xlCol - 1
+        xlSheet.write(xlRow,xlCol,r)
+        xlRow = xlRow + 1
+        xlCol = 3
+        xlSheet.write(xlRow,xlCol,'Extent of footprint up to r% (xr)')
+        xlCol = xlCol - 1
+        xlSheet.write(xlRow,xlCol,xr)
+        xlRow = xlRow + 1
+        
+        xlSheet = xlFile.add_sheet('crosswind_integrated')
+        for i in range(0,n):
+            xlSheet.write(i,0,x[i])
+            xlSheet.write(i,1,f_ci[i])
+        
+        xlFile.save(summaryFileName)
+        vectorout = open(vectorFileName, 'w')
+        csvSheet = csv.writer(vectorout, dialect='excel-tab')
+        csvSheet.writerow(['x','y','f'])
+        for i in range(0,n):
+            for j in range(0,m):
+                xout = x_2d[i,j]
+                yout = y_2d[i,j]
+                fout = f_2d[i,j]
+                csvSheet.writerow([xout,yout,fout])
+        
+        vectorout.close()
+        matrixout = open(matrixFileName, 'w')
+        csvSheet = csv.writer(matrixout, dialect='excel-tab')
+        xout = numpy.zeros(n+1,dtype=float)
+        xout[0] = -9999
+        for i in range(0,n):
+            xout[i+1] = x_2d[i,0]
+        
+        csvSheet.writerow(xout)
+        for j in range(0,m):
+            yout = y_2d[0,j]
+            dataout = f_2d[j]
+            ydataout = numpy.zeros(n+1,dtype=float)
+            ydataout[0] = yout
+            for i in range(0,n):
+                ydataout[i+1] = f_2d[i,j]
+            
+            csvSheet.writerow(ydataout)
+        
+        matrixout.close()
     
     return xr
 
@@ -2487,7 +2517,7 @@ def InterpolateOverMissing(cf,ds,series='',maxlen=1000):
             ds.series[ThisOne]['Data'][iom_new] = f(DateNum[iom_new]).astype(numpy.float32)        # fill missing values with linear interpolations
             ds.series[ThisOne]['Flag'][iom_new] = 34
 
-def MassmanStandard(cf,ds,Ta_in='Ta',Ah_in='Ah',ps_in='ps',ustar_in='ustar',ustar_out='ustar',L_in='L',L_out ='L',uw_out='uw',vw_out='vw',wT_out='wT',wA_out='wA',wC_out='wC'):
+def MassmanStandard(cf,ds,Ta_in='Ta',Ah_in='Ah',ps_in='ps',ustar_in='ustar',ustar_out='ustar',L_in='L',L_out ='L',uw_out='uw',vw_out='vw',wT_out='wT',wA_out='wA',wC_out='wC',u_in='u',uw_in='uw',vw_in='vw',wT_in='wT',wC_in='wC',wA_in='wA'):
     """
        Massman corrections.
        The steps involved are as follows:
@@ -2527,12 +2557,12 @@ def MassmanStandard(cf,ds,Ta_in='Ta',Ah_in='Ah',ps_in='ps',ustar_in='ustar',usta
     Ah,f = qcutils.GetSeriesasMA(ds,Ah_in)
     ps,f = qcutils.GetSeriesasMA(ds,ps_in)
     nRecs = numpy.size(Ta)
-    u,f = qcutils.GetSeriesasMA(ds,'u')
-    uw,f = qcutils.GetSeriesasMA(ds,'uw')
-    vw,f = qcutils.GetSeriesasMA(ds,'vw')
-    wT,f = qcutils.GetSeriesasMA(ds,'wT')
-    wC,f = qcutils.GetSeriesasMA(ds,'wC')
-    wA,f = qcutils.GetSeriesasMA(ds,'wA')
+    u,f = qcutils.GetSeriesasMA(ds,u_in)
+    uw,f = qcutils.GetSeriesasMA(ds,uw_in)
+    vw,f = qcutils.GetSeriesasMA(ds,vw_in)
+    wT,f = qcutils.GetSeriesasMA(ds,wT_in)
+    wC,f = qcutils.GetSeriesasMA(ds,wC_in)
+    wA,f = qcutils.GetSeriesasMA(ds,wA_in)
     if ustar_in not in ds.series.keys():
         ustarm = numpy.ma.sqrt(numpy.ma.sqrt(uw ** 2 + vw ** 2))
     else:
@@ -2598,12 +2628,12 @@ def MassmanStandard(cf,ds,Ta_in='Ta',Ah_in='Ah',ps_in='ps',ustar_in='ustar',usta
     LM = mf.molen(Ta, Ah, ps, ustarM, wTM)
     # write the 2nd pass Massman corrected covariances to the data structure
     qcutils.CreateSeries(ds,ustar_out,ustarM,FList=['uw','vw'],Descr='Massman true ustar',Units='m/s')
-    qcutils.CreateSeries(ds,L_out,LM,FList=[Ta_in,Ah_in,ps_in,'wT'],Descr='Massman true Obukhov Length',Units='m')
-    qcutils.CreateSeries(ds,uw_out,uwM,FList=['uw',L_out],Descr='Massman true Cov(uw)',Units='m2/s2')
-    qcutils.CreateSeries(ds,vw_out,vwM,FList=['vw',L_out],Descr='Massman true Cov(vw)',Units='m2/s2')
-    qcutils.CreateSeries(ds,wT_out,wTM,FList=['wT',L_out],Descr='Massman true Cov(wT)',Units='mC/s')
-    qcutils.CreateSeries(ds,wA_out,wAM,FList=['wA',L_out],Descr='Massman true Cov(wA)',Units='g/m2/s')
-    qcutils.CreateSeries(ds,wC_out,wCM,FList=['wC',L_out],Descr='Massman true Cov(wC)',Units='mg/m2/s')
+    qcutils.CreateSeries(ds,L_out,LM,FList=[Ta_in,Ah_in,ps_in,ustar_out,wT_in],Descr='Massman true Obukhov Length',Units='m')
+    qcutils.CreateSeries(ds,uw_out,uwM,FList=[uw_in,L_out],Descr='Massman true Cov(uw)',Units='m2/s2')
+    qcutils.CreateSeries(ds,vw_out,vwM,FList=[vw_in,L_out],Descr='Massman true Cov(vw)',Units='m2/s2')
+    qcutils.CreateSeries(ds,wT_out,wTM,FList=[wT_in,L_out],Descr='Massman true Cov(wT)',Units='mC/s')
+    qcutils.CreateSeries(ds,wA_out,wAM,FList=[wA_in,L_out],Descr='Massman true Cov(wA)',Units='g/m2/s')
+    qcutils.CreateSeries(ds,wC_out,wCM,FList=[wC_in,L_out],Descr='Massman true Cov(wC)',Units='mg/m2/s')
     # *** Massman_2ndpass ends here ***
     
     if qcutils.cfkeycheck(cf,Base='General',ThisOne='MassmanFlag') and cf['General']['MassmanFlag'] == 'True':
@@ -2612,6 +2642,13 @@ def MassmanStandard(cf,ds,Ta_in='Ta',Ah_in='Ah',ps_in='ps',ustar_in='ustar',usta
             testseries,f = qcutils.GetSeriesasMA(ds,ThisOne)
             mask = numpy.ma.getmask(testseries)
             index = numpy.where(mask.astype(int)==1)
+            ds.series[ThisOne]['Flag'][index] = 12
+    else:
+        keys = [ustar_out,L_out,uw_out,vw_out,wT_out,wA_out,wC_out]
+        for ThisOne in keys:
+            testseries,f = qcutils.GetSeriesasMA(ds,ThisOne)
+            mask = numpy.ma.getmask(testseries)
+            index = numpy.where((numpy.mod(f,10)==0) & (mask.astype(int)==1))    # find the elements with flag = 0, 10, 20 etc and masked (check for masked data with good data flag)
             ds.series[ThisOne]['Flag'][index] = 12
 
 def MergeSeries(ds,Destination,Source,QCFlag_OK):

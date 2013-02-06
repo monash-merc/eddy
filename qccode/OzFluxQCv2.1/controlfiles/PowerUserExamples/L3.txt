@@ -3,6 +3,7 @@
 FunctionList   = "['CorrectSWC', 'do_linear', 'MergeSeriesAhTa', 'TaFromTv', 'CalculateMetVars', 'CoordRotation2D', 'Massman', 'CalculateFluxes', 'FhvtoFh', 'WPLcov', 'MergeSeriesWS', 'CorrectFgForStorage', 'PostCorrectSoilAverage','rstFromPenmanMonteith', 'do_qcchecks', 'gaps', 'do_Ah7500check', 'footprint']"
 RotateFlag   = True
 MassmanFlag   = True
+WPLFlag      = True
 netCDFv3 = False
 Platform = Mac    # Mac or PC
 InputLevel = L3

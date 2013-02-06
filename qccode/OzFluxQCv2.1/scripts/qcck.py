@@ -227,26 +227,19 @@ def gaps(cf,ds,Fc_in='Fc',Fe_in='Fe',Fh_in='Fh'):
         Fc_in = vars[0]
         Fe_in = vars[1]
         Fh_in = vars[2]
-    Fc,f = qcutils.GetSeriesasMA(ds,Fc_in)
-    Fe,f = qcutils.GetSeriesasMA(ds,Fe_in)
-    Fh,f = qcutils.GetSeriesasMA(ds,Fh_in)
-    index = numpy.ma.where((Fc.mask==True) | (Fe.mask==True) | (Fh.mask==True))[0]
-    for i in range(len(index)):
-        j = index[i]
-        if Fc.mask[j]==False:
-            Fc.mask[j]=True
-            Fc[j] = numpy.float64(-9999)
-            ds.series[Fc_in]['Flag'][j] = 19
-        if Fe.mask[j]==False:
-            Fe.mask[j]=True
-            Fe[j] = numpy.float64(-9999)
-            ds.series[Fe_in]['Flag'][j] = 19            
-        if Fh.mask[j]==False:
-            Fh.mask[j]=True
-            Fh[j] = numpy.float64(-9999)
-            ds.series[Fh_in]['Flag'][j] = 19
-    ds.series[Fc_in]['Data']=numpy.ma.filled(Fc,float(-9999))
-    ds.series[Fe_in]['Data']=numpy.ma.filled(Fe,float(-9999))
-    ds.series[Fh_in]['Data']=numpy.ma.filled(Fh,float(-9999))
+    Fc,flagC = qcutils.GetSeriesasMA(ds,Fc_in)
+    Fe,flagE = qcutils.GetSeriesasMA(ds,Fe_in)
+    Fh,flagH = qcutils.GetSeriesasMA(ds,Fh_in)
+    index = numpy.ma.where((numpy.mod(flagC,10)!=0) | (numpy.mod(flagE,10)!=0) | (numpy.mod(flagH,10)!=0))[0]
+    rC_i = numpy.ma.where((numpy.mod(flagC,10)==0) & ((numpy.mod(flagE,10)!=0) | (numpy.mod(flagH,10)!=0)))[0]
+    rE_i = numpy.ma.where((numpy.mod(flagE,10)==0) & ((numpy.mod(flagC,10)!=0) | (numpy.mod(flagH,10)!=0)))[0]
+    rH_i = numpy.ma.where((numpy.mod(flagH,10)==0) & ((numpy.mod(flagC,10)!=0) | (numpy.mod(flagE,10)!=0)))[0]
+    ds.series[Fc_in]['Flag'][rC_i] = 19
+    ds.series[Fe_in]['Flag'][rE_i] = 19
+    ds.series[Fh_in]['Flag'][rH_i] = 19
+    flux_series = [Fc_in,Fe_in,Fh_in]
+    for ThisOne in flux_series:
+        index = numpy.where(ds.series[ThisOne]['Flag'] == 19)[0]
+        ds.series[ThisOne]['Data'][index] = float(-9999)
     log.info(' Finished gap co-ordination')
 
