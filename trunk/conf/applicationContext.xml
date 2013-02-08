@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-					http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
-					http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.5.xsd
-					http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
-					http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd"
-	default-lazy-init="true">
+       xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+					http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+					http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
+					http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+					http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+					http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd"
+       default-lazy-init="false">
+
+    <!-- Using annotation configuration -->
+    <context:annotation-config/>
+
+    <!-- Auto-scan annotation, and start from package name -->
+    <context:component-scan base-package="au.edu.monash.merc.capture"/>
+
+    <!-- JDBC and Mail Properties -->
 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
@@ -18,7 +29,9 @@
 		<property name="ignoreResourceNotFound" value="false" />
 		<property name="ignoreUnresolvablePlaceholders" value="true" />
 	</bean>
-	<bean id="sysPropertyConfigurer" class="au.edu.monash.merc.capture.config.SystemPropertiesConfigurer">
+
+	<!-- System properties -->
+    <bean id="sysPropertyConfigurer" class="au.edu.monash.merc.capture.config.SystemPropertiesConfigurer">
 		<property name="locations">
 			<list>
 				<value>classpath:dataCapture.properties</value>
@@ -28,6 +41,8 @@
 		<property name="ignoreResourceNotFound" value="false" />
 		<property name="ignoreUnresolvablePlaceholders" value="true" />
 	</bean>
+
+    <!-- country properties -->
 	<bean id="countryPropertyConfigurer" class="au.edu.monash.merc.capture.config.SystemPropertiesConfigurer" scope="singleton">
 		<property name="locations">
 			<list>
@@ -37,7 +52,9 @@
 		<property name="ignoreResourceNotFound" value="true" />
 		<property name="ignoreUnresolvablePlaceholders" value="true" />
 	</bean>
-	<bean id="freeMarker" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+
+    <!-- FreeMarker Mail-->
+    <bean id="freeMarker" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
 		<property name="templateLoaderPath" value="classpath:mailTemplates" /><!-- FreeMarker template file -->
 		<property name="freemarkerSettings"><!-- FreeMarker env setting -->
 			<props>
@@ -47,6 +64,8 @@
 			</props>
 		</property>
 	</bean>
+
+    <!-- Mail Sender -->
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host" value="${smtp.mail.server}" />
 		<property name="port" value="${mail.server.port}" />
@@ -62,7 +81,7 @@
 		</property>
 	</bean>
 
-
+    <!-- Datasource -->
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
 		<property name="driverClass" value="${jdbc.driverClassName}" />
 		<property name="jdbcUrl" value="${jdbc.url}" />
@@ -80,31 +99,28 @@
 		<property name="maxAdministrativeTaskTime" value="${cpool.maxAdministrativeTaskTime}" />
 	</bean>
 
-	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean"
-		destroy-method="destroy">
-		<property name="configurationClass" value="org.hibernate.cfg.AnnotationConfiguration" />
-		<property name="configLocation">
-			<value>classpath:hibernate.cfg.xml</value>
-		</property>
+    <!-- Annotation Session Factory Bean -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean" destroy-method="destroy">
 
-		<property name="dataSource" ref="dataSource" />
-		<property name="hibernateProperties">
-			<props>
-                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
-				<prop key="hibernate.jdbc.batch_size">20</prop>
-				<prop key="hibernate.hbm2ddl.auto">update</prop>
-				<prop key="hibernate.bytecode.provider">javassist</prop>
-				<prop key="hibernate.show_sql">false</prop>
-			</props>
-		</property>
-	</bean>
-
-	<!-- TRANSACTION MANAGER -->
-	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
-
-	<context:component-scan base-package="au.edu.monash.merc.capture" />
+        <!-- reference the datasource -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- configuration file location -->
+        <property name="configLocation">
+            <value>classpath:hibernate.cfg.xml</value>
+        </property>
+        <!-- hibernate properties -->
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${hibernate.jdbc.dialect}</prop>
+                <prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            </props>
+        </property>
+    </bean>
+    <!-- Transaction manager -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
 
 	<!-- ANNOTATION DRIVEN TRANSACTIONS -->
 	<tx:annotation-driven transaction-manager="transactionManager" />

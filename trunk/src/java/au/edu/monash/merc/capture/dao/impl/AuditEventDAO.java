@@ -71,8 +71,7 @@ public class AuditEventDAO extends HibernateGenericDAO<AuditEvent> implements IA
 		Criteria userCriteria = criteria.createCriteria("eventOwner");
 		userCriteria.add(Restrictions.eq("id", uid));
 		criteria.setProjection(Projections.rowCount());
-		// int total = ((Integer) criteria.list().get(0)).intValue();
-		int total = ((Integer) criteria.uniqueResult()).intValue();
+		int total = ((Long) criteria.uniqueResult()).intValue();
 		Pagination<AuditEvent> pev = new Pagination<AuditEvent>(startPageNo, recordsPerPage, total);
 		// query collections by size-per-page
 		Criteria queryCriteria = this.session().createCriteria(this.persistClass);

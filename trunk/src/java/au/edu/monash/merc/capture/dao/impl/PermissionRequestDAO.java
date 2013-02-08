@@ -92,7 +92,7 @@ public class PermissionRequestDAO extends HibernateGenericDAO<PermissionRequest>
 		coCriteria.add(Restrictions.eq("id", ownerId));
 		criteria.setProjection(Projections.rowCount());
 
-		int total = ((Integer) criteria.uniqueResult()).intValue();
+		int total = ((Long) criteria.uniqueResult()).intValue();
 		Pagination<PermissionRequest> preqpage = new Pagination<PermissionRequest>(startPageNo, recordsPerPage, total);
 		Criteria queryCriteria = this.session().createCriteria(this.persistClass);
 		Criteria qownerCrit = queryCriteria.createCriteria("owner");

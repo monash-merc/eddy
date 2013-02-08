@@ -27,18 +27,6 @@
  */
 package au.edu.monash.merc.capture.rifcs.impl;
 
-import java.io.File;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.xwork.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 import au.edu.monash.merc.capture.domain.Collection;
 import au.edu.monash.merc.capture.dto.ActivityBean;
 import au.edu.monash.merc.capture.dto.PartyBean;
@@ -48,6 +36,17 @@ import au.edu.monash.merc.capture.exception.RIFCSException;
 import au.edu.monash.merc.capture.rifcs.PartyActivityWSService;
 import au.edu.monash.merc.capture.rifcs.RIFCSGenService;
 import au.edu.monash.merc.capture.util.CaptureUtil;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 @Scope("prototype")
 @Service
