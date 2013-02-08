@@ -230,7 +230,7 @@
   <component name="ProjectResources">
     <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" project-jdk-name="1.6 (1)" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="SvnBranchConfigurationManager">
@@ -258,5 +258,47 @@
     <mapping directory="" vcs="svn" />
   </component>
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
+  <component name="libraryTable">
+    <library name="axis">
+      <CLASSES>
+        <root url="file://$PROJECT_DIR$/lib/axis" />
+        <root url="file://$PROJECT_DIR$/lib/axis" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="file://$PROJECT_DIR$/lib/axis" />
+        <root url="file://$PROJECT_DIR$/lib/axis" />
+      </SOURCES>
+      <jarDirectory url="file://$PROJECT_DIR$/lib/axis" recursive="false" />
+      <jarDirectory url="file://$PROJECT_DIR$/lib/axis" recursive="false" type="SOURCES" />
+    </library>
+    <library name="compile_lib">
+      <CLASSES>
+        <root url="file://$PROJECT_DIR$/lib/compile_lib" />
+        <root url="file://$PROJECT_DIR$/lib/compile_lib" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+      <jarDirectory url="file://$PROJECT_DIR$/lib/compile_lib" recursive="false" />
+    </library>
+    <library name="core_lib">
+      <CLASSES>
+        <root url="file://$PROJECT_DIR$/lib/core_lib" />
+        <root url="file://$PROJECT_DIR$/lib/core_lib" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+      <jarDirectory url="file://$PROJECT_DIR$/lib/core_lib" recursive="false" />
+    </library>
+    <library name="net-cdf-lib">
+      <CLASSES>
+        <root url="file://$PROJECT_DIR$/lib/net-cdf-lib" />
+        <root url="file://$PROJECT_DIR$/lib/net-cdf-lib" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+      <jarDirectory url="file://$PROJECT_DIR$/lib/net-cdf-lib" recursive="false" />
+    </library>
+  </component>
 </project>
 

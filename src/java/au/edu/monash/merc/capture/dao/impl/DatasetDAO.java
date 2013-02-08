@@ -78,7 +78,7 @@ public class DatasetDAO extends HibernateGenericDAO<Dataset> implements IDataset
 		Criteria criteria = this.session().createCriteria(this.persistClass);
 		Criteria colcrit = criteria.createCriteria("collection");
 		colcrit.add(Restrictions.eq("id", cid));
-		int num = (Integer) criteria.setProjection(Projections.rowCount()).add(Restrictions.eq("name", dsName)).uniqueResult();
+		long num = (Long) criteria.setProjection(Projections.rowCount()).add(Restrictions.eq("name", dsName)).uniqueResult();
 		if (num == 1) {
 			return true;
 		} else {
@@ -109,8 +109,7 @@ public class DatasetDAO extends HibernateGenericDAO<Dataset> implements IDataset
 		Criteria cocriteria = criteria.createCriteria("collection");
 		cocriteria.add(Restrictions.eq("id", cid));
 		criteria.setProjection(Projections.rowCount());
-		// int total = ((Integer) criteria.list().get(0)).intValue();
-		int total = ((Integer) criteria.uniqueResult()).intValue();
+		int total = ((Long) criteria.uniqueResult()).intValue();
 		Pagination<Dataset> dsPage = new Pagination<Dataset>(startPageNo, recordsPerPage, total);
 
 		// query dataset by per-page

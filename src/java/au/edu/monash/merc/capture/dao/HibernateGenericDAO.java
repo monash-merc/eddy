@@ -33,6 +33,7 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
@@ -42,68 +43,69 @@ import au.edu.monash.merc.capture.repository.IRepository;
 @Repository
 public class HibernateGenericDAO<T> implements IRepository<T> {
 
-	protected Class<T> persistClass;
+    protected Class<T> persistClass;
 
-	private SessionFactory sessionFactory;
+    @Qualifier("sessionFactory")
+    @Autowired
+    private SessionFactory sessionFactory;
 
-	@SuppressWarnings("unchecked")
-	public HibernateGenericDAO(SessionFactory sessionFactory) {
-		this.persistClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-		this.sessionFactory = sessionFactory;
-	}
+    @SuppressWarnings("unchecked")
+    public HibernateGenericDAO(SessionFactory sessionFactory) {
+        this.persistClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        this.sessionFactory = sessionFactory;
+    }
 
-	@SuppressWarnings("unchecked")
-	public HibernateGenericDAO() {
-		this.persistClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-	}
+    @SuppressWarnings("unchecked")
+    public HibernateGenericDAO() {
+        this.persistClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    }
 
-	@Autowired
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
-	public Session session() {
-		return this.sessionFactory.getCurrentSession();
-	}
+    public Session session() {
+        return this.sessionFactory.getCurrentSession();
+    }
 
-	@Override
-	public void add(T entity) {
-		this.session().save(entity);
-	}
+    @Override
+    public void add(T entity) {
+        this.session().save(entity);
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public T get(long id) {
-		return (T) this.session().get(this.persistClass, id);
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public T get(long id) {
+        return (T) this.session().get(this.persistClass, id);
+    }
 
-	@Override
-	public void remove(T entity) {
-		this.session().delete(entity);
-	}
+    @Override
+    public void remove(T entity) {
+        this.session().delete(entity);
+    }
 
-	@Override
-	public void update(T entity) {
-		this.session().update(entity);
-	}
+    @Override
+    public void update(T entity) {
+        this.session().update(entity);
+    }
 
-	@Override
-	public int saveAll(List<T> entities) {
-		int insertedCount = 0;
-		for (int i = 0; i < entities.size(); i++) {
-			add(entities.get(i));
-			if (++insertedCount % 20 == 0) {
-				flushAndClear();
-			}
-		}
-		flushAndClear();
-		return insertedCount;
-	}
+    @Override
+    public int saveAll(List<T> entities) {
+        int insertedCount = 0;
+        for (int i = 0; i < entities.size(); i++) {
+            add(entities.get(i));
+            if (++insertedCount % 20 == 0) {
+                flushAndClear();
+            }
+        }
+        flushAndClear();
+        return insertedCount;
+    }
 
-	protected void flushAndClear() {
-		if (this.session().isDirty()) {
-			this.session().flush();
-			this.session().clear();
-		}
-	}
+    protected void flushAndClear() {
+        if (this.session().isDirty()) {
+            this.session().flush();
+            this.session().clear();
+        }
+    }
 }

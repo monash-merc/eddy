@@ -56,7 +56,7 @@ public class SearchCoDAO extends HibernateGenericDAO<Collection> implements ISea
 		Criteria criteria = this.session().createCriteria(this.persistClass);
 		setCollectionCriterion(criteria, searchBean);
 		criteria.setProjection(Projections.rowCount());
-		int total = ((Integer) criteria.uniqueResult()).intValue();
+		int total = ((Long) criteria.uniqueResult()).intValue();
 		Pagination<Collection> coPages = new Pagination<Collection>(startPageNo, recordsPerPage, total);
 
 		Criteria findCriteria = this.session().createCriteria(this.persistClass);

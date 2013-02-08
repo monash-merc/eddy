@@ -47,165 +47,165 @@ import au.edu.monash.merc.capture.repository.IUserRepository;
 @Repository
 public class UserDAO extends HibernateGenericDAO<User> implements IUserRepository {
 
-	@Override
-	public User getByUserEmail(String email) {
-		return (User) this.session().createCriteria(this.persistClass).add(Restrictions.eq("email", email)).setComment("UserDAO.getByUserEmail")
-				.uniqueResult();
-	}
+    @Override
+    public User getByUserEmail(String email) {
+        return (User) this.session().createCriteria(this.persistClass).add(Restrictions.eq("email", email)).setComment("UserDAO.getByUserEmail")
+                .uniqueResult();
+    }
 
-	@Override
-	public User getByUserUnigueId(String uniqueId) {
-		return (User) this.session().createCriteria(this.persistClass).add(Restrictions.eq("uniqueId", uniqueId))
-				.setComment("UserDAO.getByUserUnigueId").uniqueResult();
-	}
+    @Override
+    public User getByUserUnigueId(String uniqueId) {
+        return (User) this.session().createCriteria(this.persistClass).add(Restrictions.eq("uniqueId", uniqueId))
+                .setComment("UserDAO.getByUserUnigueId").uniqueResult();
+    }
 
-	@Override
-	public boolean checkUserUniqueIdExisted(String uniqueId) {
-		int num = (Integer) this.session().createCriteria(this.persistClass).setProjection(Projections.rowCount())
-				.add(Restrictions.eq("uniqueId", uniqueId).ignoreCase()).uniqueResult();
-		if (num == 1) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+    @Override
+    public boolean checkUserUniqueIdExisted(String uniqueId) {
+        long num = (Long) this.session().createCriteria(this.persistClass).setProjection(Projections.rowCount())
+                .add(Restrictions.eq("uniqueId", uniqueId).ignoreCase()).uniqueResult();
+        if (num == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	@Override
-	public boolean checkUserDisplayNameExisted(String userDisplayName) {
-		int num = (Integer) this.session().createCriteria(this.persistClass).setProjection(Projections.rowCount())
-				.add(Restrictions.eq("displayName", userDisplayName).ignoreCase()).uniqueResult();
-		if (num == 1) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+    @Override
+    public boolean checkUserDisplayNameExisted(String userDisplayName) {
+        long num = (Long) this.session().createCriteria(this.persistClass).setProjection(Projections.rowCount())
+                .add(Restrictions.eq("displayName", userDisplayName).ignoreCase()).uniqueResult();
+        if (num == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	@Override
-	public boolean checkEmailExisted(String email) {
-		int num = (Integer) this.session().createCriteria(this.persistClass).setProjection(Projections.rowCount())
-				.add(Restrictions.eq("email", email).ignoreCase()).uniqueResult();
-		if (num == 1) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+    @Override
+    public boolean checkEmailExisted(String email) {
+        long num = (Long) this.session().createCriteria(this.persistClass).setProjection(Projections.rowCount())
+                .add(Restrictions.eq("email", email).ignoreCase()).uniqueResult();
+        if (num == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	@Override
-	public User checkUserLogin(String username, String password) {
-		return (User) this.session().createCriteria(this.persistClass).add(Restrictions.eq("uniqueId", username))
-				.add(Restrictions.eq("password", password)).setComment("UserDAO.validateLogin").uniqueResult();
-	}
+    @Override
+    public User checkUserLogin(String username, String password) {
+        return (User) this.session().createCriteria(this.persistClass).add(Restrictions.eq("uniqueId", username))
+                .add(Restrictions.eq("password", password)).setComment("UserDAO.validateLogin").uniqueResult();
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Pagination<User> getAllUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		criteria.add(Restrictions.and(Restrictions.ne("userType", UserType.ALLREGUSER.code()), Restrictions.ne("userType", UserType.ANONYMOUS.code())));
-		criteria.setProjection(Projections.rowCount());
-		int total = ((Integer) criteria.uniqueResult()).intValue();
+    @SuppressWarnings("unchecked")
+    @Override
+    public Pagination<User> getAllUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        criteria.add(Restrictions.and(Restrictions.ne("userType", UserType.ALLREGUSER.code()), Restrictions.ne("userType", UserType.ANONYMOUS.code())));
+        criteria.setProjection(Projections.rowCount());
+        int total = ((Long) criteria.uniqueResult()).intValue();
 
-		Pagination<User> p = new Pagination<User>(startPageNo, recordsPerPage, total);
-		Criteria qcriteria = this.session().createCriteria(this.persistClass);
-		qcriteria.add(Restrictions.and(Restrictions.ne("userType", UserType.ALLREGUSER.code()),
-				Restrictions.ne("userType", UserType.ANONYMOUS.code())));
-		if (orderBys != null && orderBys.length > 0) {
-			for (int i = 0; i < orderBys.length; i++) {
-				Order order = orderBys[i].getOrder();
-				if (order != null) {
-					qcriteria.addOrder(order);
-				}
-			}
-		} else {
-			qcriteria.addOrder(Order.desc("displayName"));
-		}
+        Pagination<User> p = new Pagination<User>(startPageNo, recordsPerPage, total);
+        Criteria qcriteria = this.session().createCriteria(this.persistClass);
+        qcriteria.add(Restrictions.and(Restrictions.ne("userType", UserType.ALLREGUSER.code()),
+                Restrictions.ne("userType", UserType.ANONYMOUS.code())));
+        if (orderBys != null && orderBys.length > 0) {
+            for (int i = 0; i < orderBys.length; i++) {
+                Order order = orderBys[i].getOrder();
+                if (order != null) {
+                    qcriteria.addOrder(order);
+                }
+            }
+        } else {
+            qcriteria.addOrder(Order.desc("displayName"));
+        }
 
-		qcriteria.setFirstResult(p.getFirstResult());
-		// set the max results (size-per-page)
-		qcriteria.setMaxResults(p.getSizePerPage());
-		List<User> collist = qcriteria.list();
-		p.setPageResults(collist);
-		return p;
-	}
+        qcriteria.setFirstResult(p.getFirstResult());
+        // set the max results (size-per-page)
+        qcriteria.setMaxResults(p.getSizePerPage());
+        List<User> collist = qcriteria.list();
+        p.setPageResults(collist);
+        return p;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Pagination<User> getAllActiveUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		criteria.add(Restrictions.eq("isActivated", true)).add(
-				Restrictions.and(Restrictions.ne("userType", UserType.ALLREGUSER.code()), Restrictions.ne("userType", UserType.ANONYMOUS.code())));
-		criteria.setProjection(Projections.rowCount());
-		int total = ((Integer) criteria.uniqueResult()).intValue();
+    @SuppressWarnings("unchecked")
+    @Override
+    public Pagination<User> getAllActiveUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        criteria.add(Restrictions.eq("isActivated", true)).add(
+                Restrictions.and(Restrictions.ne("userType", UserType.ALLREGUSER.code()), Restrictions.ne("userType", UserType.ANONYMOUS.code())));
+        criteria.setProjection(Projections.rowCount());
+        int total = ((Long) criteria.uniqueResult()).intValue();
 
-		Pagination<User> p = new Pagination<User>(startPageNo, recordsPerPage, total);
-		Criteria qcriteria = this.session().createCriteria(this.persistClass);
-		qcriteria.add(Restrictions.eq("isActivated", true)).add(
-				Restrictions.and(Restrictions.ne("userType", UserType.ALLREGUSER.code()), Restrictions.ne("userType", UserType.ANONYMOUS.code())));
-		if (orderBys != null && orderBys.length > 0) {
-			for (int i = 0; i < orderBys.length; i++) {
-				Order order = orderBys[i].getOrder();
-				if (order != null) {
-					qcriteria.addOrder(order);
-				}
-			}
-		} else {
-			qcriteria.addOrder(Order.desc("displayName"));
-		}
+        Pagination<User> p = new Pagination<User>(startPageNo, recordsPerPage, total);
+        Criteria qcriteria = this.session().createCriteria(this.persistClass);
+        qcriteria.add(Restrictions.eq("isActivated", true)).add(
+                Restrictions.and(Restrictions.ne("userType", UserType.ALLREGUSER.code()), Restrictions.ne("userType", UserType.ANONYMOUS.code())));
+        if (orderBys != null && orderBys.length > 0) {
+            for (int i = 0; i < orderBys.length; i++) {
+                Order order = orderBys[i].getOrder();
+                if (order != null) {
+                    qcriteria.addOrder(order);
+                }
+            }
+        } else {
+            qcriteria.addOrder(Order.desc("displayName"));
+        }
 
-		qcriteria.setFirstResult(p.getFirstResult());
-		// set the max results (size-per-page)
-		qcriteria.setMaxResults(p.getSizePerPage());
-		List<User> collist = qcriteria.list();
-		p.setPageResults(collist);
-		return p;
-	}
+        qcriteria.setFirstResult(p.getFirstResult());
+        // set the max results (size-per-page)
+        qcriteria.setMaxResults(p.getSizePerPage());
+        List<User> collist = qcriteria.list();
+        p.setPageResults(collist);
+        return p;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Pagination<User> getAllInActiveUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		criteria.add(Restrictions.eq("isActivated", false));
-		criteria.setProjection(Projections.rowCount());
-		int total = ((Integer) criteria.uniqueResult()).intValue();
+    @SuppressWarnings("unchecked")
+    @Override
+    public Pagination<User> getAllInActiveUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        criteria.add(Restrictions.eq("isActivated", false));
+        criteria.setProjection(Projections.rowCount());
+        int total = ((Long) criteria.uniqueResult()).intValue();
 
-		Pagination<User> p = new Pagination<User>(startPageNo, recordsPerPage, total);
-		Criteria qcriteria = this.session().createCriteria(this.persistClass);
-		qcriteria.add(Restrictions.eq("isActivated", false));
-		if (orderBys != null && orderBys.length > 0) {
-			for (int i = 0; i < orderBys.length; i++) {
-				Order order = orderBys[i].getOrder();
-				if (order != null) {
-					qcriteria.addOrder(order);
-				}
-			}
-		} else {
-			qcriteria.addOrder(Order.desc("displayName"));
-		}
+        Pagination<User> p = new Pagination<User>(startPageNo, recordsPerPage, total);
+        Criteria qcriteria = this.session().createCriteria(this.persistClass);
+        qcriteria.add(Restrictions.eq("isActivated", false));
+        if (orderBys != null && orderBys.length > 0) {
+            for (int i = 0; i < orderBys.length; i++) {
+                Order order = orderBys[i].getOrder();
+                if (order != null) {
+                    qcriteria.addOrder(order);
+                }
+            }
+        } else {
+            qcriteria.addOrder(Order.desc("displayName"));
+        }
 
-		qcriteria.setFirstResult(p.getFirstResult());
-		// set the max results (size-per-page)
-		qcriteria.setMaxResults(p.getSizePerPage());
-		List<User> collist = qcriteria.list();
-		p.setPageResults(collist);
-		return p;
-	}
+        qcriteria.setFirstResult(p.getFirstResult());
+        // set the max results (size-per-page)
+        qcriteria.setMaxResults(p.getSizePerPage());
+        List<User> collist = qcriteria.list();
+        p.setPageResults(collist);
+        return p;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<User> getAllActiveUsers() {
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		criteria.setComment("UserDAO.getAllActiveUsers");
-		criteria.add(Restrictions.eq("isActivated", true)).add(
-				Restrictions.and(Restrictions.ne("userType", UserType.ALLREGUSER.code()), Restrictions.ne("userType", UserType.ANONYMOUS.code())));
-		return criteria.addOrder(Order.desc("displayName")).list();
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<User> getAllActiveUsers() {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        criteria.setComment("UserDAO.getAllActiveUsers");
+        criteria.add(Restrictions.eq("isActivated", true)).add(
+                Restrictions.and(Restrictions.ne("userType", UserType.ALLREGUSER.code()), Restrictions.ne("userType", UserType.ANONYMOUS.code())));
+        return criteria.addOrder(Order.desc("displayName")).list();
+    }
 
-	// this method is only used to retrieve three types of virtual user - all registered user and anonymouse user.
-	@Override
-	public User getVirtualUser(int userType) {
-		return (User) this.session().createCriteria(this.persistClass).setComment("UserDAO.getVirtualUser")
-				.add(Restrictions.eq("userType", userType)).uniqueResult();
-	}
+    // this method is only used to retrieve three types of virtual user - all registered user and anonymouse user.
+    @Override
+    public User getVirtualUser(int userType) {
+        return (User) this.session().createCriteria(this.persistClass).setComment("UserDAO.getVirtualUser")
+                .add(Restrictions.eq("userType", userType)).uniqueResult();
+    }
 
 }

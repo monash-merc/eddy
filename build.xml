@@ -48,10 +48,10 @@
     <!-- Build classpath , db schema lib classpath, utest classpath          -->
     <!-- =================================================================== -->
     <path id="build.classpath">
-        <fileset dir="${lib.dir}/core-lib">
+        <fileset dir="${lib.dir}/core_lib">
             <include name="**/*.jar"/>
         </fileset>
-        <fileset dir="${lib.dir}/compile-lib">
+        <fileset dir="${lib.dir}/compile_lib">
             <include name="**/*.jar"/>
         </fileset>
         <fileset dir="${lib.dir}/net-cdf-lib">
@@ -76,7 +76,7 @@
     <!-- cleans up compiled classes                                          -->
     <!-- =================================================================== -->
     <target name="clean">
-        <echo>Deleling the build classes directory</echo>
+        <echo>Deleting the build classes directory</echo>
         <delete dir="${build.dir}"/>
     </target>
 
@@ -84,7 +84,7 @@
     <!-- cleans up all                                                       -->
     <!-- =================================================================== -->
     <target name="clean-all">
-        <echo>Deleling the build classes, deploy and distribute directories</echo>
+        <echo>Deleting the build classes, deploy and distribute directories</echo>
         <delete dir="${build.dir}"/>
         <delete dir="${deploy.dir}"/>
         <delete dir="${dist.dir}"/>
@@ -102,7 +102,7 @@
     <!-- =================================================================== -->
     <target name="compile" depends="prepare" description="compiling the source files">
         <javac srcdir="${src.java.dir}" destdir="${build.classes.dir}" debug="on" deprecation="on" optimize="off"
-               includes="**">
+               includeantruntime="false" includes="**">
             <classpath refid="build.classpath"/>
         </javac>
         <copy todir="${build.classes.dir}">
@@ -156,7 +156,7 @@
         </copy>
 
         <copy todir="${dist.pack.tmp.app.lib.dir}">
-            <fileset dir="${lib.dir}/core-lib">
+            <fileset dir="${lib.dir}/core_lib">
                 <include name="**/*.jar"/>
             </fileset>
         </copy>
@@ -274,7 +274,7 @@
         </copy>
 
         <copy todir="${deploy.app.lib.dir}">
-            <fileset dir="${lib.dir}/core-lib">
+            <fileset dir="${lib.dir}/core_lib">
                 <include name="**/*.jar"/>
             </fileset>
         </copy>
@@ -347,13 +347,14 @@
         </hibernatetool>
     </target>
 
+
     <!-- =================================================================== -->
     <!-- compile the unit test classes                                       -->
     <!-- =================================================================== -->
     <target name="utest_compile" depends="compile">
         <mkdir dir="${build.utest.classes.dir}"/>
-        <javac srcdir="${utest.java.dir}" destdir="${build.utest.classes.dir}" debug="${javac_debug}"
-               deprecation="${javac_deprecation}" optimize="${javac_optimize}">
+        <javac srcdir="${utest.java.dir}" destdir="${build.utest.classes.dir}" debug="${debug}"
+               deprecation="${deprecation}" optimize="${optimize}">
             <classpath refid="utest.classpath"/>
             <include name="**/*Test.java"/>
         </javac>

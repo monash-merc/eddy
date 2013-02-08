@@ -39,25 +39,25 @@ import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
 public class SystemPropertiesConfigurer extends PropertyPlaceholderConfigurer {
 
-	private Map<String, String> resolvedProps;
+    private Map<String, String> resolvedProps;
 
-	@SuppressWarnings("rawtypes")
-	@Override
-	protected void processProperties(ConfigurableListableBeanFactory confListBeanFactory, Properties props) throws BeansException {
-		super.processProperties(confListBeanFactory, props);
-		resolvedProps = new HashMap<String, String>();
-		for (Object key : props.keySet()) {
-			String keyStr = key.toString();
-			resolvedProps.put(keyStr, (super.parseStringValue(props.getProperty(keyStr), props, new HashSet())));
-		}
-	}
+    @SuppressWarnings("rawtypes")
+    @Override
+    protected void processProperties(ConfigurableListableBeanFactory confListBeanFactory, Properties props) throws BeansException {
+        Map<String, String> tmpProps = new HashMap<String, String>(props.size());
+        super.processProperties(confListBeanFactory, props);
+        for (Map.Entry<Object, Object> entry : props.entrySet()) {
+            tmpProps.put(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
+        }
+        this.resolvedProps = Collections.unmodifiableMap(tmpProps);
+    }
 
-	public Map<String, String> getResolvedProps() {
-		return Collections.unmodifiableMap(resolvedProps);
-	}
+    public Map<String, String> getResolvedProps() {
+        return Collections.unmodifiableMap(resolvedProps);
+    }
 
-	public String getPropValue(String propKey) {
-		return resolvedProps.get(propKey);
-	}
+    public String getPropValue(String propKey) {
+        return resolvedProps.get(propKey);
+    }
 
 }

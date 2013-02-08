@@ -1,22 +1,22 @@
+<div style="clear:both"></div>
+<div class="blank_separator"></div>
+<div class="blank_separator"></div>
 <#include "use_policy.ftl"/>
+<div style="clear:both"></div>
 <div class="blank_separator"></div>
 <div class="blank_separator"></div>
 <#include "ands.ftl"/>
 <div class="blank_separator"></div>
 <div class="blank_separator"></div>
 <div style="clear:both"></div>
+<#include "sponsor.ftl"/>
 <div class="blank_separator"></div>
-<div class="sponsor">
-    <a href="http://www.monash.edu" target="_blank"><img src="${base}/images/logo/logo_monash.png" alt="Monash University"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="http://www.monash.edu/eresearch" target="_blank"><img src="${base}/images/logo/logo_merc.png" alt="Monash MeRC"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="http://ozflux.org.au" target="_blank"><img src="${base}/images/logo/ozflux_small.gif" alt="OzFlux Australia"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="http://www.tern.org.au/" target="_blank"><img src="${base}/images/logo/tern_logo.jpg" alt="Terrestrial Ecosystem Research Network"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</div>
 <div class="blank_separator"></div>
+<div style="clear:both"></div>
 <div class="footer">
     <br/>
     <div class="copyright">
-        Copyright &copy; 2010-2011 Monash University. All Rights Reserved.
+        Copyright &copy; 2010-2013 Monash University. All Rights Reserved.
         &nbsp;&nbsp;&nbsp;&nbsp;Powered by <a href="http://code.google.com/p/eddy/" target="_blank">Eddy <@s.text name="app.version" /></a>
     </div>
     <br/>

@@ -68,7 +68,7 @@ public class SearchDatasetDAO extends HibernateGenericDAO<Dataset> implements IS
 
 		criteria.setProjection(Projections.rowCount());
 
-		int total = ((Integer) criteria.uniqueResult()).intValue();
+		int total = ((Long) criteria.uniqueResult()).intValue();
 
 		Pagination<Dataset> dsPage = new Pagination<Dataset>(startPageNo, recordsPerPage, total);
 
