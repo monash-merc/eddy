@@ -10,7 +10,7 @@ netCDFv3 = False
         xlFileName = ASM_EC_2010.xls
         xlHeaderRow  = 2
         xl1stDataRow = 5
-        ncFilePath = ncData/ASM/OzFlux/
+        ncFilePath = ncData/ASM/
         ncFileName = ASM_EC_2010_L1.nc
 
 [Global]
@@ -29,10 +29,10 @@ netCDFv3 = False
     references = "None"
     site_name = "AliceSpringsMulga"
     site = "Alice Springs Mulga, Northern Territory, Australia"
-    soil_type = "Red Sandy Loam"
-    source = "13.7m flux tower plus arrays of soil sensors"
-    start_datetime = "2010-09-02 00:00"
-    title = "Flux tower data set from the Alice Springs Mulga site for the calendar year 2010"
+    soil_type = "red kandosol, sandy loam"
+    source = "13.7m flux tower plus array of soil sensors"
+    start_datetime = "2012-01-01 00:00"
+    title = "Flux tower data set from the Alice Springs Mulga site for the calendar year 2012"
     time_step = 30
     vegetation = "Mulga canopy, grass+herb+shrub understory"
 
@@ -223,16 +223,6 @@ netCDFv3 = False
             units    = "m2/s2"
             ancillary_variables = "UyUz QC flag"
             standard_name = "not defined"
-    [[UzUz]]
-        [[[xl]]]
-            sheet    = slow_flux
-            name     = covUzUz
-        [[[Attr]]]
-            ancillary_variables = "UzUz QC flag"
-            instrument = "CSAT"
-            long_name = "Variance of Uz"
-            standard_name = "not defined"
-            units = "m2/s2"
     [[UxUy]]
         [[[xl]]]
             sheet    = slow_flux
@@ -259,6 +249,15 @@ netCDFv3 = False
             long_name = "Variance of Uy"
             units    = "m2/s2"
             ancillary_variables = "UyUy QC flag"
+            standard_name = "not defined"
+    [[UzUz]]
+        [[[xl]]]
+            sheet    = slow_flux
+            name     = covUzUz
+        [[[Attr]]]
+            long_name = "Variance of Uz"
+            units    = "m2/s2"
+            ancillary_variables = "UzUz QC flag"
             standard_name = "not defined"
     [[Cc_7500_Av]]
         [[[xl]]]
@@ -287,6 +286,33 @@ netCDFv3 = False
             units    = "g/m3"
             ancillary_variables = "Ah_HMP QC flag"
             standard_name = "not defined"
+    [[Ah_200cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = Ah_HMP_02_Avg
+        [[[Attr]]]
+            long_name = "Absolute humidity (HMP) at 2m"
+            units    = "g/m3"
+            ancillary_variables = "Ah_200cm QC flag"
+            standard_name = "not defined"
+    [[Ah_425cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = Ah_HMP_03_Avg
+        [[[Attr]]]
+            long_name = "Absolute humidity (HMP) at 4.25m"
+            units    = "g/m3"
+            ancillary_variables = "Ah_425cm QC flag"
+            standard_name = "not defined"
+    [[Ah_657cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = Ah_HMP_04_Avg
+        [[[Attr]]]
+            long_name = "Absolute humidity (HMP) at 6.57m"
+            units    = "g/m3"
+            ancillary_variables = "Ah_657cm QC flag"
+            standard_name = "not defined"
     [[Tv_CSAT]]
         [[[xl]]]
             sheet    = slow_met
@@ -304,6 +330,33 @@ netCDFv3 = False
             long_name = "Air temperature (HMP)"
             units    = "C"
             ancillary_variables = "Ta_HMP QC flag"
+            standard_name = "air_temperature"
+    [[Ta_200cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = Ta_HMP_02_Avg
+        [[[Attr]]]
+            long_name = "Air temperature (HMP) at 2m"
+            units    = "C"
+            ancillary_variables = "Ta_200cm QC flag"
+            standard_name = "air_temperature"
+    [[Ta_425cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = Ta_HMP_03_Avg
+        [[[Attr]]]
+            long_name = "Air temperature (HMP) at 4.25m"
+            units    = "C"
+            ancillary_variables = "Ta_425cm QC flag"
+            standard_name = "air_temperature"
+    [[Ta_657cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = Ta_HMP_04_Avg
+        [[[Attr]]]
+            long_name = "Air temperature (HMP) at 6.57m"
+            units    = "C"
+            ancillary_variables = "Ta_657cm QC flag"
             standard_name = "air_temperature"
     [[AhAh]]
         [[[xl]]]
@@ -467,6 +520,15 @@ netCDFv3 = False
             units    = "kPa"
             ancillary_variables = "ps QC flag"
             standard_name = "surface_air_pressure"
+    [[ps_7500]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = ps_7500_Avg
+        [[[Attr]]]
+            long_name = "Atmospheric pressure"
+            units    = "kPa"
+            ancillary_variables = "ps_7500 QC flag"
+            standard_name = "surface_air_pressure"
     [[Diag_CSAT]]
         [[[xl]]]
             sheet    = slow_flux
@@ -521,6 +583,33 @@ netCDFv3 = False
             units    = "fraction"
             ancillary_variables = "RH QC flag"
             standard_name = "relative_humidity"
+    [[RH_200cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = RH_HMP_02_Avg
+        [[[Attr]]]
+            long_name = "Relative humidity (HMP) at 2m"
+            units    = "fraction"
+            ancillary_variables = "RH_200cm QC flag"
+            standard_name = "relative_humidity"
+    [[RH_425cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = RH_HMP_03_Avg
+        [[[Attr]]]
+            long_name = "Relative humidity (HMP) at 4.25m"
+            units    = "fraction"
+            ancillary_variables = "RH_425cm QC flag"
+            standard_name = "relative_humidity"
+    [[RH_657cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = RH_HMP_04_Avg
+        [[[Attr]]]
+            long_name = "Relative humidity (HMP) at 6.57m"
+            units    = "fraction"
+            ancillary_variables = "RH_657cm QC flag"
+            standard_name = "relative_humidity"
     [[delTs_bs]]
         [[[xl]]]
             sheet    = slow_core
@@ -566,6 +655,33 @@ netCDFv3 = False
             units    = "deg"
             ancillary_variables = "Wd_WS QC flag"
             standard_name = "wind_from_direction"
+    [[Ws_WS_200cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = WS_WS_02_Avg
+        [[[Attr]]]
+            long_name = "Wind speed (Wind Sentry) at 2m"
+            units    = "m/s"
+            ancillary_variables = "Ws_WS_200cm QC flag"
+            standard_name = "wind_speed"
+    [[Ws_WS_425cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = WS_WS_03_Avg
+        [[[Attr]]]
+            long_name = "Wind speed (Wind Sentry) at 4.25m"
+            units    = "m/s"
+            ancillary_variables = "Ws_WS_425cm QC flag"
+            standard_name = "wind_speed"
+    [[Ws_WS_662cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = WS_WS_04_Avg
+        [[[Attr]]]
+            long_name = "Wind speed (Wind Sentry) at 6.62m"
+            units    = "m/s"
+            ancillary_variables = "Ws_WS_662cm QC flag"
+            standard_name = "wind_speed"
     [[Ws_CSAT_Sd]]
         [[[xl]]]
             sheet    = ex_met
@@ -601,6 +717,33 @@ netCDFv3 = False
             long_name = "Standard deviation of wind direction (Wind Sentry)"
             units    = "deg"
             ancillary_variables = "Wd_WS_Sd QC flag"
+            standard_name = "not defined"
+    [[Ws_WS_200cm_Sd]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = WS_WS_02_Std
+        [[[Attr]]]
+            long_name = "Standard deviation of wind speed (Wind Sentry) at 2m"
+            units    = "m/s"
+            ancillary_variables = "Ws_WS_200cm_Sd QC flag"
+            standard_name = "not defined"
+    [[Ws_WS_425cm_Sd]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = WS_WS_03_Std
+        [[[Attr]]]
+            long_name = "Standard deviation of wind speed (Wind Sentry) at 4.25m"
+            units    = "m/s"
+            ancillary_variables = "Ws_WS_425cm_Sd QC flag"
+            standard_name = "not defined"
+    [[Ws_WS_662cm_Sd]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = WS_WS_04_Std
+        [[[Attr]]]
+            long_name = "Standard deviation of wind speed (Wind Sentry) at 6.62m"
+            units    = "m/s"
+            ancillary_variables = "Ws_WS_662cm_Sd QC flag"
             standard_name = "not defined"
     [[rhom]]
         [[[xl]]]
@@ -656,6 +799,33 @@ netCDFv3 = False
             units    = "kPa"
             ancillary_variables = "esat QC flag"
             standard_name = "not defined"
+    [[esat_200cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = es_HMP_02_Avg
+        [[[Attr]]]
+            long_name = "saturation vapour pressure (HMP) at 2m"
+            units    = "kPa"
+            ancillary_variables = "esat_200cm QC flag"
+            standard_name = "not defined"
+    [[esat_425cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = es_HMP_03_Avg
+        [[[Attr]]]
+            long_name = "saturation vapour pressure (HMP) at 4.25m"
+            units    = "kPa"
+            ancillary_variables = "esat_425cm QC flag"
+            standard_name = "not defined"
+    [[esat_657cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = es_HMP_04_Avg
+        [[[Attr]]]
+            long_name = "saturation vapour pressure (HMP) at 6.57m"
+            units    = "kPa"
+            ancillary_variables = "esat_657cm QC flag"
+            standard_name = "not defined"
     [[e]]
         [[[xl]]]
             sheet    = ex_met
@@ -664,6 +834,33 @@ netCDFv3 = False
             long_name = "atmospheric vapour pressure (HMP)"
             units    = "kPa"
             ancillary_variables = "e QC flag"
+            standard_name = "water_vapor_partial_pressure_in_air"
+    [[e_200cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = e_HMP_02_Avg
+        [[[Attr]]]
+            long_name = "atmospheric vapour pressure (HMP) at 2m"
+            units    = "kPa"
+            ancillary_variables = "e_200cm QC flag"
+            standard_name = "water_vapor_partial_pressure_in_air"
+    [[e_425cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = e_HMP_03_Avg
+        [[[Attr]]]
+            long_name = "atmospheric vapour pressure (HMP) at 4.25m"
+            units    = "kPa"
+            ancillary_variables = "e_425cm QC flag"
+            standard_name = "water_vapor_partial_pressure_in_air"
+    [[e_657cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = e_HMP_04_Avg
+        [[[Attr]]]
+            long_name = "atmospheric vapour pressure (HMP) at 6.57m"
+            units    = "kPa"
+            ancillary_variables = "e_657cm QC flag"
             standard_name = "water_vapor_partial_pressure_in_air"
     [[rhod]]
         [[[xl]]]
@@ -905,3 +1102,39 @@ netCDFv3 = False
             units    = "fraction"
             ancillary_variables = "TDR_ms2_10cm_b QC flag"
             standard_name = "soil_moisture_content"
+    [[Ta_1147cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = TC_EC_Avg
+        [[[Attr]]]
+            long_name = "Thermocouple air temperature 20cm below EC height (11.47m)"
+            units    = "C"
+            ancillary_variables = "Ta_1147cm QC flag"
+            standard_name = "air_temperature"
+    [[Ta_150cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = TC_200cm_Avg
+        [[[Attr]]]
+            long_name = "Thermocouple air temperature at 150cm height"
+            units    = "C"
+            ancillary_variables = "Ta_150cm QC flag"
+            standard_name = "air_temperature"
+    [[Ta_375cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = TC_425cm_Avg
+        [[[Attr]]]
+            long_name = "Thermocouple air temperature at 375cm height"
+            units    = "C"
+            ancillary_variables = "Ta_375cm QC flag"
+            standard_name = "air_temperature"
+    [[Ta_607cm]]
+        [[[xl]]]
+            sheet    = slow_core
+            name     = TC_650cm_Avg
+        [[[Attr]]]
+            long_name = "Thermocouple air temperature at 600cm height"
+            units    = "C"
+            ancillary_variables = "Ta_607cm QC flag"
+            standard_name = "air_temperature"

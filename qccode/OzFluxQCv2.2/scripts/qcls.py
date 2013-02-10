@@ -1,10 +1,12 @@
 """
-    OzFlux QC v2.0 8 Jun 2012;
+    OzFlux QC v2.2 11 Feb 2013;
 
     Version History:
-    <<v1.0: 21 July 2011, code diversion reconciliation>>
+    <<v1.0: 21 Jul 2011, code diversion reconciliation>>
     <<v1.4 30 Sep 2011, final version arrising from OzFlux Black Mountain data workshop>>
-    <<v2.0 8 June 2012, version arrising from conclusion of OzFlux UTS data workshop>>
+    <<v2.0 8 Jun 2012, version arrising from conclusion of OzFlux UTS data workshop>>
+    <<v2.1 3 Feb 2013, MOST footprint model (Kljun et al. 2004) implemented at L3>>
+    <<v2.2 11 Feb 2013, Climatology implemented at L3 and L4; Penman-Monteith updated to output Gc, correct Gst computation to use air-to-soil q gradient rather than saturation deficit>>
 """
 
 import sys
@@ -235,6 +237,12 @@ def l3qc(cf,ds2):
     if 'CalculateAvailableEnergy' in l3functions:
         qcts.CalculateAvailableEnergy(cf,ds3)
     
+    qcutils.prepOzFluxVars(cf,ds3)
+    
+    # calculate specific humidity and saturated specific humidity profile
+    if 'qnqsat' in l3functions:
+        qcts.CalculateSpecificHumidityProfile(cf,ds3)
+    
     # calculate bulk stomatal resistance from Penman-Monteith inversion using bulk transfer coefficient (Stull 1988)
     if 'rstFromPenmanMonteith' in l3functions:
         qcts.get_stomatalresistance(cf,ds3)
@@ -259,11 +267,13 @@ def l3qc(cf,ds2):
     
     qcutils.GetSeriesStats(cf,ds3)
     
-    qcutils.prepOzFluxVars(cf,ds3)
-    
     # run MOST (Buckingham Pi) 2d footprint model (Kljun et al. 2004)
     if 'footprint' in l3functions:
         qcts.do_footprint_2d(cf,ds3)
+    
+    # compute climatology for L3 data
+    if 'climatology' in l3functions:
+        qcts.do_climatology(cf,ds3)
     
     return ds3
 
@@ -325,6 +335,7 @@ def l4qc(cf,ds3):
     ds4.globalattributes['Level'] = 'L4'
     ds4.globalattributes['EPDversion'] = sys.version
     ds4.globalattributes['QCVersion'] = __doc__
+    qcutils.prepOzFluxVars(cf,ds4)
     
     # linear interpolation to fill missing values over gaps of 1 hour
     if 'InterpolateOverMissing' in l4functions:
@@ -353,6 +364,12 @@ def l4qc(cf,ds3):
     if 'UstarFromFh' in l4functions:
         us_in,us_out = qcts.UstarFromFh(cf,ds4)
     
+    # add relevant meteorological values to L4 data
+    if 'CalculateMetVars' in l4functions:
+        log.info(' Adding standard met variables to database')
+        qcts.CalculateMeteorologicalVariables(cf,ds4)
+        ds4.globalattributes['L4Functions'] = ds4.globalattributes['L4Functions']+', CalculateMetVars'
+    
     # merge CSAT and wind sentry wind speed
     if 'MergeSeriesWS' in l4functions:
         srclist = qcutils.GetMergeList(cf,'Ws',default=['Ws_WS_01','Ws_CSAT'])
@@ -360,7 +377,7 @@ def l4qc(cf,ds3):
             qcts.MergeSeries(ds4,'Ws',srclist,[0,10])
     
     # calculate rst and Gst from Penman-Monteith inversion
-    if 'rstFromPenmanMonteith' in l4functions and qcutils.cfkeycheck(cf,Base='FunctionArgs',ThisOne='PMin'):
+    if 'rstFromPenmanMonteith' in l4functions:
         qcts.get_stomatalresistance(cf,ds4)
     
     # re-apply the quality control checks (range, diurnal and rules)
@@ -384,18 +401,14 @@ def l4qc(cf,ds3):
         ds4.globalattributes['Level'] = 'L3'
         ds4.globalattributes['L4Functions'] = 'No L4 functions applied'
     
-    # add relevant meteorological values to L4 data
-    if 'CalculateMetVars' in l4functions:
-        log.info(' Adding standard met variables to database')
-        qcts.CalculateMeteorologicalVariables(cf,ds4)
-        ds4.globalattributes['L4Functions'] = ds4.globalattributes['L4Functions']+', CalculateMetVars'
-    
     # calculate daily statistics
     if 'Sums' in l4functions:
         qcts.do_sums(cf,ds4)
     
     qcutils.GetSeriesStats(cf,ds4)
     
-    qcutils.prepOzFluxVars(cf,ds4)
+    # compute climatology for L3 data
+    if 'climatology' in l4functions:
+        qcts.do_climatology(cf,ds4)
     
     return ds4

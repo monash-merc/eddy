@@ -1,3 +1,9 @@
+"""
+    Monthly Climatology Module
+    These functions have been integrated into OzFluxQCv2.2
+    This script is no longer supported
+    """
+
 import ast
 import constants as c
 from matplotlib.mlab import griddata

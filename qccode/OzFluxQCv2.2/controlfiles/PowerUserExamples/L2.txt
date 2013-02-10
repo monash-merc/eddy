@@ -4,14 +4,14 @@ netCDFv3 = False
 
 [Files]
     [[L1]]
-        ncFilePath = ncData/ASM/OzFlux/
+        ncFilePath = ncData/ASM/
         ncFileName = ASM_EC_2010_L1.nc
     [[L2]]
-        ncFilePath = ncData/ASM/OzFlux/
+        ncFilePath = ncData/ASM/
         ncFileName = ASM_EC_2010_L2.nc
-        xlFilePath = ../AliceSpringsMulga/level2/OzFlux/
+        xlFilePath = ../AliceSpringsMulga/level2/
         xlFileName = ASM_EC_2010_L2.xls
-        xlFlagFilePath = ../AliceSpringsMulga/level2/OzFlux/
+        xlFlagFilePath = ../AliceSpringsMulga/level2/
         xlFlagFileName = ASM_EC_2010_flagstats_L2.xls
     [[PNG]]
         PNGFilePath = ../AliceSpringsMulga/level2/PNG/

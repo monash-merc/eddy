@@ -125,7 +125,7 @@ def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
             plt.figtext(ts_XAxOrg+ts_XAxLen-0.01,YAxOrg+ts_YAxLen-0.025,TextStr,color='r',horizontalalignment='right')
             plt.setp(ts_axR.get_xticklabels(), visible=False)
             #Plot the diurnal averages.
-            #Hr1,Av1,Sd1,Mx1,Mn1=get_diurnalstats(dsa.series['Hdh']['Data'][si:ei],
+            #Hr1,Av1,Sd1,Mx1,Mn1=qcutils.get_diurnalstats(dsa.series['Hdh']['Data'][si:ei],
                                                  #dsa.series[ThisOne]['Data'][si:ei],dt)
             #hr1_ax = fig.add_axes([hr1_XAxOrg,YAxOrg,hr1_XAxLen,ts_YAxLen])
             #hr1_ax.hold(False)
@@ -133,7 +133,7 @@ def plottimeseries(cf,nFig,SeriesList,dsa,dsb,si,ei):
             #plt.xlim(0,24)
             #plt.xticks([0,6,12,18,24])
             #if n > 0: plt.setp(hr1_ax.get_xticklabels(), visible=False)
-            Hr2,Av2,Sd2,Mx2,Mn2=get_diurnalstats(dsb.series['Hdh']['Data'][si:ei],
+            Num2,Hr2,Av2,Sd2,Mx2,Mn2=qcutils.get_diurnalstats(dsb.series['Hdh']['Data'][si:ei],
                                                  dsb.series[ThisOne]['Data'][si:ei],dt)
             Av2 = numpy.ma.masked_where(Av2==-9999,Av2)
             Sd2 = numpy.ma.masked_where(Sd2==-9999,Sd2)
@@ -262,23 +262,6 @@ def tsplot(x,y,sub=[1,1,1],title=None,xlabel=None,ylabel=None,colours=None,linea
         ax.yaxis.set_label_text(ylabel)
     if xlabel!=None:
         ax.xaxis.set_label_text(xlabel)
-
-def get_diurnalstats(DecHour,Data,dt):
-    nInts = 24*int((60/dt)+0.5)
-    Hr = numpy.zeros(nInts) + float(-9999)
-    Av = numpy.zeros(nInts) + float(-9999)
-    Sd = numpy.zeros(nInts) + float(-9999)
-    Mx = numpy.zeros(nInts) + float(-9999)
-    Mn = numpy.zeros(nInts) + float(-9999)
-    for i in range(nInts):
-        Hr[i] = float(i)*dt/60.
-        li = numpy.where((abs(DecHour-Hr[i])<c.eps)&(abs(Data-float(-9999))>c.eps))
-        if numpy.size(li)!=0:
-            Av[i] = numpy.mean(Data[li])
-            Sd[i] = numpy.std(Data[li])
-            Mx[i] = numpy.max(Data[li])
-            Mn[i] = numpy.min(Data[li])
-    return Hr, Av, Sd, Mx, Mn
 
 def get_ticks(start, end):
     from datetime import timedelta as td

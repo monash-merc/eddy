@@ -4,25 +4,25 @@ OutputLevel = L4_GapFilled
 netCDFv3 = False
 Platform = Mac    # Mac or PC
 # Following is a list of optional pre-sums functions to apply.  No default functions are available at L4
-FunctionList = "['SOLO','MergeSeriesWS','rstFromPenmanMonteith']"
+FunctionList = "['SOLO','MergeSeriesWS','rstFromPenmanMonteith','Sums']"
 # FunctionList options:  FunctionList = "['SOLO','InterpolateOverMissing','GapFillFromAlternate','GapFillFromClimatology','GapFillFromRatios','UstarFromFh','MergeSeriesWS','rstFromPenmanMonteith','Sums']"
 
 [Files]
     [[L3]]
-        ncFilePath = ncData/ASM/OzFlux/
-        ncFileName = ASM_EC_2010_L3.nc
+        ncFilePath = ncData/ASM/
+        ncFileName = ASM_EC_2012_L3.nc
     [[L4]]
         xlSumFilePath = ../AliceSpringsMulga/level5_summaries/
-        xlSumFileName = ASM_EC_2010_Daily_sums.xls
-        ncFilePath = ncData/ASM/OzFlux/
-        ncFileName = ASM_EC_2010_L4.nc
-        xlFlagFilePath = ../AliceSpringsMulga/level4/OzFlux/
-        xlFlagFileName = ASM_EC_2010_flagstats_L4.xls
+        xlSumFileName = ASM_EC_2012_Daily_sums.xls
+        ncFilePath = ncData/ASM/
+        ncFileName = ASM_EC_2012_L4.nc
+        xlFlagFilePath = ../AliceSpringsMulga/level4/
+        xlFlagFileName = ASM_EC_2012_flagstats_L4.xls
     [[L4_GapFilled]]
-        ncFilePath = ../AliceSpringsMulga/level4/OzFlux/
-        ncFileName = ASM_EC_2010_L4_GapFilled.nc
-        xlFilePath = ../AliceSpringsMulga/level4/OzFlux/
-        xlFileName = ASM_EC_2010_L4_GapFilled.xls
+        ncFilePath = ../AliceSpringsMulga/level4/
+        ncFileName = ASM_EC_2012_L4_GapFilled.nc
+        xlFilePath = ../AliceSpringsMulga/level4/
+        xlFileName = ASM_EC_2012_L4_GapFilled.xls
     [[PNG]]
         PNGFilePath = ../AliceSpringsMulga/level4/PNG/
 
@@ -67,17 +67,22 @@ SWC10cm = "['svwc_10cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_10cm_understory
 SWC60cm = "['svwc_60cm_baresoil_a1', 'svwc_60cm_mulga_a1', 'svwc_60cm_understory_a1', 'svwc_60cm_baresoil_a2', 'svwc_60cm_mulga_a2', 'svwc_60cm_understory_a2']"
 SWC100cm = "['svwc_100cm_baresoil_a1', 'svwc_100cm_mulga_a1', 'svwc_100cm_understory_a1', 'svwc_100cm_baresoil_a2', 'svwc_100cm_mulga_a2', 'svwc_100cm_understory_a2']"
 
-[FunctionArgs]
-#PMin = "['Fe_gapfilled', 'Ta_HMP', 'Ah_HMP', 'ps', 'Ws_EC', 'Fnr', 'Fsd', 'Fg_Av']"
-PMin = "['Fe', 'Ta', 'Ah', 'ps', 'Ws', 'Fn', 'Fsd', 'Fg']"
-#PMcritFe = 100  # Fe flux greater than or equal to this value to keep rst
-#PMcritFsd = 375  # Fsd flux greater than or equal to this value to keep rst
-# Default PMin = "['Fe_wpl', 'Ta_EC', 'Ah_EC', 'ps', 'Ws_EC', 'Fnr', 'Fsd', 'Fg']"
+[PenmanMonteith]
+# Default PMin = "['Fe', 'Ta', 'Ah', 'ps', 'Ws', 'Fn', 'Fsd', 'Fg', 'q_high', 'q_low']"
 # Default PMcritFe = 0  # Fe flux greater than or equal to this value to keep rst
 # Default PMcritFsd = 10  # Fsd flux greater than or equal to this value to keep rst
-#MetVars = "['Ta_HMP','ps','Ah_HMP']"
-#SOLOvars = "['Fc_gapfilled','Fe_gapfilled','Fh_gapfilled']"
-#SOLOplot = "['Fc_wpl','Fe_wpl','Fh_rmv']"
+PMin = "['Fe', 'Ta', 'Ah', 'ps', 'Ws', 'Fn', 'Fsd', 'Fg', 'q_425cm', 'q_200cm']"
+PMcritFe = 0  # Fe flux greater than or equal to this value to keep rst
+PMcritFsd = 10       # Fsd flux greater than or equal to this value to keep rst
+
+Cemethod = True      # Brutseart/Stull, requires vertical profile of q, returns bulk stomatal conductance (Gst)
+zq_high = 4.25       # Height of upper measurement of q, metres
+zq_low = 2           # Height of lower
+
+Cdmethod = True      # Jensen/Leuning, returns canopy conductance (Gc)
+zm = 11.67           # Height of measurement
+z0 = 0.8             # Aerodynamic roughness length
+zc = 6.5             # Canopy height
 
 
 [Variables]
