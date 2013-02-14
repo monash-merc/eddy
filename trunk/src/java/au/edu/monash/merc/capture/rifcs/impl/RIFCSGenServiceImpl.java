@@ -27,7 +27,9 @@
  */
 package au.edu.monash.merc.capture.rifcs.impl;
 
+import au.edu.monash.merc.capture.common.CoverageType;
 import au.edu.monash.merc.capture.domain.Collection;
+import au.edu.monash.merc.capture.domain.Location;
 import au.edu.monash.merc.capture.dto.ActivityBean;
 import au.edu.monash.merc.capture.dto.PartyBean;
 import au.edu.monash.merc.capture.dto.ProjectBean;
@@ -91,7 +93,7 @@ public class RIFCSGenServiceImpl implements RIFCSGenService {
 		rifcsBuilder.append(lineSeparator);
 		rifcsBuilder.append("<identifier type=\"local\">" + collection.getUniqueKey() + "</identifier>");
 		rifcsBuilder.append(lineSeparator);
-		
+
 		if (identifier != null && StringUtils.contains(identifier, "/")) {
 			rifcsBuilder.append("<identifier type=\"handle\">" + identifier + "</identifier>");
 			rifcsBuilder.append(lineSeparator);
@@ -139,12 +141,17 @@ public class RIFCSGenServiceImpl implements RIFCSGenService {
 		}
 
 		rifcsBuilder.append("<coverage>");
-		String coverage = collection.getSpatialType();
-		if (StringUtils.isNotBlank(coverage)) {
-			rifcsBuilder.append(lineSeparator);
-			rifcsBuilder.append("<spatial type=\"" + collection.getSpatialType() + "\">" + collection.getSpatialCoverage() + "</spatial>");
-			rifcsBuilder.append(lineSeparator);
-		}
+        Location location = collection.getLocation();
+        if(location != null){
+            String spatialType = location.getSpatialType();
+            String spatialValue = location.getSpatialCoverage();
+            if(!CoverageType.fromType(spatialType).equals(CoverageType.UNKNOWN)){
+                rifcsBuilder.append(lineSeparator);
+                rifcsBuilder.append("<spatial type=\"" + spatialType + "\">" + spatialValue + "</spatial>");
+                rifcsBuilder.append(lineSeparator);
+            }
+        }
+
 		if (collection.getDateFrom() != null) {
 			rifcsBuilder.append("<temporal>");
 			rifcsBuilder.append(lineSeparator);
@@ -196,7 +203,7 @@ public class RIFCSGenServiceImpl implements RIFCSGenService {
 
 		rifcsBuilder.append("<subject  type=\"anzsrc-for\">" + publishBean.getAnzsrcCode() + "</subject>");
 		rifcsBuilder.append(lineSeparator);
-		
+
 		rifcsBuilder.append("<description type=\"rights\" xml:lang=\"en\">");
 		rifcsBuilder.append(lineSeparator);
 		rifcsBuilder.append(publishBean.getRights().getRightContents());
@@ -210,7 +217,7 @@ public class RIFCSGenServiceImpl implements RIFCSGenService {
 		rifcsBuilder.append(lineSeparator);
 		rifcsBuilder.append("</description>");
 		rifcsBuilder.append(lineSeparator);
-		
+
 		if (StringUtils.isNotBlank(publishBean.getAccessRights())) {
 			rifcsBuilder.append("<description type=\"accessRights\" xml:lang=\"en\">");
 			rifcsBuilder.append(lineSeparator);

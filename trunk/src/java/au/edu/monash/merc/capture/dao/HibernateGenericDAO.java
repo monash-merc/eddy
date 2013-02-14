@@ -90,6 +90,11 @@ public class HibernateGenericDAO<T> implements IRepository<T> {
     }
 
     @Override
+    public void merge(T entity) {
+        this.session().merge(entity);
+    }
+
+    @Override
     public int saveAll(List<T> entities) {
         int insertedCount = 0;
         for (int i = 0; i < entities.size(); i++) {

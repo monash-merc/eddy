@@ -53,9 +53,29 @@
 	text-align: center;
 }
 
-.main_map{
-	width:500px;
-	height:360px;
+.map_view{
+	height:350px;
+    width: 550px;
 	border: solid 1px #E1E8F0;
 	padding: 5px 5px 5px 5px;
 }
+
+.infobox-wrapper {
+    display:none;
+}
+#infobox {
+    border:2px solid black;
+    margin-top: 8px;
+    background:#333;
+    color:#FFF;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:12px;
+    padding: .5em 1em;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    text-shadow:0 -1px #000000;
+    -webkit-box-shadow: 0 0  8px #000;
+    box-shadow: 0 0 8px #000;
+}
+

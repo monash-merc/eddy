@@ -110,7 +110,7 @@
 
 		 			<tr>
 		 				<td align="left">
-		 					<@s.textarea  id="spatialcvg" name="collection.spatialCoverage" cssStyle="width: 200px; height: 80px;" cssClass="input_textarea" readonly ="true" />
+		 					<@s.textarea  id="spatialcvg" name="collection.location.spatialCoverage" cssStyle="width: 200px; height: 80px;" cssClass="input_textarea" readonly ="true" />
 		 				</td>
 		 				<td></td>
 		 			</tr>

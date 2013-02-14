@@ -13,12 +13,76 @@
 <div class="main_body_container">
     <div class="display_middel_div">
         <div class="left_display_div">
-
+        <#include "../template/action_errors.ftl" />
             <div style="clear:both"></div>
             <div class="left_display_inner">
+                <div class="content_none_border_div">
+                    <div class="none_border_block">
+                    <@s.if test="%{actionSuccessMsg != null}">
+                        <#include "../template/action_success_msg.ftl"/>
+                    </@s.if>
+                    </div>
+                </div>
+                <div class="none_border_block">
+                    <span class="name_title">You have <font color="green"> ${eventPagination.totalRecords} </font> Events</span>
+                </div>
+            <@s.if test="%{eventPagination.pageResults.size() > 0}">
+                <div class="msg_content">
+                    <a href="${base}/${pageLink}${pageSuffix}<@s.property value='eventPagination.pageNo' />" class="page_url"></a>
+                </div>
+                <div class="content_none_border_div">
+                    <div class="none_border_block">
+                        <span class="filter_inline_span">
+                           Page size: <@s.select id="item_select_size" name="sizePerPage" headerKey="<@s.property value='sizePerPage' />"  list="pageSizeMap" cssClass="input_select_small" />
+                            &nbsp;Sorted by: <@s.select id="item_select_order" name="orderBy" headerKey="${orderBy}"  list="orderByMap" cssClass="input_select_small" />
+                            &nbsp;Ordered by: <@s.select id="item_select_otype" name="orderByType" headerKey="${orderByType}"  list="orderByTypeMap" cssClass="input_select_small" />
+                        </span>
+                    </div>
+                </div>
 
+                <div class="content_none_border_div">
+                    <table class="display_data_tab">
+                        <thead>
+                        <tr>
+                            <th width="20%">Date</th>
+                            <th width="70%">Events</th>
+                            <th width="10%">&nbsp;</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <@s.iterator status="eventStat" value="eventPagination.pageResults" id="eventResult" >
+                            <tr>
+                                <td>
+                            <span class="span_inline1">
+                                <@s.date name="#eventResult.createdTime"  format="dd-MM-yyyy 'at' hh:mm a" />
+                            </span>
+                                </td>
+                                <td>
+                            <span class="span_inline2">
+                                <@s.property value="#eventResult.event" />, by <@s.property value="#eventResult.operator.displayName" />
+                            </span>
+                                </td>
+                                <td>
+                                    <div class="tab_link">
+                                        <a href="${base}/${deleteEventLink}?pageNo=<@s.property value='eventPagination.pageNo' />&auditEvent.id=<@s.property value='#eventResult.id' />">Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            </@s.iterator>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="blank_separator"></div>
+                <#include "../pagination/pag_style2.ftl" />
+            </@s.if>
+            <@s.else>
+                <div class="placeholder_div">
+                    There is no event
+                </div>
+            </@s.else>
             </div>
         </div>
+        <!-- End of left panel -->
         <!-- right panel -->
         <div class="right_display_div">
         <@s.if test="%{#session.authentication_flag =='authenticated'}">
@@ -28,70 +92,6 @@
     </div>
     <div style="clear:both"></div>
 </div>
-<br/>
-
-
-<div class="main_big_border">
-    <div class="left_container_panel">
-        <br/>
-    <#include "../template/action_errors.ftl" />
-        <div class="left_middle_panel">
-            <div class="none_border_block">
-            <@s.if test="%{actionSuccessMsg != null}">
-			 	<#include "../template/action_success_msg.ftl"/>
-			 </@s.if>
-            </div>
-            <div class="none_border_block">
-                <span class="name_title">You have <font color="green"> ${eventPagination.totalRecords} </font> Events</span>
-            </div>
-        <@s.if test="%{eventPagination.pageResults.size() > 0}">
-            <div class="msg_content">
-                <a href="${base}/${pageLink}${pageSuffix}<@s.property value='eventPagination.pageNo' />" class="page_url"></a>
-            </div>
-            <div class="single_line_center_block">
-				<span class="inline_span">				
-					Page size: <@s.select id="item_select_size" name="sizePerPage" headerKey="<@s.property value='sizePerPage' />"  list="pageSizeMap" cssClass="input_select_small" />
-                    &nbsp;Sorted by: <@s.select id="item_select_order" name="orderBy" headerKey="${orderBy}"  list="orderByMap" cssClass="input_select_small" />
-                    &nbsp;Ordered by: <@s.select id="item_select_otype" name="orderByType" headerKey="${orderByType}"  list="orderByTypeMap" cssClass="input_select_small" />
-				</span>
-            </div>
-
-            <@s.iterator status="eventStat" value="eventPagination.pageResults" id="eventResult" >
-                <div class="left_inner_panel">
-                    <div class="record_data">
-                        <div class="record_data_inline"><font color="#0E774A"><@s.date name="#eventResult.createdTime"  format="dd-MM-yyyy 'at' hh:mm a" /></font>
-                            &nbsp;&nbsp;<@s.property value="#eventResult.event" />, by <@s.property value="#eventResult.operator.displayName" /></div>
-                        <div class="record_data_link2">
-                            <a href="${base}/${deleteEventLink}?pageNo=<@s.property value='eventPagination.pageNo' />&auditEvent.id=<@s.property value='#eventResult.id' />">&nbsp;&nbsp;&nbsp; Delete
-                                &nbsp;&nbsp;&nbsp;</a>
-                        </div>
-                    </div>
-                </div>
-                <div style="clear:both"></div>
-            </@s.iterator>
-            <!-- END of Record -->
-            <div style="clear:both"></div>
-            <@s.if test="%{eventPagination.pageResults.size() < 4}">
-                <div class="none_border_space_small"></div>
-            </@s.if>
-            <br/>
-            <#include "../pagination/pag_style2.ftl" />
-        </@s.if>
-        <@s.else>
-            <div class="bottom_border_block"></div>
-            <br/>
-
-            <div class="none_border_space_block"></div>
-        </@s.else>
-        </div>
-        <br/>
-    </div>
-    <div class="right_container_panel">
-    <#include "../template/subnav_section.ftl" />
-    </div>
-    <div style="clear:both"></div>
-</div>
-
 <#include "../template/footer.ftl"/>
 </body>
 </html>

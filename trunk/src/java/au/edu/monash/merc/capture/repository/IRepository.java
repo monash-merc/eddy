@@ -30,13 +30,20 @@ package au.edu.monash.merc.capture.repository;
 import java.util.List;
 
 public interface IRepository<T> {
-	public T get(long id);
+    public T get(long id);
 
-	public void add(T entity);
+    public void add(T entity);
 
-	public void remove(T entity);
+    public void remove(T entity);
 
-	public void update(T entity);
+    public void update(T entity);
 
-	public int saveAll(List<T> entities);
+    /**
+     * generic method - merge a domain entity in the database
+     *
+     * @param entity a parameterized type of a domain entity object which will be replaced by the actual type argument.
+     */
+    void merge(T entity);
+
+    public int saveAll(List<T> entities);
 }

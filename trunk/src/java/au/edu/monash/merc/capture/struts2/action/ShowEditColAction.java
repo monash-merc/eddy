@@ -29,6 +29,9 @@ package au.edu.monash.merc.capture.struts2.action;
 
 import java.util.List;
 
+import au.edu.monash.merc.capture.common.CoverageType;
+import au.edu.monash.merc.capture.common.SpatialValue;
+import au.edu.monash.merc.capture.domain.Location;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
@@ -67,12 +70,25 @@ public class ShowEditColAction extends DMCoreAction {
             if (collection != null) {
                 // populate the user object
                 colNameBeforeUpdate = collection.getName();
-                String spatialType = collection.getSpatialType();
-                String spatialCoverValue = collection.getSpatialCoverage();
-                if (StringUtils.isNotBlank(spatialType) && StringUtils.equals(spatialType, ActConstants.ANDS_SPATIAL_TEXT_TYPE) && StringUtils.equals(spatialCoverValue, ActConstants.ANDS_SPATIAL_GLOBAL)) {
-                    globalCoverage = true;
-                    collection.setSpatialCoverage("");
+                Location location = collection.getLocation();
+                //if no location, we just create a new location with unknown value
+                if (location == null) {
+                    location = new Location();
+                    location.setSpatialType(CoverageType.UNKNOWN.type());
+                    location.setSpatialCoverage(SpatialValue.UNKNOWN.value());
                 }
+                String spatialType = location.getSpatialType();
+
+                if (CoverageType.fromType(spatialType).equals(CoverageType.GLOBAL)) {
+                    globalCoverage = true;
+                    location.setSpatialCoverage("");
+                }
+                if (CoverageType.fromType(spatialType).equals(CoverageType.UNKNOWN)) {
+                    globalCoverage = false;
+                    location.setSpatialCoverage("");
+                }
+                //set location back to collection
+                collection.setLocation(location);
 
                 // set page title and nav label.
                 setNavAfterSuccess();

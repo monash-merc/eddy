@@ -59,261 +59,274 @@ import org.hibernate.annotations.LazyCollectionOption;
 @Table(name = "collection")
 public class Collection extends Domain {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "pk_generator")
-	@TableGenerator(name = "pk_generator", pkColumnName = "pk_column_name", valueColumnName = "pk_column_value", pkColumnValue = "collection_pk")
-	@Column(name = "id", nullable = false)
-	private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "pk_generator")
+    @TableGenerator(name = "pk_generator", pkColumnName = "pk_column_name", valueColumnName = "pk_column_value", pkColumnValue = "collection_pk")
+    @Column(name = "id", nullable = false)
+    private long id;
 
-	@Basic
-	@Column(name = "site_name", length = 100)
-	private String name;
+    @Basic
+    @Column(name = "site_name", length = 100)
+    private String name;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "created_time")
-	private Date createdTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_time")
+    private Date createdTime;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "modified_time")
-	private Date modifiedTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "modified_time")
+    private Date modifiedTime;
 
-	@ManyToOne(targetEntity = User.class)
-	@JoinColumn(referencedColumnName = "id", nullable = false, name = "owner_id")
-	private User owner;
+    @ManyToOne(targetEntity = User.class)
+    @JoinColumn(referencedColumnName = "id", nullable = false, name = "owner_id")
+    private User owner;
 
-	@OneToOne(targetEntity = User.class)
-	@JoinColumn(referencedColumnName = "id", nullable = false, name = "modified_by_user")
-	private User modifiedByUser;
+    @OneToOne(targetEntity = User.class)
+    @JoinColumn(referencedColumnName = "id", nullable = false, name = "modified_by_user")
+    private User modifiedByUser;
 
-	@Basic
-	@Column(name = "directory_name")
-	private String dirPathName;
+    @Basic
+    @Column(name = "directory_name")
+    private String dirPathName;
 
-	@Basic
-	@Column(name = "brief_desc", length = 255)
-	private String briefDesc;
+    @Basic
+    @Column(name = "brief_desc", length = 255)
+    private String briefDesc;
 
-	@Basic
-	@Column(name = "description", length = 4000)
-	private String description;
+    @Basic
+    @Column(name = "description", length = 4000)
+    private String description;
 
-	@Basic
-	@Column(name = "persist_identifier")
-	private String persistIdentifier;
+    @Basic
+    @Column(name = "persist_identifier")
+    private String persistIdentifier;
 
-	@Basic
-	@Column(name = "unique_key")
-	private String uniqueKey;
+    @Basic
+    @Column(name = "unique_key")
+    private String uniqueKey;
 
-	@Basic
-	@Column(name = "published")
-	private boolean published;
+    @Basic
+    @Column(name = "published")
+    private boolean published;
 
-	@Basic
-	@Column(name = "spatial_type", length = 100)
-	private String spatialType;
+    @Basic
+    @Column(name = "spatial_type", length = 100)
+    private String spatialType;
 
-	@Basic
-	@Column(name = "spatial_coverage", length = 255)
-	private String spatialCoverage;
+    @Basic
+    @Column(name = "spatial_coverage", length = 255)
+    private String spatialCoverage;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "date_from")
-	private Date dateFrom;
+    @ManyToOne(targetEntity = Location.class)
+    @JoinColumn(name = "location_id", referencedColumnName = "id", nullable = true)
+    private Location location;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "date_to")
-	private Date dateTo;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "date_from")
+    private Date dateFrom;
 
-	@OneToMany(mappedBy = "collection", fetch = FetchType.LAZY, targetEntity = Permission.class)
-	@Cascade({ CascadeType.SAVE_UPDATE, CascadeType.DELETE })
-	private List<Permission> permissions = new ArrayList<Permission>();
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "date_to")
+    private Date dateTo;
 
-	@OneToMany(mappedBy = "collection", targetEntity = Dataset.class, fetch = FetchType.LAZY)
-	@Cascade({ CascadeType.DELETE })
-	private List<Dataset> datasets = new ArrayList<Dataset>();
+    @OneToMany(mappedBy = "collection", fetch = FetchType.LAZY, targetEntity = Permission.class)
+    @Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
+    private List<Permission> permissions = new ArrayList<Permission>();
 
-	@ManyToMany(targetEntity = Activity.class)
-	@JoinTable(name = "collection_activity", joinColumns = { @JoinColumn(name = "collection_id", referencedColumnName = "id") }, inverseJoinColumns = { @JoinColumn(name = "activity_id", referencedColumnName = "id") }, uniqueConstraints = { @UniqueConstraint(columnNames = {
-			"collection_id", "activity_id" }) })
-	@LazyCollection(LazyCollectionOption.TRUE)
-	private List<Activity> activities = new ArrayList<Activity>();
+    @OneToMany(mappedBy = "collection", targetEntity = Dataset.class, fetch = FetchType.LAZY)
+    @Cascade({CascadeType.DELETE})
+    private List<Dataset> datasets = new ArrayList<Dataset>();
 
-	@ManyToMany(targetEntity = Party.class)
-	@JoinTable(name = "collection_party", joinColumns = { @JoinColumn(name = "collection_id", referencedColumnName = "id") }, inverseJoinColumns = { @JoinColumn(name = "party_id", referencedColumnName = "id") }, uniqueConstraints = { @UniqueConstraint(columnNames = {
-			"collection_id", "party_id" }) })
-	@LazyCollection(LazyCollectionOption.TRUE)
-	private List<Party> parties = new ArrayList<Party>();
+    @ManyToMany(targetEntity = Activity.class)
+    @JoinTable(name = "collection_activity", joinColumns = {@JoinColumn(name = "collection_id", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "activity_id", referencedColumnName = "id")}, uniqueConstraints = {@UniqueConstraint(columnNames = {
+            "collection_id", "activity_id"})})
+    @LazyCollection(LazyCollectionOption.TRUE)
+    private List<Activity> activities = new ArrayList<Activity>();
 
-	@OneToOne(mappedBy = "collection", targetEntity = Rights.class, fetch = FetchType.LAZY)
-	@Cascade({ CascadeType.DELETE })
-	private Rights rights;
+    @ManyToMany(targetEntity = Party.class)
+    @JoinTable(name = "collection_party", joinColumns = {@JoinColumn(name = "collection_id", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "party_id", referencedColumnName = "id")}, uniqueConstraints = {@UniqueConstraint(columnNames = {
+            "collection_id", "party_id"})})
+    @LazyCollection(LazyCollectionOption.TRUE)
+    private List<Party> parties = new ArrayList<Party>();
 
-	public long getId() {
-		return id;
-	}
+    @OneToOne(mappedBy = "collection", targetEntity = Rights.class, fetch = FetchType.LAZY)
+    @Cascade({CascadeType.DELETE})
+    private Rights rights;
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public Date getCreatedTime() {
-		return createdTime;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setCreatedTime(Date createdTime) {
-		this.createdTime = createdTime;
-	}
+    public Date getCreatedTime() {
+        return createdTime;
+    }
 
-	public Date getModifiedTime() {
-		return modifiedTime;
-	}
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
 
-	public void setModifiedTime(Date modifiedTime) {
-		this.modifiedTime = modifiedTime;
-	}
+    public Date getModifiedTime() {
+        return modifiedTime;
+    }
 
-	public User getOwner() {
-		return owner;
-	}
+    public void setModifiedTime(Date modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
 
-	public void setOwner(User owner) {
-		this.owner = owner;
-	}
+    public User getOwner() {
+        return owner;
+    }
 
-	public String getDirPathName() {
-		return dirPathName;
-	}
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
 
-	public void setDirPathName(String dirPath) {
-		this.dirPathName = dirPath;
-	}
+    public String getDirPathName() {
+        return dirPathName;
+    }
 
-	public String getBriefDesc() {
-		return briefDesc;
-	}
+    public void setDirPathName(String dirPath) {
+        this.dirPathName = dirPath;
+    }
 
-	public void setBriefDesc(String briefDesc) {
-		this.briefDesc = briefDesc;
-	}
+    public String getBriefDesc() {
+        return briefDesc;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public void setBriefDesc(String briefDesc) {
+        this.briefDesc = briefDesc;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public String getPersistIdentifier() {
-		return persistIdentifier;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setPersistIdentifier(String persistIdentifier) {
-		this.persistIdentifier = persistIdentifier;
-	}
+    public String getPersistIdentifier() {
+        return persistIdentifier;
+    }
 
-	public String getUniqueKey() {
-		return uniqueKey;
-	}
+    public void setPersistIdentifier(String persistIdentifier) {
+        this.persistIdentifier = persistIdentifier;
+    }
 
-	public void setUniqueKey(String uniqueKey) {
-		this.uniqueKey = uniqueKey;
-	}
+    public String getUniqueKey() {
+        return uniqueKey;
+    }
 
-	public List<Dataset> getDatasets() {
-		return datasets;
-	}
+    public void setUniqueKey(String uniqueKey) {
+        this.uniqueKey = uniqueKey;
+    }
 
-	public void setDatasets(List<Dataset> datasets) {
-		this.datasets = datasets;
-	}
+    public List<Dataset> getDatasets() {
+        return datasets;
+    }
 
-	public List<Permission> getPermissions() {
-		return permissions;
-	}
+    public void setDatasets(List<Dataset> datasets) {
+        this.datasets = datasets;
+    }
 
-	public void setPermissions(List<Permission> permissions) {
-		this.permissions = permissions;
-	}
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
 
-	public User getModifiedByUser() {
-		return modifiedByUser;
-	}
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
+    }
 
-	public void setModifiedByUser(User modifiedByUser) {
-		this.modifiedByUser = modifiedByUser;
-	}
+    public User getModifiedByUser() {
+        return modifiedByUser;
+    }
 
-	public List<Activity> getActivities() {
-		return activities;
-	}
+    public void setModifiedByUser(User modifiedByUser) {
+        this.modifiedByUser = modifiedByUser;
+    }
 
-	public void setActivities(List<Activity> activities) {
-		this.activities = activities;
-	}
+    public List<Activity> getActivities() {
+        return activities;
+    }
 
-	public List<Party> getParties() {
-		return parties;
-	}
+    public void setActivities(List<Activity> activities) {
+        this.activities = activities;
+    }
 
-	public void setParties(List<Party> parties) {
-		this.parties = parties;
-	}
+    public List<Party> getParties() {
+        return parties;
+    }
 
-	public boolean isPublished() {
-		return published;
-	}
+    public void setParties(List<Party> parties) {
+        this.parties = parties;
+    }
 
-	public void setPublished(boolean published) {
-		this.published = published;
-	}
+    public boolean isPublished() {
+        return published;
+    }
 
-	public Rights getRights() {
-		return rights;
-	}
+    public void setPublished(boolean published) {
+        this.published = published;
+    }
 
-	public void setRights(Rights rights) {
-		this.rights = rights;
-	}
+    public Rights getRights() {
+        return rights;
+    }
 
-	public String getSpatialType() {
-		return spatialType;
-	}
+    public void setRights(Rights rights) {
+        this.rights = rights;
+    }
 
-	public void setSpatialType(String spatialType) {
-		this.spatialType = spatialType;
-	}
+    public Location getLocation() {
+        return location;
+    }
 
-	public String getSpatialCoverage() {
-		return spatialCoverage;
-	}
+    public void setLocation(Location location) {
+        this.location = location;
+    }
 
-	public void setSpatialCoverage(String spatialCoverage) {
-		this.spatialCoverage = spatialCoverage;
-	}
+    public String getSpatialType() {
+        return spatialType;
+    }
 
-	public Date getDateFrom() {
-		return dateFrom;
-	}
+    public void setSpatialType(String spatialType) {
+        this.spatialType = spatialType;
+    }
 
-	public void setDateFrom(Date dateFrom) {
-		this.dateFrom = dateFrom;
-	}
 
-	public Date getDateTo() {
-		return dateTo;
-	}
+    public String getSpatialCoverage() {
+        return spatialCoverage;
+    }
 
-	public void setDateTo(Date dateTo) {
-		this.dateTo = dateTo;
-	}
+    public void setSpatialCoverage(String spatialCoverage) {
+        this.spatialCoverage = spatialCoverage;
+    }
+
+    public Date getDateFrom() {
+        return dateFrom;
+    }
+
+    public void setDateFrom(Date dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+
+    public Date getDateTo() {
+        return dateTo;
+    }
+
+    public void setDateTo(Date dateTo) {
+        this.dateTo = dateTo;
+    }
 }
