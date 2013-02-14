@@ -27,9 +27,12 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
+import au.edu.monash.merc.capture.common.CoverageType;
+import au.edu.monash.merc.capture.common.SpatialValue;
 import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.AuditEvent;
 import au.edu.monash.merc.capture.domain.Collection;
+import au.edu.monash.merc.capture.domain.Location;
 import au.edu.monash.merc.capture.domain.Permission;
 import au.edu.monash.merc.capture.domain.UserType;
 import au.edu.monash.merc.capture.util.CaptureUtil;
@@ -83,21 +86,35 @@ public class EditColAction extends DMCoreAction {
                     existedCollection.setDateTo(normalizeDate(todate));
                 }
 
-                // check the spatial coverage and type
+                //check the location
+                String spatialType = null;
+                String spatialValue = null;
                 if (globalCoverage) {
-                    existedCollection.setSpatialType(ActConstants.ANDS_SPATIAL_TEXT_TYPE);
-                    existedCollection.setSpatialCoverage(ActConstants.ANDS_SPATIAL_GLOBAL);
+                    spatialType = CoverageType.GLOBAL.type();
+                    spatialValue = SpatialValue.GLOBAL.value();
                 } else {
+                    Location alocation = collection.getLocation();
+                    String spValue = alocation.getSpatialCoverage();
                     // check the spatial coverage and type
-                    String spatialTmp = collection.getSpatialCoverage();
-                    if (StringUtils.isBlank(spatialTmp)) {
-                        existedCollection.setSpatialCoverage("");
-                        existedCollection.setSpatialType("");
+                    if (StringUtils.isBlank(spValue)) {
+                        spatialType = CoverageType.UNKNOWN.type();
+                        spatialValue = SpatialValue.UNKNOWN.value();
+
                     } else {
-                        existedCollection.setSpatialType(ActConstants.ANDS_SPATIAL_TYPE);
-                        existedCollection.setSpatialCoverage(collection.getSpatialCoverage());
+                        spatialType = CoverageType.KML.type();
+                        spatialValue = spValue;
                     }
                 }
+                Location location = this.dmService.getLocationByCoverageType(spatialType, spatialValue);
+                if (location == null) {
+                    location = new Location();
+                    location.setSpatialType(spatialType);
+                    location.setSpatialCoverage(spatialValue);
+                    this.dmService.saveLocation(location);
+                }
+                //save the location inot collection
+                existedCollection.setLocation(location);
+
 
                 // retrieve the permissions for all registered users and anonymous users
                 List<Permission> permissions = this.dmService.getCollectionDefaultPerms(collection.getId());

@@ -62,6 +62,66 @@ public interface DMService {
 
     public boolean checkCollectionNameExisted(String colName);
 
+    /**
+     * Save a Location
+     *
+     * @param location A Location
+     */
+    void saveLocation(Location location);
+
+    /**
+     * Merge a Location
+     *
+     * @param location A Location
+     */
+    void mergeLocation(Location location);
+
+    /**
+     * Update a Location
+     *
+     * @param location A Location
+     */
+    void updateLocation(Location location);
+
+    /**
+     * Delete a Location
+     *
+     * @param location a Location location
+     */
+    void deleteLocation(Location location);
+
+    /**
+     * Get a Location by id
+     *
+     * @param id A Location id
+     * @return A Location object
+     */
+    Location getLocationById(long id);
+
+    /**
+     * Delete a Location by id
+     *
+     * @param id A Location id
+     */
+    void deleteLocationById(long id);
+
+    /**
+     * get all Locations by coverageType
+     *
+     * @param coverageType a spatial coverage type
+     * @return a list of Locations
+     */
+    public List<Location> getLocations(String coverageType);
+
+    /**
+     * get a Location by coverage type
+     *
+     * @param coverageType    a coverage type
+     * @param spatialCoverage a spatial coverage value
+     * @return a Location object
+     */
+    public Location getLocationByCoverageType(String coverageType, String spatialCoverage);
+
     public Dataset captureData(String destFileName, File srcFile, boolean extractable, boolean globalAttOnly, Collection collection, String rootPath);
 
     public List<String> discoverFiles(String stagePath, FilenameFilter filter);

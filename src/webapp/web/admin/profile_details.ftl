@@ -148,11 +148,10 @@
                         <@s.property value="profile.interests" escape=false />
                         </div>
                     </div>
-                </div>
-                <div class="content_none_border_div">
                     <div class="content_act_div">
                         <a href="${base}/admin/showProfileUpdate.jspx">Edit Profile</a>
                     </div>
+                    <div style="clear:both"></div>
                 </div>
             </div>
         </div>

@@ -575,4 +575,15 @@
             <result name="success">/web/data/view_dataset_details.ftl</result>
         </action>
     </package>
+    <package name="core.mapview" extends="core.merc" namespace="/mapview">
+        <default-interceptor-ref name="noneAuthStack"/>
+        <action name="*">
+            <result type="freemarker">/web/map/{1}.ftl</result>
+        </action>
+        <action name="showMapView" class="data.locationAction" method="showMapView">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/map/list_map_view.ftl</result>
+        </action>
+    </package>
 </struts>

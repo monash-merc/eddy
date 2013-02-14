@@ -33,7 +33,7 @@
             <li><a href="#">Collections</a>
                 <ul>
                     <li><a href="${base}/data/listAllCollections.jspx">List View</a></li>
-                    <li><a href="#">Map View</a></li>
+                    <li><a href="${base}/mapview/showMapView.jspx">Map View</a></li>
                 </ul>
             </li>
             <li><a href="${base}/admin/listUsers.jspx">Users</a></li>
@@ -42,7 +42,7 @@
             <li><a href="#">Collections</a>
                 <ul>
                     <li><a href="${base}/pub/listPubCollections.jspx">List View</a></li>
-                    <li><a href="#">Map View</a></li>
+                    <li><a href="${base}/mapview/showMapView.jspx">Map View</a></li>
                 </ul>
             </li>
         </@s.else>

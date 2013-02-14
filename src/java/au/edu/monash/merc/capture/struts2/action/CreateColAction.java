@@ -27,8 +27,11 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
+import au.edu.monash.merc.capture.common.CoverageType;
+import au.edu.monash.merc.capture.common.SpatialValue;
 import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.AuditEvent;
+import au.edu.monash.merc.capture.domain.Location;
 import au.edu.monash.merc.capture.domain.PermType;
 import au.edu.monash.merc.capture.domain.Permission;
 import au.edu.monash.merc.capture.domain.UserType;
@@ -136,20 +139,35 @@ public class CreateColAction extends DMCoreAction {
             collection.setOwner(user);
             // set collection modified by some user, in this case is an owner user
             collection.setModifiedByUser(user);
-
+            //check the location
+            String spatialType = null;
+            String spatialValue = null;
             if (globalCoverage) {
-                collection.setSpatialType(ActConstants.ANDS_SPATIAL_TEXT_TYPE);
-                collection.setSpatialCoverage(ActConstants.ANDS_SPATIAL_GLOBAL);
+                spatialType = CoverageType.GLOBAL.type();
+                spatialValue = SpatialValue.GLOBAL.value();
             } else {
+                Location alocation = collection.getLocation();
+                String spValue = alocation.getSpatialCoverage();
                 // check the spatial coverage and type
-                String spatialTmp = collection.getSpatialCoverage();
-                if (StringUtils.isBlank(spatialTmp)) {
-                    collection.setSpatialCoverage("");
-                    collection.setSpatialCoverage("");
+                if (StringUtils.isBlank(spValue)) {
+                    spatialType = CoverageType.UNKNOWN.type();
+                    spatialValue = SpatialValue.UNKNOWN.value();
+
                 } else {
-                    collection.setSpatialType(ActConstants.ANDS_SPATIAL_TYPE);
+                    spatialType = CoverageType.KML.type();
+                    spatialValue = spValue;
                 }
             }
+            Location location = this.dmService.getLocationByCoverageType(spatialType, spatialValue);
+            if (location == null) {
+                location = new Location();
+                location.setSpatialType(spatialType);
+                location.setSpatialCoverage(spatialValue);
+                this.dmService.saveLocation(location);
+            }
+            //save the location inot collection
+            collection.setLocation(location);
+
             // setup a default permissions.
             List<Permission> defaultPermissions = setDefaultPermissions();
             collection.setPermissions(defaultPermissions);

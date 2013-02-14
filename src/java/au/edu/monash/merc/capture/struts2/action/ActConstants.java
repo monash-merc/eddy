@@ -48,7 +48,7 @@ public interface ActConstants {
     static String ANDS_SPATIAL_TEXT_TYPE = "text";
 
     static String ANDS_SPATIAL_GLOBAL = "Global";
-	
+
 	static String SEARCH_CONDITION_KEY = "search_condition_Key";
 
 	static String ACTION_SUCCESS_MSG_TAG = "actionSuccessMsg";

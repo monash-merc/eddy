@@ -1,11 +1,11 @@
 jQuery(function ($) {
-	$('#confirm-dialog input.confirm, #confirm-dialog a.confirm').click(function (e) {
+	$('a.confirm').click(function (e) {
 		e.preventDefault();
 		var actionUrl = $(this).attr('href');
 		//get which dialog message is:
 		var msg = $(this).parent('div').find('.msg_content').html();
 		//get which dialog div is:
-		var dialog_div = $(this).parent('div').find('#confirm');
+		var dialog_div = $(this).parent('div').find('#confirm_dialog');
 		//pass the dialog div object and confirm message
 		// calling the confirm function
 		// use a callback function to perform the "yes" action

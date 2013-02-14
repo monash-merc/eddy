@@ -101,6 +101,9 @@ public class DMServiceImpl implements DMService {
     @Autowired
     private RightsService rightsService;
 
+    @Autowired
+    private LocationService locationService;
+
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     public void setCollectionService(CollectionService collectionService) {
@@ -153,6 +156,10 @@ public class DMServiceImpl implements DMService {
 
     public void setRightsService(RightsService rightsService) {
         this.rightsService = rightsService;
+    }
+
+    public void setLocationService(LocationService locationService) {
+        this.locationService = locationService;
     }
 
     public boolean checkWritePermission(String path) {
@@ -249,6 +256,46 @@ public class DMServiceImpl implements DMService {
     @Override
     public boolean checkCollectionNameExisted(String colName) {
         return this.collectionService.checkCollectionNameExisted(colName);
+    }
+
+    @Override
+    public void saveLocation(Location location) {
+        this.locationService.saveLocation(location);
+    }
+
+    @Override
+    public void mergeLocation(Location location) {
+        this.locationService.mergeLocation(location);
+    }
+
+    @Override
+    public void updateLocation(Location location) {
+        this.locationService.updateLocation(location);
+    }
+
+    @Override
+    public void deleteLocation(Location location) {
+        this.locationService.deleteLocation(location);
+    }
+
+    @Override
+    public Location getLocationById(long id) {
+        return this.locationService.getLocationById(id);
+    }
+
+    @Override
+    public void deleteLocationById(long id) {
+        this.locationService.deleteLocationById(id);
+    }
+
+    @Override
+    public List<Location> getLocations(String coverageType) {
+        return this.locationService.getLocations(coverageType);
+    }
+
+    @Override
+    public Location getLocationByCoverageType(String coverageType, String spatialCoverage) {
+        return this.locationService.getLocationByCoverageType(coverageType, spatialCoverage);
     }
 
     @Override
