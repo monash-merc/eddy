@@ -109,6 +109,25 @@ def Fustar(T, Ah, p, Fh, u, z, z0, ustar):
     Fustar = u*c.k/(Fm(z, z0, MO))
     return Fustar
     
+def get_diurnalstats(DecHour,Data,dt):
+    nInts = 24*int((60/dt)+0.5)
+    Hr = numpy.zeros(nInts) + float(-9999)
+    Av = numpy.zeros(nInts) + float(-9999)
+    Sd = numpy.zeros(nInts) + float(-9999)
+    Mx = numpy.zeros(nInts) + float(-9999)
+    Mn = numpy.zeros(nInts) + float(-9999)
+    Num = numpy.zeros(nInts) + float(-9999)
+    for i in range(nInts):
+        Hr[i] = float(i)*dt/60.
+        li = numpy.where((abs(DecHour-Hr[i])<c.eps)&(abs(Data-float(-9999))>c.eps))
+        Num[i] = numpy.size(li)
+        if numpy.size(li)!=0:
+            Av[i] = numpy.mean(Data[li])
+            Sd[i] = numpy.std(Data[li])
+            Mx[i] = numpy.max(Data[li])
+            Mn[i] = numpy.min(Data[li])
+    return Num, Hr, Av, Sd, Mx, Mn
+
 def GetAverageList(cf,ThisOne,default=['']):
     if cfkeycheck(cf,ThisOne=ThisOne):
         if default == ['']:

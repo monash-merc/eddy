@@ -35,7 +35,7 @@ OutputLevel = L3_Corrected
 #OFL2 = "['Fm', 'Fc', 'Fe', 'Fh', 'Fg', 'Fn', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustar', 'L', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'theta', 'eta', 'u', 'v', 'w', 'uu', 'uv', 'uw', 'uA', 'uC', 'uT', 'vA', 'vC', 'vT', 'vv', 'vw', 'ww', 'AhAh', 'CcCc', 'wT', 'wA', 'wC', 'Ts', 'Sws', 'svwc_s_baresoil', 'Ts_bs', 'delTs_bs', 'Fgc_bs', 'svwc_s_understory', 'Ts_mu', 'delTs_mu', 'Fgc_mu', 'svwc_s_mulga', 'Ts_ms', 'delTs_ms', 'Fgc_ms', 'svwc_10cm_baresoil_a1', 'svwc_60cm_baresoil_a1', 'svwc_100cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_60cm_mulga_a1', 'svwc_100cm_mulga_a1', 'svwc_10cm_understory_a1', 'svwc_60cm_understory_a1', 'svwc_100cm_understory_a1', 'svwc_10cm_baresoil_a2', 'svwc_60cm_baresoil_a2', 'svwc_100cm_baresoil_a2', 'svwc_143cm_baresoil_a2', 'svwc_10cm_a_mulga_a2', 'svwc_10cm_b_mulga_a2', 'svwc_60cm_mulga_a2', 'svwc_100cm_mulga_a2', 'svwc_10cm_a_understory_a2', 'svwc_10cm_b_understory_a2', 'svwc_60cm_understory_a2', 'svwc_100cm_understory_a2', 'Ah', 'q', 'qsat', 'e', 'RH', 'rhom', 'rhod', 'esat', 'Ta', 'Ta_150cm', 'Ah_200cm', 'e_200cm', 'RH_200cm', 'esat_200cm', 'Ta_200cm', 'q_200cm', 'qsat_200cm', 'Ta_375cm', 'Ah_425cm', 'e_425cm', 'RH_425cm', 'esat_425cm', 'Ta_425cm', 'q_425cm', 'qsat_425cm', 'Ta_607cm', 'Ah_657cm', 'e_657cm', 'RH_657cm', 'esat_657cm', 'Ta_657cm', 'q_657cm', 'qsat_657cm', 'Ta_1147cm', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Ws_WS', 'Wd_WS', 'Ws_CSAT_Sd', 'Wd_CSAT_Sd', 'Ws_WS_Sd', 'Wd_WS_Sd', 'Ws_WS_200cm', 'Ws_WS_200cm_Sd', 'Ws_WS_425cm', 'Ws_WS_425cm_Sd', 'Ws_WS_662cm', 'Ws_WS_662cm_Sd', 'Rain', 'rst', 'Gst', 'xr']"
 L3_Corrected = "['Fm', 'Fc', 'Fe', 'Fh', 'Fg', 'Fn', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustar', 'L', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'theta', 'eta', 'u', 'v', 'w', 'uu', 'uv', 'uw', 'uA', 'uC', 'uT', 'vA', 'vC', 'vT', 'vv', 'vw', 'ww', 'AhAh', 'CcCc', 'wT', 'wA', 'wC', 'Ts', 'Sws', 'svwc_s_baresoil', 'Ts_bs', 'delTs_bs', 'Fgc_bs', 'svwc_s_understory', 'Ts_mu', 'delTs_mu', 'Fgc_mu', 'svwc_s_mulga', 'Ts_ms', 'delTs_ms', 'Fgc_ms', 'svwc_10cm_baresoil_a1', 'svwc_60cm_baresoil_a1', 'svwc_100cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_60cm_mulga_a1', 'svwc_100cm_mulga_a1', 'svwc_10cm_understory_a1', 'svwc_60cm_understory_a1', 'svwc_100cm_understory_a1', 'svwc_10cm_baresoil_a2', 'svwc_60cm_baresoil_a2', 'svwc_100cm_baresoil_a2', 'svwc_143cm_baresoil_a2', 'svwc_10cm_a_mulga_a2', 'svwc_10cm_b_mulga_a2', 'svwc_60cm_mulga_a2', 'svwc_100cm_mulga_a2', 'svwc_10cm_a_understory_a2', 'svwc_10cm_b_understory_a2', 'svwc_60cm_understory_a2', 'svwc_100cm_understory_a2', 'Ah', 'q', 'qsat', 'e', 'RH', 'rhom', 'rhod', 'esat', 'Ta', 'Ta_150cm', 'Ah_200cm', 'e_200cm', 'RH_200cm', 'esat_200cm', 'Ta_200cm', 'q_200cm', 'qsat_200cm', 'Ta_375cm', 'Ah_425cm', 'e_425cm', 'RH_425cm', 'esat_425cm', 'Ta_425cm', 'q_425cm', 'qsat_425cm', 'Ta_607cm', 'Ah_657cm', 'e_657cm', 'RH_657cm', 'esat_657cm', 'Ta_657cm', 'q_657cm', 'qsat_657cm', 'Ta_1147cm', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Ws_WS', 'Wd_WS', 'Ws_CSAT_Sd', 'Wd_CSAT_Sd', 'Ws_WS_Sd', 'Wd_WS_Sd', 'Ws_WS_200cm', 'Ws_WS_200cm_Sd', 'Ws_WS_425cm', 'Ws_WS_425cm_Sd', 'Ws_WS_662cm', 'Ws_WS_662cm_Sd', 'Rain', 'rst', 'Gst', 'xr']"
 #noDefaultXl = True
-FootprintFile = True
+FootprintFile = False
 
 [Footprint]
 zm = 11.67                   # measurement height, m
@@ -44,6 +44,7 @@ z0 = 0.8                     # roughness length, z0 = zc / 3e (Brutseart 1982, e
 r = 90                       # % of flux footprint
 #default wd = "['Wd_CSAT']"
 wd = Wd_CSAT_Compass
+loglist = True
     [[AnalysisDates]]
             0          = "['2011-1-24 0:00','2011-1-24 0:30']"
 
@@ -121,24 +122,29 @@ IRGAarm = 0.315  # distance from CSAT mounting point to IRGA sensor
 
 [qprofile]
 p_in = ps
-e_in = "['e_200cm','e_425cm','e_657cm']"
+e_in = "['e_200cm','e_425cm','e_657cm','e']"
 esat_in = "['esat_200cm','esat_425cm','esat_657cm','esat']"
-q_out = "['q_200cm','q_425cm','q_657cm']"
+q_out = "['q_200cm','q_425cm','q_657cm','q']"
 qsat_out = "['qsat_200cm','qsat_425cm','qsat_657cm','qsat']"
-q_attr = "['Specific humidity at 200 cm height','Specific humidity at 425 cm height','Specific humidity at 657 cm height']"
+q_attr = "['Specific humidity at 200 cm height','Specific humidity at 425 cm height','Specific humidity at 657 cm height','Specific humidity at 1167 cm height']"
 qsat_attr = "['Saturated specific humidity at 200 cm height','Saturated specific humidity at 425 cm height','Saturated specific humidity at 657 cm height','Saturated specific humidity at 1167 cm height']"
+VPD_out = "['VPD_200cm','VPD_425cm','VPD_657cm','VPD']"
+VPD_attr = "['Vapour pressure deficit at 200 cm height','Vapour pressure deficit at 425 cm height','Vapour pressure deficit at 657 cm height','Vapour pressure deficit at 1167 cm height']"
 
 [PenmanMonteith]
-# Default PMin = "['Fe', 'Ta', 'Ah', 'ps', 'Ws', 'Fn', 'Fsd', 'Fg', 'q_high', 'q_low']"
+# Default PMin = "['Fe', 'Ta', 'Ah', 'ps', 'Ws', 'Fn', 'Fsd', 'Fg', 'VPD']"
 # Default PMcritFe = 0  # Fe flux greater than or equal to this value to keep rst
 # Default PMcritFsd = 10  # Fsd flux greater than or equal to this value to keep rst
-PMin = "['Fe', 'Ta', 'Ah', 'ps', 'Ws', 'Fn', 'Fsd', 'Fg', 'q_425cm', 'q_200cm']"
-PMcritFe = 0  # Fe flux greater than or equal to this value to keep rst
+PMcritFe = 0         # Fe flux greater than or equal to this value to keep rst
 PMcritFsd = 10       # Fsd flux greater than or equal to this value to keep rst
 
 Cemethod = True      # Brutseart/Stull, requires vertical profile of q, returns bulk stomatal conductance (Gst)
+Profile = True       # Availability of profile q measurements
+profileq =  "['q_425cm', 'q_200cm']"    # order is q_upper, q_lower
+Deficit = True       # Calculate Gst using saturation deficit (q - q_saturated) instead of q profile
+deficitq =  "['q_1167cm','qsat_1167cm']"    # order is q, qsat
 zq_high = 4.25       # Height of upper measurement of q, metres
-zq_low = 2           # Height of lower
+zq_low = 2           # Height of lower q
 
 Cdmethod = True      # Jensen/Leuning, returns canopy conductance (Gc)
 zm = 11.67           # Height of measurement
@@ -433,12 +439,6 @@ TDRattr = "['Surface soil water content of bare soil near raingage, empirically 
     [[Ws]]
         [[[MergeSeries]]]
             Source = "['Ws_WS','Ws_CSAT']"
-    [[Gst]]
-        [[[DiurnalCheck]]]
-            NumSd      = "[2.5]*12"
-    [[rst]]
-        [[[DiurnalCheck]]]
-            NumSd      = "[2]*12"
 
 
 [PlotSpec]

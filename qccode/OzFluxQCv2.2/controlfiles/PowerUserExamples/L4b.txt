@@ -4,13 +4,15 @@ OutputLevel = L4_GapFilled
 netCDFv3 = False
 Platform = Mac    # Mac or PC
 # Following is a list of optional pre-sums functions to apply.  No default functions are available at L4
-FunctionList = "['SOLO','MergeSeriesWS','rstFromPenmanMonteith','Sums']"
+FunctionList = "['SOLO','MergeSeriesWS','PenmanMonteith','Sums','CalculateMetVars']"
 # FunctionList options:  FunctionList = "['SOLO','InterpolateOverMissing','GapFillFromAlternate','GapFillFromClimatology','GapFillFromRatios','UstarFromFh','MergeSeriesWS','rstFromPenmanMonteith','Sums']"
 
 [Files]
     [[L3]]
         ncFilePath = ncData/ASM/
         ncFileName = ASM_EC_2012_L3.nc
+        xlFlagFilePath = ../AliceSpringsMulga/level4/
+        xlFlagFileName = ASM_EC_2011_flagstats_L4.xls
     [[L4]]
         xlSumFilePath = ../AliceSpringsMulga/level5_summaries/
         xlSumFileName = ASM_EC_2012_Daily_sums.xls
@@ -27,8 +29,9 @@ FunctionList = "['SOLO','MergeSeriesWS','rstFromPenmanMonteith','Sums']"
         PNGFilePath = ../AliceSpringsMulga/level4/PNG/
 
 [Output]
-OFL2 = "['Fm', 'Fc', 'Fe', 'Fh', 'Fg', 'Fn', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustar', 'L', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'theta', 'eta', 'u', 'v', 'w', 'uu', 'uv', 'uw', 'uA', 'uC', 'uT', 'vA', 'vC', 'vT', 'vv', 'vw','ww', 'AhAh', 'CcCc', 'wT', 'wA', 'wC', 'Ts', 'Sws', 'svwc_s_baresoil', 'Ts_bs', 'delTs_bs', 'Fgc_bs', 'svwc_s_understory', 'Ts_mu', 'delTs_mu', 'Fgc_mu', 'svwc_s_mulga', 'Ts_ms', 'delTs_ms', 'Fgc_ms', 'svwc_10cm_baresoil_a1', 'svwc_60cm_baresoil_a1', 'svwc_100cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_60cm_mulga_a1', 'svwc_100cm_mulga_a1', 'svwc_10cm_understory_a1', 'svwc_60cm_understory_a1', 'svwc_100cm_understory_a1', 'svwc_10cm_baresoil_a2', 'svwc_60cm_baresoil_a2', 'svwc_100cm_baresoil_a2', 'svwc_143cm_baresoil_a2', 'svwc_10cm_a_mulga_a2', 'svwc_10cm_b_mulga_a2', 'svwc_60cm_mulga_a2', 'svwc_100cm_mulga_a2', 'svwc_10cm_a_understory_a2', 'svwc_10cm_b_understory_a2', 'svwc_60cm_understory_a2', 'svwc_100cm_understory_a2', 'Ah', 'q', 'e', 'RH', 'rhom', 'rhod', 'esat', 'Ta', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Ws_WS', 'Wd_WS', 'Ws_CSAT_Sd', 'Wd_CSAT_Sd', 'Ws_WS_Sd', 'Wd_WS_Sd', 'Rain', 'rst', 'Gst','GPP','Re']"
-L4_GapFilled = "['Fm', 'Fc', 'Fe', 'Fh', 'Fg', 'Fn', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustar', 'L', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'Tpanel_CR1000', 'theta', 'eta', 'u', 'v', 'w', 'uu', 'uv', 'uw', 'uA', 'uC', 'uT', 'vA', 'vC', 'vT', 'vv', 'vw', 'ww','AhAh', 'CcCc', 'wT', 'wA', 'wC', 'Ts', 'Sws', 'svwc_s_baresoil', 'Ts_bs', 'delTs_bs', 'Fgc_bs', 'svwc_s_understory', 'Ts_mu', 'delTs_mu', 'Fgc_mu', 'svwc_s_mulga', 'Ts_ms', 'delTs_ms', 'Fgc_ms', 'svwc_10cm_baresoil_a1', 'svwc_60cm_baresoil_a1', 'svwc_100cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_60cm_mulga_a1', 'svwc_100cm_mulga_a1', 'svwc_10cm_understory_a1', 'svwc_60cm_understory_a1', 'svwc_100cm_understory_a1', 'svwc_10cm_baresoil_a2', 'svwc_60cm_baresoil_a2', 'svwc_100cm_baresoil_a2', 'svwc_143cm_baresoil_a2', 'svwc_10cm_a_mulga_a2', 'svwc_10cm_b_mulga_a2', 'svwc_60cm_mulga_a2', 'svwc_100cm_mulga_a2', 'svwc_10cm_a_understory_a2', 'svwc_10cm_b_understory_a2', 'svwc_60cm_understory_a2', 'svwc_100cm_understory_a2', 'Ah', 'q', 'e', 'RH', 'rhom', 'rhod', 'esat', 'Ta', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Ws_WS', 'Wd_WS', 'Ws_CSAT_Sd', 'Wd_CSAT_Sd', 'Ws_WS_Sd', 'Wd_WS_Sd', 'Rain', 'rst', 'Gst','GPP','Re']"
+#OFL2 = "['Fm', 'Fc', 'Fe', 'Fh', 'Fg', 'Fn', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustar', 'L', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'Tpanel_CR1000', 'Tpanel_CR3000b', 'theta', 'eta', 'u', 'v', 'w', 'uu', 'uv', 'uw', 'uA', 'uC', 'uT', 'vA', 'vC', 'vT', 'vv', 'vw', 'ww', 'AhAh', 'CcCc', 'wT', 'wA', 'wC', 'Ts', 'Sws', 'svwc_s_baresoil', 'Ts_bs', 'delTs_bs', 'Fgc_bs', 'svwc_s_understory', 'Ts_mu', 'delTs_mu', 'Fgc_mu', 'svwc_s_mulga', 'Ts_ms', 'delTs_ms', 'Fgc_ms', 'svwc_10cm_baresoil_a1', 'svwc_60cm_baresoil_a1', 'svwc_100cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_60cm_mulga_a1', 'svwc_100cm_mulga_a1', 'svwc_10cm_understory_a1', 'svwc_60cm_understory_a1', 'svwc_100cm_understory_a1', 'svwc_10cm_baresoil_a2', 'svwc_60cm_baresoil_a2', 'svwc_100cm_baresoil_a2', 'svwc_143cm_baresoil_a2', 'svwc_10cm_a_mulga_a2', 'svwc_10cm_b_mulga_a2', 'svwc_60cm_mulga_a2', 'svwc_100cm_mulga_a2', 'svwc_10cm_a_understory_a2', 'svwc_10cm_b_understory_a2', 'svwc_60cm_understory_a2', 'svwc_100cm_understory_a2', 'Ah', 'q', 'e', 'RH', 'rhom', 'rhod', 'esat', 'Ta', 'Ah_200cm', 'e_200cm', 'RH_200cm', 'esat_200cm', 'Ta_200cm', 'Ah_425cm', 'e_425cm', 'RH_425cm', 'esat_425cm', 'Ta_425cm', 'Ah_657cm', 'e_657cm', 'RH_657cm', 'esat_657cm', 'Ta_657cm', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Ws_WS', 'Wd_WS', 'Ws_CSAT_Sd', 'Wd_CSAT_Sd', 'Ws_WS_Sd', 'Wd_WS_Sd', 'Ws_WS_200cm', 'Ws_WS_200cm_Sd', 'Ws_WS_425cm', 'Ws_WS_425cm_Sd', 'Ws_WS_662cm', 'Ws_WS_662cm_Sd', 'Rain', 'rst', 'Gst', 'rc', 'Gc', 'GPP', 'Re']"
+#L4_GapFilled = "['Fm', 'Fc', 'Fe', 'Fh', 'Fg', 'Fn', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustar', 'L', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'Tpanel_CR1000', 'Tpanel_CR3000b', 'theta', 'eta', 'u', 'v', 'w', 'uu', 'uv', 'uw', 'uA', 'uC', 'uT', 'vA', 'vC', 'vT', 'vv', 'vw', 'ww', 'AhAh', 'CcCc', 'wT', 'wA', 'wC', 'Ts', 'Sws', 'svwc_s_baresoil', 'Ts_bs', 'delTs_bs', 'Fgc_bs', 'svwc_s_understory', 'Ts_mu', 'delTs_mu', 'Fgc_mu', 'svwc_s_mulga', 'Ts_ms', 'delTs_ms', 'Fgc_ms', 'svwc_10cm_baresoil_a1', 'svwc_60cm_baresoil_a1', 'svwc_100cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_60cm_mulga_a1', 'svwc_100cm_mulga_a1', 'svwc_10cm_understory_a1', 'svwc_60cm_understory_a1', 'svwc_100cm_understory_a1', 'svwc_10cm_baresoil_a2', 'svwc_60cm_baresoil_a2', 'svwc_100cm_baresoil_a2', 'svwc_143cm_baresoil_a2', 'svwc_10cm_a_mulga_a2', 'svwc_10cm_b_mulga_a2', 'svwc_60cm_mulga_a2', 'svwc_100cm_mulga_a2', 'svwc_10cm_a_understory_a2', 'svwc_10cm_b_understory_a2', 'svwc_60cm_understory_a2', 'svwc_100cm_understory_a2', 'Ah', 'q', 'e', 'RH', 'rhom', 'rhod', 'esat', 'Ta', 'Ah_200cm', 'e_200cm', 'RH_200cm', 'esat_200cm', 'Ta_200cm', 'Ah_425cm', 'e_425cm', 'RH_425cm', 'esat_425cm', 'Ta_425cm', 'Ah_657cm', 'e_657cm', 'VPD_200cm', 'VPD_425cm', 'VPD_657cm', 'VPD_1167cm', 'RH_657cm', 'esat_657cm', 'Ta_657cm', 'VPD', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Ws_WS', 'Wd_WS', 'Ws_CSAT_Sd', 'Wd_CSAT_Sd', 'Ws_WS_Sd', 'Wd_WS_Sd', 'Ws_WS_200cm', 'Ws_WS_200cm_Sd', 'Ws_WS_425cm', 'Ws_WS_425cm_Sd', 'Ws_WS_662cm', 'Ws_WS_662cm_Sd', 'Rain', 'Ce_p', 'Ce_d', 'rav_p', 'rav_d', 'rst_p', 'rst_d', 'Gst_p', 'Gst_d', 'ra', 'rc', 'Gc', 'GPP', 'Re']"
+L4_GapFilled = "['Fe', 'Ta', 'Ah', 'ps', 'Ws', 'Fn', 'Fsd', 'Fg', 'q_425cm', 'q_200cm', 'q_1167cm', 'qsat_1167cm', 'VPD_657cm', 'Ce_p', 'Ce_d', 'rav_p', 'rav_d', 'rst_p', 'rst_d', 'Gst_p', 'Gst_d', 'ra', 'rc', 'Gc']"
 #noDefaultXl = True
 PNGFile = True
 
@@ -68,16 +71,20 @@ SWC60cm = "['svwc_60cm_baresoil_a1', 'svwc_60cm_mulga_a1', 'svwc_60cm_understory
 SWC100cm = "['svwc_100cm_baresoil_a1', 'svwc_100cm_mulga_a1', 'svwc_100cm_understory_a1', 'svwc_100cm_baresoil_a2', 'svwc_100cm_mulga_a2', 'svwc_100cm_understory_a2']"
 
 [PenmanMonteith]
-# Default PMin = "['Fe', 'Ta', 'Ah', 'ps', 'Ws', 'Fn', 'Fsd', 'Fg', 'q_high', 'q_low']"
+# Default PMin = "['Fe', 'Ta', 'Ah', 'ps', 'Ws', 'Fn', 'Fsd', 'Fg', 'VPD']"
+PMin = "['Fe', 'Ta', 'Ah', 'ps', 'Ws', 'Fn', 'Fsd', 'Fg', 'VPD_657cm']"
 # Default PMcritFe = 0  # Fe flux greater than or equal to this value to keep rst
 # Default PMcritFsd = 10  # Fsd flux greater than or equal to this value to keep rst
-PMin = "['Fe', 'Ta', 'Ah', 'ps', 'Ws', 'Fn', 'Fsd', 'Fg', 'q_425cm', 'q_200cm']"
-PMcritFe = 0  # Fe flux greater than or equal to this value to keep rst
+PMcritFe = 0         # Fe flux greater than or equal to this value to keep rst
 PMcritFsd = 10       # Fsd flux greater than or equal to this value to keep rst
 
 Cemethod = True      # Brutseart/Stull, requires vertical profile of q, returns bulk stomatal conductance (Gst)
+Profile = True       # Availability of profile q measurements
+profileq =  "['q_425cm', 'q_200cm']"    # order is q_upper, q_lower
+Deficit = True       # Calculate Gst using saturation deficit (q - q_saturated) instead of q profile
+deficitq =  "['q_657cm','qsat_657cm']"    # order is q, qsat
 zq_high = 4.25       # Height of upper measurement of q, metres
-zq_low = 2           # Height of lower
+zq_low = 2           # Height of lower q
 
 Cdmethod = True      # Jensen/Leuning, returns canopy conductance (Gc)
 zm = 11.67           # Height of measurement
@@ -93,12 +100,6 @@ zc = 6.5             # Canopy height
         [[[MergeSeries]]]
             Source = "['Ws_WS','Ws_CSAT']"
 #            Source = "['Ws_WS_01','Ws_CSAT']"
-    [[Gst]]
-        [[[DiurnalCheck]]]
-            NumSd      = "[2.5]*12"
-    [[rst]]
-        [[[DiurnalCheck]]]
-            NumSd      = "[2]*12"
 
 
 [PlotSpec]

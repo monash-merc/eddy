@@ -244,8 +244,8 @@ def l3qc(cf,ds2):
         qcts.CalculateSpecificHumidityProfile(cf,ds3)
     
     # calculate bulk stomatal resistance from Penman-Monteith inversion using bulk transfer coefficient (Stull 1988)
-    if 'rstFromPenmanMonteith' in l3functions:
-        qcts.get_stomatalresistance(cf,ds3)
+    if 'PenmanMonteith' in l3functions:
+        qcts.do_PenmanMonteith(cf,ds3)
     
     # re-apply the quality control checks (range, diurnal and rules)
     qcck.do_qcchecks(cf,ds3)
@@ -365,7 +365,7 @@ def l4qc(cf,ds3):
         us_in,us_out = qcts.UstarFromFh(cf,ds4)
     
     # add relevant meteorological values to L4 data
-    if 'CalculateMetVars' in l4functions:
+    if 'CalculateMetVars' in l4functions or 'PenmanMonteith':
         log.info(' Adding standard met variables to database')
         qcts.CalculateMeteorologicalVariables(cf,ds4)
         ds4.globalattributes['L4Functions'] = ds4.globalattributes['L4Functions']+', CalculateMetVars'
@@ -376,9 +376,9 @@ def l4qc(cf,ds3):
         if len(srclist) > 0:
             qcts.MergeSeries(ds4,'Ws',srclist,[0,10])
     
-    # calculate rst and Gst from Penman-Monteith inversion
-    if 'rstFromPenmanMonteith' in l4functions:
-        qcts.get_stomatalresistance(cf,ds4)
+    # calculate rst, rc and Gst, Gc from Penman-Monteith inversion
+    if 'PenmanMonteith' in l4functions:
+        qcts.do_PenmanMonteith(cf,ds4)
     
     # re-apply the quality control checks (range, diurnal and rules)
     log.info(' Doing QC checks on L4 data')

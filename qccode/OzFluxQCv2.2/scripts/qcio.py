@@ -185,6 +185,7 @@ def nc_read_series_file(ncFullName):
     # get a series of Python datetime objects
     get_datetime(ds)
     return ds
+
 def nc_write_OzFlux_series(cf,ds,level):
     ncFullName = cf['Files'][level]['ncFilePath']+cf['Files'][level]['ncFileName']
     log.info(' Writing netCDF file '+ncFullName)
