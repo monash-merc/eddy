@@ -47,12 +47,7 @@
             </li>
         </@s.else>
             <li><a href="${base}/search/showSearch.jspx">Search</a></li>
-            <li><a href="#">Resources</a>
-                <ul>
-                    <li><a href="#">QA Python Code</a></li>
-                    <li><a href="#">Data Type</a></li>
-                </ul>
-            </li>
+            <li><a href="${base}/res/resources.jspx">Resources</a></li>
             <li><a href="${base}/aboutus">About Us</a></li>
         </ul>
     </div>

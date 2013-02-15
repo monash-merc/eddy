@@ -575,6 +575,21 @@
             <result name="success">/web/data/view_dataset_details.ftl</result>
         </action>
     </package>
+
+    <!-- Resource Action -->
+    <package name="core.resource" extends="core.merc" namespace="/res">
+        <default-interceptor-ref name="noneAuthStack"/>
+        <action name="*">
+            <result type="freemarker">/web/res/{1}.ftl</result>
+        </action>
+        <action name="resources" class="res.resourceAction" method="resources">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/res/resources.ftl</result>
+        </action>
+    </package>
+
+    <!-- Map View -->
     <package name="core.mapview" extends="core.merc" namespace="/mapview">
         <default-interceptor-ref name="noneAuthStack"/>
         <action name="*">
