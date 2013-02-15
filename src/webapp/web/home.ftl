@@ -56,22 +56,25 @@
             </div>
         </div>
         <div class="home_right_panel">
-            <div class="paragraph_title">Introduction</div>
+            <div class="paragraph_title">Welcome to the OzFlux Data Portal</div>
             <br/>
 
             <p>
-                OzFlux is a national ecosystem research network consisting of 10 flux stations at present with a further 6 planned for installation in 2011,
-                all funded under the TERN 1 initiative. Funding for 6 more sites has been requested under the TERN-EIF initiative. The final network of 21 sites
-                will provide the Australian and global ecosystem modelling communities with nationally consistent observations of energy, carbon and water exchange
-                between the atmosphere and key Australian ecosystems. OzFlux is part of an international network (FluxNet) of over 500 flux stations that is designed
-                to provide continuous, long-term micrometeorological measurements to monitor the state of ecosystems globally.
+                Data from the OzFlux network of flux towers is available from this portal.
             </p>
 
             <p>
-                A Central Node administered by CSIRO Marine and Atmospheric Research coordinates the OzFlux network, determines protocols for measurements,
-                data processing and quality control, provides a database to archive data from each site and provides training to site operators as required.
-                A 7 member Steering Committee chaired by Dr Helen Cleugh (CMAR) and Associate Professor Mike Liddell (James Cook University) provides scientific
-                leadership for the network and coordinates logistics as required.
+                Users can browse the contents of this portal by clicking on the “All Collections” entry above
+                and using the “Map view” or the “List view” to view the data collections.
+            </p>
+
+            <p>Users wishing to download data will need to log in to the portal. If you already have an
+                account, click the “Login” button above. If you would like to ask for an account, click on
+                “Register”.
+            </p>
+
+            <p>Information on the data available, the license conditions and the data file format are
+                available on the Resources page.
             </p>
         </div>
         <div style="clear:both"></div>

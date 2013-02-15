@@ -758,6 +758,7 @@ input {
     line-height: 22px;
     font-size: 11px;
 }
+
 .data_action_link2 {
     float: right;
     margin-left: 5px;
@@ -785,7 +786,6 @@ input {
     line-height: 22px;
     font-size: 11px;
 }
-
 
 /** ==== End of collection ====**/
 
@@ -1028,6 +1028,73 @@ input {
     padding: 2px 5px;
     margin: 2px;
     color: #ddd;
+}
+
+/** UL **/
+#toc {
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+#toc li {
+    margin-right: 10px;
+    padding-bottom: 2px;
+    margin-bottom: 10px;
+}
+
+#toc_small {
+    list-style-type: circle;
+    font-size: 12px;
+}
+
+#toc_small li {
+    margin-top: 10px;
+    margin-right: 15px;
+}
+
+#toc_num {
+    list-style-type: decimal;
+    font-size: 12px;
+}
+
+#toc_num li {
+    margin-top: 10px;
+    margin-right: 15px;
+}
+
+.sub_b_title {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.sub_norm_title {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.paragraph_div {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-align: justify;
+}
+
+.paragraph_italic_div {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-style: italic;
+    text-align: justify;
 }
 
 /**   ========= End of Refactored CSS ====== **/
