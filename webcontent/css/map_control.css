@@ -21,7 +21,7 @@ $Revision: 319 $
 {
 	font-family: verdana, sans-serif;
 	border: solid 1px #eaeaea;
-	width:500px;
+	width:580px;
 }
 
 .mct_loaderror
@@ -41,6 +41,7 @@ $Revision: 319 $
 	height: 28px;
 	color: #ffffff;
 	background: #eaeaea;
+    padding-left: 5px;
 }
 
 .mct_tool
@@ -115,15 +116,15 @@ $Revision: 319 $
 
 .mct_canvas
 {
-	width: 500px;
-	height: 320px;
+	width: 580px;
+	height: 350px;
 	overflow: hidden;
 }
 
 .mct_dialog_container
 {
-	width: 500px;
-	height: 320px;	
+	width: 580px;
+	height: 350px;
 	position: absolute;
 	z-index: 100;
 	display: none;
@@ -132,16 +133,16 @@ $Revision: 319 $
 
 .mct_dialog_back
 {
-	width: 500px;
-	height: 320px;
+	width: 580px;
+	height: 350px;
 	position: absolute;
 	z-index: 110;
 }
 
 .mct_dialog_outer
 {
-	width: 500px;
-	height: 320px;
+    width: 580px;
+    height: 350px;
 	position: absolute;
 	z-index: 120;
 }

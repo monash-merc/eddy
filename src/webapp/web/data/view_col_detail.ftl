@@ -8,11 +8,10 @@
         function doAfterImport(success) {
             if (success) {
             <@s.if test = "%{navigationBar.secondNavLink != null}">
-                setTimeout('window.location.href = "${base}/${navigationBar.secondNavLink}"', 3000);
+                setTimeout('window.location.href = "${base}/${navigationBar.secondNavLink}"', 3500);
             </@s.if>
             }
         }
-        ;
     </script>
 </head>
 <body>
@@ -24,385 +23,258 @@
 <!-- End of Navigation Title -->
 
 <div class="main_body_container">
-    <div class="display_middel_div">
-        <div class="left_display_div">
-        <#include "../template/action_errors.ftl" />
-            <div style="clear:both"></div>
-            <div class="left_display_inner">
+<div class="display_middel_div">
+<div class="left_display_div">
+<#include "../template/action_errors.ftl" />
+<div style="clear:both"></div>
+<div class="left_display_inner">
 
-                <div class="content_none_border_div">
-                    <div class="none_border_block">
-                    <@s.if test="%{actionSuccessMsg != null}">
-                        <#include "../template/action_success_msg.ftl"/>
-                    </@s.if>
-                    </div>
-                </div>
-
-                <!-- File importing message block -->
-                <div class="none_border_block">
-                    <div class="file_success_msg_div">
-                        <p id="success_msg">&nbsp;</p>
-                        <img src="${base}/images/btn-delete.png" alt="hidden" class="hidden_msg"/>
-                    </div>
-
-                    <div class="file_error_msg_div">
-                        <div class="error_msg_item_div">
-                            <ul>
-                                <li><p id="error_msg">test</p></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- End of file importing message block -->
-                <div class="data_display_div">
-                    <div class="data_title">
-                    <@s.property value="collection.name"/>
-                    </div>
-                    <div class="data_desc_div">
-                    <@s.property  value="collection.description" escape=false />
-                    </div>
-                    <div class="data_other_info">
-                            <span class="span_inline1">
-                                Created by <@s.property value="collection.owner.displayName" />,
-                            </span>
-                            <span class="span_inline1">
-                                Creation date: <@s.date name="collection.createdTime" format="yyyy-MM-dd hh:mm" />,
-                            </span>
-                           <span class="span_inline1">
-                                Modified by <@s.property value="collection.modifiedByUser.displayName" />,
-                            </span>
-                            <span class="span_inline1">
-                                Modified date: <@s.date name="collection.modifiedTime" format="yyyy-MM-dd hh:mm" />
-                            </span>
-                    </div>
-                    <div class="input_field_row">
-                        <div class="status_field_name_div">Temporal Coverage:</div>
-                        <div class="status_field_value_div">
-                        <@s.date name="collection.dateFrom" format="yyyy-MM-dd" />&nbsp;-&nbsp;<@s.date name="collection.dateTo" format="yyyy-MM-dd" />
-                        </div>
-                    </div>
-
-                    <div class="input_field_row">
-                        <div class="status_field_name_div">Metadata Registered:</div>
-                        <div class="status_field_value_div"><@s.property value="collection.published" /></div>
-                    </div>
-
-
-                    <div class="data_action_link2">
-                    <@s.if test="%{permissionBean.viewAllowed == false }">
-                        <a href="${base}/perm/applyForPerms.jspx?collection.id=<@s.property value='collection.id' />">
-                            Apply For Permissions
-                        </a>
-                    </@s.if>
-                    <@s.if test="%{permissionBean.editAllowed == true}">
-                        <a href="${base}/${showColEditLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}">
-                            Edit
-                        </a>
-                    </@s.if>
-                    <@s.if test="%{permissionBean.deleteAllowed}">
-                        <div class="msg_content">All data will be removed from the repository permanently!<p>Are you sure to delet this collection?</p></div>
-                        <div id='confirm_dialog'>
-                            <div class='header'><span>Deleting Collection Confirm</span></div>
-                            <div class='message'></div>
-                            <div class='buttons'>
-                                <div class='no simplemodal-close'>No</div>
-                                <div class='yes'>Yes</div>
-                            </div>
-                        </div>
-                        <a href="${base}/${deleteColLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}"
-                           class="confirm">
-                            Delete
-                        </a>
-                    </@s.if>
-                    <@s.if test="%{permissionBean.changePermAllowed}">
-                        <a href="${base}/${permissionLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}">
-                            Permissions
-                        </a>
-                    </@s.if>
-                    <@s.if test="%{mdRegEnabled}">
-                        <@s.if test="%{collection.owner.id == user.id || user.userType == 1 || user.userType ==2}">
-                            <!-- modal window for register with ands -->
-                            <a href="${base}/${andsMdRegLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}"
-                               id="wait_modal" name='wait_modal' title="Public registration of the metadata associated with this collection with the Research Data Australia website">
-                                <@s.text name="ands.md.registration.title" />
-                            </a>
-
-                            <div id='mask'></div>
-                            <div id='modal_window'>
-                                Calling Metadata Registration Service, please wait ... <img src="${base}/images/wait_loader.gif" class="loading_image">
-                            </div>
-                        </@s.if>
-                    </@s.if>
-                    </div>
-
-                </div>
-            </div>
-            <div style="clear:both"></div>
-        </div>
-        <!-- right panel -->
-        <div class="right_display_div">
-        <@s.if test="%{#session.authentication_flag =='authenticated'}">
-            <#include "../template/sub_nav.ftl" />
-        </@s.if>
-        </div>
-    </div>
-    <div style="clear:both"></div>
-</div>
-<br/>
-<br/>
-
-<div class="main_big_border">
-<div class="left_container_panel">
-<br/>
-<@s.if test="%{collectionError == true}">
-<div class="left_middle_panel">
-    <#include "../template/action_errors.ftl" />
-    <div class="none_border_space_block"></div>
-</div>
-</@s.if>
-<@s.else>
-    <#include "../template/action_errors.ftl" />
-<div class="left_middle_panel">
+<@s.if test="%{collectionError == false }">
     <@s.if test="%{actionSuccessMsg != null}">
+    <div class="content_none_border_div">
         <div class="none_border_block">
             <#include "../template/action_success_msg.ftl"/>
         </div>
-    </@s.if>
-
-    <@s.if test="%{permissionBean.viewAllowed}">
-        <!-- Display total data files in this collection -->
-        <div class="none_border_block">
-		 		<span class="name_title">A total of <font color="green">
-                     <@s.if test = "%{datasets != null}"><@s.property value="datasets.size" /></@s.if>
-                     <@s.else>0</@s.else>
-                 </font> data file(s) in this collection</span>
-        </div>
-    </@s.if>
-
-    <div class="blank_separator"></div>
-
-    <div class="single_border_block">
-        <table class="table_col">
-            <tr>
-                <td>
-                    <div class="name_title"><@s.property value="collection.name"/></div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="inline_span_justify">
-                        <@s.property  value="collection.description" escape=false />
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-							<span class="inline_span2">
-							 	Created by <@s.property value="collection.owner.displayName" />, &nbsp;&nbsp;&nbsp;&nbsp; 
-						 		Creation date: <@s.date name="collection.createdTime" format="yyyy-MM-dd hh:mm" /> &nbsp;&nbsp;&nbsp;&nbsp;
-						 		Modified by <@s.property value="collection.modifiedByUser.displayName" />, &nbsp;&nbsp;&nbsp;&nbsp; 
-						 		Modified date: <@s.date name="collection.modifiedTime" format="yyyy-MM-dd hh:mm" />
-							</span>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    <div class="status_tname_div">Temporal Coverage:</div>
-                    <div class="status_tvalue_div">
-                        <@s.date name="collection.dateFrom" format="yyyy-MM-dd" />&nbsp;-&nbsp;<@s.date name="collection.dateTo" format="yyyy-MM-dd" />
-                    </div>
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    <div class="status_name_div">Metadata Registered:</div>
-                    <div class="status_value_div"><@s.property value="collection.published" /></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td>
-                    <div class="inline_td_div">
-
-                        <@s.if test="%{permissionBean.viewAllowed == false}">
-                            <a href="${base}/perm/applyForPerms.jspx?collection.id=<@s.property value='collection.id' />">Apply For Permissions</a>
-                        </@s.if>
-
-
-                        <@s.if test="%{permissionBean.editAllowed == true}">
-                            <a href="${base}/${showColEditLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}">
-                                &nbsp; &nbsp; &nbsp; &nbsp; Edit &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; </a> &nbsp;&nbsp;
-                        </@s.if>
-
-
-                        <@s.if test="%{permissionBean.deleteAllowed}">
-
-                            <a href="${base}/${deleteColLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}"
-                               class="confirm">&nbsp; &nbsp; &nbsp; Delete &nbsp; &nbsp; &nbsp;</a>&nbsp;&nbsp;
-                        </@s.if>
-                        <@s.if test="%{permissionBean.changePermAllowed}">
-                            <a href="${base}/${permissionLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}">
-                                &nbsp;Permissions&nbsp;</a>
-                        </@s.if>
-                        <@s.if test="%{mdRegEnabled}">
-                            <@s.if test="%{collection.owner.id == user.id || user.userType == 1 || user.userType ==2}">
-                                <!-- modal window for register with ands -->
-                                <a href="${base}/${andsMdRegLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}"
-                                   id="wait_modal" name='wait_modal' title="Public registration of the metadata associated with this collection with the Research Data Australia website">
-                                    <@s.text name="ands.md.registration.title" />
-                                </a>
-
-                                <div id='mask'></div>
-                                <div id='modal_window'>
-                                    Calling Metadata Registration Service, please wait ... <img src="${base}/images/wait_loader.gif" class="loading_image">
-                                </div>
-                            </@s.if>
-                        </@s.if>
-                    </div>
     </div>
-    </td>
-    </tr>
-    <tr>
-        <td></td>
-    </tr>
-    </table>
-</div>
+    </@s.if>
+<!-- File importing message block -->
+<div class="content_none_border_div">
+    <div class="file_success_msg_div">
+        <p id="success_msg">Some text</p>
+    </div>
 
-<!-- Import the dataset file -->
+    <div class="file_error_msg_div">
+        <div class="error_msg_item_div">
+            <ul>
+                <li><p id="error_msg">&nbsp;</p></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- End of file importing message block -->
+
+<div class="data_display_div">
+    <div class="data_title">
+        <@s.property value="collection.name"/>
+    </div>
+    <div class="data_desc_div">
+        <@s.property  value="collection.description" escape=false />
+    </div>
+    <div class="data_other_info">
+        <span class="span_inline1">
+            Created by <@s.property value="collection.owner.displayName" />,
+        </span>
+        <span class="span_inline1">
+            Creation date: <@s.date name="collection.createdTime" format="yyyy-MM-dd hh:mm" />,
+        </span>
+       <span class="span_inline1">
+            Modified by <@s.property value="collection.modifiedByUser.displayName" />,
+        </span>
+        <span class="span_inline1">
+            Modified date: <@s.date name="collection.modifiedTime" format="yyyy-MM-dd hh:mm" />
+        </span>
+    </div>
+    <div class="input_field_row">
+        <div class="status_field_name_div">Temporal Coverage:</div>
+        <div class="status_field_value_div">
+            <@s.date name="collection.dateFrom" format="yyyy-MM-dd" />&nbsp;-&nbsp;<@s.date name="collection.dateTo" format="yyyy-MM-dd" />
+        </div>
+    </div>
+
+    <div class="input_field_row">
+        <div class="status_field_name_div">Metadata Registered:</div>
+        <div class="status_field_value_div"><@s.property value="collection.published" /></div>
+    </div>
+
+
+    <div class="data_action_link2">
+        <@s.if test="%{permissionBean.viewAllowed == false }">
+            <a href="${base}/perm/applyForPerms.jspx?collection.id=<@s.property value='collection.id' />">
+                Apply For Permissions
+            </a>
+        </@s.if>
+        <@s.if test="%{permissionBean.editAllowed == true}">
+            <a href="${base}/${showColEditLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}">
+                Edit
+            </a>
+        </@s.if>
+        <@s.if test="%{permissionBean.deleteAllowed}">
+            <div class="msg_content">All data will be removed from the repository permanently!<p>Are you sure to delet this collection?</p></div>
+            <div id='confirm_dialog'>
+                <div class='header'><span>Deleting Collection Confirm</span></div>
+                <div class='message'></div>
+                <div class='buttons'>
+                    <div class='no simplemodal-close'>No</div>
+                    <div class='yes'>Yes</div>
+                </div>
+            </div>
+            <a href="${base}/${deleteColLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}"
+               class="confirm">
+                Delete
+            </a>
+        </@s.if>
+        <@s.if test="%{permissionBean.changePermAllowed}">
+            <a href="${base}/${permissionLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}">
+                Permissions
+            </a>
+        </@s.if>
+        <@s.if test="%{mdRegEnabled}">
+            <@s.if test="%{collection.owner.id == user.id || user.userType == 1 || user.userType ==2}">
+                <!-- modal window for register with ands -->
+                <a href="${base}/${andsMdRegLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}"
+                   id="wait_modal" name='wait_modal' title="Public registration of the metadata associated with this collection with the Research Data Australia website">
+                    <@s.text name="ands.md.registration.title" />
+                </a>
+
+                <div id='mask'></div>
+                <div id='modal_window'>
+                    Calling Metadata Registration Service, please wait ... <img src="${base}/images/wait_loader.gif" class="loading_image">
+                </div>
+            </@s.if>
+        </@s.if>
+    </div>
+    <div style="clear: both;"></div>
+</div>
+<!-- import the file -->
     <@s.if test="%{permissionBean.importAllowed}">
     <div class="blank_separator"></div>
-    <div class="none_border_block2">
-        <div class="p_title2"><b>Local File Import</b></div>
-        <div id="ajaxfileupload">
-            <#assign dobefore = 'undefined' />
-            <div id="fileuploadProgress">
-                <div id="uploadFilename">Initialising, please wait.....</div>
-                <div id="progress-bar">
-                    <div id="progress-bgrd"></div>
-                    <div id="progress-text"></div>
+    <div class="content_none_border_div">
+        <div class="content_title">File Import</div>
+    </div>
+    <!-- file uploading progress messages -->
+    <div class="content_none_border_div">
+        <div class="file_uploading_div">
+            <div id="ajaxfileupload">
+                <#assign dobefore = 'undefined' />
+                <div id="fileuploadProgress">
+                    <div id="uploadFilename">Initialising, please wait.....</div>
+                    <div id="progress-bar">
+                        <div id="progress-bgrd"></div>
+                        <div id="progress-text"></div>
+                    </div>
+                    <br/>
                 </div>
-                <br/>
+                <span id="message"></span>
             </div>
-            <span id="message"></span>
         </div>
     </div>
-    <div class="single_border_block">
+    <!-- upload file -->
+    <div class="data_display_div">
         <div id="fileuploadForm">
             <@s.form id="ajaxFileUploadForm" onsubmit="return false" action="importFile.jspx" namespace="/data" method="post" enctype="multipart/form-data" >
                 <@s.hidden name="collection.id" id="col"/>
                 <@s.hidden name="collection.owner.id" id="colowner" />
                 <@s.hidden name="viewType" id="viewtype"/>
-                <table align="center">
-                    <tr>
-                        <td align="left">Please select a file</td>
-                        <td align="left"><@s.file name="upload" id="upload" /></td>
-                    </tr>
-                    <tr>
-                        <td align="left">Extract the Metadata</td>
-                        <td align="left"><@s.checkbox name="extractable" id="extract" value="true"/></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><@s.submit value="Import" id="fileUpload" name="fileUpload" onclick="merc.AjaxFileUpload.initialise(${dobefore}, doAfterImport);" cssClass="input_button_normal"/></td>
-                    </tr>
-                </table>
+
+                <div class="input_field_row">
+                    <div class="input_field_title">
+                        Please select a file:
+                    </div>
+                    <div class="input_field_value_section">
+                        <@s.file name="upload" id="upload" cssClass="input_file" />
+                    </div>
+                </div>
+                <div style="clear: both;"></div>
+
+                <div class="input_field_row">
+                    <div class="input_field_title">
+                        Extract the Metadata:
+                    </div>
+                    <div class="input_field_value_section">
+                        <@s.checkbox name="extractable"  id="extract" value="true" cssClass="check_box" />
+                    </div>
+                </div>
+                <div style="clear: both;"></div>
+
+                <div class="input_field_row">
+                    <div class="input_field_title">
+                        &nbsp;
+                    </div>
+                    <div class="input_field_value_section">
+                        <@s.submit value="Import" id="fileUpload" name="fileUpload" onclick="merc.AjaxFileUpload.initialise(${dobefore}, doAfterImport);" cssClass="input_button_style"/>
+                    </div>
+                </div>
             </@s.form>
         </div>
     </div>
-    <!-- End of import dataset file -->
-        <@s.if test="%{stageTransferEnabled}">
-        <div class="none_border_block2">
-            <div class="p_title2"><b>Staging Area File Transfer</b></div>
-            <br/>
-
-            <div class="stage_div">
-                <@s.form id="stageTransfer"  action="viewStageFiles.jspx" namespace="/data" method="post" >
-                    <@s.hidden name="collection.id" id="col"/>
-                    <@s.hidden name="collection.name" id="coname"/>
-                    <@s.hidden name="collection.description" id="desc"/>
-                    <@s.hidden name="collection.owner.displayName" id="codisplayname" />
-                    <@s.hidden name="collection.owner.id" id="colowner" />
-                    <@s.hidden name="collection.createdTime" />
-                    <@s.hidden name="collection.modifiedTime" />
-                    <@s.hidden name="collection.modifiedByUser.displayName" />
-                    <@s.hidden name="viewType" id="viewtype"/>
-                    <table align="center">
-                        <tr>
-                            <td><@s.submit value="Transfer"  name="transfer" cssClass="input_button_normal"/></td>
-                        </tr>
-                    </table>
-                </@s.form>
-            </div>
-        </div>
-        </@s.if>
-    <div style="clear:both"></div>
     </@s.if>
-<!-- end of allow to import file or stage transfer -->
-<!-- display the datasets -->
-    <@s.if test = "%{datasets != null & datasets.size >0}">
-    <div class="none_border_block2">
-        <table class="table_data">
-            <tr class="bg_grey_tr">
-                <td width="200" height="20">
-                    <center><b>Name</b></center>
-                </td>
-                <td width="100">
-                    <center><b>Site Name</b></center>
-                </td>
-                <td width="60">
-                    <center><b> Level </b></center>
-                </td>
-                <td width="160">&nbsp;</td>
+<!-- end of importing file -->
+<div class="none_border_block">
+        <span class="name_title">
+             A total of <font color="green">
+            <@s.if test = "%{datasets != null}"><@s.property value="datasets.size" /></@s.if>
+            <@s.else>0</@s.else>
+        </font> data file(s) in this collection
+        </span>
+</div>
+    <@s.if test="%{datasets.size() > 0}">
+    <div class="content_none_border_div">
+        <table class="display_data_tab">
+            <thead>
+            <tr>
+                <th width="30%">File Name</th>
+                <th width="27%">Site Name</th>
+                <th width="5%">Level</th>
+                <th width="38%">&nbsp;</th>
             </tr>
-            <@s.iterator status="dsState" value="datasets" id="ds" >
+            </thead>
+            <tbody>
+                <@s.iterator status="dsState" value="datasets" id="ds" >
                 <tr class="tr_normal" onMouseOver="this.className='tr_highlight'" onMouseOut="this.className='tr_normal'">
                     <td><@s.property value="#ds.name" /></td>
                     <td><@s.property value="#ds.siteName" /></td>
                     <td>
-                        <center><@s.property value="#ds.netCDFLevel" /></center>
+                        <@s.property value="#ds.netCDFLevel" />
                     </td>
                     <td>
-                        <div class="inline_td_div">
-
+                        <div class="data_action_link">
                             <@s.if test="%{permissionBean.viewAllowed}">
                                 <@s.if test="%{#ds.extracted}">
                                     <a href="${base}/${viewDatasetLink}?dataset.id=<@s.property value='#ds.id' />&collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}"
-                                       title="Dataset - ${ds.name}" id="viewdataset">View Data</a> &nbsp;
+                                       title="Dataset - ${ds.name}" id="viewdataset">View Metadata</a>
                                 </@s.if>
                             </@s.if>
 
                             <@s.if test="%{permissionBean.exportAllowed}">
                                 <a href="${base}/${downloadDatasetLink}?dataset.id=<@s.property value='#ds.id' />&collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}">
-                                    &nbsp;&nbsp;Export&nbsp;&nbsp;</a> &nbsp;
+                                    Export</a>
                             </@s.if>
 
+                            <@s.if test="%{permissionBean.deleteAllowed}">
+                                <div id='confirm_dialog'>
+                                    <div class="msg_content">The data will be removed from the repository permanently!<p>Are you sure to delet this dataset?</p></div>
+                                    <div id='confirm'>
+                                        <div class='header'><span>Deleting Dataset Confirm</span></div>
+                                        <div class='message'></div>
+                                        <div class='buttons'>
+                                            <div class='no simplemodal-close'>No</div>
+                                            <div class='yes'>Yes</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="${base}/${deleteDatasetLink}?dataset.id=<@s.property value='#ds.id' />&collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}"
+                                   class='confirm'>Delete</a>
+                            </@s.if>
 
                         </div>
                     </td>
                 </tr>
-            </@s.iterator>
+                </@s.iterator>
+            </tbody>
         </table>
     </div>
     </@s.if>
+</@s.if>
+</div>
 <div style="clear:both"></div>
-<br/>
-<br/>
-<br/>
-    <@s.if test="%{permissionBean.viewAllowed == false}">
-    <div class="none_border_space_block"></div>
-    </@s.if>
 </div>
-<br/>
-</@s.else>
-</div>
-<div class="right_container_panel">
+<!-- right panel -->
+<div class="right_display_div">
 <@s.if test="%{#session.authentication_flag =='authenticated'}">
-		 	<#include "../template/subnav_section.ftl" />
-		</@s.if>
+            <#include "../template/sub_nav.ftl" />
+        </@s.if>
 </div>
-
+</div>
 <div style="clear:both"></div>
 </div>
 <#include "../template/footer.ftl"/>

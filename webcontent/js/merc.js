@@ -83,16 +83,16 @@ $(document).ready(function(){
       	
         if(value_index != '-1'){
 	       $('#user_permissions > tbody:last').append("<tr>"+
-				 	 		"<td><center>" + selectedText + "</center>" +
+				 	 		"<td>" + selectedText + "" +
 				 	 		"<input type='hidden' name='permissionBeans[" + rowIndex +"].id' value='0' id='permissionBeans_" + rowIndex +"__id'/>"+
 				 	 		"<input type='hidden' name='permissionBeans[" + rowIndex +"].uid' value='" + value_index +"' id='user_id'/></td>" +
 				 	 		"<input type='hidden' name='permissionBeans[" + rowIndex +"].userName' value='" + selectedText + "' id='permissionBeans_" + rowIndex +"__userName'/></td>" +
-				 	 		"<td><center><input type='checkbox' name='permissionBeans[" + rowIndex +"].viewAllowed' value='true' id='permissionBeans_" + rowIndex +"__viewAllowed'/></center></td>" +
-				 	 		"<td><center><input type='checkbox' name='permissionBeans[" + rowIndex +"].editAllowed' value='true' id='permissionBeans_" + rowIndex +"__editAllowed'/></center></td>" +
-				 	 		"<td><center><input type='checkbox' name='permissionBeans[" + rowIndex +"].importAllowed' value='true'  id='permissionBeans_" + rowIndex +"__importAllowed'/></center></td>" +
-				 	 		"<td><center><input type='checkbox' name='permissionBeans[" + rowIndex +"].exportAllowed' value='true'  id='permissionBeans_" + rowIndex +"__exportAllowed'/></center></td>" +
-				 	 		"<td><center><input type='checkbox' name='permissionBeans[" + rowIndex +"].deleteAllowed' value='true'  id='permissionBeans_" + rowIndex +"__deleteAllowed'/></center></td>" +
-				 	 		"<td><center><input type='checkbox' name='permissionBeans[" + rowIndex +"].changePermAllowed' value='true'  id='permissionBeans_" + rowIndex +"__changePermAllowed'/></center></td>" +
+				 	 		"<td><input type='checkbox' class='check_box' name='permissionBeans[" + rowIndex +"].viewAllowed' value='true' id='permissionBeans_" + rowIndex +"__viewAllowed'/></td>" +
+				 	 		"<td><input type='checkbox' class='check_box' name='permissionBeans[" + rowIndex +"].editAllowed' value='true' id='permissionBeans_" + rowIndex +"__editAllowed'/></td>" +
+				 	 		"<td><input type='checkbox' class='check_box' name='permissionBeans[" + rowIndex +"].importAllowed' value='true'  id='permissionBeans_" + rowIndex +"__importAllowed'/></td>" +
+				 	 		"<td><input type='checkbox' class='check_box' name='permissionBeans[" + rowIndex +"].exportAllowed' value='true'  id='permissionBeans_" + rowIndex +"__exportAllowed'/></td>" +
+				 	 		"<td><input type='checkbox' class='check_box' name='permissionBeans[" + rowIndex +"].deleteAllowed' value='true'  id='permissionBeans_" + rowIndex +"__deleteAllowed'/></td>" +
+				 	 		"<td><input type='checkbox' class='check_box' name='permissionBeans[" + rowIndex +"].changePermAllowed' value='true'  id='permissionBeans_" + rowIndex +"__changePermAllowed'/></td>" +
 				 	 	"</tr>");
         }
     }); 
@@ -132,61 +132,61 @@ $("#user_permissions input[type=checkbox]").live('click',function(){
 	}
 });
 //for all-registered users
-$('input[name=coPermForAllUser.viewAllowed]').live('click', function(){
+$("input[name='coPermForAllUser.viewAllowed']").live('click', function(){
 	if($(this).is(":checked") == false){
-	 	if($('input[name=coPermForAllUser.editAllowed]').is(":checked")){
+	 	if($("input[name='coPermForAllUser.editAllowed']").is(":checked")){
 	 		keepViewAllowedTrueForAllUsers();
 	 	}
-	 	if($('input[name=coPermForAllUser.importAllowed]').is(":checked")){
+	 	if($("input[name='coPermForAllUser.importAllowed']").is(":checked")){
 	 		keepViewAllowedTrueForAllUsers();
 		}
-	 	if($('input[name=coPermForAllUser.exportAllowed]').is(":checked")){
+	 	if($("input[name='coPermForAllUser.exportAllowed']").is(":checked")){
 	 		keepViewAllowedTrueForAllUsers();
 	 	}
-	 	if($('input[name=coPermForAllUser.deleteAllowed]').is(":checked")){
+	 	if($("input[name='coPermForAllUser.deleteAllowed']").is(":checked")){
 	 		keepViewAllowedTrueForAllUsers();
 	 	}
-	 	if($('input[name=coPermForAllUser.changePermAllowed]').is(":checked")){
+	 	if($("input[name='coPermForAllUser.changePermAllowed']").is(":checked")){
 	 		keepViewAllowedTrueForAllUsers();
 	 	}
 	}
 });
 
 //for all-annonymous user
-$('input[name=coPermForAnony.viewAllowed]').live('click', function(){
+$("input[name='coPermForAnony.viewAllowed']").live('click', function(){
 	if($(this).is(":checked") == false){
-		if($('input[name=coPermForAnony.editAllowed]').is(":checked")){
+		if($("input[name='coPermForAnony.editAllowed']").is(":checked")){
 			keepViewAllowedTrueForAnonymous();
 	 	}
-	 	if($('input[name=coPermForAnony.importAllowed]').is(":checked")){
+	 	if($("input[name='coPermForAnony.importAllowed']").is(":checked")){
 	 		keepViewAllowedTrueForAnonymous();
 		}
-	 	if($('input[name=coPermForAnony.exportAllowed]').is(":checked")){
+	 	if($("input[name='coPermForAnony.exportAllowed']").is(":checked")){
 	 		keepViewAllowedTrueForAnonymous();
 	 	}
-	 	if($('input[name=coPermForAnony.deleteAllowed]').is(":checked")){
+	 	if($("input[name='coPermForAnony.deleteAllowed']").is(":checked")){
 	 		keepViewAllowedTrueForAnonymous();
 	 	}
-	 	if($('input[name=coPermForAnony.changePermAllowed]').is(":checked")){
+	 	if($("input[name='coPermForAnony.changePermAllowed']").is(":checked")){
 	 		keepViewAllowedTrueForAnonymous();
 	 	}
 	}
 });
 //for all-registered users
 function setViewTrueForAllRegUser() {
-	$('input[name=coPermForAllUser.viewAllowed]').attr('checked', true);
+	$("input[name='coPermForAllUser.viewAllowed']").attr('checked', true);
 };
 function keepViewAllowedTrueForAllUsers(){
-	$('input[name=coPermForAllUser.viewAllowed]').attr('checked', true);
+	$("input[name='coPermForAllUser.viewAllowed']").attr('checked', true);
 };
 
 //for anonymous users
 function setViewTrueForAnonymous(){
-	$('input[name=coPermForAnony.viewAllowed]').attr('checked', true);
+	$("input[name='coPermForAnony.viewAllowed']").attr('checked', true);
 };
 
 function keepViewAllowedTrueForAnonymous(){
-	$('input[name=coPermForAnony.viewAllowed]').attr('checked', true);
+	$("input[name='coPermForAnony.viewAllowed']").attr('checked', true);
 };
 
 //for dynamic added checkbox
@@ -294,24 +294,24 @@ $("#permission_req input[type=checkbox]").live('click',function(){
 });
 
 function setViewPermTrueForPermReq() {
-	$('input[name=permReq.viewAllowed]').attr('checked', true);
+	$("input[name='permReq.viewAllowed']").attr('checked', true);
 };
 
-$('input[name=permReq.viewAllowed]').live('click', function(){
+$("input[name='permReq.viewAllowed']").live('click', function(){
 	if($(this).is(":checked") == false){
-		if($('input[name=permReq.editAllowed]').is(":checked")){
+		if($("input[name='permReq.editAllowed']").is(":checked")){
 			setViewPermTrueForPermReq();
 	 	}
-	 	if($('input[name=permReq.importAllowed]').is(":checked")){
+	 	if($("input[name='permReq.importAllowed']").is(":checked")){
 	 		setViewPermTrueForPermReq();
 		}
-	 	if($('input[name=permReq.exportAllowed]').is(":checked")){
+	 	if($("input[name='permReq.exportAllowed']").is(":checked")){
 	 		setViewPermTrueForPermReq();
 	 	}
-	 	if($('input[name=permReq.deleteAllowed]').is(":checked")){
+	 	if($("input[name='permReq.deleteAllowed']").is(":checked")){
 	 		setViewPermTrueForPermReq();
 	 	}
-	 	if($('input[name=permReq.changePermAllowed]').is(":checked")){
+	 	if($("input[name='permReq.changePermAllowed']").is(":checked")){
 	 		setViewPermTrueForPermReq();
 	 	}
 	}

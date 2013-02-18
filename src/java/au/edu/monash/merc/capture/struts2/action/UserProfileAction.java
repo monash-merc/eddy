@@ -104,11 +104,11 @@ public class UserProfileAction extends DMCoreAction {
     }
 
     private void reformatNewLines() {
-        if (!StringUtils.isBlank(profile.getContactDetails())) {
+        if (StringUtils.isNotBlank(profile.getContactDetails())) {
             String contactDetails = nlToBr(profile.getContactDetails());
             profile.setContactDetails(contactDetails);
         }
-        if (!StringUtils.isBlank(profile.getInterests())) {
+        if (StringUtils.isNotBlank(profile.getInterests())) {
             String interests = nlToBr(profile.getInterests());
             profile.setInterests(interests);
         }
@@ -164,43 +164,14 @@ public class UserProfileAction extends DMCoreAction {
                 this.dmService.updateAvatar(avatar);
             }
 
-            // start to update the profile.
-            oldProfile.setGender(profile.getGender());
-            if (!StringUtils.isBlank(profile.getAddress())) {
-                oldProfile.setAddress(profile.getAddress());
-            }
-            if (!StringUtils.isBlank(profile.getCity())) {
-                oldProfile.setCity(profile.getCity());
-            }
-            if (!StringUtils.isBlank(profile.getState())) {
-                oldProfile.setState(profile.getState());
-            }
-            if (!StringUtils.isBlank(profile.getPostcode())) {
-                oldProfile.setPostcode(profile.getPostcode());
-            }
-            if (!StringUtils.isBlank(profile.getContactDetails())) {
-                oldProfile.setContactDetails(profile.getContactDetails());
-            }
-            if (!StringUtils.isBlank(profile.getCountry())) {
-                oldProfile.setCountry(profile.getCountry());
-            }
-
-            if (!StringUtils.isBlank(profile.getOccupation())) {
-                oldProfile.setOccupation(profile.getOccupation());
-            }
-            if (!StringUtils.isBlank(profile.getIndustryField())) {
-                oldProfile.setIndustryField(profile.getIndustryField());
-            }
-            if (!StringUtils.isBlank(profile.getInterests())) {
-                oldProfile.setInterests(profile.getInterests());
-            }
-            if (!StringUtils.isBlank(profile.getOrganization())) {
-                oldProfile.setOrganization(profile.getOrganization());
-            }
+            //set the user profile id
+            profile.setId(oldProfile.getId());
+            //set the user for reference
+            profile.setUser(user);
 
             // update the profile.
-            this.dmService.updateProfile(oldProfile);
-            profile = oldProfile;
+            this.dmService.updateProfile(profile);
+            //profile = oldProfile;
             // reformat the display format for interests and contact details.
             reformatNewLines();
             // post processing for populating the gender and countries

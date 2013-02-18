@@ -38,9 +38,7 @@
                         <div class="data_title">
                             <a href="${base}/${viewColDetailLink}?collection.id=<@s.property value='#colResult.id '/>&collection.owner.id=<@s.property value='#colResult.owner.id' />&viewType=${viewType}"><@s.property value="#colResult.name" /></a>
                         </div>
-                        <div class="tern_flag">
-                            [ Tern-funded ]
-                        </div>
+
                         <div class="data_desc_div">
                             <@s.property value="#colResult.briefDesc" />
                         </div>
@@ -49,7 +47,7 @@
                                 Created by <@s.property value="#colResult.owner.displayName" />,
                             </span>
                             <span class="span_inline1">
-                                Created date: <@s.date name="#colResult.createdTime" format="yyyy-MM-dd hh:mm" />,
+                                Creation date: <@s.date name="#colResult.createdTime" format="yyyy-MM-dd hh:mm" />,
                             </span>
                            <span class="span_inline1">
                                 Modified by <@s.property value="#colResult.modifiedByUser.displayName" />,
@@ -58,7 +56,11 @@
                                 Modified date: <@s.date name="#colResult.modifiedTime" format="yyyy-MM-dd hh:mm" />
                             </span>
                         </div>
-
+                        <@s.if test="%{#colResult.funded == true}">
+                            <div class="data_tern_div">
+                                [ TERN-Funded ]
+                            </div>
+                        </@s.if>
                         <div class="data_action_link">
                             <a href="${base}/${viewColDetailLink}?collection.id=<@s.property value='#colResult.id' />&collection.owner.id=<@s.property value='#colResult.owner.id' />&viewType=${viewType}">View
                                 details</a>
