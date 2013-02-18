@@ -72,6 +72,8 @@ public class EditColAction extends DMCoreAction {
             if (existedCollection != null) {
                 // update the new values for collection
                 existedCollection.setName(collection.getName());
+                //set it's funded if it's funded
+                existedCollection.setFunded(collection.isFunded());
                 // set modified date time
                 existedCollection.setModifiedTime(GregorianCalendar.getInstance().getTime());
                 existedCollection.setDescription(collection.getDescription());

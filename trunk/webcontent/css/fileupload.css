@@ -40,12 +40,15 @@
 }
 
 .file_success_msg_div{
-	display: none;
-	width: 80%;
-	background: #f4f7fb;
-	position: relative;
-	margin: 0 auto;
-	border: solid 1px #c0c7d5;
+    display: none;
+    background: #EFF2F7;
+    border: solid 1px #EFF2F7;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    color: #726E4C;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
 }
 
 .file_success_msg_div .hidden_msg {
@@ -56,12 +59,7 @@
 }
 
 .file_error_msg_div {
-	display: none;
-    background: none repeat scroll 0 0 white;
-    border: 1px solid #E1E8F0;
-    margin: 10px auto;
-    text-align: center;
-    width: 500px;
+    display: none;
 }
 .error_msg_item_div {
     border-collapse: collapse;
@@ -70,3 +68,5 @@
     margin: 2px auto;
     text-align: left;
 }
+
+

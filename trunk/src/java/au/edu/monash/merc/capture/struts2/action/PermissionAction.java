@@ -213,7 +213,10 @@ public class PermissionAction extends DMCoreAction {
             if (collection != null) {
                 populateFilteredUserNames(ownerId);
 
-                AssignedPermissions assignedPerms = manageAssignedPerms(collection);
+                // get all permission from the database
+                List<Permission> permissions = this.dmService.getCollectionPermissions(collection.getId());
+
+                AssignedPermissions assignedPerms = manageAssignedPerms(collection, permissions);
 
                 this.dmService.setCollectionPermissions(assignedPerms);
 
@@ -242,7 +245,7 @@ public class PermissionAction extends DMCoreAction {
     }
 
     // manage the owner assigned permissions, and prepare to persist
-    private AssignedPermissions manageAssignedPerms(Collection col) {
+    private AssignedPermissions manageAssignedPerms(Collection col, List<Permission> existedPermissions) {
         List<Permission> newPermissions = new ArrayList<Permission>();
         List<Permission> updatePermissions = new ArrayList<Permission>();
         List<Long> deletePermissionIds = new ArrayList<Long>();

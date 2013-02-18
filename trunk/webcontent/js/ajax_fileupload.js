@@ -74,8 +74,6 @@ jQuery.extend({
 		$(oldViewElement).before(newViewElement);
 		$(oldViewElement).appendTo(form);
 
-		
-		
 		//set attributes
 		$(form).css('position', 'absolute');
 		$(form).css('top', '-1200px');

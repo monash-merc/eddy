@@ -25,6 +25,7 @@
                         <@s.property value="user.displayName"/>
                         </div>
                     </div>
+                    <div style="clear:both"></div>
 
                     <div class="input_field_row">
                         <div class="input_field_title">
@@ -34,6 +35,7 @@
                         <@s.date name="user.registedDate" format="yyyy-MM-dd" />
                         </div>
                     </div>
+                    <div style="clear:both"></div>
 
                     <div class="input_field_row">
                         <div class="input_field_title">
@@ -43,6 +45,7 @@
                         <@s.property value="profile.gender" />
                         </div>
                     </div>
+                    <div style="clear:both"></div>
                 </div>
                 <div class="content_title">Your contact details</div>
                 <div class="content_div">
@@ -54,6 +57,7 @@
                         <@s.property value="user.email" />
                         </div>
                     </div>
+                    <div style="clear:both"></div>
 
                     <div class="input_field_row">
                         <div class="input_field_title">
@@ -63,6 +67,7 @@
                         <@s.property value="profile.contactDetails" escape=false  />
                         </div>
                     </div>
+                    <div style="clear:both"></div>
                 </div>
 
                 <div class="content_title">Your location</div>
@@ -75,6 +80,7 @@
                         <@s.property value="profile.address" />
                         </div>
                     </div>
+                    <div style="clear:both"></div>
 
                     <div class="input_field_row">
                         <div class="input_field_title">
@@ -84,6 +90,8 @@
                         <@s.property value="profile.city" />
                         </div>
                     </div>
+                    <div style="clear:both"></div>
+
                     <div class="input_field_row">
                         <div class="input_field_title">
                             State:
@@ -92,6 +100,7 @@
                         <@s.property value="profile.state" />
                         </div>
                     </div>
+                    <div style="clear:both"></div>
 
                     <div class="input_field_row">
                         <div class="input_field_title">
@@ -101,6 +110,7 @@
                         <@s.property value="profile.postcode" />
                         </div>
                     </div>
+                    <div style="clear:both"></div>
 
                     <div class="input_field_row">
                         <div class="input_field_title">
@@ -110,6 +120,7 @@
                         <@s.property value="profile.country" />
                         </div>
                     </div>
+                    <div style="clear:both"></div>
                 </div>
 
                 <div class="content_title">Your work(professional) life</div>
@@ -119,9 +130,10 @@
                             Field (Industry):
                         </div>
                         <div class="input_field_value_section">
-                        <@s.property value="profile.industryField" />
+                        <@s.property value="profile.industryField"/>
                         </div>
                     </div>
+                    <div style="clear:both"></div>
 
                     <div class="input_field_row">
                         <div class="input_field_title">
@@ -131,6 +143,8 @@
                         <@s.property value="profile.occupation" />
                         </div>
                     </div>
+                    <div style="clear:both"></div>
+
                     <div class="input_field_row">
                         <div class="input_field_title">
                             Organization you belong to:
@@ -139,6 +153,7 @@
                         <@s.property value="profile.organization" />
                         </div>
                     </div>
+                    <div style="clear:both"></div>
 
                     <div class="input_field_row">
                         <div class="input_field_title">
@@ -148,6 +163,8 @@
                         <@s.property value="profile.interests" escape=false />
                         </div>
                     </div>
+                    <div style="clear:both"></div>
+
                     <div class="content_act_div">
                         <a href="${base}/admin/showProfileUpdate.jspx">Edit Profile</a>
                     </div>

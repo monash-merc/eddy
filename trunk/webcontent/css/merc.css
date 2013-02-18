@@ -66,7 +66,17 @@ input {
     padding: 1px;
     width: 200px;
     font-size: 12px;
+    text-align: left;
 }
+
+
+.check_box {
+    line-height: 14px;
+    height: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    width: 25px;
+}
+
 
 .input_file {
     font-family: Arial, Helvetica, sans-serif;
@@ -504,18 +514,19 @@ input {
 }
 
 .content_div {
-    margin-left: 5px;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin: 5px;
     border: solid 1px #f2f2f2;
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
 
 .content_none_border_div {
-    margin-left: 5px;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin: 5px;
+}
+.file_uploading_div{
+    margin: 0 auto;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .content_act_div {
@@ -579,9 +590,9 @@ input {
 }
 
 .input_field_value_section {
-    display: block;
     padding-left: 5px;
-    margin-left: 165px;
+    margin-left: 170px;
+    text-align: left;
 }
 
 .captch_div {
@@ -700,7 +711,7 @@ input {
 
 /** ==== colllection ====**/
 .data_display_div {
-    border: dotted 1px #FFFFFF;
+    border: solid 1px #E1E8F0;
     padding: 5px;
     border-radius: 5px 5px;
     -moz-border-radius: 5px 5px;
@@ -717,6 +728,13 @@ input {
 .data_title a {
     text-align: left;
     color: #003766;
+}
+
+.data_tern_div{
+    margin-left: 5px;
+    margin-right: 5px;
+    color: #5d5a3e;
+    font-size: 11px;
 }
 
 .data_desc_div {
@@ -738,7 +756,7 @@ input {
 }
 
 .data_action_link a {
-    min-width: 80px;
+    min-width: 82px;
     height: 22px;
     line-height: 22px;
     display: inline-block;
@@ -962,7 +980,7 @@ input {
 
 /** successful Message ====**/
 .pane {
-    background: #f2f2f2;
+    background: #EFF2F7;
     position: relative;
     margin: 5px auto;
     border: solid 1px #EFF2F7;
@@ -1096,6 +1114,55 @@ input {
     font-style: italic;
     text-align: justify;
 }
+
+
+.tr_highlight {
+    background-color: #f3f3f3;
+}
+
+.table_ds_data {
+    text-align: left;
+    border: solid 1px #E1E8F0;
+    border-collapse: collapse;
+}
+
+.table_ds_data td {
+    border: solid 1px #E1E8F0;
+    padding: 2px 10px 2px 10px;
+}
+
+.ds_tr_bg_hig td {
+    background-color: #F5F5F5;
+    height: 16px;
+    line-height: 16px;
+}
+
+.ds_var_td td {
+    background-color: #F5F5F5;
+    border-right: solid 1px #F5F5F5;
+    border-left: solid 1px #F5F5F5;
+    border-top: solid 1px #E1E8F0;
+}
+
+.var_td td {
+    color: #7e7e7e;
+}
+
+.ds_div_border_block {
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 2px;
+    margin-top: 2px;
+    padding: 5px;
+}
+
+
+.div_grey_section {
+    color: #909090;
+    text-align: justify;
+    padding: 5px;
+}
+
 
 /**   ========= End of Refactored CSS ====== **/
 
@@ -2002,46 +2069,6 @@ input {
     background-color: #fff;
     font-size: 11px;
     color: #808080;
-}
-
-.tr_highlight {
-    background-color: #f3f3f3;
-}
-
-.table_ds_data {
-    text-align: left;
-    border: solid 1px #E1E8F0;
-    border-collapse: collapse;
-}
-
-.table_ds_data td {
-    border: solid 1px #E1E8F0;
-    padding: 2px 10px 2px 10px;
-}
-
-.ds_tr_bg_hig td {
-    background-color: #F5F5F5;
-    height: 16px;
-    line-height: 16px;
-}
-
-.ds_var_td td {
-    background-color: #F5F5F5;
-    border-right: solid 1px #F5F5F5;
-    border-left: solid 1px #F5F5F5;
-    border-top: solid 1px #E1E8F0;
-}
-
-.var_td td {
-    color: #7e7e7e;
-}
-
-.ds_div_border_block {
-    margin-left: 15px;
-    margin-right: 15px;
-    margin-bottom: 2px;
-    margin-top: 2px;
-    padding: 5px;
 }
 
 /** === create collection === */

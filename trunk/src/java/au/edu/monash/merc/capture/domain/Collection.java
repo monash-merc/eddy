@@ -110,6 +110,10 @@ public class Collection extends Domain {
     private boolean published;
 
     @Basic
+    @Column(name = "funded")
+    private boolean funded;
+
+    @Basic
     @Column(name = "spatial_type", length = 100)
     private String spatialType;
 
@@ -279,6 +283,14 @@ public class Collection extends Domain {
 
     public void setPublished(boolean published) {
         this.published = published;
+    }
+
+    public boolean isFunded() {
+        return funded;
+    }
+
+    public void setFunded(boolean funded) {
+        this.funded = funded;
     }
 
     public Rights getRights() {
