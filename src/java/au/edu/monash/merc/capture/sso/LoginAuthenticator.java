@@ -32,8 +32,7 @@ import au.edu.monash.merc.capture.util.ldap.LdapUser;
 
 public interface LoginAuthenticator {
 
-	public User validateLogin(String username, String password, boolean ldap);
-	
-	public LdapUser validataLdapUser(String authcatId, String password);
+    User validateLogin(String username, String password, boolean ldap);
 
+    LdapUser validataLdapUser(String authcatId, String password);
 }

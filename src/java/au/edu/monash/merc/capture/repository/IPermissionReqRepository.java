@@ -35,14 +35,13 @@ import au.edu.monash.merc.capture.dto.page.Pagination;
 
 public interface IPermissionReqRepository {
 
-	public List<PermissionRequest> getPermissionRequestsByOwner(long ownerId);
+    List<PermissionRequest> getPermissionRequestsByOwner(long ownerId);
 
-	public void deletePermissionRequestsByCoId(long coId);
+    void deletePermissionRequestsByCoId(long coId);
 
-	public void deletePermissionRequestById(long pmReqId);
+    void deletePermissionRequestById(long pmReqId);
 
-	public PermissionRequest getCoPermissionRequestByReqUser(long coid, long reqUserId);
+    PermissionRequest getCoPermissionRequestByReqUser(long coid, long reqUserId);
 
-	public Pagination<PermissionRequest> getPermRequestsByPages(long ownerId, int startPageNo, int recordsPerPage,
-			OrderBy[] orderBys);
+    Pagination<PermissionRequest> getPermRequestsByPages(long ownerId, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 }

@@ -31,15 +31,15 @@ import au.edu.monash.merc.capture.domain.Rights;
 
 public interface RightsService {
 
-	public void saveRights(Rights rights);
+    void saveRights(Rights rights);
 
-	public void updateRights(Rights rights);
+    void updateRights(Rights rights);
 
-	public void deleteRights(Rights rights);
+    void deleteRights(Rights rights);
 
-	public void deleteRightsById(long id);
+    void deleteRightsById(long id);
 
-	public Rights getRightsById(long id);
+    Rights getRightsById(long id);
 
-	public Rights getRightsByCollectionId(long cid);
+    Rights getRightsByCollectionId(long cid);
 }

@@ -35,20 +35,23 @@ import au.edu.monash.merc.capture.dto.page.Pagination;
 
 public interface ICollectionRepository {
 
-	public List<Collection> getCollectionsByUserId(long uid);
+    List<Collection> getCollectionsByUserId(long uid);
 
-	public Pagination<Collection> getCollectionsByUserId(long uid, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+    Pagination<Collection> getCollectionsByUserId(long uid, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
-	public Pagination<Collection> getAllPublicCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+    Pagination<Collection> getAllPublicCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
-	public Pagination<Collection> getAllCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+    Pagination<Collection> getAllCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
-	public Collection getCollection(long cid, long uid);
+    Collection getCollection(long cid, long uid);
 
-	public boolean checkCollectionNameExisted(String colName);
+    boolean checkCollectionNameExisted(String colName);
 
-	public List<Collection> getPublishedCollections();
+    List<Collection> getPublishedCollections();
 
-	public Collection getPublishedCoByIdentifier(String identifier);
+    Collection getPublishedCoByIdentifier(String identifier);
 
+    List<Collection> getCollectionsByLocation(String coverageType, String spatialCoverage);
+
+    List<Collection> getCollectionsByLocation(long locationId);
 }

@@ -35,11 +35,11 @@ import au.edu.monash.merc.capture.dto.ProjectBean;
 
 public interface PartyActivityWSService {
 
-	public String getNlaId(String authcateId);
+    String getNlaId(String authcateId);
 
-	public PartyBean getParty(String nlaId);
+    PartyBean getParty(String nlaId);
 
-	public List<ProjectBean> getProjects(String nlaId);
+    List<ProjectBean> getProjects(String nlaId);
 
-	public ActivityBean getActivity(String projectId);
+    ActivityBean getActivity(String projectId);
 }

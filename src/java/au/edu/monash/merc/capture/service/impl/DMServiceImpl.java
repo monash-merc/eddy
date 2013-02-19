@@ -259,6 +259,16 @@ public class DMServiceImpl implements DMService {
     }
 
     @Override
+    public List<Collection> getCollectionsByLocation(String coverageType, String spatialCoverage) {
+        return this.collectionService.getCollectionsByLocation(coverageType, spatialCoverage);
+    }
+
+    @Override
+    public List<Collection> getCollectionsByLocation(long locationId) {
+        return this.collectionService.getCollectionsByLocation(locationId);
+    }
+
+    @Override
     public void saveLocation(Location location) {
         this.locationService.saveLocation(location);
     }

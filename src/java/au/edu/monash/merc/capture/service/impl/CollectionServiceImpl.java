@@ -45,75 +45,84 @@ import au.edu.monash.merc.capture.service.CollectionService;
 @Transactional
 public class CollectionServiceImpl implements CollectionService {
 
-	@Autowired
-	private CollectionDAO collectionDAO;
+    @Autowired
+    private CollectionDAO collectionDAO;
 
-	public CollectionDAO getCollectionDAO() {
-		return collectionDAO;
-	}
+    public CollectionDAO getCollectionDAO() {
+        return collectionDAO;
+    }
 
-	public void setCollectionDAO(CollectionDAO collectionDAO) {
-		this.collectionDAO = collectionDAO;
-	}
+    public void setCollectionDAO(CollectionDAO collectionDAO) {
+        this.collectionDAO = collectionDAO;
+    }
 
-	@Override
-	public void deleteCollection(Collection entity) {
-		this.collectionDAO.remove(entity);
-	}
+    @Override
+    public void deleteCollection(Collection entity) {
+        this.collectionDAO.remove(entity);
+    }
 
-	@Override
-	public Collection getCollectionById(long id) {
-		return this.collectionDAO.get(id);
-	}
+    @Override
+    public Collection getCollectionById(long id) {
+        return this.collectionDAO.get(id);
+    }
 
-	@Override
-	public Pagination<Collection> getCollectionsByUserId(long uid, int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
-		return this.collectionDAO.getCollectionsByUserId(uid, startPageNo, recordsPerPage, orderBys);
-	}
+    @Override
+    public Pagination<Collection> getCollectionsByUserId(long uid, int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
+        return this.collectionDAO.getCollectionsByUserId(uid, startPageNo, recordsPerPage, orderBys);
+    }
 
-	@Override
-	public Pagination<Collection> getAllPublicCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
-		return this.collectionDAO.getAllPublicCollections(startPageNo, recordsPerPage, orderBys);
-	}
+    @Override
+    public Pagination<Collection> getAllPublicCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
+        return this.collectionDAO.getAllPublicCollections(startPageNo, recordsPerPage, orderBys);
+    }
 
-	@Override
-	public Pagination<Collection> getAllCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
-		return this.collectionDAO.getAllCollections(startPageNo, recordsPerPage, orderBys);
-	}
+    @Override
+    public Pagination<Collection> getAllCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
+        return this.collectionDAO.getAllCollections(startPageNo, recordsPerPage, orderBys);
+    }
 
-	@Override
-	public List<Collection> getCollectionsByUserId(long uid) {
-		return this.collectionDAO.getCollectionsByUserId(uid);
-	}
+    @Override
+    public List<Collection> getCollectionsByUserId(long uid) {
+        return this.collectionDAO.getCollectionsByUserId(uid);
+    }
 
-	@Override
-	public void saveCollection(Collection entity) {
-		this.collectionDAO.add(entity);
-	}
+    @Override
+    public void saveCollection(Collection entity) {
+        this.collectionDAO.add(entity);
+    }
 
-	@Override
-	public void updateCollection(Collection entity) {
-		this.collectionDAO.update(entity);
-	}
+    @Override
+    public void updateCollection(Collection entity) {
+        this.collectionDAO.update(entity);
+    }
 
-	@Override
-	public Collection getCollection(long cid, long uid) {
-		return this.collectionDAO.getCollection(cid, uid);
-	}
+    @Override
+    public Collection getCollection(long cid, long uid) {
+        return this.collectionDAO.getCollection(cid, uid);
+    }
 
-	@Override
-	public boolean checkCollectionNameExisted(String colName) {
-		return this.collectionDAO.checkCollectionNameExisted(colName);
-	}
+    @Override
+    public boolean checkCollectionNameExisted(String colName) {
+        return this.collectionDAO.checkCollectionNameExisted(colName);
+    }
 
-	@Override
-	public List<Collection> getPublishedCollections() {
-		return this.collectionDAO.getPublishedCollections();
-	}
+    @Override
+    public List<Collection> getPublishedCollections() {
+        return this.collectionDAO.getPublishedCollections();
+    }
 
-	@Override
-	public Collection getPublishedCoByIdentifier(String identifier) {
-		return this.collectionDAO.getPublishedCoByIdentifier(identifier);
-	}
+    @Override
+    public Collection getPublishedCoByIdentifier(String identifier) {
+        return this.collectionDAO.getPublishedCoByIdentifier(identifier);
+    }
 
+    @Override
+    public List<Collection> getCollectionsByLocation(String coverageType, String spatialCoverage) {
+        return this.collectionDAO.getCollectionsByLocation(coverageType, spatialCoverage);
+    }
+
+    @Override
+    public List<Collection> getCollectionsByLocation(long locationId) {
+        return this.collectionDAO.getCollectionsByLocation(locationId);
+    }
 }

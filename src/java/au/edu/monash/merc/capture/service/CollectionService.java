@@ -35,27 +35,31 @@ import au.edu.monash.merc.capture.dto.page.Pagination;
 
 public interface CollectionService {
 
-	public Collection getCollectionById(long id);
+    Collection getCollectionById(long id);
 
-	public void saveCollection(Collection entity);
+    void saveCollection(Collection entity);
 
-	public void updateCollection(Collection entity);
+    void updateCollection(Collection entity);
 
-	public void deleteCollection(Collection entity);
+    void deleteCollection(Collection entity);
 
-	public List<Collection> getCollectionsByUserId(long uid);
+    List<Collection> getCollectionsByUserId(long uid);
 
-	public Pagination<Collection> getCollectionsByUserId(long uid, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+    Pagination<Collection> getCollectionsByUserId(long uid, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
-	public Pagination<Collection> getAllPublicCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+    Pagination<Collection> getAllPublicCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
-	public Pagination<Collection> getAllCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+    Pagination<Collection> getAllCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
-	public Collection getCollection(long cid, long uid);
+    Collection getCollection(long cid, long uid);
 
-	public boolean checkCollectionNameExisted(String colName);
+    boolean checkCollectionNameExisted(String colName);
 
-	public List<Collection> getPublishedCollections();
+    List<Collection> getPublishedCollections();
 
-	public Collection getPublishedCoByIdentifier(String identifier);
+    Collection getPublishedCoByIdentifier(String identifier);
+
+    List<Collection> getCollectionsByLocation(String coverageType, String spatialCoverage);
+
+    List<Collection> getCollectionsByLocation(long locationId);
 }

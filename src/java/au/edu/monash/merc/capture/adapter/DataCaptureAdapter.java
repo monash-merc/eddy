@@ -31,34 +31,27 @@ import au.edu.monash.merc.capture.domain.Dataset;
 import au.edu.monash.merc.capture.exception.DataCaptureException;
 
 /**
- * 
- * 
+ *
+ *
  *
  */
+
 /**
  * DataCaptureAdapter interface which caputres the metadata from a dataset file, i.e Net-CDF file.
- * 
+ *
  * @author Simon Yu - Xiaoming.Yu@monash.edu
  * @version v2.0
  * @since v1.0
  */
 public interface DataCaptureAdapter {
 
-	/**
-	 * 
-	 * @param name
-	 *            the file name.
-	 * @param fileFullPathName
-	 *            the file full path name.
-	 * @param extractRequired
-	 *            if the metadata extraction is required.
-	 * @param globalAttrbuteOnly
-	 *            if only taking the global attributes.
-	 * @return a new Dataset object for storing the data and metadata.
-	 * @throws DataCaptureException
-	 *             if any errors occur.
-	 * 
-	 */
-	public Dataset caputreData(String name, String fileFullPathName, boolean extractRequired, boolean globalAttrbuteOnly) throws DataCaptureException;
-
+    /**
+     * @param name               the file name.
+     * @param fileFullPathName   the file full path name.
+     * @param extractRequired    if the metadata extraction is required.
+     * @param globalAttrbuteOnly if only taking the global attributes.
+     * @return a new Dataset object for storing the data and metadata.
+     * @throws DataCaptureException if any errors occur.
+     */
+    Dataset caputreData(String name, String fileFullPathName, boolean extractRequired, boolean globalAttrbuteOnly) throws DataCaptureException;
 }

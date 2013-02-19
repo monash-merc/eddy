@@ -33,10 +33,9 @@ import au.edu.monash.merc.capture.dto.page.Pagination;
 
 public interface IAuditEventRepository {
 
-	public void deleteAuditEventById(long eId);
+    void deleteAuditEventById(long eId);
 
-	public void deleteEventByIdWithUserId(long eId, long userId);
+    void deleteEventByIdWithUserId(long eId, long userId);
 
-	public Pagination<AuditEvent> getEventByUserId(long uid, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
-
+    Pagination<AuditEvent> getEventByUserId(long uid, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 }

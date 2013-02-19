@@ -30,14 +30,14 @@ package au.edu.monash.merc.capture.service;
 import au.edu.monash.merc.capture.domain.Profile;
 
 public interface ProfileService {
-	
-	public void saveProfile(Profile profile);
 
-	public Profile getProfileById(long id);
-	
-	public Profile getUserProfile(long userId); 
+    void saveProfile(Profile profile);
 
-	public void updateProfile(Profile profile);
+    Profile getProfileById(long id);
 
-	public void deleteProfile(Profile profile);
+    Profile getUserProfile(long userId);
+
+    void updateProfile(Profile profile);
+
+    void deleteProfile(Profile profile);
 }

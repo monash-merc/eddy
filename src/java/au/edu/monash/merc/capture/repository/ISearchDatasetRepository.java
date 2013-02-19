@@ -34,6 +34,5 @@ import au.edu.monash.merc.capture.dto.page.Pagination;
 
 public interface ISearchDatasetRepository {
 
-	public Pagination<Dataset> search(SearchBean searchBean, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
-
+    Pagination<Dataset> search(SearchBean searchBean, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 }

@@ -33,5 +33,5 @@ import au.edu.monash.merc.capture.domain.MetaAttribute;
 
 public interface IMetaAttributeRepository {
 
-	public List<MetaAttribute> getAllAttributeByVarId(long varId);
+    List<MetaAttribute> getAllAttributeByVarId(long varId);
 }

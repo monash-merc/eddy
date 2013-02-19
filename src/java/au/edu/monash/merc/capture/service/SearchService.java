@@ -35,8 +35,7 @@ import au.edu.monash.merc.capture.dto.page.Pagination;
 
 public interface SearchService {
 
-	public Pagination<Dataset> searchDs(SearchBean searchBean, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+    Pagination<Dataset> searchDs(SearchBean searchBean, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
-	public Pagination<Collection> searchCo(SearchBean searchBean, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
-
+    Pagination<Collection> searchCo(SearchBean searchBean, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 }

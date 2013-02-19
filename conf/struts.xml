@@ -600,5 +600,13 @@
             <result name="error">/web/common/action_error.ftl</result>
             <result name="success">/web/map/list_map_view.ftl</result>
         </action>
+
+        <!-- AJAX call to retrieve all user names -->
+        <action name="viewLocations" class="data.locationAction" method="viewLocations">
+            <result name="success" type="json">
+                <param name="noCache">true</param>
+                <param name="root">locationResponse</param>
+            </result>
+        </action>
     </package>
 </struts>

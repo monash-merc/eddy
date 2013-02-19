@@ -30,13 +30,13 @@ package au.edu.monash.merc.capture.repository;
 import java.util.List;
 
 public interface IRepository<T> {
-    public T get(long id);
+    T get(long id);
 
-    public void add(T entity);
+    void add(T entity);
 
-    public void remove(T entity);
+    void remove(T entity);
 
-    public void update(T entity);
+    void update(T entity);
 
     /**
      * generic method - merge a domain entity in the database
@@ -45,5 +45,5 @@ public interface IRepository<T> {
      */
     void merge(T entity);
 
-    public int saveAll(List<T> entities);
+    int saveAll(List<T> entities);
 }

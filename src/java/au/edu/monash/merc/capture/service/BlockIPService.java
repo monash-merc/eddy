@@ -31,16 +31,15 @@ import au.edu.monash.merc.capture.domain.IPBlock;
 
 public interface BlockIPService {
 
-	public void saveIPBlock(IPBlock ipBlock);
+    void saveIPBlock(IPBlock ipBlock);
 
-	public IPBlock getIPBlockById(long id);
+    IPBlock getIPBlockById(long id);
 
-	public void deleteIPBlock(IPBlock ipBlock);
+    void deleteIPBlock(IPBlock ipBlock);
 
-	public void updateIPBlock(IPBlock ipBlock);
+    void updateIPBlock(IPBlock ipBlock);
 
-	public IPBlock getIPBlockByIp(String ipAddress);
+    IPBlock getIPBlockByIp(String ipAddress);
 
-	public void deleteIPBlockByIP(String ipAddress);
-
+    void deleteIPBlockByIP(String ipAddress);
 }

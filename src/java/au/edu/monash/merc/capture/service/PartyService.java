@@ -33,25 +33,25 @@ import java.util.List;
 
 public interface PartyService {
 
-    public Party getPartyByPartyKey(String partyKey);
+    Party getPartyByPartyKey(String partyKey);
 
-    public List<Party> getPartyByUserName(String firstName, String lastName);
+    List<Party> getPartyByUserName(String firstName, String lastName);
 
-    public Party getPartyByEmail(String email);
+    Party getPartyByEmail(String email);
 
-    public Party getPartyById(long id);
+    Party getPartyById(long id);
 
-    public List<Party> getAllParties();
+    List<Party> getAllParties();
 
-    public List<Party> getPartiesByCollectionId(long cid);
+    List<Party> getPartiesByCollectionId(long cid);
 
-    public void saveParty(Party party);
+    void saveParty(Party party);
 
-    public void deleteParty(Party party);
+    void deleteParty(Party party);
 
-    public void deletePartyById(long id);
+    void deletePartyById(long id);
 
-    public void deletePartyByPartyKey(String partyKey);
+    void deletePartyByPartyKey(String partyKey);
 
-    public void updateParty(Party party);
+    void updateParty(Party party);
 }

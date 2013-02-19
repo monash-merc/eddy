@@ -36,36 +36,35 @@ import au.edu.monash.merc.capture.util.ldap.LdapUser;
 
 public interface UserService {
 
-	public User getByUserEmail(String email);
+    User getByUserEmail(String email);
 
-	public User getByUserUnigueId(String uniqueId);
+    User getByUserUnigueId(String uniqueId);
 
-	public void saveUser(User user);
+    void saveUser(User user);
 
-	public User getUserById(long id);
+    User getUserById(long id);
 
-	public void updateUser(User user);
+    void updateUser(User user);
 
-	public void deleteUser(User user);
+    void deleteUser(User user);
 
-	public boolean checkUserUniqueIdExisted(String uniqueId);
-	
-	public boolean checkUserDisplayNameExisted(String userName);
+    boolean checkUserUniqueIdExisted(String uniqueId);
 
-	public boolean checkEmailExisted(String email);
+    boolean checkUserDisplayNameExisted(String userName);
 
-	public User validateLogin(String username, String password, boolean ldap);
+    boolean checkEmailExisted(String email);
 
-	public List<User> getAllActiveUsers();
+    User validateLogin(String username, String password, boolean ldap);
 
-	public Pagination<User> getAllUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+    List<User> getAllActiveUsers();
 
-	public Pagination<User> getAllActiveUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+    Pagination<User> getAllUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
-	public Pagination<User> getAllInActiveUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+    Pagination<User> getAllActiveUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
-	public LdapUser checkLdapUser(String authcatId, String password);
+    Pagination<User> getAllInActiveUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
-	public User getVirtualUser(int userType);
+    LdapUser checkLdapUser(String authcatId, String password);
 
+    User getVirtualUser(int userType);
 }

@@ -33,6 +33,5 @@ import au.edu.monash.merc.capture.domain.GlobalMetadata;
 
 public interface IGlobalMetadataRepository {
 
-	public List<GlobalMetadata> getAllGlobalMetadataByDatasetId(long dsId);
-
+    List<GlobalMetadata> getAllGlobalMetadataByDatasetId(long dsId);
 }

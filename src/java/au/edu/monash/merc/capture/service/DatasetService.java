@@ -35,27 +35,27 @@ import au.edu.monash.merc.capture.dto.page.Pagination;
 
 public interface DatasetService {
 
-	public Dataset getDatasetById(long id);
+    Dataset getDatasetById(long id);
 
-	public boolean checkDatasetNameExisted(String dsName, long cid);
+    boolean checkDatasetNameExisted(String dsName, long cid);
 
-	public Dataset getDatasetByHandlId(String handleId);
+    Dataset getDatasetByHandlId(String handleId);
 
-	public void deleteDatasetsByCollectionId(long id);
+    void deleteDatasetsByCollectionId(long id);
 
-	public void deleteDatasetById(long id);
+    void deleteDatasetById(long id);
 
-	public void saveDataset(Dataset entity);
+    void saveDataset(Dataset entity);
 
-	public void deleteDataset(Dataset entity);
+    void deleteDataset(Dataset entity);
 
-	public void updateDataset(Dataset entity);
+    void updateDataset(Dataset entity);
 
-	public List<Dataset> getDatasetByCollectionId(long cid);
+    List<Dataset> getDatasetByCollectionId(long cid);
 
-	public List<Dataset> getDatasetByCollectionIdUsrId(long cid, long uid);
+    List<Dataset> getDatasetByCollectionIdUsrId(long cid, long uid);
 
-	public Pagination<Dataset> getDatasetByCollectionId(long cid, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+    Pagination<Dataset> getDatasetByCollectionId(long cid, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
-	public Dataset getAllDatasetData(long dsId);
+    Dataset getAllDatasetData(long dsId);
 }

@@ -33,17 +33,17 @@ import au.edu.monash.merc.capture.dto.page.Pagination;
 
 public interface AuditEventService {
 
-	public void saveAuditEvent(AuditEvent event);
-	
-	public void updateAuditEvent(AuditEvent event);
-	
-	public void deleteAuditEvent(AuditEvent event);
-	
-	public void deleteAuditEventById(long eId);
-	
-	public void deleteEventByIdWithUserId(long eId, long userId);
-	
-	public AuditEvent getAuditEventById(long eid);
-	
-	public Pagination<AuditEvent> getEventByUserId(long uid, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+    void saveAuditEvent(AuditEvent event);
+
+    void updateAuditEvent(AuditEvent event);
+
+    void deleteAuditEvent(AuditEvent event);
+
+    void deleteAuditEventById(long eId);
+
+    void deleteEventByIdWithUserId(long eId, long userId);
+
+    AuditEvent getAuditEventById(long eid);
+
+    Pagination<AuditEvent> getEventByUserId(long uid, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 }
