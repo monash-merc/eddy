@@ -25,13 +25,29 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package au.edu.monash.merc.capture.repository;
 
-import au.edu.monash.merc.capture.domain.Rights;
+package au.edu.monash.merc.capture.dto;
 
-public interface IRightsRepository {
+import java.io.Serializable;
 
-    Rights getRightsByCollectionId(long cid);
+/**
+ * @author Simon Yu
+ *         <p/>
+ *         Email: xiaoming.yu@monash.edu
+ * @version 1.0
+ * @since 1.0
+ *        <p/>
+ *        Date: 19/02/13 11:27 AM
+ */
+public class MapLocation implements Serializable {
 
-    void deleteRightsById(long id);
+    private String spatialCoverage;
+
+    public String getSpatialCoverage() {
+        return spatialCoverage;
+    }
+
+    public void setSpatialCoverage(String spatialCoverage) {
+        this.spatialCoverage = spatialCoverage;
+    }
 }

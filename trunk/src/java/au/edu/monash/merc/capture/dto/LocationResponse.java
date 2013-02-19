@@ -25,13 +25,50 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package au.edu.monash.merc.capture.repository;
 
-import au.edu.monash.merc.capture.domain.Rights;
+package au.edu.monash.merc.capture.dto;
 
-public interface IRightsRepository {
+import java.io.Serializable;
+import java.util.List;
 
-    Rights getRightsByCollectionId(long cid);
+/**
+ * @author Simon Yu
+ *         <p/>
+ *         Email: xiaoming.yu@monash.edu
+ * @version 1.0
+ * @since 1.0
+ *        <p/>
+ *        Date: 19/02/13 11:01 AM
+ */
+public class LocationResponse implements Serializable {
 
-    void deleteRightsById(long id);
+    private boolean succeed;
+
+    private String msg;
+
+    private List<MapLocation> mapLocations;
+
+    public boolean isSucceed() {
+        return succeed;
+    }
+
+    public void setSucceed(boolean succeed) {
+        this.succeed = succeed;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public List<MapLocation> getMapLocations() {
+        return mapLocations;
+    }
+
+    public void setMapLocations(List<MapLocation> mapLocations) {
+        this.mapLocations = mapLocations;
+    }
 }

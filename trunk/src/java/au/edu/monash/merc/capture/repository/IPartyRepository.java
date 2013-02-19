@@ -33,17 +33,17 @@ import au.edu.monash.merc.capture.domain.Party;
 
 public interface IPartyRepository {
 
-	public Party getPartyByPartyKey(String partyKey);
+    Party getPartyByPartyKey(String partyKey);
 
-    public Party getPartyByEmail(String email);
-	
-	public List<Party> getPartyByUserName(String firstName, String lastName);
+    Party getPartyByEmail(String email);
 
-	public List<Party> getAllParties();
+    List<Party> getPartyByUserName(String firstName, String lastName);
 
-	public List<Party> getPartiesByCollectionId(long cid);
+    List<Party> getAllParties();
 
-	public void deletePartyById(long id);
+    List<Party> getPartiesByCollectionId(long cid);
 
-	public void deletePartyByPartyKey(String partyKey);
+    void deletePartyById(long id);
+
+    void deletePartyByPartyKey(String partyKey);
 }

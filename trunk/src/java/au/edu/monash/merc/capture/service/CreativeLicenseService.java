@@ -34,8 +34,7 @@ import au.edu.monash.merc.capture.dto.CCWSField;
 
 public interface CreativeLicenseService {
 
-	public List<CCWSField> genLicenseFields(String ServiceUrl);
+    List<CCWSField> genLicenseFields(String ServiceUrl);
 
-	public CCLicense getCCLicense(String ServiceUrl, String licenseParams);
-
+    CCLicense getCCLicense(String ServiceUrl, String licenseParams);
 }

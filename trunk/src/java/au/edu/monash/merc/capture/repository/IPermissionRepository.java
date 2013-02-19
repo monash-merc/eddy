@@ -33,15 +33,15 @@ import au.edu.monash.merc.capture.domain.Permission;
 
 public interface IPermissionRepository {
 
-	public List<Permission> getUserCoPerms(long permForUsrId, long coId);
+    List<Permission> getUserCoPerms(long permForUsrId, long coId);
 
-	public Permission getAnonymousPerm(long cid);
+    Permission getAnonymousPerm(long cid);
 
-	public List<Permission> getCollectionDefaultPerms(long cid);
+    List<Permission> getCollectionDefaultPerms(long cid);
 
-	public List<Permission> getCollectionPermissions(long cid);
+    List<Permission> getCollectionPermissions(long cid);
 
-	public void deletePermissionByPId(long pId);
+    void deletePermissionByPId(long pId);
 
-	public void deleteAllPermissionsByColId(long cId);
+    void deleteAllPermissionsByColId(long cId);
 }

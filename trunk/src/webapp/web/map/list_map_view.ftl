@@ -28,12 +28,16 @@
         <#include "../template/action_errors.ftl" />
             <div style="clear:both"></div>
             <div class="left_display_inner">
+
                 <div class="content_div">
-                    <div class="map_view" id="map_view"></div>
+                    <div class="map_view_div">
+                        <div class="map_view" id="map_view"></div>
+                        <div class="collection_info_div">
+                            view collection details;
+                        </div>
+                    </div>
                 </div>
-                <div class="content_div">
-                    map view collection details
-                </div>
+
             </div>
         </div>
         <!-- right panel -->

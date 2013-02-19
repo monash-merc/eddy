@@ -33,13 +33,13 @@ import au.edu.monash.merc.capture.domain.Activity;
 
 public interface IActivityRepository {
 
-	public Activity getActivityByActKey(String activityKey);
+    Activity getActivityByActKey(String activityKey);
 
-	public List<Activity> getAllActivities();
+    List<Activity> getAllActivities();
 
-	public List<Activity> getActivitiesByCollectionId(long cid);
+    List<Activity> getActivitiesByCollectionId(long cid);
 
-	public void deleteActivityById(long id);
+    void deleteActivityById(long id);
 
-	public void deleteActivityByActKey(String activityKey);
+    void deleteActivityByActKey(String activityKey);
 }

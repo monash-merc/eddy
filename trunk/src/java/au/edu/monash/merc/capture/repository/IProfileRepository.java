@@ -31,6 +31,5 @@ import au.edu.monash.merc.capture.domain.Profile;
 
 public interface IProfileRepository {
 
-	public Profile getUserProfile(long userId);
-
+    Profile getUserProfile(long userId);
 }

@@ -1,5 +1,7 @@
 var map;
 var errorMessage = "";
+
+
 $(document).ready(function () {
     // create map
     var melCenter = new google.maps.LatLng(-28.071980, 147.480469);
@@ -8,7 +10,7 @@ $(document).ready(function () {
         center:melCenter,
         panControl:true,
         zoomControl:true,
-        zoomControlOptions: {
+        zoomControlOptions:{
             style:google.maps.ZoomControlStyle.SMALL
         },
         mapTypeControl:true,
@@ -17,28 +19,74 @@ $(document).ready(function () {
         mapTypeId:google.maps.MapTypeId.ROADMAP
     }
     map = new google.maps.Map(document.getElementById('map_view'), myOptions);
-    var data = new Array();
-    data[0] = "139.921875,-33.211116";
-    data[1] = "128.847656,-16.551962";
-    initialize(map, data);
+    //ajax call to get all map locations for collections
+    getMapLocations();
 });
 
-function initialize(map, data) {
-    if (data != null) {
-        for (var i = 0; i < data.length; i++) {
-            var location = getCoordsFromCoverageStr(data[i]);
+function getMapLocations() {
+    $.ajax({
+            type:"get",
+            url:'../mapview/viewLocations.jspx',
+            cache:false,
+            contentType:'application/json; charset=utf-8',
+            dataType:'json',
+            success:function (respdata) {
+                var ok = respdata.succeed;
+                if (ok) {
+                    var locations = respdata.mapLocations;
+                    displayMapLocations(locations)
+                } else {
+                    alert("error.");
+                }
+            },
+            error:function (request, exception) {
+                var errormsg = getErrorMsg(request, exception);
+                alert(errormsg)
+            }
+        }
+    )
+}
+
+function displayMapLocations(mapData) {
+    if (mapData != null) {
+        var mapLocations = new Array();
+        $.each(mapData, function (key, coverage) {
+            mapLocations[key] = coverage.spatialCoverage;
+            var location = getCoordsFromCoverageStr(mapLocations[key]);
             if (location != null && location.length == 1) {
                 var pointCreator = new PointCreator(map, location[0]);
             }
             if (location != null && location.length > 1) {
-                var polygonCreator = new PolygonCreator(map, location);
+                //disabled the polygon
+                // var polygonCreator = new PolygonCreator(map, location);
             }
+        });
+        alert("size: " + mapLocations.length);
+        if (mapLocations != null && mapLocations.length == 0) {
+            var pointCreator = new PointCreator(map);
         }
     } else {
         var pointCreator = new PointCreator(map);
     }
-
 }
+
+
+//initialize the map points
+//function initialize(map, data) {
+//    if (data != null) {
+//        for (var i = 0; i < data.length; i++) {
+//            var location = getCoordsFromCoverageStr(data[i]);
+//            if (location != null && location.length == 1) {
+//                var pointCreator = new PointCreator(map, location[0]);
+//            }
+//            if (location != null && location.length > 1) {
+//                // var polygonCreator = new PolygonCreator(map, location);
+//            }
+//        }
+//    } else {
+//        var pointCreator = new PointCreator(map);
+//    }
+//}
 
 function getCoordsFromCoverageStr(longlatStr) {
     var coords = new Array();

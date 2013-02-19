@@ -33,6 +33,5 @@ import au.edu.monash.merc.capture.domain.MetaVariable;
 
 public interface IMetaVariableRepository {
 
-	public List<MetaVariable> getAllMetaVariableByDatasetId(long dsId);
-
+    List<MetaVariable> getAllMetaVariableByDatasetId(long dsId);
 }

@@ -47,175 +47,199 @@ import au.edu.monash.merc.capture.repository.ICollectionRepository;
 @Repository
 public class CollectionDAO extends HibernateGenericDAO<Collection> implements ICollectionRepository {
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Collection> getCollectionsByUserId(long uid) {
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		Criteria userCrit = criteria.createCriteria("owner");
-		userCrit.add(Restrictions.eq("id", uid));
-		return criteria.list();
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Collection> getCollectionsByUserId(long uid) {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        Criteria userCrit = criteria.createCriteria("owner");
+        userCrit.add(Restrictions.eq("id", uid));
+        return criteria.list();
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Pagination<Collection> getCollectionsByUserId(long uid, int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
-		// count total
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		Criteria userCriteria = criteria.createCriteria("owner");
-		userCriteria.add(Restrictions.eq("id", uid));
-		criteria.setProjection(Projections.rowCount());
-		int total = ((Long) criteria.uniqueResult()).intValue();
+    @SuppressWarnings("unchecked")
+    @Override
+    public Pagination<Collection> getCollectionsByUserId(long uid, int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
+        // count total
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        Criteria userCriteria = criteria.createCriteria("owner");
+        userCriteria.add(Restrictions.eq("id", uid));
+        criteria.setProjection(Projections.rowCount());
+        int total = ((Long) criteria.uniqueResult()).intValue();
 
-		Pagination<Collection> p = new Pagination<Collection>(startPageNo, recordsPerPage, total);
+        Pagination<Collection> p = new Pagination<Collection>(startPageNo, recordsPerPage, total);
 
-		// query collections by size-per-page
-		Criteria queryCriteria = this.session().createCriteria(this.persistClass);
-		Criteria qownerCrit = queryCriteria.createCriteria("owner");
-		qownerCrit.add(Restrictions.eq("id", uid));
-		// add orders
-		if (orderBys != null && orderBys.length > 0) {
-			for (int i = 0; i < orderBys.length; i++) {
-				Order order = orderBys[i].getOrder();
-				if (order != null) {
-					queryCriteria.addOrder(order);
-				}
-			}
-		} else {
-			queryCriteria.addOrder(Order.desc("name"));
-		}
-		// calculate the first result from the pagination and set this value into the start search index
-		queryCriteria.setFirstResult(p.getFirstResult());
-		// set the max results (size-per-page)
-		queryCriteria.setMaxResults(p.getSizePerPage());
-		List<Collection> collist = queryCriteria.list();
-		p.setPageResults(collist);
-		return p;
-	}
+        // query collections by size-per-page
+        Criteria queryCriteria = this.session().createCriteria(this.persistClass);
+        Criteria qownerCrit = queryCriteria.createCriteria("owner");
+        qownerCrit.add(Restrictions.eq("id", uid));
+        // add orders
+        if (orderBys != null && orderBys.length > 0) {
+            for (int i = 0; i < orderBys.length; i++) {
+                Order order = orderBys[i].getOrder();
+                if (order != null) {
+                    queryCriteria.addOrder(order);
+                }
+            }
+        } else {
+            queryCriteria.addOrder(Order.desc("name"));
+        }
+        // calculate the first result from the pagination and set this value into the start search index
+        queryCriteria.setFirstResult(p.getFirstResult());
+        // set the max results (size-per-page)
+        queryCriteria.setMaxResults(p.getSizePerPage());
+        List<Collection> collist = queryCriteria.list();
+        p.setPageResults(collist);
+        return p;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Pagination<Collection> getAllPublicCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
-		// count total
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		Criteria permCriteria = criteria.createCriteria("permissions");
-		permCriteria.add(Restrictions.eq("viewAllowed", true)).add(Restrictions.eq("permType", PermType.ANONYMOUS.code()));
+    @SuppressWarnings("unchecked")
+    @Override
+    public Pagination<Collection> getAllPublicCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
+        // count total
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        Criteria permCriteria = criteria.createCriteria("permissions");
+        permCriteria.add(Restrictions.eq("viewAllowed", true)).add(Restrictions.eq("permType", PermType.ANONYMOUS.code()));
 
-		criteria.setProjection(Projections.rowCount());
-		int total = ((Long) criteria.uniqueResult()).intValue();
+        criteria.setProjection(Projections.rowCount());
+        int total = ((Long) criteria.uniqueResult()).intValue();
 
-		Pagination<Collection> p = new Pagination<Collection>(startPageNo, recordsPerPage, total);
+        Pagination<Collection> p = new Pagination<Collection>(startPageNo, recordsPerPage, total);
 
-		// start to query the sharing collections
-		Criteria findCriteria = this.session().createCriteria(this.persistClass);
-		Criteria findPermCriteria = findCriteria.createCriteria("permissions");
-		findPermCriteria.add(Restrictions.eq("viewAllowed", true)).add(Restrictions.eq("permType", PermType.ANONYMOUS.code()));
+        // start to query the sharing collections
+        Criteria findCriteria = this.session().createCriteria(this.persistClass);
+        Criteria findPermCriteria = findCriteria.createCriteria("permissions");
+        findPermCriteria.add(Restrictions.eq("viewAllowed", true)).add(Restrictions.eq("permType", PermType.ANONYMOUS.code()));
 
-		// add orders
-		if (orderBys != null && orderBys.length > 0) {
-			for (int i = 0; i < orderBys.length; i++) {
-				Order order = orderBys[i].getOrder();
-				if (order != null) {
-					findCriteria.addOrder(order);
-				}
-			}
-		} else {
-			findCriteria.addOrder(Order.desc("name"));
-		}
+        // add orders
+        if (orderBys != null && orderBys.length > 0) {
+            for (int i = 0; i < orderBys.length; i++) {
+                Order order = orderBys[i].getOrder();
+                if (order != null) {
+                    findCriteria.addOrder(order);
+                }
+            }
+        } else {
+            findCriteria.addOrder(Order.desc("name"));
+        }
 
-		// calculate the first result from the pagination and set this value into the start search index
-		findCriteria.setFirstResult(p.getFirstResult());
-		// set the max results (size-per-page)
-		findCriteria.setMaxResults(p.getSizePerPage());
+        // calculate the first result from the pagination and set this value into the start search index
+        findCriteria.setFirstResult(p.getFirstResult());
+        // set the max results (size-per-page)
+        findCriteria.setMaxResults(p.getSizePerPage());
 
-		List<Collection> collist = findCriteria.list();
+        List<Collection> collist = findCriteria.list();
 
-		p.setPageResults(collist);
-		return p;
-	}
+        p.setPageResults(collist);
+        return p;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Pagination<Collection> getAllCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
-		// count total
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		criteria.setProjection(Projections.rowCount());
-		int total = ((Long) criteria.uniqueResult()).intValue();
-		Pagination<Collection> p = new Pagination<Collection>(startPageNo, recordsPerPage, total);
+    @SuppressWarnings("unchecked")
+    @Override
+    public Pagination<Collection> getAllCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
+        // count total
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        criteria.setProjection(Projections.rowCount());
+        int total = ((Long) criteria.uniqueResult()).intValue();
+        Pagination<Collection> p = new Pagination<Collection>(startPageNo, recordsPerPage, total);
 
-		// query collections by size-per-page
-		Criteria queryCriteria = this.session().createCriteria(this.persistClass);
-		// add orders
-		if (orderBys != null && orderBys.length > 0) {
-			for (int i = 0; i < orderBys.length; i++) {
-				// if sorted by user name required
-				// if (orderBys[i].getFieldName().equalsIgnoreCase("user")) {
-				// // sort by user name
-				// queryCriteria.createAlias("owner", "user");
-				// if (orderBys[i].getOrderTypeCode().equals(OrderType.ASC)) {
-				//
-				// queryCriteria.addOrder(Order.asc("user.displayName"));
-				// } else {
-				// queryCriteria.addOrder(Order.desc("user.displayName"));
-				// }
-				//
-				// } else {
-				// Order order = orderBys[i].getOrder();
-				// if (order != null) {
-				// queryCriteria.addOrder(order);
-				// }
-				// }
-				Order order = orderBys[i].getOrder();
-				if (order != null) {
-					queryCriteria.addOrder(order);
-				}
-			}
-		} else {
-			queryCriteria.addOrder(Order.desc("name"));
-		}
+        // query collections by size-per-page
+        Criteria queryCriteria = this.session().createCriteria(this.persistClass);
+        // add orders
+        if (orderBys != null && orderBys.length > 0) {
+            for (int i = 0; i < orderBys.length; i++) {
+                // if sorted by user name required
+                // if (orderBys[i].getFieldName().equalsIgnoreCase("user")) {
+                // // sort by user name
+                // queryCriteria.createAlias("owner", "user");
+                // if (orderBys[i].getOrderTypeCode().equals(OrderType.ASC)) {
+                //
+                // queryCriteria.addOrder(Order.asc("user.displayName"));
+                // } else {
+                // queryCriteria.addOrder(Order.desc("user.displayName"));
+                // }
+                //
+                // } else {
+                // Order order = orderBys[i].getOrder();
+                // if (order != null) {
+                // queryCriteria.addOrder(order);
+                // }
+                // }
+                Order order = orderBys[i].getOrder();
+                if (order != null) {
+                    queryCriteria.addOrder(order);
+                }
+            }
+        } else {
+            queryCriteria.addOrder(Order.desc("name"));
+        }
 
-		// calculate the first result from the pagination and set this value into the start search index
-		queryCriteria.setFirstResult(p.getFirstResult());
-		// set the max results (size-per-page)
-		queryCriteria.setMaxResults(p.getSizePerPage());
-		queryCriteria.setComment("listAllCollections");
-		List<Collection> collist = queryCriteria.list();
-		p.setPageResults(collist);
-		return p;
-	}
+        // calculate the first result from the pagination and set this value into the start search index
+        queryCriteria.setFirstResult(p.getFirstResult());
+        // set the max results (size-per-page)
+        queryCriteria.setMaxResults(p.getSizePerPage());
+        queryCriteria.setComment("listAllCollections");
+        List<Collection> collist = queryCriteria.list();
+        p.setPageResults(collist);
+        return p;
+    }
 
-	@Override
-	public Collection getCollection(long cid, long uid) {
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		Criteria usrCrit = criteria.createCriteria("owner");
-		criteria.add(Restrictions.eq("id", cid));
-		usrCrit.add(Restrictions.eq("id", uid));
-		criteria.setComment("getCollection by collection id and user id");
-		return (Collection) criteria.uniqueResult();
-	}
+    @Override
+    public Collection getCollection(long cid, long uid) {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        Criteria usrCrit = criteria.createCriteria("owner");
+        criteria.add(Restrictions.eq("id", cid));
+        usrCrit.add(Restrictions.eq("id", uid));
+        criteria.setComment("getCollection by collection id and user id");
+        return (Collection) criteria.uniqueResult();
+    }
 
-	public boolean checkCollectionNameExisted(String colName) {
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		long num = (Long) criteria.setProjection(Projections.rowCount()).add(Restrictions.eq("name", colName)).uniqueResult();
-		if (num == 1) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+    public boolean checkCollectionNameExisted(String colName) {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        long num = (Long) criteria.setProjection(Projections.rowCount()).add(Restrictions.eq("name", colName)).uniqueResult();
+        if (num == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Collection> getPublishedCollections() {
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		criteria.add(Restrictions.eq("published", true));
-		return criteria.list();
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Collection> getPublishedCollections() {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        criteria.add(Restrictions.eq("published", true));
+        return criteria.list();
+    }
 
-	@Override
-	public Collection getPublishedCoByIdentifier(String identifier) {
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		criteria.add(Restrictions.eq("published", true)).add(Restrictions.eq("persistIdentifier", identifier));
-		return (Collection) criteria.uniqueResult();
-	}
+    @Override
+    public Collection getPublishedCoByIdentifier(String identifier) {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        criteria.add(Restrictions.eq("published", true)).add(Restrictions.eq("persistIdentifier", identifier));
+        return (Collection) criteria.uniqueResult();
+    }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Collection> getCollectionsByLocation(String coverageType, String spatialCoverage) {
+
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        // Criteria permCriteria = criteria.createCriteria("permissions");
+
+        //permCriteria.add(Restrictions.eq("viewAllowed", true)).add(Restrictions.eq("permType", PermType.ANONYMOUS.code()));
+        //use the location condition
+        Criteria locationCriteria = criteria.createCriteria("location");
+
+        locationCriteria.add(Restrictions.eq("spatialType", coverageType));
+        locationCriteria.add(Restrictions.eq("spatialCoverage", spatialCoverage));
+        return criteria.list();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Collection> getCollectionsByLocation(long locationId) {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        Criteria locationCriteria = criteria.createCriteria("location");
+        locationCriteria.add(Restrictions.eq("id", locationId));
+        return criteria.list();
+    }
 }

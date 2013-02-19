@@ -31,5 +31,5 @@ import au.edu.monash.merc.capture.domain.Avatar;
 
 public interface IAvatarRepository {
 
-	public Avatar getUserAvatar(long userId);
+    Avatar getUserAvatar(long userId);
 }

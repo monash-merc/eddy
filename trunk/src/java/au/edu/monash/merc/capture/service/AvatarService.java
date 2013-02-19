@@ -30,14 +30,13 @@ package au.edu.monash.merc.capture.service;
 import au.edu.monash.merc.capture.domain.Avatar;
 
 public interface AvatarService {
-	public void saveAvatar(Avatar avatar);
+    void saveAvatar(Avatar avatar);
 
-	public Avatar getAvatarById(long id);
+    Avatar getAvatarById(long id);
 
-	public Avatar getUserAvatar(long userId);
+    Avatar getUserAvatar(long userId);
 
-	public void updateAvatar(Avatar avatar);
+    void updateAvatar(Avatar avatar);
 
-	public void deleteAvatar(Avatar avatar);
-
+    void deleteAvatar(Avatar avatar);
 }

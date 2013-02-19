@@ -31,5 +31,5 @@ import au.edu.monash.merc.capture.util.ldap.LdapUser;
 
 public interface LdapService {
 
-	public LdapUser searchLdapUser(String snOrEmail);
+    LdapUser searchLdapUser(String snOrEmail);
 }

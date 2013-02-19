@@ -1,5 +1,3 @@
-
-
 function PointCreator(map, latLng) {
     this.map = map;
     this.pointPen = new PointPen(this.map);
@@ -94,22 +92,22 @@ function Point(latLng, map, pointPen) {
             // parent.setPoint(thisPoint);
             //parent.drawPoint(thisMarker.getPosition());
             //alert(" you click the site for: " + parent.getLatLng() + "data: " + parent.getData());
-            alert(" will display a site collection");
+            alert(" will display the collections in this site");
         });
-        google.maps.event.addListener(thisMarker, 'mouseover', function () {
-            // parent.setPoint(thisPoint);
-            //parent.drawPoint(thisMarker.getPosition());
-            //alert(" you click the site for: " + parent.getLatLng() + "data: " + parent.getData());
-            infowindow.setContent("The site for : " + parent.getLatLng() + " data : " + parent.getData());
-            infowindow.open(map,thisMarker);
-        });
-        google.maps.event.addListener(thisMarker, 'mouseout', function () {
-            // parent.setPoint(thisPoint);
-            //parent.drawPoint(thisMarker.getPosition());
-            //alert(" you click the site for: " + parent.getLatLng() + "data: " + parent.getData());
-
-            infowindow.close(map,thisMarker);
-        });
+//        google.maps.event.addListener(thisMarker, 'mouseover', function () {
+//            // parent.setPoint(thisPoint);
+//            //parent.drawPoint(thisMarker.getPosition());
+//            //alert(" you click the site for: " + parent.getLatLng() + "data: " + parent.getData());
+//            infowindow.setContent("The site for : " + parent.getLatLng() + " data : " + parent.getData());
+//            infowindow.open(map,thisMarker);
+//        });
+//        google.maps.event.addListener(thisMarker, 'mouseout', function () {
+//            // parent.setPoint(thisPoint);
+//            //parent.drawPoint(thisMarker.getPosition());
+//            //alert(" you click the site for: " + parent.getLatLng() + "data: " + parent.getData());
+//
+//            infowindow.close(map,thisMarker);
+//        });
     }
     this.addListener();
 

@@ -31,5 +31,5 @@ import au.edu.monash.merc.capture.dto.PublishBean;
 
 public interface RIFCSGenService {
 
-	public String publishCollectionRifcs(PublishBean publishBean);
+    String publishCollectionRifcs(PublishBean publishBean);
 }

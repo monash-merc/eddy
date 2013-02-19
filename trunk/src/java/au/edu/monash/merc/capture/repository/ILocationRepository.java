@@ -57,7 +57,7 @@ public interface ILocationRepository {
      * @param coverageType a spatial coverage type
      * @return a list of Locations
      */
-    public List<Location> getLocations(String coverageType);
+    List<Location> getLocations(String coverageType);
 
     /**
      * get a Location by coverage type
@@ -66,5 +66,5 @@ public interface ILocationRepository {
      * @param spatialCoverage a spatial coverage value
      * @return a Location object
      */
-    public Location getLocationByCoverageType(String coverageType, String spatialCoverage);
+    Location getLocationByCoverageType(String coverageType, String spatialCoverage);
 }

@@ -35,25 +35,25 @@ import au.edu.monash.merc.capture.dto.page.Pagination;
 
 public interface IUserRepository {
 
-	public User getByUserUnigueId(String uniqueId);
+    User getByUserUnigueId(String uniqueId);
 
-	public User getByUserEmail(String email);
+    User getByUserEmail(String email);
 
-	public boolean checkUserUniqueIdExisted(String uniqueId);
+    boolean checkUserUniqueIdExisted(String uniqueId);
 
-	public boolean checkUserDisplayNameExisted(String userName);
+    boolean checkUserDisplayNameExisted(String userName);
 
-	public boolean checkEmailExisted(String email);
+    boolean checkEmailExisted(String email);
 
-	public User checkUserLogin(String uniqueId, String password);
+    User checkUserLogin(String uniqueId, String password);
 
-	public List<User> getAllActiveUsers();
+    List<User> getAllActiveUsers();
 
-	public Pagination<User> getAllUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+    Pagination<User> getAllUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
-	public Pagination<User> getAllActiveUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+    Pagination<User> getAllActiveUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
-	public Pagination<User> getAllInActiveUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+    Pagination<User> getAllInActiveUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
-	public User getVirtualUser(int uid);
+    User getVirtualUser(int uid);
 }

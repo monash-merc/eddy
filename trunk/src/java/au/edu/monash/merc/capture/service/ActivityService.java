@@ -33,21 +33,21 @@ import au.edu.monash.merc.capture.domain.Activity;
 
 public interface ActivityService {
 
-	public Activity getActivityByActKey(String activityKey);
+    Activity getActivityByActKey(String activityKey);
 
-	public Activity getActivityById(long id);
+    Activity getActivityById(long id);
 
-	public List<Activity> getAllActivities();
+    List<Activity> getAllActivities();
 
-	public List<Activity> getActivitiesByCollectionId(long cid);
+    List<Activity> getActivitiesByCollectionId(long cid);
 
-	public void saveActivity(Activity activity);
+    void saveActivity(Activity activity);
 
-	public void deleteActivity(Activity activity);
+    void deleteActivity(Activity activity);
 
-	public void deleteActivityById(long id);
+    void deleteActivityById(long id);
 
-	public void deleteActivityByActKey(String actKey);
+    void deleteActivityByActKey(String actKey);
 
-	public void updateActivity(Activity activity);
+    void updateActivity(Activity activity);
 }

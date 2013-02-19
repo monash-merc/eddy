@@ -35,17 +35,17 @@ import au.edu.monash.merc.capture.dto.page.Pagination;
 
 public interface IDatasetRepository {
 
-	public boolean checkDatasetNameExisted(String dsName, long cid);
+    boolean checkDatasetNameExisted(String dsName, long cid);
 
-	public Dataset getDatasetByHandlId(String handleId);
+    Dataset getDatasetByHandlId(String handleId);
 
-	public void deleteDatasetByCollectionId(long cid);
+    void deleteDatasetByCollectionId(long cid);
 
-	public void deleteDatasetById(long id);
+    void deleteDatasetById(long id);
 
-	public List<Dataset> getDatasetByCollectionId(long cid);
+    List<Dataset> getDatasetByCollectionId(long cid);
 
-	public List<Dataset> getDatasetByCollectionIdUsrId(long cid, long uid);
+    List<Dataset> getDatasetByCollectionIdUsrId(long cid, long uid);
 
-	public Pagination<Dataset> getDatasetByCollectionId(long cid, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+    Pagination<Dataset> getDatasetByCollectionId(long cid, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 }

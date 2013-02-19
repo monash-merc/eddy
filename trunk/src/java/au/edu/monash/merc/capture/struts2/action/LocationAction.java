@@ -28,8 +28,16 @@
 
 package au.edu.monash.merc.capture.struts2.action;
 
+import au.edu.monash.merc.capture.common.CoverageType;
+import au.edu.monash.merc.capture.domain.Location;
+import au.edu.monash.merc.capture.dto.MapLocation;
+import au.edu.monash.merc.capture.dto.LocationResponse;
+import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Simon Yu
@@ -44,8 +52,55 @@ import org.springframework.stereotype.Controller;
 @Controller("data.locationAction")
 public class LocationAction extends DMCoreAction {
 
-    public String showMapView(){
+    private static String SUCCESS_MSG = "success";
+    private static String ERROR_MSG = "failed";
+
+    private LocationResponse locationResponse;
+
+    private Logger logger = Logger.getLogger(this.getClass().getName());
+
+    public String showMapView() {
         return SUCCESS;
     }
 
+    public String viewLocations() {
+        try {
+            //the kml type locations
+            List<Location> locations = this.dmService.getLocations(CoverageType.KML.type());
+            locationResponse = new LocationResponse();
+            locationResponse.setMapLocations(copyFromLocations(locations));
+            locationResponse.setSucceed(true);
+        } catch (Exception ex) {
+            logger.error(ex);
+            locationResponse = new LocationResponse();
+            locationResponse.setSucceed(false);
+            locationResponse.setMsg(ERROR_MSG);
+        }
+        return SUCCESS;
+    }
+
+    public LocationResponse getLocationResponse() {
+        return locationResponse;
+    }
+
+    public void setLocationResponse(LocationResponse locationResponse) {
+        this.locationResponse = locationResponse;
+    }
+
+    private List<MapLocation> copyFromLocations(List<Location> locations) {
+        List<MapLocation> tempLos = new ArrayList<MapLocation>();
+        if (locations != null) {
+            for (Location loc : locations) {
+                if (loc != null) {
+                    long id = loc.getId();
+                    String type = loc.getSpatialType();
+                    String coverage = loc.getSpatialCoverage();
+                    MapLocation mapLocation = new MapLocation();
+                    mapLocation.setSpatialCoverage(coverage);
+                    tempLos.add(mapLocation);
+                }
+            }
+        }
+        return tempLos;
+    }
 }

@@ -31,7 +31,7 @@ import au.edu.monash.merc.capture.domain.IPBlock;
 
 public interface IBlockIPRepository {
 
-	public IPBlock getIPBlockByIp(String ipAddress);
+    IPBlock getIPBlockByIp(String ipAddress);
 
-	public void deleteIPBlockByIp(String ipAddress);
+    void deleteIPBlockByIp(String ipAddress);
 }
