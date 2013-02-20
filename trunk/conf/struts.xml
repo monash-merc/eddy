@@ -12,7 +12,8 @@
     <constant name="struts.serve.static.browserCache" value="false"/>
     <constant name="struts.ui.theme" value="simple"/>
     <constant name="struts.enable.SlashesInActionNames" value="true"/>
-    <bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="merc" class="au.edu.monash.merc.capture.struts2.multipart.MonitoredMultiPartRequest" scope="default"/>
+    <bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="merc"
+          class="au.edu.monash.merc.capture.struts2.multipart.MonitoredMultiPartRequest" scope="default"/>
     <constant name="struts.multipart.handler" value="merc"/>
     <constant name="struts.multipart.maxSize" value="2048000000"/>
     <!-- constant name="struts.multipart.saveDir" value="temp" / -->
@@ -25,7 +26,8 @@
         </result-types>
 
         <interceptors>
-            <interceptor name="authenInterceptor" class="au.edu.monash.merc.capture.struts2.intercepter.AuthenticationInterceptor"/>
+            <interceptor name="authenInterceptor"
+                         class="au.edu.monash.merc.capture.struts2.intercepter.AuthenticationInterceptor"/>
             <interceptor-stack name="noneAuthStack">
                 <interceptor-ref name="defaultStack"/>
             </interceptor-stack>
@@ -51,13 +53,15 @@
             </result>
 
             <result name="file_not_found" type="freemarker">/web/404.html</result>
-            <result name="invocation_target_exception" type="freemarker">/web/globalError/invocation_target_exception.ftl
+            <result name="invocation_target_exception" type="freemarker">
+                /web/globalError/invocation_target_exception.ftl
             </result>
         </global-results>
 
         <global-exception-mappings>
             <exception-mapping result="file_not_found" exception="java.io.FileNotFoundException"/>
-            <exception-mapping result="invocation_target_exception" exception="java.lang.reflect.InvocationTargetException"/>
+            <exception-mapping result="invocation_target_exception"
+                               exception="java.lang.reflect.InvocationTargetException"/>
         </global-exception-mappings>
 
         <action name="*">
@@ -601,11 +605,19 @@
             <result name="success">/web/map/list_map_view.ftl</result>
         </action>
 
-        <!-- AJAX call to retrieve all user names -->
+        <!-- AJAX call to retrieve all sites in the map -->
         <action name="viewLocations" class="data.locationAction" method="viewLocations">
             <result name="success" type="json">
                 <param name="noCache">true</param>
                 <param name="root">locationResponse</param>
+            </result>
+        </action>
+
+        <!-- AJAX call to retrieve all collection for a point in the map -->
+        <action name="listSites" class="data.locationAction" method="listSites">
+            <result name="success" type="json">
+                <param name="noCache">true</param>
+                <param name="root">sitesResponse</param>
             </result>
         </action>
     </package>

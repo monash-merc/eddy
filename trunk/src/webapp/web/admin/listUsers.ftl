@@ -17,7 +17,7 @@
             <div style="clear:both"></div>
             <div class="left_display_inner">
                 <div class="none_border_block">
-                    <span class="name_title">Total <font color="green"> ${userPagination.totalRecords} </font> Users</span>
+                    <span class="name_title">Total <span class="span_number"> ${userPagination.totalRecords} </span> Users</span>
                 </div>
             <@s.if test="%{userPagination.pageResults.size() > 0}">
                 <div class="msg_content">

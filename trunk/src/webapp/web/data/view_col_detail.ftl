@@ -1,5 +1,6 @@
 <#assign s=JspTaglibs["/WEB-INF/struts-tags.tld"] />
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title><@s.property value="pageTitle" /></title>
@@ -77,7 +78,8 @@
     <div class="input_field_row">
         <div class="status_field_name_div">Temporal Coverage:</div>
         <div class="status_field_value_div">
-            <@s.date name="collection.dateFrom" format="yyyy-MM-dd" />&nbsp;-&nbsp;<@s.date name="collection.dateTo" format="yyyy-MM-dd" />
+            <@s.date name="collection.dateFrom" format="yyyy-MM-dd" />
+            &nbsp;-&nbsp;<@s.date name="collection.dateTo" format="yyyy-MM-dd" />
         </div>
     </div>
 
@@ -99,7 +101,8 @@
             </a>
         </@s.if>
         <@s.if test="%{permissionBean.deleteAllowed}">
-            <div class="msg_content">All data will be removed from the repository permanently!<p>Are you sure to delet this collection?</p></div>
+            <div class="msg_content">All data will be removed from the repository permanently!<p>Are you sure to delet
+                this collection?</p></div>
             <div id='confirm_dialog'>
                 <div class='header'><span>Deleting Collection Confirm</span></div>
                 <div class='message'></div>
@@ -122,13 +125,15 @@
             <@s.if test="%{collection.owner.id == user.id || user.userType == 1 || user.userType ==2}">
                 <!-- modal window for register with ands -->
                 <a href="${base}/${andsMdRegLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}"
-                   id="wait_modal" name='wait_modal' title="Public registration of the metadata associated with this collection with the Research Data Australia website">
+                   id="wait_modal" name='wait_modal'
+                   title="Public registration of the metadata associated with this collection with the Research Data Australia website">
                     <@s.text name="ands.md.registration.title" />
                 </a>
 
                 <div id='mask'></div>
                 <div id='modal_window'>
-                    Calling Metadata Registration Service, please wait ... <img src="${base}/images/wait_loader.gif" class="loading_image">
+                    Calling Metadata Registration Service, please wait ... <img src="${base}/images/wait_loader.gif"
+                                                                                class="loading_image">
                 </div>
             </@s.if>
         </@s.if>
@@ -201,10 +206,10 @@
 <!-- end of importing file -->
 <div class="none_border_block">
         <span class="name_title">
-             A total of <font color="green">
+             A total of <span class="span_number">
             <@s.if test = "%{datasets != null}"><@s.property value="datasets.size" /></@s.if>
             <@s.else>0</@s.else>
-        </font> data file(s) in this collection
+        </span> data file(s) in this collection
         </span>
 </div>
     <@s.if test="%{datasets.size() > 0}">
@@ -220,7 +225,8 @@
             </thead>
             <tbody>
                 <@s.iterator status="dsState" value="datasets" id="ds" >
-                <tr class="tr_normal" onMouseOver="this.className='tr_highlight'" onMouseOut="this.className='tr_normal'">
+                <tr class="tr_normal" onMouseOver="this.className='tr_highlight'"
+                    onMouseOut="this.className='tr_normal'">
                     <td><@s.property value="#ds.name" /></td>
                     <td><@s.property value="#ds.siteName" /></td>
                     <td>
@@ -242,7 +248,8 @@
 
                             <@s.if test="%{permissionBean.deleteAllowed}">
                                 <div id='confirm_dialog'>
-                                    <div class="msg_content">The data will be removed from the repository permanently!<p>Are you sure to delet this dataset?</p></div>
+                                    <div class="msg_content">The data will be removed from the repository permanently!
+                                        <p>Are you sure to delet this dataset?</p></div>
                                     <div id='confirm'>
                                         <div class='header'><span>Deleting Dataset Confirm</span></div>
                                         <div class='message'></div>

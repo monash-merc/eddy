@@ -17,7 +17,7 @@
             <div style="clear:both"></div>
             <div class="left_display_inner">
                 <div class="none_border_block">
-                    <span class="name_title">A total of <font color="green"> ${pagination.totalRecords} </font> collection(s) in the repository</span>
+                    <span class="name_title">A total of <span class="span_number"> ${pagination.totalRecords} </span> collection(s) in the repository</span>
                 </div>
             <@s.if test="%{pagination.pageResults.size() > 0}">
                 <div class="msg_content">
