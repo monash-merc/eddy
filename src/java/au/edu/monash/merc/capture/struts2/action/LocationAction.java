@@ -29,9 +29,12 @@
 package au.edu.monash.merc.capture.struts2.action;
 
 import au.edu.monash.merc.capture.common.CoverageType;
+import au.edu.monash.merc.capture.domain.Collection;
 import au.edu.monash.merc.capture.domain.Location;
 import au.edu.monash.merc.capture.dto.MapLocation;
 import au.edu.monash.merc.capture.dto.LocationResponse;
+import au.edu.monash.merc.capture.dto.SiteBean;
+import au.edu.monash.merc.capture.dto.SitesResponse;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -57,6 +60,10 @@ public class LocationAction extends DMCoreAction {
 
     private LocationResponse locationResponse;
 
+    private SitesResponse sitesResponse;
+
+    private String spatialCoverage;
+
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     public String showMapView() {
@@ -79,14 +86,6 @@ public class LocationAction extends DMCoreAction {
         return SUCCESS;
     }
 
-    public LocationResponse getLocationResponse() {
-        return locationResponse;
-    }
-
-    public void setLocationResponse(LocationResponse locationResponse) {
-        this.locationResponse = locationResponse;
-    }
-
     private List<MapLocation> copyFromLocations(List<Location> locations) {
         List<MapLocation> tempLos = new ArrayList<MapLocation>();
         if (locations != null) {
@@ -102,5 +101,74 @@ public class LocationAction extends DMCoreAction {
             }
         }
         return tempLos;
+    }
+
+    public String listSites() {
+        sitesResponse = new SitesResponse();
+        try {
+
+            String viewSiteNamespace = "pub";
+            String viewActName = "viewColDetails.jspx";
+            String viewType = "anonymous";
+            long userId = getLoginUsrIdFromSession();
+            if (userId != 0) {
+                viewSiteNamespace = "data";
+                viewType = "user";
+            }
+            List<Collection> collections = this.dmService.getCollectionsByLocation(CoverageType.KML.type(), this.spatialCoverage);
+            List<SiteBean> siteBeans = covertToSiteBeans(collections);
+            sitesResponse.setSucceed(true);
+            sitesResponse.setMsg(SUCCESS_MSG);
+            sitesResponse.setSiteBeans(siteBeans);
+            sitesResponse.setViewSiteNamespace(viewSiteNamespace);
+            sitesResponse.setViewActName(viewActName);
+            sitesResponse.setViewType(viewType);
+
+        } catch (Exception ex) {
+            sitesResponse.setSucceed(false);
+            sitesResponse.setMsg(ERROR_MSG);
+        }
+        return SUCCESS;
+    }
+
+    private List<SiteBean> covertToSiteBeans(List<Collection> collections) {
+        List<SiteBean> tmp = new ArrayList<SiteBean>();
+        if (collections != null) {
+            for (Collection co : collections) {
+                String name = co.getName();
+                long id = co.getId();
+                long ownerId = co.getOwner().getId();
+                SiteBean siteBean = new SiteBean();
+                siteBean.setName(name);
+                siteBean.setId(id);
+                siteBean.setOwnerId(ownerId);
+                tmp.add(siteBean);
+            }
+        }
+        return tmp;
+    }
+
+    public LocationResponse getLocationResponse() {
+        return locationResponse;
+    }
+
+    public void setLocationResponse(LocationResponse locationResponse) {
+        this.locationResponse = locationResponse;
+    }
+
+    public SitesResponse getSitesResponse() {
+        return sitesResponse;
+    }
+
+    public void setSitesResponse(SitesResponse sitesResponse) {
+        this.sitesResponse = sitesResponse;
+    }
+
+    public String getSpatialCoverage() {
+        return spatialCoverage;
+    }
+
+    public void setSpatialCoverage(String spatialCoverage) {
+        this.spatialCoverage = spatialCoverage;
     }
 }

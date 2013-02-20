@@ -1,14 +1,67 @@
 .map_view{
-	height:400px;
-    width: 60%;
-	border: solid 1px #E1E8F0;
+    height:400px;
+    width: 55%;
+    margin-left: 5px;
+    margin-bottom: 5px;
 	padding: 5px 5px 5px 5px;
     display: inline-block;
+    border: 2px solid #C0C7D5;
 }
 .collection_info_div{
     float: right;
-    width: 35%;
-    border: solid 1px #E1E8F0;
+    width: 40%;
+    margin-right: 5px;
+    margin-bottom: 5px;
     padding: 5px 5px 5px 5px;
     display: inline-block;
 }
+
+.site_map_top{
+    display: none;
+    padding-left: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-align: center;
+    width: 55%;
+}
+
+.mapview_error_msg_div {
+    display: none;
+}
+.mapview_error_msg_item {
+    border-collapse: collapse;
+    color: #B24F3C;
+    font-weight: normal;
+    margin: 2px auto;
+    text-align: left;
+}
+
+.site_co_info{
+    margin: 5px auto;
+    text-align: center;
+}
+
+.site_title {
+    display: block;
+    font-weight: bold;
+    color: #726E4C;
+}
+.no_co_on_site{
+    margin: 5px auto;
+    text-align: center;
+    color: #726E4C;
+}
+
+
+.collection_ul {
+    color: #726E4C;
+}
+
+.collection_ul li {
+    margin-top: 5px;
+}
+
+
+

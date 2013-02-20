@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 <div class="none_border_block">
-                    <span class="name_title">You have <font color="green"> ${eventPagination.totalRecords} </font> Events</span>
+                    <span class="name_title">You have <span class="span_number"> ${eventPagination.totalRecords} </span> Events</span>
                 </div>
             <@s.if test="%{eventPagination.pageResults.size() > 0}">
                 <div class="msg_content">

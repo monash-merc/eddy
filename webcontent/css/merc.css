@@ -58,6 +58,11 @@ a:hover {
     text-decoration: underline;
 }
 
+.span_number {
+    color: green;
+    font-weight: bold;
+}
+
 input {
     height: 22px;
     font-family: Arial, Helvetica, sans-serif;
@@ -69,14 +74,12 @@ input {
     text-align: left;
 }
 
-
 .check_box {
     line-height: 14px;
     height: 14px;
     font-family: Arial, Helvetica, sans-serif;
     width: 25px;
 }
-
 
 .input_file {
     font-family: Arial, Helvetica, sans-serif;
@@ -349,7 +352,7 @@ input {
 
 .ozfux_nav ul ul li a:hover {
     text-decoration: none;
-    background-color: #4B545F;
+    background-color: #002830;
 }
 
 .ozfux_nav ul ul ul {
@@ -524,7 +527,8 @@ input {
 .content_none_border_div {
     margin: 5px;
 }
-.file_uploading_div{
+
+.file_uploading_div {
     margin: 0 auto;
     padding-left: 10px;
     padding-right: 10px;
@@ -712,7 +716,7 @@ input {
 
 /** ==== colllection ====**/
 .data_display_div {
-    border: solid 1px #E1E8F0;
+    border: solid 1px #e9f1f9;
     padding: 5px;
     border-radius: 5px 5px;
     -moz-border-radius: 5px 5px;
@@ -731,7 +735,7 @@ input {
     color: #003766;
 }
 
-.data_tern_div{
+.data_tern_div {
     margin-left: 5px;
     margin-right: 5px;
     color: #5d5a3e;
@@ -1116,7 +1120,6 @@ input {
     text-align: justify;
 }
 
-
 .tr_highlight {
     background-color: #f3f3f3;
 }
@@ -1157,13 +1160,11 @@ input {
     padding: 5px;
 }
 
-
 .div_grey_section {
     color: #909090;
     text-align: justify;
     padding: 5px;
 }
-
 
 /**   ========= End of Refactored CSS ====== **/
 
