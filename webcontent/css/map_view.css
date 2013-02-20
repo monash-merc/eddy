@@ -1,0 +1,14 @@
+.map_view{
+	height:400px;
+    width: 60%;
+	border: solid 1px #E1E8F0;
+	padding: 5px 5px 5px 5px;
+    display: inline-block;
+}
+.collection_info_div{
+    float: right;
+    width: 35%;
+    border: solid 1px #E1E8F0;
+    padding: 5px 5px 5px 5px;
+    display: inline-block;
+}

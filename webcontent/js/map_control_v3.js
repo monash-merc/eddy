@@ -1,99 +1,46 @@
+var polygonCreator;
+var pointCreator;
 var map;
 var errorMessage = "";
-
-
-$(document).ready(function () {
+$(document).ready(function() {
     // create map
-    var melCenter = new google.maps.LatLng(-28.071980, 147.480469);
+    var melCenter = new google.maps.LatLng(-23.3533, 133.2057);
     var myOptions = {
-        zoom:3,
-        center:melCenter,
-        panControl:true,
-        zoomControl:true,
-        zoomControlOptions:{
-            style:google.maps.ZoomControlStyle.SMALL
-        },
-        mapTypeControl:true,
-        scaleControl:true,
-        rotateControl:true,
-        mapTypeId:google.maps.MapTypeId.ROADMAP
+        zoom : 3,
+        center : melCenter,
+        zoomControl : true,
+        mapTypeId : google.maps.MapTypeId.ROADMAP
     }
-    map = new google.maps.Map(document.getElementById('map_view'), myOptions);
-    //ajax call to get all map locations for collections
-    getMapLocations();
+    map = new google.maps.Map(document.getElementById('main_map'), myOptions);
+
+    initialize(map);
+
 });
 
-function getMapLocations() {
-    $.ajax({
-            type:"get",
-            url:'../mapview/viewLocations.jspx',
-            cache:false,
-            contentType:'application/json; charset=utf-8',
-            dataType:'json',
-            success:function (respdata) {
-                var ok = respdata.succeed;
-                if (ok) {
-                    var locations = respdata.mapLocations;
-                    displayMapLocations(locations)
-                } else {
-                    alert("error.");
-                }
-            },
-            error:function (request, exception) {
-                var errormsg = getErrorMsg(request, exception);
-                alert(errormsg)
-            }
+function initialize(map) {
+    var spcvg = $('#spatialcvg').val();
+    if (spcvg != null) {
+        var precoords = getCoordsFromCoverageStr(spcvg);
+        if (precoords != null && precoords.length == 1) {
+            $('#point_button').attr('class', 'button_hht');
+            pointCreator = new PointCreator(map, precoords[0]);
+        } else if (precoords != null && precoords.length > 1) {
+            $('#polygon_button').attr('class', 'button_hht');
+            polygonCreator = new PolygonCreator(map, precoords);
+        } else {
+            $('#point_button').attr('class', 'button_hht');
+            $('#spatialtype').val('point');
+            pointCreator = new PointCreator(map);
         }
-    )
-}
-
-function displayMapLocations(mapData) {
-    if (mapData != null) {
-        var mapLocations = new Array();
-        $.each(mapData, function (key, coverage) {
-            mapLocations[key] = coverage.spatialCoverage;
-            var location = getCoordsFromCoverageStr(mapLocations[key]);
-            if (location != null && location.length == 1) {
-                var pointCreator = new PointCreator(map, location[0]);
-            }
-            if (location != null && location.length > 1) {
-                //disabled the polygon
-                // var polygonCreator = new PolygonCreator(map, location);
-            }
-        });
-        alert("size: " + mapLocations.length);
-        if (mapLocations != null && mapLocations.length == 0) {
-            var pointCreator = new PointCreator(map);
-        }
-    } else {
-        var pointCreator = new PointCreator(map);
     }
 }
-
-
-//initialize the map points
-//function initialize(map, data) {
-//    if (data != null) {
-//        for (var i = 0; i < data.length; i++) {
-//            var location = getCoordsFromCoverageStr(data[i]);
-//            if (location != null && location.length == 1) {
-//                var pointCreator = new PointCreator(map, location[0]);
-//            }
-//            if (location != null && location.length > 1) {
-//                // var polygonCreator = new PolygonCreator(map, location);
-//            }
-//        }
-//    } else {
-//        var pointCreator = new PointCreator(map);
-//    }
-//}
 
 function getCoordsFromCoverageStr(longlatStr) {
     var coords = new Array();
     var lonlatText = normalizeCoverageStr(longlatStr);
     if (lonlatText != "") {
         var coordsStr = lonlatText.split(' ');
-        for (var i = 0; i < coordsStr.length; i++) {
+        for ( var i = 0; i < coordsStr.length; i++) {
             // Fill the array with LatLngs.
             coordsPair = coordsStr[i].split(",");
             coords[i] = new google.maps.LatLng(coordsPair[1], coordsPair[0]);
@@ -118,8 +65,7 @@ function normalizeCoverageStr(longlatStr) {
     return normalizedStr;
 }
 
-
-$('#point_button').live('click', function () {
+$('#point_button').live('click', function() {
     $(this).attr('class', 'button_hht');
     $('#polygon_button').attr('class', 'button_normal');
     cleanAll();
@@ -128,7 +74,7 @@ $('#point_button').live('click', function () {
     pointCreator = new PointCreator(map);
 });
 
-$('#polygon_button').live('click', function () {
+$('#polygon_button').live('click', function() {
     cleanAll();
     $(this).attr('class', 'button_hht');
     $('#point_button').attr('class', 'button_normal');
@@ -137,7 +83,7 @@ $('#polygon_button').live('click', function () {
     polygonCreator = new PolygonCreator(map);
 });
 
-$('#clear_button').live('click', function () {
+$('#clear_button').live('click', function() {
     cleanAll();
     var type = $('#spatialtype').val();
     $('#spatialcvg').val(null);
@@ -159,9 +105,9 @@ function cleanAll() {
         polygonCreator.destroy();
         polygonCreator = null;
     }
-}
-;
-function setErrorMessage(message) {
+};
+function setErrorMessage(message)
+{
     errorMessage = message;
 }
 
@@ -179,7 +125,7 @@ function validateLonLat(lonlatText) {
             valid = false;
         }
 
-        for (var i = 0; i < coords.length && valid; i++) {
+        for ( var i = 0; i < coords.length && valid; i++) {
             // Get the lat and lon.
             coordsPair = coords[i].split(",");
             lat = coordsPair[1];
