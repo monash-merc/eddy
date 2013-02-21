@@ -29,6 +29,7 @@ package au.edu.monash.merc.capture.struts2.action;
 
 import java.util.GregorianCalendar;
 
+import au.edu.monash.merc.capture.domain.Location;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -42,151 +43,167 @@ import au.edu.monash.merc.capture.struts2.action.ActConstants.UserViewType;
 @Controller("data.deleteColAction")
 public class DeleteColAction extends DMCoreAction {
 
-	private String requestUrl;
+    private String requestUrl;
 
-	private Logger logger = Logger.getLogger(this.getClass().getName());
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
-	/**
-	 * Delete user collection
-	 * 
-	 * @return a String represents SUCCESS or ERROR.
-	 */
-	public String deleteCollection() {
+    /**
+     * Delete user collection
+     *
+     * @return a String represents SUCCESS or ERROR.
+     */
+    public String deleteCollection() {
 
-		try {
+        try {
 
-			checkUserPermissions(collection.getId(), collection.getOwner().getId());
-			if (!permissionBean.isDeleteAllowed()) {
-				addActionError(getText("delete.collection.permission.denied"));
-				setNavAfterException();
-				return ERROR;
-			}
+            checkUserPermissions(collection.getId(), collection.getOwner().getId());
+            if (!permissionBean.isDeleteAllowed()) {
+                addActionError(getText("delete.collection.permission.denied"));
+                setNavAfterException();
+                return ERROR;
+            }
 
-			collection = this.dmService.getCollection(collection.getId(), collection.getOwner().getId());
-			if (collection != null) {
-				String dataStorePath = configSetting.getPropValue(ConfigSettings.DATA_STORE_LOCATION);
+            collection = this.dmService.getCollection(collection.getId(), collection.getOwner().getId());
+            if (collection != null) {
+                String dataStorePath = configSetting.getPropValue(ConfigSettings.DATA_STORE_LOCATION);
+                User owner = collection.getOwner();
+                //keep the current location first, then we can check the reference later. if no references, then we have to delete this location.
+                Location currentLocation = collection.getLocation();
+                long locationId = 0;
+                if (currentLocation != null) {
+                    locationId = currentLocation.getId();
+                }
+                // delete collection include permissions and dataset files
+                if (collection.isPublished()) {
+                    // populate the rifcs registration if enabled
+                    String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
+                    boolean mdRegEnabled = Boolean.valueOf(mdRegEnabledStr).booleanValue();
+                    if (mdRegEnabled) {
+                        String rifcsRootPath = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_STORE_LOCATION);
+                        this.dmService.deletePublisheCollection(collection, dataStorePath, rifcsRootPath);
+                    }
+                } else {
+                    this.dmService.deleteCollection(collection, dataStorePath);
+                }
 
-				User owner = collection.getOwner();
+                //try delete this location if can
+                try {
+                    boolean collectionReferenced = this.dmService.findAnyReferencedCollectionsByLocationId(locationId);
+                    if (!collectionReferenced) {
+                        this.dmService.deleteLocationById(locationId);
+                    }
+                } catch (Exception dex) {
+                    //if delete the location failed, we just log it
+                    logger.error(getText("delete.location.failed") + ", " + dex.getMessage());
+                }
 
-				// delete collection include permissions and dataset files
-				if (collection.isPublished()) {
-					// populate the rifcs registration if enabled
-					String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
-					boolean mdRegEnabled = Boolean.valueOf(mdRegEnabledStr).booleanValue();
-					if (mdRegEnabled) {
-						String rifcsRootPath = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_STORE_LOCATION);
-						this.dmService.deletePublisheCollection(collection, dataStorePath, rifcsRootPath);
-					}
-				} else {
-					this.dmService.deleteCollection(collection, dataStorePath);
-				}
-				setActionSuccessMsg(getText("delete.collection.success", new String[] { collection.getName() }));
+                setActionSuccessMsg(getText("delete.collection.success", new String[]{collection.getName()}));
 
-				if (viewType.equals(UserViewType.USER.toString())) {
-					requestUrl = ActConstants.USER_LIST_COLLECTION_ACTION;
-				}
-				if (viewType.equals(UserViewType.ALL.toString())) {
-					requestUrl = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
-				}
-				// record the action audit event
-				recordAuditEvent(owner, user);
-				setNavAfterSuccess();
-			} else {
-				addActionError(getText("failed.to.delete.nonexisted.collection"));
-				setNavAfterException();
-				return ERROR;
-			}
-		} catch (Exception e) {
-			logger.error(e);
-			addActionError(getText("failed.to.delete.collection"));
-			setNavAfterException();
-			return ERROR;
-		}
-		return SUCCESS;
-	}
+                if (viewType.equals(UserViewType.USER.toString())) {
+                    requestUrl = ActConstants.USER_LIST_COLLECTION_ACTION;
+                }
+                if (viewType.equals(UserViewType.ALL.toString())) {
+                    requestUrl = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
+                }
+                // record the action audit event
+                recordAuditEvent(owner, user);
+                setNavAfterSuccess();
+            } else {
+                addActionError(getText("failed.to.delete.nonexisted.collection"));
+                setNavAfterException();
+                return ERROR;
+            }
+        } catch (Exception e) {
+            logger.error(e);
+            addActionError(getText("failed.to.delete.collection"));
+            setNavAfterException();
+            return ERROR;
+        }
+        return SUCCESS;
+    }
 
-	public void validateDeleteCollection() {
-		boolean error = false;
-		if (collection == null) {
-			addFieldError("collection.id", getText("invalid.collection.id"));
-			addFieldError("collection.owner.id", getText("invalid.collection.owner.id"));
-			error = true;
-		}
-		if (collection.getId() <= 0) {
-			addFieldError("collection.id", getText("invalid.collection.id"));
-			error = true;
-		}
-		if (collection.getOwner().getId() <= 0) {
-			addFieldError("collection.id", getText("invalid.collection.owner.id"));
-			error = true;
-		}
-		if (error) {
-			setNavAfterException();
-		}
-	}
+    public void validateDeleteCollection() {
+        boolean error = false;
+        if (collection == null) {
+            addFieldError("collection.id", getText("invalid.collection.id"));
+            addFieldError("collection.owner.id", getText("invalid.collection.owner.id"));
+            error = true;
+        }
+        if (collection.getId() <= 0) {
+            addFieldError("collection.id", getText("invalid.collection.id"));
+            error = true;
+        }
+        if (collection.getOwner().getId() <= 0) {
+            addFieldError("collection.id", getText("invalid.collection.owner.id"));
+            error = true;
+        }
+        if (error) {
+            setNavAfterException();
+        }
+    }
 
-	private void recordAuditEvent(User owner, User operator) {
-		AuditEvent ev = new AuditEvent();
-		ev.setCreatedTime(GregorianCalendar.getInstance().getTime());
-		ev.setEvent(collection.getName() + " has been deleted");
-		ev.setEventOwner(owner);
-		ev.setOperator(operator);
-		recordActionAuditEvent(ev);
-	}
+    private void recordAuditEvent(User owner, User operator) {
+        AuditEvent ev = new AuditEvent();
+        ev.setCreatedTime(GregorianCalendar.getInstance().getTime());
+        ev.setEvent(collection.getName() + " has been deleted");
+        ev.setEventOwner(owner);
+        ev.setOperator(operator);
+        recordActionAuditEvent(ev);
+    }
 
-	private void setNavAfterException() {
+    private void setNavAfterException() {
 
-		String startNav = null;
-		String startNavLink = null;
-		String secondNav = getText("delete.collection.error");
+        String startNav = null;
+        String startNavLink = null;
+        String secondNav = getText("delete.collection.error");
 
-		if (viewType != null) {
-			if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
-				startNav = getText("mycollection.nav.label.name");
-				startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
-			}
+        if (viewType != null) {
+            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+                startNav = getText("mycollection.nav.label.name");
+                startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
+            }
 
-			if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
-				startNav = getText("allcollection.nav.label.name");
-				startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
-			}
-			setPageTitle(startNav, secondNav);
-			navigationBar = generateNavLabel(startNav, startNavLink, secondNav, null, null, null);
-		} else {
-			setPageTitle(secondNav);
-			navigationBar = generateNavLabel(secondNav, null, null, null, null, null);
-		}
-	}
+            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+                startNav = getText("allcollection.nav.label.name");
+                startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
+            }
+            setPageTitle(startNav, secondNav);
+            navigationBar = generateNavLabel(startNav, startNavLink, secondNav, null, null, null);
+        } else {
+            setPageTitle(secondNav);
+            navigationBar = generateNavLabel(secondNav, null, null, null, null, null);
+        }
+    }
 
-	private void setNavAfterSuccess() {
+    private void setNavAfterSuccess() {
 
-		String startNav = null;
-		String startNavLink = null;
-		String secondNav = collection.getName();
-		String thirdNav = getText("delete.collection");
-		if (viewType != null) {
-			if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
-				startNav = getText("mycollection.nav.label.name");
-				startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
-			}
+        String startNav = null;
+        String startNavLink = null;
+        String secondNav = collection.getName();
+        String thirdNav = getText("delete.collection");
+        if (viewType != null) {
+            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+                startNav = getText("mycollection.nav.label.name");
+                startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
+            }
 
-			if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
-				startNav = getText("allcollection.nav.label.name");
-				startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
-			}
+            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+                startNav = getText("allcollection.nav.label.name");
+                startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
+            }
 
-			// set the new page title after successful creating a new collection.
-			setPageTitle(startNav, secondNav);
-			navigationBar = generateNavLabel(startNav, startNavLink, secondNav, null, thirdNav, null);
-		}
-	}
+            // set the new page title after successful creating a new collection.
+            setPageTitle(startNav, secondNav);
+            navigationBar = generateNavLabel(startNav, startNavLink, secondNav, null, thirdNav, null);
+        }
+    }
 
-	public String getRequestUrl() {
-		return requestUrl;
-	}
+    public String getRequestUrl() {
+        return requestUrl;
+    }
 
-	public void setRequestUrl(String requestUrl) {
-		this.requestUrl = requestUrl;
-	}
+    public void setRequestUrl(String requestUrl) {
+        this.requestUrl = requestUrl;
+    }
 
 }

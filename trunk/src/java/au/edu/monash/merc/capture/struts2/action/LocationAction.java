@@ -125,6 +125,7 @@ public class LocationAction extends DMCoreAction {
             sitesResponse.setViewType(viewType);
 
         } catch (Exception ex) {
+            logger.error(ex);
             sitesResponse.setSucceed(false);
             sitesResponse.setMsg(ERROR_MSG);
         }

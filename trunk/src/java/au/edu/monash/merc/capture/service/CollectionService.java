@@ -62,4 +62,6 @@ public interface CollectionService {
     List<Collection> getCollectionsByLocation(String coverageType, String spatialCoverage);
 
     List<Collection> getCollectionsByLocation(long locationId);
+
+    boolean findAnyReferencedCollectionsByLocationId(long locationId);
 }

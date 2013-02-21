@@ -44,7 +44,7 @@
 
                 <div class="content_div">
                     <div class="site_map_top">
-                        <span class="site_title" id="location_number_id">&nbsp;</span>
+                        <span class="name_title" id="location_number_id">&nbsp;</span>
                         <div class="comments">[ Select a site to view the collection(s) on the map ]</div>
                     </div>
                     <div class="map_view_div">

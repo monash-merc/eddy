@@ -107,6 +107,13 @@ public class EditColAction extends DMCoreAction {
                         spatialValue = spValue;
                     }
                 }
+                //keep the previous location first, then we can check the reference later. if no references, then we have to delete this location.
+                Location previousLocation = existedCollection.getLocation();
+                long locationId = 0;
+                if (previousLocation != null) {
+                    locationId = previousLocation.getId();
+                }
+
                 Location location = this.dmService.getLocationByCoverageType(spatialType, spatialValue);
                 if (location == null) {
                     location = new Location();
@@ -123,6 +130,17 @@ public class EditColAction extends DMCoreAction {
                 existedCollection.setModifiedByUser(user);
 
                 this.dmService.updateCollection(existedCollection);
+
+                //try delete this location if can
+                try {
+                    boolean collectionReferenced = this.dmService.findAnyReferencedCollectionsByLocationId(locationId);
+                    if (!collectionReferenced) {
+                        this.dmService.deleteLocationById(locationId);
+                    }
+                } catch (Exception dex) {
+                    //if delete the location failed, we just log it
+                    logger.error(getText("delete.location.failed") + ", " + dex.getMessage());
+                }
 
                 // sign the updated collection object to collection
                 collection = existedCollection;
