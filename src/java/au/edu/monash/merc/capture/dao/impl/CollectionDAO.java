@@ -242,4 +242,18 @@ public class CollectionDAO extends HibernateGenericDAO<Collection> implements IC
         locationCriteria.add(Restrictions.eq("id", locationId));
         return criteria.list();
     }
+
+    @Override
+    public boolean findAnyReferencedCollectionsByLocationId(long locationId) {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        Criteria locationCriteria = criteria.createCriteria("location");
+        locationCriteria.add(Restrictions.eq("id", locationId));
+        criteria.setProjection(Projections.rowCount());
+        long num = (Long) criteria.uniqueResult();
+        if (num >= 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

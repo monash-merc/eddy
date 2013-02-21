@@ -1,4 +1,5 @@
 var map = null;
+var infoBox = null;
 $(document).ready(function () {
     // create map
     var melCenter = new google.maps.LatLng(-28.071980, 147.480469);
@@ -103,14 +104,36 @@ function MapPoint(latLng, map) {
     });
 
     var thisPoint = this;
-    var infowindow = new google.maps.InfoWindow();
+
+    //create a infox box for this marker
+    infoBox = createInfoBox();
+
     this.addListener = function () {
         var thisMarker = this.markerObj;
         google.maps.event.addListener(thisMarker, 'click', function () {
-            //alert(" you click the site for: " + thisPoint.getData());
+            //try to close the infoBox first
+            if (infoBox != null) {
+                infoBox.close();
+            }
+
+            //get the current location
             var foundLocation = thisPoint.getData();
+            //display the site collections
             viewSites(foundLocation);
+
+            //check the info box content if it's defaultText, we don't want to show it
+            if (infoBox != null) {
+                infoBox.open(map, thisMarker);
+            }
         });
+
+        //add infobox close listener
+//        google.maps.event.addListener(map, 'click', function () {
+//            if (infoBox != null) {
+//                infoBox.close();
+//            }
+//        });
+
     }
 
     this.addListener();
@@ -137,6 +160,23 @@ function MapPoint(latLng, map) {
         }
     }
 }
+function createInfoBox() {
+    var infobox = new InfoBox({
+        content:"site info",
+        disableAutoPan:false,
+        maxWidth:150,
+        pixelOffset:new google.maps.Size(10, -85),
+        zIndex:null,
+        boxStyle:{
+            opacity:0.75,
+            width:"145px"
+        },
+        closeBoxMargin:"12px 4px 2px 2px",
+        closeBoxURL:"../images/close.gif",
+        infoBoxClearance:new google.maps.Size(1, 1)
+    });
+    return infobox;
+}
 
 function displaySiteTitle(number) {
     if (number > 0) {
@@ -161,10 +201,12 @@ function viewSites(location) {
                 if (ok) {
                     createCollectionListDetails(respdata);
                 } else {
+                    infoBox = null;
                     displayErrorMsg("Failed to get all collections for this site");
                 }
             },
             error:function (request, exception) {
+                infoBox = null;
                 var errormsg = getErrorMsg(request, exception);
                 displayErrorMsg(errormsg);
             }
@@ -173,7 +215,6 @@ function viewSites(location) {
 }
 
 function createCollectionListDetails(sitesResponse) {
-
     var baseDiv = $('.collection_list_div');
     baseDiv.empty();
 
@@ -183,6 +224,10 @@ function createCollectionListDetails(sitesResponse) {
         var viewtype = sitesResponse.viewType;
         var sites = sitesResponse.siteBeans;
         var totalSize = sites.length;
+        if (infoBox == null) {
+            infoBox = createInfoBox();
+        }
+        infoBox.setContent("<div id='infobox'><span class='site_number'>" + totalSize + "</span> collection(s) </div>");
         if (sites != null) {
             if (totalSize > 0) {
                 var html = "<div class='site_co_info'>";

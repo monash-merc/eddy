@@ -125,4 +125,9 @@ public class CollectionServiceImpl implements CollectionService {
     public List<Collection> getCollectionsByLocation(long locationId) {
         return this.collectionDAO.getCollectionsByLocation(locationId);
     }
+
+    @Override
+    public boolean findAnyReferencedCollectionsByLocationId(long locationId) {
+        return this.collectionDAO.findAnyReferencedCollectionsByLocationId(locationId);
+    }
 }

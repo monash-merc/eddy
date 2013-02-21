@@ -66,6 +66,8 @@ public interface DMService {
 
     List<Collection> getCollectionsByLocation(long locationId);
 
+    boolean findAnyReferencedCollectionsByLocationId(long locationId);
+
     List<Collection> getPublishedCollections();
 
     Collection getPublishedCoByIdentifier(String identifier);

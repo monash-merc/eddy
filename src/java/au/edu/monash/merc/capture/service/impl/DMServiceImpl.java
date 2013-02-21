@@ -269,6 +269,11 @@ public class DMServiceImpl implements DMService {
     }
 
     @Override
+    public boolean findAnyReferencedCollectionsByLocationId(long locationId) {
+        return this.collectionService.findAnyReferencedCollectionsByLocationId(locationId);
+    }
+
+    @Override
     public void saveLocation(Location location) {
         this.locationService.saveLocation(location);
     }

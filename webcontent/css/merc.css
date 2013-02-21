@@ -107,6 +107,16 @@ input {
     font-size: 12px;
 }
 
+.hasDatepicker {
+    height: 22px;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #FFFFFF;
+    border: 1px solid #c2c9d7;
+    padding: 1px;
+    width: 198px;
+    font-size: 12px;
+}
+
 .input_select_field {
     height: 25px;
     width: 190px;
@@ -126,7 +136,7 @@ input {
 }
 
 .input_select_normal {
-    height: 20px;
+    height: 22px;
     width: 120px;
     font-family: Arial, Helvetica, sans-serif;
     background-color: #FFFFFF;
@@ -322,7 +332,7 @@ input {
 }
 
 .ozfux_nav ul ul {
-    background: #004958;
+    background: #003766;
     padding-bottom: 0;
     padding-left: 0;
     padding-right: 0;
@@ -332,11 +342,10 @@ input {
 }
 
 .ozfux_nav ul ul li {
-    border-bottom-color: #43475d;
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
     float: none;
     position: relative;
+
+    border-bottom: solid 1px #858585;
 }
 
 .ozfux_nav ul ul li a {
@@ -352,7 +361,7 @@ input {
 
 .ozfux_nav ul ul li a:hover {
     text-decoration: none;
-    background-color: #002830;
+    background-color: #3399CC;
 }
 
 .ozfux_nav ul ul ul {
@@ -716,7 +725,7 @@ input {
 
 /** ==== colllection ====**/
 .data_display_div {
-    border: solid 1px #e9f1f9;
+    border: solid 1px #f2f2f2;
     padding: 5px;
     border-radius: 5px 5px;
     -moz-border-radius: 5px 5px;
@@ -884,20 +893,20 @@ input {
 .display_data_tab {
     width: 100%;
     text-align: left;
-    border: solid 1px #E1E8F0;
+    border: solid 1px #F2F2F2;
     border-collapse: collapse;
 }
 
 .display_data_tab th {
-    background-color: #EFF2F7;
-    border-bottom: solid 1px #E1E8F0;
-    border-right: solid 1px #E1E8F0;
+    background-color: #F2F2F2;
+    border-bottom: solid 1px #F2F2F2;
+    border-right: solid 1px #F2F2F2;
     padding: 5px;
 }
 
 .display_data_tab td {
-    border-bottom: solid 1px #E1E8F0;
-    border-right: solid 1px #E1E8F0;
+    border-bottom: solid 1px #F2F2F2;
+    border-right: solid 1px #F2F2F2;
     padding: 5px;
     font-size: 11px;
 }
@@ -1945,17 +1954,6 @@ input {
     margin-left: 2px;
 }
 
-.record_data_link {
-    margin-left: 2px;
-    margin-right: 4px;
-}
-
-.record_data_link a {
-    font-weight: bold;
-    text-align: left;
-    color: #003766;
-}
-
 .record_data_link2 {
     float: right;
     margin-left: 2px;
@@ -2571,16 +2569,6 @@ input {
     font-size: 12px;
     width: 430px;
     height: 240px;
-}
-
-.hasDatepicker {
-    height: 18px;
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #FFFFFF;
-    border: 1px solid #c2c9d7;
-    padding: 1px;
-    width: 198px;
-    font-size: 12px;
 }
 
 .grey_div_block {
