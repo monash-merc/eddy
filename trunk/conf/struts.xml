@@ -347,20 +347,6 @@
             <result name="success">/web/data/view_dataset_details.ftl</result>
         </action>
 
-        <!-- view staging files -->
-        <action name="viewStageFiles" class="data.stageTransferAction" method="discoverFiles">
-            <result name="input">/web/stage/stage_transfer.ftl</result>
-            <result name="error">/web/stage/stage_transfer.ftl</result>
-            <result name="success">/web/stage/stage_transfer.ftl</result>
-        </action>
-
-        <!-- staging transfer -->
-        <action name="stageTransfer" class="data.stageTransferAction" method="stageTransfer">
-            <result name="input">/web/stage/stage_transfer.ftl</result>
-            <result name="error">/web/stage/stage_transfer.ftl</result>
-            <result name="success">/web/stage/stage_transfer_finished.ftl</result>
-        </action>
-
         <!-- show the metadata registration -->
         <action name="showMdReg" class="data.mdRegAction" method="showMdReg">
             <result name="input">/web/mdreg/md_reg.ftl</result>
@@ -498,11 +484,13 @@
 
         <action name="applyForPerms" class="perm.permReqAction" method="applyForPerms">
             <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
             <result name="success">/web/perm/perm_request.ftl</result>
         </action>
 
         <action name="sendPermsReq" class="perm.permReqAction" method="sendPermsReq">
             <result name="input">/web/perm/perm_request.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
             <result name="success">/web/perm/perm_req_finished.ftl</result>
         </action>
 

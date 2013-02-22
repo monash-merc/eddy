@@ -41,124 +41,130 @@ import au.edu.monash.merc.capture.domain.User;
 @Controller("perm.permReqAction")
 public class PermissionRequestAction extends DMCoreAction {
 
-	private Logger logger = Logger.getLogger(this.getClass().getName());
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
-	private PermissionRequest permReq;
+    private PermissionRequest permReq;
 
-	private List<PermissionRequest> permRequests;
+    private List<PermissionRequest> permRequests;
 
-	public String applyForPerms() {
-		try {
+    public String applyForPerms() {
+        try {
 
-			user = retrieveLoggedInUser();
-			collection = this.dmService.getCollectionById(collection.getId());
-			User owner = collection.getOwner();
-			// check if the logged in user is an owner of this collection or not
-			// owner of the collection doesn't need to apply for the access permissions.
-			if (user.getId() == owner.getId()) {
-				addActionError(getText("collection.owner.does.not.need.apply.perms"));
-				setNavAfterExc();
-				return INPUT;
-			}
+            user = retrieveLoggedInUser();
+            collection = this.dmService.getCollectionById(collection.getId());
+            User owner = collection.getOwner();
+            // check if the logged in user is an owner of this collection or not
+            // owner of the collection doesn't need to apply for the access permissions.
+            if (user.getId() == owner.getId()) {
+                addActionError(getText("collection.owner.does.not.need.apply.perms"));
+                setNavAfterExc();
+                return INPUT;
+            }
+            permReq = this.dmService.getCoPermissionRequestByReqUser(collection.getId(), user.getId());
+            if (permReq == null) {
+                permReq = new PermissionRequest();
+            }
+            setNavAfterSuccess();
+        } catch (Exception e) {
+            logger.error(e);
+            addActionError(getText("failed.to.show.apply.collection.perms.page"));
+            setNavAfterExc();
+            return INPUT;
+        }
+        return SUCCESS;
+    }
 
-			permReq = this.dmService.getCoPermissionRequestByReqUser(collection.getId(), user.getId());
-			if (permReq == null) {
-				permReq = new PermissionRequest();
-			}
-			setNavAfterSuccess();
-		} catch (Exception e) {
-			logger.error(e);
-			addActionError(getText("failed.to.show.apply.collection.perms.page"));
-			setNavAfterExc();
-			return INPUT;
-		}
-		return SUCCESS;
-	}
+    public String sendPermsReq() {
+        try {
+            if (checkPermsReqError()) {
+                setNavAfterSuccess();
+                return INPUT;
+            }
+            collection = this.dmService.getCollectionById(collection.getId());
+            User owner = collection.getOwner();
+            user = retrieveLoggedInUser();
+            // check if the logged in user is an owner of this collection or not
+            // owner of the collection doesn't need to apply for the access permissions.
+            if (user.getId() == owner.getId()) {
+                addActionError(getText("collection.owner.does.not.need.apply.perms"));
+                setNavAfterExc();
+                return INPUT;
+            }
+            //set new permission request
+            permReq.setOwner(owner);
+            permReq.setRequestUser(user);
+            permReq.setCollection(collection);
+            permReq.setRequestTime(GregorianCalendar.getInstance().getTime());
 
-	public String sendPermsReq() {
-		try {
-			if (checkPermsReqError()) {
-				setNavAfterSuccess();
-				return INPUT;
-			}
-			collection = this.dmService.getCollectionById(collection.getId());
-			User owner = collection.getOwner();
-			user = retrieveLoggedInUser();
-			// check if the logged in user is an owner of this collection or not
-			// owner of the collection doesn't need to apply for the access permissions.
-			if (user.getId() == owner.getId()) {
-				addActionError(getText("collection.owner.does.not.need.apply.perms"));
-				setNavAfterExc();
-				return INPUT;
-			}
-			permReq.setOwner(owner);
-			permReq.setRequestUser(user);
-			permReq.setCollection(collection);
-			permReq.setRequestTime(GregorianCalendar.getInstance().getTime());
+            //get old permission request if any
+            PermissionRequest previousReq = this.dmService.getCoPermissionRequestByReqUser(collection.getId(), user.getId());
+            //if previous request existed, then we just set the id for this new request
+            if (previousReq != null) {
+                permReq.setId(previousReq.getId());
+            }
 
-			if (permReq.getId() == 0) {
-				this.dmService.savePermissionRequest(permReq);
-			}
-			if (permReq.getId() > 0) {
-				this.dmService.updatePermissionRequest(permReq);
-			}
-			// TODO: send email to owner
-			setActionSuccessMsg(getText("apply.for.collection.permissions.successfully", new String[] { collection.getName() }));
-			setNavAfterSuccess();
-		} catch (Exception e) {
-			logger.error(e);
-			addActionError("failed.to.apply.collection.permissions");
-			setNavAfterExc();
-			return INPUT;
-		}
-		return SUCCESS;
-	}
+            if (permReq.getId() == 0) {
+                this.dmService.savePermissionRequest(permReq);
+            }
+            if (permReq.getId() > 0) {
+                this.dmService.updatePermissionRequest(permReq);
+            }
+            setActionSuccessMsg(getText("apply.for.collection.permissions.successfully", new String[]{collection.getName()}));
+            setNavAfterSuccess();
+        } catch (Exception e) {
+            logger.error(e);
+            addActionError("failed.to.apply.collection.permissions");
+            setNavAfterExc();
+            return INPUT;
+        }
+        return SUCCESS;
+    }
 
-	private boolean checkPermsReqError() {
-		if (!permReq.isViewAllowed() && !permReq.isUpdateAllowed() && !permReq.isImportAllowed() && !permReq.isExportAllowed()
-				&& !permReq.isDeleteAllowed() && !permReq.isChangePermAllowed()) {
-			addFieldError("perms", getText("at.least.selected.permission.required"));
-			return true;
-		}
-		return false;
+    private boolean checkPermsReqError() {
+        if (!permReq.isViewAllowed() && !permReq.isUpdateAllowed() && !permReq.isImportAllowed() && !permReq.isExportAllowed()
+                && !permReq.isDeleteAllowed() && !permReq.isChangePermAllowed()) {
+            addFieldError("perms", getText("at.least.selected.permission.required"));
+            return true;
+        }
+        return false;
 
-	}
+    }
 
-	private void setNavAfterExc() {
-		String startNav = getText("allcollection.nav.label.name");
-		String startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
-		String secondNav = getText("apply.collection.permission.nav.label.name");
-		setPageTitle(startNav, secondNav + " Error");
-		navigationBar = generateNavLabel(startNav, startNavLink, secondNav, null, null, null);
-	}
+    private void setNavAfterExc() {
+        String startNav = getText("allcollection.nav.label.name");
+        String startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
+        String secondNav = getText("apply.collection.permission.nav.label.name");
+        setPageTitle(startNav, secondNav + " Error");
+        navigationBar = generateNavLabel(startNav, startNavLink, secondNav, null, null, null);
+    }
 
-	private void setNavAfterSuccess() {
-		String pageTitle = null;
-		String startNav = getText("allcollection.nav.label.name");
-		String startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
-		String secondNav = collection.getName();
-		String secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="
-				+ collection.getOwner().getId() + "&viewType=all";
-		String thirdNav = getText("apply.collection.permission.nav.label.name");
-		pageTitle = startNav + " - " + secondNav + " - " + thirdNav;
-		setPageTitle(pageTitle);
-		navigationBar = generateNavLabel(startNav, startNavLink, secondNav, secondNavLink, thirdNav, null);
-	}
+    private void setNavAfterSuccess() {
+        String pageTitle = null;
+        String startNav = getText("allcollection.nav.label.name");
+        String startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
+        String secondNav = collection.getName();
+        String secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="
+                + collection.getOwner().getId() + "&viewType=all";
+        String thirdNav = getText("apply.collection.permission.nav.label.name");
+        pageTitle = startNav + " - " + secondNav + " - " + thirdNav;
+        setPageTitle(pageTitle);
+        navigationBar = generateNavLabel(startNav, startNavLink, secondNav, secondNavLink, thirdNav, null);
+    }
 
-	public PermissionRequest getPermReq() {
-		return permReq;
-	}
+    public PermissionRequest getPermReq() {
+        return permReq;
+    }
 
-	public void setPermReq(PermissionRequest permReq) {
-		this.permReq = permReq;
-	}
+    public void setPermReq(PermissionRequest permReq) {
+        this.permReq = permReq;
+    }
 
-	public List<PermissionRequest> getPermRequests() {
-		return permRequests;
-	}
+    public List<PermissionRequest> getPermRequests() {
+        return permRequests;
+    }
 
-	public void setPermRequests(List<PermissionRequest> permRequests) {
-		this.permRequests = permRequests;
-	}
+    public void setPermRequests(List<PermissionRequest> permRequests) {
+        this.permRequests = permRequests;
+    }
 
 }

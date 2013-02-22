@@ -27,16 +27,6 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-
 import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.Collection;
 import au.edu.monash.merc.capture.domain.User;
@@ -45,9 +35,10 @@ import au.edu.monash.merc.capture.dto.TransferFileBean;
 import au.edu.monash.merc.capture.util.CaptureUtil;
 import au.edu.monash.merc.capture.util.stage.ScanFileFilter;
 import au.edu.monash.merc.capture.util.stage.StageTransferManager;
+import org.apache.log4j.Logger;
 
-@Scope("prototype")
-@Controller("data.stageTransferAction")
+import java.util.*;
+
 public class StageTransferAction extends DMCoreAction {
 
 	private List<TransferFileBean> stageFiles;

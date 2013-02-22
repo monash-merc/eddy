@@ -156,7 +156,6 @@ input {
     border-right: solid 1px #C2C9D7;
     border-bottom: solid 1px #C2C9D7;
     text-decoration: none;
-    color: #3a4c66;
     width: 70px;
     height: 22px;
     padding-bottom: 2px;
@@ -168,11 +167,9 @@ input {
 .input_button_normal {
     width: 85px;
     border: solid 1px #E1E8F0;
-    font-size: 11px;
     background-color: #fff;
     font-weight: bold;
     text-align: center;
-    color: #3a4c66;
 }
 
 .input_button_normal:hover {
@@ -181,27 +178,27 @@ input {
     background-color: #006377;
     font-weight: bold;
     text-align: center;
-    font-size: 11px;
 }
 
 .input_button_sm {
     width: 60px;
+    height: 25px;
+    line-height: 25px;
     border: solid 1px #E1E8F0;
-    font-size: 11px;
     background-color: #fff;
     font-weight: bold;
     text-align: center;
-    color: #3a4c66;
 }
 
 .input_button_sm:hover {
     border: solid 1px #E1E8F0;
-    color: #fff;
+    text-decoration: none;
     background-color: #006377;
-    font-weight: bold;
-    text-align: center;
-    font-size: 11px;
+    color: #fff;
+    height: 25px;
+    line-height: 25px;
 }
+
 
 .stage_pane_div {
     font-size: 12px;
@@ -438,6 +435,7 @@ input {
     margin-right: 165px;
     min-width: 1024px;
     border: solid 1px #C0C7D5;
+    -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
     -moz-box-shadow: 0 0 5px #C0C7D5;
@@ -723,6 +721,38 @@ input {
     margin: 0 auto;
 }
 
+.title_panel {
+    /**background: url("../images/title_bg.gif") repeat scroll 0 0 transparent;**/
+    height: 25px;
+    line-height: 25px;
+    margin-left: 165px;
+    margin-right: 165px;
+    min-width: 1024px;
+}
+
+.div_inline {
+    display: inline;
+    float: left;
+    margin-right: 5px;
+    line-height: 25px;
+    text-decoration: none;
+    color: #989eab;
+    font-size: 12px;
+    font-weight: normal;
+    font-family: Arial, Verdana, sans-serif;
+}
+
+.div_inline a:link, .div_inline a:visited {
+    text-decoration: none;
+    color: #4d5a6d;
+}
+
+.div_inline img {
+    margin-left: 2px;
+    margin-right: 2px;
+    padding-top: 6px;
+}
+
 /** ==== colllection ====**/
 .data_display_div {
     border: solid 1px #f2f2f2;
@@ -910,6 +940,26 @@ input {
     padding: 5px;
     font-size: 11px;
 }
+.display_data_tab2 {
+    width: 100%;
+    text-align: left;
+    border: solid 1px #FFFFFF;
+    border-collapse: collapse;
+}
+
+.display_data_tab2 th {
+    background-color: #F2F2F2;
+    border-bottom: solid 1px #FFFFFF;
+    border-right: solid 1px #FFFFFF;
+    padding: 5px;
+}
+
+.display_data_tab2 td {
+    border-bottom: solid 1px #FFFFFF;
+    border-right: solid 1px #FFFFFF;
+    padding: 5px;
+    font-size: 11px;
+}
 
 .tab_link {
     text-align: center;
@@ -970,7 +1020,6 @@ input {
 }
 
 .tab_div a:hover {
-
     width: 60px;
     padding-left: 5px;
     padding-right: 5px;
@@ -1195,15 +1244,6 @@ input {
     color: #909090;
 }
 
-.title_panel {
-    /**background: url("../images/title_bg.gif") repeat scroll 0 0 transparent;**/
-    height: 25px;
-    line-height: 25px;
-    margin-left: 165px;
-    margin-right: 165px;
-    min-width: 1024px;
-}
-
 .title_panel_img {
     float: left;
     margin-left: 10px;
@@ -1257,29 +1297,6 @@ input {
 
 .perm_delim {
     background: none repeat scroll 0 0 #eff2f7;
-}
-
-.div_inline {
-    display: inline;
-    float: left;
-    margin-right: 5px;
-    line-height: 25px;
-    text-decoration: none;
-    color: #989eab;
-    font-size: 12px;
-    font-weight: normal;
-    font-family: Arial, Verdana, sans-serif;
-}
-
-.div_inline a:link, .div_inline a:visited {
-    text-decoration: none;
-    color: #4d5a6d;
-}
-
-.div_inline img {
-    margin-left: 2px;
-    margin-right: 2px;
-    padding-top: 6px;
 }
 
 .div_inline2 {
@@ -2653,28 +2670,6 @@ input {
     padding: 3px 5px 4px 10px;
 }
 
-.aboutus_div {
-    margin: 15px;
-    padding: 10px;
-    display: block;
-    text-align: justify;
-    font-size: 12px;
-    color: #212121;
-}
-
-.aboutus_div a {
-    color: #003766;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.aboutus_div li {
-    margin-bottom: 5px;
-}
-
-#loading {
-
-}
 
 /** ==== START of Footer Section ==== **/
 
@@ -2731,47 +2726,3 @@ input {
 }
 
 /** ==== END of Footer Section ==== **/
-
-.main_menu_bar {
-    width: 100%;
-    height: 30px;
-    line-height: 30px;
-    background-color: #003766;
-    float: left;
-    clear: both;
-}
-
-.main_menu_bar_center {
-    float: left;
-    margin-left: 165px;
-}
-
-a.main_menu_link, a.main_menu_link:active, a.main_menu_link:link, a.main_menu_link:visited {
-    width: 120px;
-    text-transform: uppercase;
-    font-weight: bold;
-    text-decoration: none;
-    float: left;
-    text-align: center;
-    color: #FFFFFF;
-    height: 30px;
-    line-height: 30px;
-    border-left-width: 1px;
-    border-left-style: solid;
-    border-left-color: #595E7B;
-}
-
-a.main_menu_link:hover {
-    text-decoration: none;
-    background-color: #006377;
-    color: #fff;
-    height: 30px;
-    line-height: 30px;
-}
-
-.main_menu_bar_bottom {
-    height: 8px;
-    background-color: #c1c6cd;
-    display: block;
-    clear: both;
-}
