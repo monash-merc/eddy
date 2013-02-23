@@ -47,8 +47,9 @@
             sheet = slow_met                                                   # worksheet containing data
             name = TIMESTAMP                                                   # name in Excel header row
         [[[Attr]]]                                                             # netCDF variable attribute section
+            ancillary_variables = ""
             long_name = "Date/time in Excel format"                            # variable attribute - description
-            units = "days"                                                     # variable attribute - units
+            units = ""                                                     # variable attribute - units
             standard_name = "not defined"
 # Radiation: Kipp and Zonen CNR4
     [[Flu]]
@@ -71,16 +72,6 @@
             long_name = "Down-welling long wave"
             standard_name = "surface_downwelling_longwave_flux_in_air"
             units = "W/m2"
-    [[Fsu]]
-        [[[xl]]]
-            sheet    = slow_rad
-            name     = Fsu_CNR4_Avg
-        [[[Attr]]]
-            ancillary_variables = "Fsu QC flag"
-            instrument = "Kipp and Zonen CNR4"
-            long_name = "Up-welling short wave"
-            standard_name = "surface_upwelling_shortwave_flux_in_air"
-            units = "W/m2"
     [[Fsd]]
         [[[xl]]]
             sheet    = slow_rad
@@ -90,6 +81,16 @@
             instrument = "Kipp and Zonen CNR4"
             long_name = "Down-welling short wave"
             standard_name = "surface_downwelling_shortwave_flux_in_air"
+            units = "W/m2"
+    [[Fsu]]
+        [[[xl]]]
+            sheet    = slow_rad
+            name     = Fsu_CNR4_Avg
+        [[[Attr]]]
+            ancillary_variables = "Fsu QC flag"
+            instrument = "Kipp and Zonen CNR4"
+            long_name = "Up-welling short wave"
+            standard_name = "surface_upwelling_shortwave_flux_in_air"
             units = "W/m2"
     [[Rs_CNR4]]
         [[[xl]]]

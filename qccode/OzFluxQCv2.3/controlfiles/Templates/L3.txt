@@ -47,8 +47,41 @@
 #
 [General]
 Platform = PC    # Mac or PC
-# To run the Massman correction for spectral attenuation, uncomment the following line:
-#FunctionList = "['do_linear', 'MergeSeriesAhTa', 'TaFromTv', 'CalculateMetVars', 'CoordRotation2D', 'Massman', 'CalculateFluxes', 'FhvtoFh', 'WPL', 'CalculateNetRadiation', 'MergeSeriesFn', 'SoilAverage', 'CorrectFgForStorage', 'CalculateAvailableEnergy', 'do_qcchecks','do_Ah7500check']"
+
+[Functions]
+# Mandatory functions:
+# do_linear
+# TaFromTv
+# CalculateMetVars
+# CoordRotation2D
+# CalculateFluxes
+# FhvtoFh
+# CorrectFgForStorage
+# do_qcchecks
+# do_Ah7500check
+# WPL if WPLcov not True
+WPLcov = True
+# PreCorrectSoilAverage if PostCorrectSoilAverage not True
+PostCorrectSoilAverage = True
+
+# Default functions (standard set)
+MergeSeriesAhTa = True
+CalculateNetRadiation = True
+CalculateAvailableEnergy = True
+
+# Add-ons
+Massman = False
+CorrectSWC = False
+MergeSeriesWS = False
+PenmanMonteith = False
+gaps = False
+qnqsat = False
+footprint = False
+convertFc = False
+climatology = False
+CalculateAh = False
+ustarFilter = False
+CalculateET = False
 
 [Files]
     [[L2]]

@@ -19,7 +19,10 @@ def bp(fx,tao):
 
 def cfkeycheck(cf,Base='Variables',ThisOne=[],key=[]):
     if len(ThisOne) == 0:
-        return
+        if Base in cf.keys():
+            return Base in cf.keys()
+        else:
+            return
     if len(key) == 0:
         if Base in cf.keys() and ThisOne in cf[Base].keys():
             return ThisOne in cf[Base].keys()

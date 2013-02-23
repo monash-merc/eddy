@@ -18,7 +18,7 @@ netCDFv3 = False
     canopy_height = "6.5m"
     comment = "CF convention version"
     data_url = "http://ozflux.its.monash.edu.au/"
-    end_datetime = "2010-12-31 23:30"
+    end_datetime = "2012-12-31 23:30"
     history = ""
     institution = "University of Technology, Sydney"
     latitude = -22.283
@@ -31,11 +31,10 @@ netCDFv3 = False
     site = "Alice Springs Mulga, Northern Territory, Australia"
     soil_type = "red kandosol, sandy loam"
     source = "13.7m flux tower plus array of soil sensors"
-    start_datetime = "2010-09-02 00:00"
-    title = "Flux tower data set from the Alice Springs Mulga site for the calendar year 2010"
+    start_datetime = "2012-01-01 00:00"
+    title = "Flux tower data set from the Alice Springs Mulga site for the calendar year 2012"
     time_step = 30
     vegetation = "Mulga canopy, grass+herb+shrub understory"
-
 
 [Variables]
     [[xlDateTime]]
@@ -230,6 +229,15 @@ netCDFv3 = False
             long_name = "soil datalogger panel temperature (CR1000)"
             units    = "C"
             ancillary_variables = "Tpanel_CR1000 QC flag"
+            standard_name = "not defined"
+    [[Tpanel_CR3000b]]
+        [[[xl]]]
+            sheet    = Data
+            name     = Tpanel_CR3000b
+        [[[Attr]]]
+            long_name = "vertical gradient datalogger panel temperature (CR3000)"
+            units    = "C"
+            ancillary_variables = "Tpanel_CR3000b QC flag"
             standard_name = "not defined"
     [[theta]]
         [[[xl]]]
@@ -758,7 +766,7 @@ netCDFv3 = False
             sheet    = Data
             name     = q
         [[[Attr]]]
-            long_name = "Specific humidity"
+            long_name = "Specific humidity at 11.67 m"
             units    = "kg/kg"
             ancillary_variables = "q QC flag"
             standard_name = "specific_humidity"
@@ -875,7 +883,7 @@ netCDFv3 = False
             sheet    = Data
             name     = Ta
         [[[Attr]]]
-            long_name = "Air temperature (HMP)"
+            long_name = "Air temperature (HMP) at 11.67m"
             units    = "C"
             ancillary_variables = "Ta QC flag"
             standard_name = "air_temperature"
@@ -1100,7 +1108,7 @@ netCDFv3 = False
             sheet    = Data
             name     = Ws_WS
         [[[Attr]]]
-            long_name = "Wind speed (Wind Sentry)"
+            long_name = "Wind speed (Wind Sentry) at 9.25m"
             units    = "m/s"
             ancillary_variables = "Ws_WS QC flag"
             standard_name = "wind_speed"
@@ -1109,7 +1117,7 @@ netCDFv3 = False
             sheet    = Data
             name     = Wd_WS
         [[[Attr]]]
-            long_name = "Wind direction (Wind Sentry)"
+            long_name = "Wind direction (Wind Sentry) at 9.25m"
             units    = "deg"
             ancillary_variables = "Wd_WS QC flag"
             standard_name = "wind_from_direction"
@@ -1136,7 +1144,7 @@ netCDFv3 = False
             sheet    = Data
             name     = Ws_WS_Sd
         [[[Attr]]]
-            long_name = "Standard deviation of wind speed (Wind Sentry)"
+            long_name = "Standard deviation of wind speed (Wind Sentry) at 9.25m"
             units    = "m/s"
             ancillary_variables = "Ws_WS_Sd QC flag"
             standard_name = "not defined"
@@ -1145,7 +1153,7 @@ netCDFv3 = False
             sheet    = Data
             name     = Wd_WS_Sd
         [[[Attr]]]
-            long_name = "Standard deviation of wind direction (Wind Sentry)"
+            long_name = "Standard deviation of wind direction (Wind Sentry) at 9.25m"
             units    = "deg"
             ancillary_variables = "Wd_WS_Sd QC flag"
             standard_name = "not defined"

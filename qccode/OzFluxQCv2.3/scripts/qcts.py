@@ -273,7 +273,21 @@ def CalculateAvailableEnergy(cf,ds,Fa_out='Fa',Fn_in='Fn',Fg_in='Fg'):
                          Descr='Available energy using '+Fn_in+','+Fg_in,
                          Units='W/m2')
 
-def CalculateFluxes(cf,ds,l3functions,Ta_name='Ta',ps_name='ps',Ah_name='Ah',wT_in='wT',wA_in='wA',wC_in='wC',uw_in='uw',vw_in='vw',Fh_out='Fh',Fe_out='Fe',Fc_out='Fc',Fm_out='Fm',ustar_out='ustar'):
+def CalculateET(cf,ds,Fe_in='Fe'):
+    if 'ET' not in ds.series.keys():
+        if qcutils.cfkeycheck(cf,Base='CalculateET',ThisOne='Fe_in'):
+            Fe_in = cf['Sums']['Fe_in']
+        Fe,f = qcutils.GetSeriesasMA(ds,Fe_in)
+        if 'Lv' in ds.series.keys():
+            Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
+        else:
+            Lv = c.Lv
+        ET = Fe * 60 * 30 * 1000 / (Lv * c.rho_water)  # mm/30min for summing
+        qcutils.CreateSeries(ds,'ET',ET,FList=[Fe_in],Descr='Evapotranspiration Flux',Units='mm/30min')
+    else:
+        log.warn('   ET already in dataset')
+    
+def CalculateFluxes(cf,ds,massman='False',Ta_name='Ta',ps_name='ps',Ah_name='Ah',wT_in='wT',wA_in='wA',wC_in='wC',uw_in='uw',vw_in='vw',Fh_out='Fh',Fe_out='Fe',Fc_out='Fc',Fm_out='Fm',ustar_out='ustar'):
     """
         Calculate the fluxes from the rotated covariances.
         
@@ -300,7 +314,7 @@ def CalculateFluxes(cf,ds,l3functions,Ta_name='Ta',ps_name='ps',Ah_name='Ah',wT_
         Fm_out = args[11]
         ustar_out = args[12]
     long_name = ''
-    if 'Massman' in l3functions:
+    if massman == 'True':
         long_name = ' and frequency response corrected'
     Ta,f = qcutils.GetSeriesasMA(ds,Ta_name)
     ps,f = qcutils.GetSeriesasMA(ds,ps_name)
@@ -869,17 +883,19 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
     
     for ThisOne in SumList:
         if ThisOne == 'ET':
-            if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='ETin'):
-                Invar = ast.literal_eval(cf['Sums']['ETin'])
-            else:
-                Invar = ['Fe']
-            Fe,f = qcutils.GetSeriesasMA(ds,Invar[0])
-            if 'Lv' in ds.series.keys():
-                Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
-            else:
-                Lv = c.Lv
-            ET = Fe * 60 * 30 * 1000 / (Lv * c.rho_water)  # mm/30min for summing
-            qcutils.CreateSeries(ds,'ET',ET,FList=Invar,Descr='Evapotranspiration Flux',Units='mm')
+            if 'ET' not in ds.series.keys():
+                if qcutils.cfkeycheck(cf,Base='CalculateET',ThisOne='Fe_in'):
+                    Fe_in = cf['Sums']['Fe_in']
+                else:
+                    Fe_in = 'Fe'
+                Fe,f = qcutils.GetSeriesasMA(ds,Fe_in)
+                if 'Lv' in ds.series.keys():
+                    Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
+                else:
+                    Lv = c.Lv
+                ET = Fe * 60 * 30 * 1000 / (Lv * c.rho_water)  # mm/30min for summing
+                qcutils.CreateSeries(ds,'ET',ET,FList=[Fe_in],Descr='Evapotranspiration Flux',Units='mm/30min')
+            
             SumOutList.append('ET')
             OutList.append('ET')
             if ThisOne in SubSumList:
@@ -918,9 +934,9 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
                     log.error('  Subsum: Negative radiation flux not defined')
         elif ThisOne == 'Carbon':
             if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='Cin'):
-                CIn = ast.literal_eval(cf['Sums']['Cin'])
+                CIn = cf['Sums']['Cin']
             else:
-                CIn = ['Fc']
+                CIn = 'Fc'
             
             if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='GPPin'):
                 GPPIn = ast.literal_eval(cf['Sums']['GPPin'])
@@ -935,12 +951,12 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
                     OutList.append(GPPOut[listindex])
                     SumOutList.append(GPPOut[listindex])
             
-            Fc,f = qcutils.GetSeriesasMA(ds,CIn[0])
+            Fc,f = qcutils.GetSeriesasMA(ds,CIn)
             Fc_umol = Fc * 1e6 / (1000 * 44)               # umol/m2-s for min/max
             Fc_mmol = Fc_umol * 1800 / 1000                # mmol/m2-30min for summing
             Fc_g = Fc * 1800 / 1000                        # g/m2-30min for summing
-            qcutils.CreateSeries(ds,'Fc_mmol',Fc_mmol,FList=CIn,Descr='Cumulative 30-min Flux',Units='mmol/m2',Standard='surface_upward_mole_flux_of_carbon_dioxide')
-            qcutils.CreateSeries(ds,'Fc_g',Fc_g,FList=CIn,Descr='Cumulative 30-min Flux',Units='g/m2')
+            qcutils.CreateSeries(ds,'Fc_mmol',Fc_mmol,FList=[CIn],Descr='Cumulative 30-min Flux',Units='mmol/m2',Standard='surface_upward_mole_flux_of_carbon_dioxide')
+            qcutils.CreateSeries(ds,'Fc_g',Fc_g,FList=[CIn],Descr='Cumulative 30-min Flux',Units='g/m2')
             COut = ['Fc_g','Fc_mmol']
             for listindex in range(0,2):
                 OutList.append(COut[listindex])
@@ -949,27 +965,17 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
                     SubOutList.append(COut[listindex])
         elif ThisOne == 'PM':
             if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Cemethod') and cf['PenmanMonteith']['Cemethod'] == 'True':
-                if 'Gst_p' not in ds.series.keys() and 'Gst_d' not in ds.series.keys():
+                if 'Gst' not in ds.series.keys():
                     SumList.remove('PM')
                     log.error('  Penman-Monteith Daily sum: input Gst not located')
                 else:
-                    if 'Gst_p' in ds.series.keys():
-                        Gst_mmol,f = qcutils.GetSeriesasMA(ds,'Gst_p')   # mmol/m2-s
-                        Gst_mol =  Gst_mmol * 1800 / 1000                 # mol/m2-30min for summing
-                        qcutils.CreateSeries(ds,'Gst_mol_p',Gst_mol,FList=['Gst_p'],Descr='Cumulative 30-min Bulk Stomatal Conductance',Units='mol/m2')
-                        OutList.append('Gst_mol_p')
-                        if 'Gst_mol_p' in SubSumList:
-                            log.error('  Subsum: Negative bulk stomatal conductance not defined')
-                        SumOutList.append('Gst_mol_p')
-                    
-                    if 'Gst_d' in ds.series.keys():
-                        Gst_mmol,f = qcutils.GetSeriesasMA(ds,'Gst_d')   # mmol/m2-s
-                        Gst_mol =  Gst_mmol * 1800 / 1000                 # mol/m2-30min for summing
-                        qcutils.CreateSeries(ds,'Gst_mol_d',Gst_mol,FList=['Gst_d'],Descr='Cumulative 30-min Bulk Stomatal Conductance',Units='mol/m2')
-                        OutList.append('Gst_mol_d')
-                        if 'Gst_mol_d' in SubSumList:
-                            log.error('  Subsum: Negative bulk stomatal conductance not defined')
-                        SumOutList.append('Gst_mol_d')
+                    Gst_mmol,f = qcutils.GetSeriesasMA(ds,'Gst')   # mmol/m2-s
+                    Gst_mol =  Gst_mmol * 1800 / 1000                 # mol/m2-30min for summing
+                    qcutils.CreateSeries(ds,'Gst_mol',Gst_mol,FList=['Gst'],Descr='Cumulative 30-min Bulk Stomatal Conductance',Units='mol/m2')
+                    OutList.append('Gst_mol')
+                    if 'Gst_mol' in SubSumList:
+                        log.error('  Subsum: Negative bulk stomatal conductance not defined')
+                    SumOutList.append('Gst_mol')
             
             if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Cdmethod') and cf['PenmanMonteith']['Cdmethod'] == 'True':
                 if 'Gc' not in ds.series.keys():
@@ -1002,38 +1008,28 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
     for ThisOne in MinMaxList:
         if ThisOne == 'Carbon':
             if qcutils.cfkeycheck(cf,Base='Sums',ThisOne='Cin'):
-                CIn = ast.literal_eval(cf['Sums']['Cin'])
+                CIn = cf['Sums']['Cin']
             else:
-                CIn = ['Fc']
-            Fc,f = qcutils.GetSeriesasMA(ds,CIn[0])
+                CIn = 'Fc'
+            Fc,f = qcutils.GetSeriesasMA(ds,CIn)
             Fc_umol = Fc * 1e6 / (1000 * 44)               # umol/m2-s for min/max
-            qcutils.CreateSeries(ds,'Fc_umol',Fc_umol,FList=CIn,Descr='Average Flux',Units='umol/(m2 s)',Standard='surface_upward_mole_flux_of_carbon_dioxide')
-            qcutils.CreateSeries(ds,'Fc_mg',Fc,FList=CIn,Descr='Average Flux',Units='mg/(m2 s)')
+            qcutils.CreateSeries(ds,'Fc_umol',Fc_umol,FList=[CIn],Descr='Average Flux',Units='umol/(m2 s)',Standard='surface_upward_mole_flux_of_carbon_dioxide')
+            qcutils.CreateSeries(ds,'Fc_mg',Fc,FList=[CIn],Descr='Average Flux',Units='mg/(m2 s)')
             COut = ['Fc_mg','Fc_umol']
             for listindex in range(0,2):
                 OutList.append(COut[listindex])
                 MinMaxOutList.append(COut[listindex])
         elif ThisOne == 'PM':
-            if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Cemethod') and cf['PenmanMonteith']['Cemethod'] == 'True':
-                if 'Gst_p' not in ds.series.keys() or 'rst_p' not in ds.series.keys():
-                    if 'Gst_d' not in ds.series.keys() or 'rst_d' not in ds.series.keys():
-                        MinMaxList.remove('PM')
-                        PMout = []
-                        log.error('  Penman-Monteith Daily min/max: input Gst or rst not located')
-                
-                if 'Gst_p' in ds.series.keys() and 'rst_p' in ds.series.keys():
-                    PMout = ['rst_p','Gst_p']
-                    for listindex in range(0,2):
-                        if PMout[listindex] not in OutList:
-                            OutList.append(PMout[listindex])
-                        MinMaxOutList.append(PMout[listindex])
-                
-                if 'Gst_d' in ds.series.keys() and 'rst_d' in ds.series.keys():
-                    PMout = ['rst_d','Gst_d']
-                    for listindex in range(0,2):
-                        if PMout[listindex] not in OutList:
-                            OutList.append(PMout[listindex])
-                        MinMaxOutList.append(PMout[listindex])
+            if 'Gst' in ds.series.keys() and 'rst' in ds.series.keys():
+                PMout = ['rst','Gst']
+                for listindex in range(0,2):
+                    if PMout[listindex] not in OutList:
+                        OutList.append(PMout[listindex])
+                    MinMaxOutList.append(PMout[listindex])
+            else:
+                MinMaxList.remove('PM')
+                PMout = []
+                log.error('  Penman-Monteith Daily min/max: input Gst or rst not located')
             
             if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Cdmethod') and cf['PenmanMonteith']['Cdmethod'] == 'True':
                 if ThisOne not in SumList:
@@ -1059,26 +1055,16 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
         if ThisOne == 'Energy' or ThisOne == 'Carbon' or ThisOne == 'Radiation':
             log.error(' Mean error: '+ThisOne+' to be placed in SumList')
         elif ThisOne == 'PM':
-            if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Cemethod') and cf['PenmanMonteith']['Cemethod'] == 'True':
-                if 'Gst_p' not in ds.series.keys() or 'rst_p' not in ds.series.keys():
-                    if 'Gst_d' not in ds.series.keys() or 'rst_d' not in ds.series.keys():
-                        MeanList.remove('PM')
-                        PMout = []
-                        log.error('  Penman-Monteith Daily mean: input Gst or rst not located')
-                
-                if 'Gst_p' in ds.series.keys() and 'rst_p' in ds.series.keys():
-                    PMout = ['rst_p','Gst_p']
-                    for listindex in range(0,2):
-                        if PMout[listindex] not in OutList:
-                            OutList.append(PMout[listindex])
-                        MeanOutList.append(PMout[listindex])
-            
-                if 'Gst_d' in ds.series.keys() and 'rst_d' in ds.series.keys():
-                    PMout = ['rst_d','Gst_d']
-                    for listindex in range(0,2):
-                        if PMout[listindex] not in OutList:
-                            OutList.append(PMout[listindex])
-                        MeanOutList.append(PMout[listindex])
+            if 'Gst' in ds.series.keys() and 'rst' in ds.series.keys():
+                PMout = ['rst','Gst']
+                for listindex in range(0,2):
+                    if PMout[listindex] not in OutList:
+                        OutList.append(PMout[listindex])
+                    MeanOutList.append(PMout[listindex])
+            else:
+                MeanList.remove('PM')
+                PMout = []
+                log.error('  Penman-Monteith Daily mean: input Gst or rst not located')
             
             if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Cdmethod') and cf['PenmanMonteith']['Cdmethod'] == 'True':
                 if 'Gc' not in ds.series.keys() or 'rc' not in ds.series.keys():
@@ -1745,26 +1731,11 @@ def do_PenmanMonteith(cf,ds):
     else:
         Cemethod = 'False'
     
-    if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Profile'):
-        profile = cf['PenmanMonteith']['Profile']
-    else:
-        profile = 'False'
-    
-    if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Deficit'):
-        deficit = cf['PenmanMonteith']['Deficit']
-    else:
-        deficit = 'False'
-    
     if Cdmethod != 'True' and Cemethod != 'True':
         log.error(' PenmanMontieth:  no method selected')
         return
         
-    if Cemethod == 'True':
-        if profile != 'True' and deficit != 'True':
-            log.error(' PenmanMontieth:  Profile or Deficit must be chosen to invoke the Ce method')
-            return
-    
-    prep_aerodynamicresistance(cf,ds,Cdmethod,Cemethod,profile,deficit)
+    prep_aerodynamicresistance(cf,ds,Cdmethod,Cemethod)
     return
 
 def do_solo(cf,ds4,Fc_in='Fc',Fe_in='Fe',Fh_in='Fh',Fc_out='Fc',Fe_out='Fe',Fh_out='Fh'):
@@ -2237,7 +2208,7 @@ def FhvtoFh(cf,ds,Ta_in='Ta',Fh_in='Fh',Tv_in='Tv_CSAT',Fe_in='Fe',ps_in='ps',Ah
     index = numpy.where(mask.astype(int)==1)
     ds.series[Fh_out]['Flag'][index] = 13
 
-def FilterFcByUstar(cf, ds, Fc_out, Fc_in, ustar_in):
+def FilterFcByUstar(cf, ds, Fc_out='Fc', Fc_in='Fc', ustar_in='ustar'):
     """
         Filter the CO2 flux for low ustar periods.  The filtering is done by checking the
         friction velocity for each time period.  If ustar is less than or equal to the
@@ -2258,21 +2229,29 @@ def FilterFcByUstar(cf, ds, Fc_out, Fc_in, ustar_in):
         
         """
     log.info(' Filtering CO2 flux based on ustar')
-    if 'General' in cf:
-        if 'ustar_threshold' in cf['General']:
-            us_threshold = float(cf['General']['ustar_threshold'])
-            Fc,Fc_flag = qcutils.GetSeriesasMA(ds,Fc_in,si=0,ei=-1)
-            us,us_flag = qcutils.GetSeriesasMA(ds,ustar_in,si=0,ei=-1)
-            Fc = numpy.ma.masked_where(us<=us_threshold,Fc)
-            index = numpy.where(us<=us_threshold)[0]
-            Fc_flag[index] = 18
-            descr = Fc_in+' filtered for low ustar conditions, ustar threshold was '+str(us_threshold)
-            units = qcutils.GetUnitsFromds(ds, Fc_in)
-            qcutils.CreateSeries(ds,Fc_out,Fc,Flag=Fc_flag,Descr=descr,Units=units)
-        else:
-            log.error('FilterFcByUstar: ustar_threshold expected but not found in General section of control file')
+    if qcutils.cfkeycheck(cf,Base='Filters',ThisOne='Fc_in'):
+        Fc_in = cf['Filters']['Fc_in']
+    
+    if qcutils.cfkeycheck(cf,Base='Filters',ThisOne='Fc_out'):
+        Fc_out = cf['Filters']['Fc_out']
+    
+    if qcutils.cfkeycheck(cf,Base='Filters',ThisOne='ustar_in'):
+        ustar_in = cf['Filters']['ustar_in']
+    
+    if qcutils.cfkeycheck(cf,Base='Filters',ThisOne='ustar_threshold'):
+        us_threshold = float(cf['Filters']['ustar_threshold'])
     else:
-        log.error('FilterFcByUstar: section General expected but not found in control file')
+        log.error('FilterFcByUstar: ustar_threshold expected but not found in Filters section of control file')
+        return
+    
+    Fc,Fc_flag = qcutils.GetSeriesasMA(ds,Fc_in,si=0,ei=-1)
+    us,us_flag = qcutils.GetSeriesasMA(ds,ustar_in,si=0,ei=-1)
+    Fc = numpy.ma.masked_where(us<=us_threshold,Fc)
+    index = numpy.where(us<=us_threshold)[0]
+    Fc_flag[index] = 18
+    descr = ' filtered for low ustar conditions, ustar threshold was '+str(us_threshold)
+    units = qcutils.GetUnitsFromds(ds, Fc_in)
+    qcutils.CreateSeries(ds,Fc_out,Fc,Flag=Fc_flag,Descr=descr,Units=units)
 
 def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp,eta):
     """
@@ -2399,8 +2378,8 @@ def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp,eta):
         f_2d = numpy.zeros((n,m), dtype=float)
         for i in range(0, n):
             for j in range(0, m):
-                x_2d[i,j] = (x[i] * numpy.cos(numpy.deg2rad(eta))) + (y[j] * numpy.sin(numpy.deg2rad(eta)))   # longitudal rotation of the x,y plane
-                y_2d[i,j] = (y[j] * numpy.cos(numpy.deg2rad(eta))) - (x[i] * numpy.sin(numpy.deg2rad(eta)))   # lateral rotation of the x,y plane
+                x_2d[i,j] = (x[i] * numpy.cos(numpy.deg2rad(-eta))) + (y[j] * numpy.sin(numpy.deg2rad(-eta)))   # longitudal rotation of the x,y plane
+                y_2d[i,j] = (y[j] * numpy.cos(numpy.deg2rad(-eta))) - (x[i] * numpy.sin(numpy.deg2rad(-eta)))   # lateral rotation of the x,y plane
                 f_2d[i,j] = f_ci[i] * 1/(sqrt2pi*sigmay[i]) *  math.exp(-y[j]**2 / (2*sigmay[i]**2))
         
         STList = []
@@ -2693,7 +2672,7 @@ def get_averages(Data):
             Av = -9999
     return Num, Av
 
-def get_canopyresistance(cf,ds,Uavg,uindex,PMin,Level,critFsd,critFe,qList):
+def get_canopyresistance(cf,ds,Uavg,uindex,PMin,Level,critFsd,critFe):
     if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='zm'):
         zm = float(cf['PenmanMonteith']['zm'])
     
@@ -3037,41 +3016,42 @@ def InvertSign(ds,ThisOne):
 
 def InterpolateOverMissing(cf,ds,series='',maxlen=1000):
     if len(series)==0:
-        series = cf['Variables'].keys() # ... create one using all variables listed in control file
+        series = cf['InterpolateVars'].keys() # ... create one using all variables listed in control file
     #print time.strftime('%X')+' Interpolating over missing values in series '+S_in
     DateNum = date2num(ds.series['DateTime']['Data'])
     for ThisOne in series:
         iog = numpy.where(ds.series[ThisOne]['Data']!=float(-9999))[0]            # index of good values
-        f = interpolate.interp1d(DateNum[iog],ds.series[ThisOne]['Data'][iog])    # linear interpolation function
-        iom = numpy.where((ds.series[ThisOne]['Data']==float(-9999))&             # index of missing values
-                          (DateNum>=DateNum[iog[0]])&                          # that occur between the first
-                          (DateNum<=DateNum[iog[-1]]))[0]                      # and last dates used to define f
-        # Now we step through the indices of the missing values and discard
-        # contiguous blocks longer than maxlen.
-        # !!! The following code is klunky and could be re-written to be
-        # !!! neater and faster.
-        # First, define 2 temporary arrays used and initialise 2 counters.
-        tmp1 = numpy.zeros(len(iom),int)
-        tmp2 = numpy.zeros(len(iom),int)
-        k=0
-        n=0
-        # step through the array of idices for missing values
-        for i in range(len(iom)-1):
-            dn = iom[i+1]-iom[i]        # change in index number from one element of iom to the next
-            if dn==1:                   # if the change is 1 then we are still in a contiguous block
-                tmp1[n] = iom[i]        # save the index into a temporary array
-                n = n + 1               # increment the contiguous block length counter
-            elif dn>1:                  # if the change is greater than 1 then we have come to the end of a contiguous block
-                if n<maxlen:            # if the contiguous block length is less then maxlen
-                    tmp1[n]=iom[i]      # save the last index of the contiguous block
-                    tmp2[k:k+n+1] = tmp1[0:n+1]   # concatenate the indices for this block to any previous block with length less than maxlen
-                    k=k+n+1             # update the pointer to the concatenating array
-                n=0                     # reset the contiguous block length counter
-        if k>0:                         # do the interpolation only if 1 gap is less than maxlen
-            tmp2[k] = iom[-1]               # just accept the last missing value index regardless
-            iom_new = tmp2[:k+1]            # the array of missing data indices with contiguous block lengths less than maxlen
-            ds.series[ThisOne]['Data'][iom_new] = f(DateNum[iom_new]).astype(numpy.float32)        # fill missing values with linear interpolations
-            ds.series[ThisOne]['Flag'][iom_new] = 34
+        if len(iog) > 0:
+            f = interpolate.interp1d(DateNum[iog],ds.series[ThisOne]['Data'][iog])    # linear interpolation function
+            iom = numpy.where((ds.series[ThisOne]['Data']==float(-9999))&             # index of missing values
+                              (DateNum>=DateNum[iog[0]])&                          # that occur between the first
+                              (DateNum<=DateNum[iog[-1]]))[0]                      # and last dates used to define f
+            # Now we step through the indices of the missing values and discard
+            # contiguous blocks longer than maxlen.
+            # !!! The following code is klunky and could be re-written to be
+            # !!! neater and faster.
+            # First, define 2 temporary arrays used and initialise 2 counters.
+            tmp1 = numpy.zeros(len(iom),int)
+            tmp2 = numpy.zeros(len(iom),int)
+            k=0
+            n=0
+            # step through the array of idices for missing values
+            for i in range(len(iom)-1):
+                dn = iom[i+1]-iom[i]        # change in index number from one element of iom to the next
+                if dn==1:                   # if the change is 1 then we are still in a contiguous block
+                    tmp1[n] = iom[i]        # save the index into a temporary array
+                    n = n + 1               # increment the contiguous block length counter
+                elif dn>1:                  # if the change is greater than 1 then we have come to the end of a contiguous block
+                    if n<maxlen:            # if the contiguous block length is less then maxlen
+                        tmp1[n]=iom[i]      # save the last index of the contiguous block
+                        tmp2[k:k+n+1] = tmp1[0:n+1]   # concatenate the indices for this block to any previous block with length less than maxlen
+                        k=k+n+1             # update the pointer to the concatenating array
+                    n=0                     # reset the contiguous block length counter
+            if k>0:                         # do the interpolation only if 1 gap is less than maxlen
+                tmp2[k] = iom[-1]               # just accept the last missing value index regardless
+                iom_new = tmp2[:k+1]            # the array of missing data indices with contiguous block lengths less than maxlen
+                ds.series[ThisOne]['Data'][iom_new] = f(DateNum[iom_new]).astype(numpy.float32)        # fill missing values with linear interpolations
+                ds.series[ThisOne]['Flag'][iom_new] = 34
 
 def MassmanStandard(cf,ds,Ta_in='Ta',Ah_in='Ah',ps_in='ps',ustar_in='ustar',ustar_out='ustar',L_in='L',L_out ='L',uw_out='uw',vw_out='vw',wT_out='wT',wA_out='wA',wC_out='wC',u_in='u',uw_in='uw',vw_in='vw',wT_in='wT',wC_in='wC',wA_in='wA'):
     """
@@ -3264,7 +3244,7 @@ def MergeSeries(ds,Destination,Source,QCFlag_OK):
         ds.series[Destination]['Attr']['long_name'] = 'Merged from '+SeriesNameString
         ds.series[Destination]['Attr']['units'] = SeriesUnitString
 
-def prep_aerodynamicresistance(cf,ds,Cdmethod,Cemethod,profile,deficit):
+def prep_aerodynamicresistance(cf,ds,Cdmethod,Cemethod):
     if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='PMin'):
         PMin = ast.literal_eval(cf['PenmanMonteith']['PMin'])
     else:
@@ -3288,35 +3268,21 @@ def prep_aerodynamicresistance(cf,ds,Cdmethod,Cemethod,profile,deficit):
     # use bulk transfer coefficient method
     if Cemethod == 'True':
         # rav parameterised with q profile measurements
-        if profile == 'True':
-            if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='profileq'):
-                qList = ast.literal_eval(cf['PenmanMonteith']['profileq'])
-            else:
-                log.error('  PenmanMonteith:  profileq not given')
-                return
-            
-            outList = ['Ce_p','rav_p','rst_p','Gst_p']
-            attribute = 'Ce with q profile, '
-            log.info('  Ce method (Brutseart 1982, Stull 1988) implementing q profile used to estimate aerodynamic resistance, rav')
-            get_stomatalresistance(cf,ds,Uavg,uindex,outList,PMin,attribute,Level,critFsd,critFe,qList)
+        if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='profileq'):
+            qList = ast.literal_eval(cf['PenmanMonteith']['profileq'])
+        else:
+            log.error('  PenmanMonteith:  profileq not given')
+            return
         
-        # rav parameterised with the humidity deficit at one level (q_saturated - q)
-        if deficit == 'True':
-            if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='deficitq'):
-                qList = ast.literal_eval(cf['PenmanMonteith']['deficitq'])
-            else:
-                log.error('  PenmanMonteith:  deficitq not given')
-                return
-            
-            outList = ['Ce_d','rav_d','rst_d','Gst_d']
-            attribute = 'Ce with q saturation deficit, '
-            log.info('  Ce method (Brutseart 1982, Stull 1988) implementing saturation q deficit at one height used to estimate aerodynamic resistance, rav')
-            get_stomatalresistance(cf,ds,Uavg,uindex,outList,PMin,attribute,Level,critFsd,critFe,qList)
+        outList = ['Ce','rav','rst','Gst']
+        attribute = 'Ce with q profile, '
+        log.info('  Ce method (Brutseart 1982, Stull 1988) used to estimate aerodynamic resistance, rav')
+        get_stomatalresistance(cf,ds,Uavg,uindex,outList,PMin,attribute,Level,critFsd,critFe,qList)
     
     # use drag coefficient method
     if Cdmethod == 'True':
         log.info('  Cd method (Jensen 1990, Luening 2008) used to estimate aerodynamic resistance, ra')
-        get_canopyresistance(cf,ds,Uavg,uindex,PMin,Level,critFsd,critFe,qList)
+        get_canopyresistance(cf,ds,Uavg,uindex,PMin,Level,critFsd,critFe)
     
     return
 
@@ -3615,7 +3581,7 @@ def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoMean
             
         for day in range(1,dRan+1):
             xlRow = xlRow + 1
-            if ThisOne == 'rst_p' or ThisOne == 'rst_d' or ThisOne == 'Gst_p' or ThisOne == 'Gst_d' or ThisOne == 'Gst_mol_p' or ThisOne == 'Gst_mol_d' or ThisOne == 'rc' or ThisOne == 'Gc' or ThisOne == 'Gc_mol':
+            if ThisOne == 'rst' or ThisOne == 'Gst' or ThisOne == 'Gst_mol' or ThisOne == 'rc' or ThisOne == 'Gc' or ThisOne == 'Gc_mol':
                 di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day) & ((numpy.mod(ds.series[ThisOne]['Flag'],10) == 0) & (ds.series[ThisOne]['Flag'] < 60)))[0]
                 ti = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day))[0]
                 nRecs = len(ti)
