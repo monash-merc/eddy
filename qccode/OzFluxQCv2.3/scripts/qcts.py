@@ -529,29 +529,17 @@ def CalculateSpecificHumidityProfile(cf,ds):
         return
     
     ps,f = qcutils.GetSeriesasMA(ds,ps_in)
-    if (len(e_vars) > 1):
-        for i in range(len(e_vars)):
-            e,f = qcutils.GetSeriesasMA(ds,e_vars[i])
-            esat,f = qcutils.GetSeriesasMA(ds,esat_vars[i])
-            mr = mf.mixingratio(ps,e)
-            q = mf.specifichumidity(mr)
-            mrsat = mf.mixingratio(ps,esat)
-            qsat = mf.specifichumidity(mrsat)
-            VPD = esat - e
-            qcutils.CreateSeries(ds,q_vars[i],q,FList=[ps_in,e_vars[i]],Descr=q_attrs[i],Units='kg/kg',Standard='specific_humidity')
-            qcutils.CreateSeries(ds,qsat_vars[i],qsat,FList=[ps_in,esat_vars[i]],Descr=qsat_attrs[i],Units='kg/kg',Standard='not_defined')
-            qcutils.CreateSeries(ds,VPD_vars[i],VPD,FList=[ps_in,e_vars[i],esat_vars[i]],Descr=VPD_attrs[i],Units='kPa',Standard='water_vapor_saturation_deficit_in_air')
-    else:
-        e,f = qcutils.GetSeriesasMA(ds,e_vars)
-        esat,f = qcutils.GetSeriesasMA(ds,esat_vars)
+    for i in range(len(e_vars)):
+        e,f = qcutils.GetSeriesasMA(ds,e_vars[i])
+        esat,f = qcutils.GetSeriesasMA(ds,esat_vars[i])
         mr = mf.mixingratio(ps,e)
         q = mf.specifichumidity(mr)
         mrsat = mf.mixingratio(ps,esat)
         qsat = mf.specifichumidity(mrsat)
         VPD = esat - e
-        qcutils.CreateSeries(ds,q_vars,q,FList=[ps_in,e_vars],Descr=q_attrs,Units='kg/kg',Standard='specific_humidity')
-        qcutils.CreateSeries(ds,qsat_vars,qsat,FList=[ps_in,esat_vars],Descr=qsat_attrs,Units='kg/kg',Standard='not_defined')
-        qcutils.CreateSeries(ds,VPD_vars,q,FList=[ps_in,e_vars,esat_vars],Descr=VPD_attrs,Units='kPa',Standard='water_vapor_saturation_deficit_in_air')
+        qcutils.CreateSeries(ds,q_vars[i],q,FList=[ps_in,e_vars[i]],Descr=q_attrs[i],Units='kg/kg',Standard='specific_humidity')
+        qcutils.CreateSeries(ds,qsat_vars[i],qsat,FList=[ps_in,esat_vars[i]],Descr=qsat_attrs[i],Units='kg/kg',Standard='not_defined')
+        qcutils.CreateSeries(ds,VPD_vars[i],VPD,FList=[ps_in,e_vars[i],esat_vars[i]],Descr=VPD_attrs[i],Units='kPa',Standard='water_vapor_saturation_deficit_in_air')
     
     return
 
@@ -964,11 +952,12 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
                 if ThisOne in SubSumList:
                     SubOutList.append(COut[listindex])
         elif ThisOne == 'PM':
+            if 'Gst' not in ds.series.keys() and 'Gc' not in ds.series.keys():
+                SumList.remove('PM')
+                log.error('  Penman-Monteith Daily sum: input Gst or Gc not located')
+            
             if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Cemethod') and cf['PenmanMonteith']['Cemethod'] == 'True':
-                if 'Gst' not in ds.series.keys():
-                    SumList.remove('PM')
-                    log.error('  Penman-Monteith Daily sum: input Gst not located')
-                else:
+                if 'Gst' in ds.series.keys():
                     Gst_mmol,f = qcutils.GetSeriesasMA(ds,'Gst')   # mmol/m2-s
                     Gst_mol =  Gst_mmol * 1800 / 1000                 # mol/m2-30min for summing
                     qcutils.CreateSeries(ds,'Gst_mol',Gst_mol,FList=['Gst'],Descr='Cumulative 30-min Bulk Stomatal Conductance',Units='mol/m2')
@@ -976,12 +965,11 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
                     if 'Gst_mol' in SubSumList:
                         log.error('  Subsum: Negative bulk stomatal conductance not defined')
                     SumOutList.append('Gst_mol')
+                else:
+                    log.error('  Penman-Monteith Daily sum: input Gst not located')
             
             if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Cdmethod') and cf['PenmanMonteith']['Cdmethod'] == 'True':
-                if 'Gc' not in ds.series.keys():
-                    SumList.remove('PM')
-                    log.error('  Penman-Monteith Daily sum: input Gc not located')
-                else:
+                if 'Gc' in ds.series.keys():
                     Gc_mmol,f = qcutils.GetSeriesasMA(ds,'Gc')   # mmol/m2-s
                     Gc_mol =  Gc_mmol * 1800 / 1000                 # mol/m2-30min for summing
                     qcutils.CreateSeries(ds,'Gc_mol',Gc_mol,FList=['Gc'],Descr='Cumulative 30-min Canopy Conductance',Units='mol/m2')
@@ -989,6 +977,9 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
                     if 'Gc_mol' in SubSumList:
                         log.error('  Subsum: Negative bulk stomatal conductance not defined')
                     SumOutList.append('Gc_mol')
+                else:
+                    log.error('  Penman-Monteith Daily sum: input Gc not located')
+        
         elif ThisOne == 'Rainhours':
             rain,f = qcutils.GetSeriesasMA(ds,'Rain')
             day,f = qcutils.GetSeriesasMA(ds,'Ddd')
@@ -1020,32 +1011,29 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
                 OutList.append(COut[listindex])
                 MinMaxOutList.append(COut[listindex])
         elif ThisOne == 'PM':
-            if 'Gst' in ds.series.keys() and 'rst' in ds.series.keys():
-                PMout = ['rst','Gst']
-                for listindex in range(0,2):
-                    if PMout[listindex] not in OutList:
-                        OutList.append(PMout[listindex])
-                    MinMaxOutList.append(PMout[listindex])
-            else:
+            if 'Gst' not in ds.series.keys() and 'Gc' not in ds.series.keys() and 'rst' not in ds.series.keys() and 'rc' not in ds.series.keys():
                 MinMaxList.remove('PM')
-                PMout = []
-                log.error('  Penman-Monteith Daily min/max: input Gst or rst not located')
+                log.error('  Penman-Monteith Daily min/max: input Gst, rst, rc or Gc not located')
+            
+            if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Cemethod') and cf['PenmanMonteith']['Cemethod'] == 'True':
+                if 'Gst' in ds.series.keys() and 'rst' in ds.series.keys():
+                    PMout = ['rst','Gst']
+                    for listindex in range(0,2):
+                        if PMout[listindex] not in OutList:
+                            OutList.append(PMout[listindex])
+                        MinMaxOutList.append(PMout[listindex])
+                else:
+                    log.error('  Penman-Monteith Daily min/max: input Gst or rst not located')
             
             if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Cdmethod') and cf['PenmanMonteith']['Cdmethod'] == 'True':
-                if ThisOne not in SumList:
-                    if 'Gc' not in ds.series.keys() or 'rc' not in ds.series.keys():
-                        MinMaxList.remove('PM')
-                        PMout = []
-                        log.error('  Penman-Monteith Daily min/max: input Gc or rc not located')
-                    else:
-                        PMout = ['rc','Gc']
-                else:
+                if 'Gc' in ds.series.keys() and 'rc' in ds.series.keys():
                     PMout = ['rc','Gc']
-            if len(PMout) > 0:
-                for listindex in range(0,2):
-                    if PMout[listindex] not in OutList:
-                        OutList.append(PMout[listindex])
-                    MinMaxOutList.append(PMout[listindex])
+                    for listindex in range(0,2):
+                        if PMout[listindex] not in OutList:
+                            OutList.append(PMout[listindex])
+                        MinMaxOutList.append(PMout[listindex])
+                else:
+                    log.error('  Penman-Monteith Daily min/max: input Gc or rc not located')
         else:
             if ThisOne not in OutList:
                 OutList.append(ThisOne)
@@ -1055,30 +1043,29 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
         if ThisOne == 'Energy' or ThisOne == 'Carbon' or ThisOne == 'Radiation':
             log.error(' Mean error: '+ThisOne+' to be placed in SumList')
         elif ThisOne == 'PM':
-            if 'Gst' in ds.series.keys() and 'rst' in ds.series.keys():
-                PMout = ['rst','Gst']
-                for listindex in range(0,2):
-                    if PMout[listindex] not in OutList:
-                        OutList.append(PMout[listindex])
-                    MeanOutList.append(PMout[listindex])
-            else:
+            if 'Gst' not in ds.series.keys() and 'Gc' not in ds.series.keys() and 'rst' not in ds.series.keys() and 'rc' not in ds.series.keys():
                 MeanList.remove('PM')
-                PMout = []
-                log.error('  Penman-Monteith Daily mean: input Gst or rst not located')
+                log.error('  Penman-Monteith Daily mean: input Gst, rst, rc or Gc not located')
+            
+            if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Cemethod') and cf['PenmanMonteith']['Cemethod'] == 'True':
+                if 'Gst' in ds.series.keys() and 'rst' in ds.series.keys():
+                    PMout = ['rst','Gst']
+                    for listindex in range(0,2):
+                        if PMout[listindex] not in OutList:
+                            OutList.append(PMout[listindex])
+                        MeanOutList.append(PMout[listindex])
+                else:
+                    log.error('  Penman-Monteith Daily mean: input Gst or rst not located')
             
             if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Cdmethod') and cf['PenmanMonteith']['Cdmethod'] == 'True':
-                if 'Gc' not in ds.series.keys() or 'rc' not in ds.series.keys():
-                    MeanList.remove('PM')
-                    PMout = []
-                    log.error('  Penman-Monteith Daily mean: input Gc or rc not located')
-                else:
+                if 'Gc' in ds.series.keys() and 'rc' in ds.series.keys():
                     PMout = ['rc','Gc']
-            
-            if len(PMout) > 0:
-                for listindex in range(len(PMout)):
-                    if PMout[listindex] not in OutList:
-                        OutList.append(PMout[listindex])
-                    MeanOutList.append(PMout[listindex])
+                    for listindex in range(0,2):
+                        if PMout[listindex] not in OutList:
+                            OutList.append(PMout[listindex])
+                        MeanOutList.append(PMout[listindex])
+                else:
+                    log.error('  Penman-Monteith Daily mean: input Gc or rc not located')
         else:
             MeanOutList.append(ThisOne)
             if ThisOne not in OutList:
@@ -3020,38 +3007,41 @@ def InterpolateOverMissing(cf,ds,series='',maxlen=1000):
     #print time.strftime('%X')+' Interpolating over missing values in series '+S_in
     DateNum = date2num(ds.series['DateTime']['Data'])
     for ThisOne in series:
-        iog = numpy.where(ds.series[ThisOne]['Data']!=float(-9999))[0]            # index of good values
-        if len(iog) > 0:
-            f = interpolate.interp1d(DateNum[iog],ds.series[ThisOne]['Data'][iog])    # linear interpolation function
-            iom = numpy.where((ds.series[ThisOne]['Data']==float(-9999))&             # index of missing values
-                              (DateNum>=DateNum[iog[0]])&                          # that occur between the first
-                              (DateNum<=DateNum[iog[-1]]))[0]                      # and last dates used to define f
-            # Now we step through the indices of the missing values and discard
-            # contiguous blocks longer than maxlen.
-            # !!! The following code is klunky and could be re-written to be
-            # !!! neater and faster.
-            # First, define 2 temporary arrays used and initialise 2 counters.
-            tmp1 = numpy.zeros(len(iom),int)
-            tmp2 = numpy.zeros(len(iom),int)
-            k=0
-            n=0
-            # step through the array of idices for missing values
-            for i in range(len(iom)-1):
-                dn = iom[i+1]-iom[i]        # change in index number from one element of iom to the next
-                if dn==1:                   # if the change is 1 then we are still in a contiguous block
-                    tmp1[n] = iom[i]        # save the index into a temporary array
-                    n = n + 1               # increment the contiguous block length counter
-                elif dn>1:                  # if the change is greater than 1 then we have come to the end of a contiguous block
-                    if n<maxlen:            # if the contiguous block length is less then maxlen
-                        tmp1[n]=iom[i]      # save the last index of the contiguous block
-                        tmp2[k:k+n+1] = tmp1[0:n+1]   # concatenate the indices for this block to any previous block with length less than maxlen
-                        k=k+n+1             # update the pointer to the concatenating array
-                    n=0                     # reset the contiguous block length counter
-            if k>0:                         # do the interpolation only if 1 gap is less than maxlen
-                tmp2[k] = iom[-1]               # just accept the last missing value index regardless
-                iom_new = tmp2[:k+1]            # the array of missing data indices with contiguous block lengths less than maxlen
-                ds.series[ThisOne]['Data'][iom_new] = f(DateNum[iom_new]).astype(numpy.float32)        # fill missing values with linear interpolations
-                ds.series[ThisOne]['Flag'][iom_new] = 34
+        if ThisOne in ds.series.keys():
+            iog = numpy.where(ds.series[ThisOne]['Data']!=float(-9999))[0]            # index of good values
+            if len(iog) > 0:
+                f = interpolate.interp1d(DateNum[iog],ds.series[ThisOne]['Data'][iog])    # linear interpolation function
+                iom = numpy.where((ds.series[ThisOne]['Data']==float(-9999))&             # index of missing values
+                                  (DateNum>=DateNum[iog[0]])&                          # that occur between the first
+                                  (DateNum<=DateNum[iog[-1]]))[0]                      # and last dates used to define f
+                # Now we step through the indices of the missing values and discard
+                # contiguous blocks longer than maxlen.
+                # !!! The following code is klunky and could be re-written to be
+                # !!! neater and faster.
+                # First, define 2 temporary arrays used and initialise 2 counters.
+                tmp1 = numpy.zeros(len(iom),int)
+                tmp2 = numpy.zeros(len(iom),int)
+                k=0
+                n=0
+                # step through the array of idices for missing values
+                for i in range(len(iom)-1):
+                    dn = iom[i+1]-iom[i]        # change in index number from one element of iom to the next
+                    if dn==1:                   # if the change is 1 then we are still in a contiguous block
+                        tmp1[n] = iom[i]        # save the index into a temporary array
+                        n = n + 1               # increment the contiguous block length counter
+                    elif dn>1:                  # if the change is greater than 1 then we have come to the end of a contiguous block
+                        if n<maxlen:            # if the contiguous block length is less then maxlen
+                            tmp1[n]=iom[i]      # save the last index of the contiguous block
+                            tmp2[k:k+n+1] = tmp1[0:n+1]   # concatenate the indices for this block to any previous block with length less than maxlen
+                            k=k+n+1             # update the pointer to the concatenating array
+                        n=0                     # reset the contiguous block length counter
+                if k>0:                         # do the interpolation only if 1 gap is less than maxlen
+                    tmp2[k] = iom[-1]               # just accept the last missing value index regardless
+                    iom_new = tmp2[:k+1]            # the array of missing data indices with contiguous block lengths less than maxlen
+                    ds.series[ThisOne]['Data'][iom_new] = f(DateNum[iom_new]).astype(numpy.float32)        # fill missing values with linear interpolations
+                    ds.series[ThisOne]['Flag'][iom_new] = 34
+        else:
+            log.warn('  Interpolate over missing:  '+ThisOne+' not in dataset')
 
 def MassmanStandard(cf,ds,Ta_in='Ta',Ah_in='Ah',ps_in='ps',ustar_in='ustar',ustar_out='ustar',L_in='L',L_out ='L',uw_out='uw',vw_out='vw',wT_out='wT',wA_out='wA',wC_out='wC',u_in='u',uw_in='uw',vw_in='vw',wT_in='wT',wC_in='wC',wA_in='wA'):
     """
