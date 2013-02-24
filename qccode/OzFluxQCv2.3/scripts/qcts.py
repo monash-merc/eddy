@@ -952,21 +952,33 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
                 if ThisOne in SubSumList:
                     SubOutList.append(COut[listindex])
         elif ThisOne == 'PM':
-            if 'Gst' not in ds.series.keys() and 'Gc' not in ds.series.keys():
+            if 'Gst_2layer' not in ds.series.keys() and 'Gst_1layer' not in ds.series.keys() and 'Gc' not in ds.series.keys():
                 SumList.remove('PM')
                 log.error('  Penman-Monteith Daily sum: input Gst or Gc not located')
             
             if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Cemethod') and cf['PenmanMonteith']['Cemethod'] == 'True':
-                if 'Gst' in ds.series.keys():
-                    Gst_mmol,f = qcutils.GetSeriesasMA(ds,'Gst')   # mmol/m2-s
-                    Gst_mol =  Gst_mmol * 1800 / 1000                 # mol/m2-30min for summing
-                    qcutils.CreateSeries(ds,'Gst_mol',Gst_mol,FList=['Gst'],Descr='Cumulative 30-min Bulk Stomatal Conductance',Units='mol/m2')
-                    OutList.append('Gst_mol')
-                    if 'Gst_mol' in SubSumList:
+                if 'Gst_1layer' in ds.series.keys():
+                    Gst_1layer_mmol,f = qcutils.GetSeriesasMA(ds,'Gst_1layer')   # mmol/m2-s
+                    Gst_1layer_mol =  Gst_1layer_mmol * 1800 / 1000                 # mol/m2-30min for summing
+                    qcutils.CreateSeries(ds,'Gst_1layer_mol',Gst_1layer_mol,FList=['Gst_1layer'],Descr='Cumulative 30-min Bulk Stomatal Conductance, 1-layer Ce method Penman-Monteith',Units='mol/m2')
+                    OutList.append('Gst_1layer_mol')
+                    if 'Gst_1layer_mol' in SubSumList:
                         log.error('  Subsum: Negative bulk stomatal conductance not defined')
-                    SumOutList.append('Gst_mol')
+                    SumOutList.append('Gst_1layer_mol')
                 else:
-                    log.error('  Penman-Monteith Daily sum: input Gst not located')
+                    log.error('  Penman-Monteith Daily sum: input Gst_1layer not located')
+            
+            if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Ce_2layer') and cf['PenmanMonteith']['Ce_2layer'] == 'True':
+                if 'Gst_2layer' in ds.series.keys():
+                    Gst_2layer_mmol,f = qcutils.GetSeriesasMA(ds,'Gst_2layer')   # mmol/m2-s
+                    Gst_2layer_mol =  Gst_2layer_mmol * 1800 / 1000                 # mol/m2-30min for summing
+                    qcutils.CreateSeries(ds,'Gst_2layer_mol',Gst_2layer_mol,FList=['Gst_2layer'],Descr='Cumulative 30-min Bulk Stomatal Conductance, 2-layer Ce method Penman-Monteith',Units='mol/m2')
+                    OutList.append('Gst_2layer_mol')
+                    if 'Gst_2layer_mol' in SubSumList:
+                        log.error('  Subsum: Negative bulk stomatal conductance not defined')
+                    SumOutList.append('Gst_2layer_mol')
+                else:
+                    log.error('  Penman-Monteith Daily sum: input Gst_2layer not located')
             
             if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Cdmethod') and cf['PenmanMonteith']['Cdmethod'] == 'True':
                 if 'Gc' in ds.series.keys():
@@ -1011,19 +1023,28 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
                 OutList.append(COut[listindex])
                 MinMaxOutList.append(COut[listindex])
         elif ThisOne == 'PM':
-            if 'Gst' not in ds.series.keys() and 'Gc' not in ds.series.keys() and 'rst' not in ds.series.keys() and 'rc' not in ds.series.keys():
+            if 'Gst_1layer' not in ds.series.keys() and 'Gst_2layer' not in ds.series.keys() and 'Gc' not in ds.series.keys() and 'rst_1layer' not in ds.series.keys() and 'rst_2layer' not in ds.series.keys() and 'rc' not in ds.series.keys():
                 MinMaxList.remove('PM')
                 log.error('  Penman-Monteith Daily min/max: input Gst, rst, rc or Gc not located')
             
             if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Cemethod') and cf['PenmanMonteith']['Cemethod'] == 'True':
-                if 'Gst' in ds.series.keys() and 'rst' in ds.series.keys():
-                    PMout = ['rst','Gst']
+                if 'Gst_1layer' in ds.series.keys() and 'rst_1layer' in ds.series.keys():
+                    PMout = ['rst_1layer','Gst_1layer']
                     for listindex in range(0,2):
                         if PMout[listindex] not in OutList:
                             OutList.append(PMout[listindex])
                         MinMaxOutList.append(PMout[listindex])
                 else:
-                    log.error('  Penman-Monteith Daily min/max: input Gst or rst not located')
+                    log.error('  Penman-Monteith Daily min/max: input Gst_1layer or rst_1layer not located')
+            
+                if 'Gst_2layer' in ds.series.keys() and 'rst_2layer' in ds.series.keys():
+                    PMout = ['rst_2layer','Gst_2layer']
+                    for listindex in range(0,2):
+                        if PMout[listindex] not in OutList:
+                            OutList.append(PMout[listindex])
+                        MinMaxOutList.append(PMout[listindex])
+                else:
+                    log.error('  Penman-Monteith Daily min/max: input Gst_2layer or rst_2layer not located')
             
             if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Cdmethod') and cf['PenmanMonteith']['Cdmethod'] == 'True':
                 if 'Gc' in ds.series.keys() and 'rc' in ds.series.keys():
@@ -1043,19 +1064,29 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
         if ThisOne == 'Energy' or ThisOne == 'Carbon' or ThisOne == 'Radiation':
             log.error(' Mean error: '+ThisOne+' to be placed in SumList')
         elif ThisOne == 'PM':
-            if 'Gst' not in ds.series.keys() and 'Gc' not in ds.series.keys() and 'rst' not in ds.series.keys() and 'rc' not in ds.series.keys():
+            if 'Gst_1layer' not in ds.series.keys() and 'Gst_2layer' not in ds.series.keys() and 'Gc' not in ds.series.keys() and 'rst_1layer' not in ds.series.keys() and 'rst_2layer' not in ds.series.keys() and 'rc' not in ds.series.keys():
                 MeanList.remove('PM')
                 log.error('  Penman-Monteith Daily mean: input Gst, rst, rc or Gc not located')
             
             if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Cemethod') and cf['PenmanMonteith']['Cemethod'] == 'True':
-                if 'Gst' in ds.series.keys() and 'rst' in ds.series.keys():
-                    PMout = ['rst','Gst']
+                if 'Gst_1layer' in ds.series.keys() and 'rst_1layer' in ds.series.keys():
+                    PMout = ['rst_1layer','Gst_1layer']
                     for listindex in range(0,2):
                         if PMout[listindex] not in OutList:
                             OutList.append(PMout[listindex])
                         MeanOutList.append(PMout[listindex])
                 else:
-                    log.error('  Penman-Monteith Daily mean: input Gst or rst not located')
+                    log.error('  Penman-Monteith Daily mean: input Gst_1layer or rst_1layer not located')
+            
+            if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Ce_2layer') and cf['PenmanMonteith']['Ce_2layer'] == 'True':
+                if 'Gst_1layer' in ds.series.keys() and 'rst_1layer' in ds.series.keys():
+                    PMout = ['rst_2layer','Gst_2layer']
+                    for listindex in range(0,2):
+                        if PMout[listindex] not in OutList:
+                            OutList.append(PMout[listindex])
+                        MeanOutList.append(PMout[listindex])
+                else:
+                    log.error('  Penman-Monteith Daily mean: input Gst_2layer or rst_2layer not located')
             
             if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Cdmethod') and cf['PenmanMonteith']['Cdmethod'] == 'True':
                 if 'Gc' in ds.series.keys() and 'rc' in ds.series.keys():
@@ -1718,11 +1749,16 @@ def do_PenmanMonteith(cf,ds):
     else:
         Cemethod = 'False'
     
-    if Cdmethod != 'True' and Cemethod != 'True':
+    if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Ce_2layer'):
+        Ce_2layer = cf['PenmanMonteith']['Ce_2layer']
+    else:
+        Ce_2layer = 'False'
+    
+    if Cdmethod != 'True' and Cemethod != 'True' and Ce_2layer != 'True':
         log.error(' PenmanMontieth:  no method selected')
         return
         
-    prep_aerodynamicresistance(cf,ds,Cdmethod,Cemethod)
+    prep_aerodynamicresistance(cf,ds,Cdmethod,Cemethod,Ce_2layer)
     return
 
 def do_solo(cf,ds4,Fc_in='Fc',Fe_in='Fe',Fh_in='Fh',Fc_out='Fc',Fe_out='Fe',Fh_out='Fh'):
@@ -1791,15 +1827,15 @@ def do_WPL(cf,ds,cov=''):
     Fe_WPL(cf,ds)
     Fc_WPL(cf,ds)
 
-def extract_floor_humidity(zq_high,zq_low,q_high,q_low,fqh,fql):
+def extrapolate_humidity(zq_ref,zq_high,zq_low,q_high,q_low,fqh,fql):
     rise = zq_high - zq_low
     run = q_high - q_low
-    qsurface = numpy.zeros(len(run)) + numpy.float(-9999)
+    qref = numpy.zeros(len(run)) + numpy.float(-9999)
     slope = numpy.zeros(len(run)) + numpy.float(-9999)
     index = numpy.where((numpy.mod(fqh,10)==0) & (numpy.mod(fql,10)==0))[0]
     slope[index] = rise / run[index]
-    qsurface[index] = ((slope[index] * q_high[index]) - zq_high) / slope[index]
-    return qsurface
+    qref[index] = q_high[index] - ((zq_high - zq_ref) / slope[index])
+    return qref
 
 def Fc_WPL(cf,ds,Fc_wpl_out='Fc',Fc_raw_in='Fc',Fh_in='Fh',Fe_wpl_in='Fe',Ta_in='Ta',Ah_in='Ah',Cc_in='Cc_7500_Av',ps_in='ps'):
     """
@@ -2776,27 +2812,47 @@ def get_nightsums(Data):
     
     return Num, Sum, Av
 
-def get_stomatalresistance(cf,ds,Uavg,uindex,outList,PMin,attribute,Level,critFsd,critFe,qList):
-    if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Cemethod'):
-        if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='zq_low'):
-            zq_low = float(cf['PenmanMonteith']['zq_low'])
+def get_rav(cf,ds,Uavg,PMin,qList,layer='',method='Cemethod'):
+    if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne=method):
+        if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne=layer+'zq_low'):
+            zq_low = float(cf['PenmanMonteith'][layer+'zq_low'])
         else:
             log.error('  PenmanMonteith:  zq_low (height of lower q sensor) not given')
             return
         
-        if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='zq_high'):
-            zq_high = float(cf['PenmanMonteith']['zq_high'])
+        if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne=layer+'zq_high'):
+            zq_high = float(cf['PenmanMonteith'][layer+'zq_high'])
         else:
             log.error('  PenmanMonteith:  zq_high (height of upper q sensor) not given')
             return
         
+        if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne=layer+'zq_air'):
+            zq_air = float(cf['PenmanMonteith'][layer+'zq_air'])
+        else:
+            log.error('  PenmanMonteith:  zq_air (height of q_air extrapolation target) not given')
+            return
+        
+        if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne=layer+'zq_surface'):
+            zq_surface = float(cf['PenmanMonteith'][layer+'zq_surface'])
+        else:
+            log.error('  PenmanMonteith:  zq_surface (height of q_surface extrapolation target) not given')
+            return
+        
+        log.info('   Ce method:  '+layer+'zq_high: '+str(zq_high)+', '+layer+'zq_low: '+str(zq_low))
+        log.info('   Ce method:  '+layer+'zq_air: '+str(zq_air)+', '+layer+'zq_surface: '+str(zq_surface))
         q_high,fqh = qcutils.GetSeriesasMA(ds,qList[0])
         q_low,fql = qcutils.GetSeriesasMA(ds,qList[1])
-        if zq_low > 0:
-            qsurface = extract_floor_humidity(zq_high,zq_low,q_high,q_low,fqh,fql)
-        else:
-            zq_low = float(0)
+        if zq_low == 0:
             qsurface = numpy.zeros(len(q_low), dtype=float) + q_low
+        elif zq_low == zq_surface:
+            qsurface = numpy.zeros(len(q_low), dtype=float) + q_low
+        else:
+            qsurface = extrapolate_humidity(zq_surface,zq_high,zq_low,q_high,q_low,fqh,fql)
+        
+        if zq_high == zq_air:
+            qair = numpy.zeros(len(q_high), dtype=float) + q_high
+        else:
+            qair = extrapolate_humidity(zq_air,zq_high,zq_low,q_high,q_low,fqh,fql)
         
     Fe,f = qcutils.GetSeriesasMA(ds,PMin[0])
     Ta,f = qcutils.GetSeriesasMA(ds,PMin[1])
@@ -2805,57 +2861,32 @@ def get_stomatalresistance(cf,ds,Uavg,uindex,outList,PMin,attribute,Level,critFs
     Fn,f = qcutils.GetSeriesasMA(ds,PMin[5])
     Fsd,f = qcutils.GetSeriesasMA(ds,PMin[6])
     Fg,f = qcutils.GetSeriesasMA(ds,PMin[7])
-    flagList = [PMin[1],PMin[2],PMin[3],PMin[4],PMin[5],PMin[6],PMin[7],qList[0],qList[1]]
+    Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
+    Ce = mf.bulktransfercoefficient(Fe,Lv,Uavg,qair,qsurface)
+    rav = mf.aerodynamicresistance(Uavg,Ce)
+    ravindex = numpy.ma.where(rav < 0)[0]
+    rav[ravindex] = numpy.float(-9999)
+    return Ce, rav, ravindex
+
+def get_rstGst(cf,ds,PMin,rav):
+    Fe,f = qcutils.GetSeriesasMA(ds,PMin[0])
+    Ta,f = qcutils.GetSeriesasMA(ds,PMin[1])
+    Ah,f = qcutils.GetSeriesasMA(ds,PMin[2])
+    ps,f = qcutils.GetSeriesasMA(ds,PMin[3])
+    Fn,f = qcutils.GetSeriesasMA(ds,PMin[5])
+    Fsd,f = qcutils.GetSeriesasMA(ds,PMin[6])
+    Fg,f = qcutils.GetSeriesasMA(ds,PMin[7])
     VPD,f = qcutils.GetSeriesasMA(ds,'VPD')
     Lv,f = qcutils.GetSeriesasMA(ds,'Lv')
     Cpm,f = qcutils.GetSeriesasMA(ds,'Cpm')
     rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
     gamma = mf.gamma(ps,Cpm,Lv)
     delta = mf.delta(Ta)
-    Feindex = numpy.ma.where(Fe < critFe)[0]
-    Fsdindex = numpy.ma.where(Fsd < critFsd)[0]
-    #Fnindex = numpy.where(Fn < 0)[0]
-    Ce = mf.bulktransfercoefficient(Fe,Lv,Uavg,q_high,q_low)
-    rav = mf.aerodynamicresistance(Uavg,Ce)
-    ravindex = numpy.ma.where(rav < 0)[0]
     rst = ((((((delta * (Fn - Fg) / (Lv)) + (rhom * Cpm * (VPD / ((Lv) * rav)))) / (Fe / (Lv))) - delta) / gamma) - 1) * rav
     rstindex = numpy.ma.where(rst < 0)[0]
     Gst = (1 / rst) * (Ah * 1000) / 18
-    qcutils.CreateSeries(ds,outList[0],Ce,FList=flagList,Descr='Bulk transfer coefficient, '+attribute+Level,Units='s/m')
-    qcutils.CreateSeries(ds,outList[1],rav,FList=flagList,Descr='Aerodynamic resistance, '+attribute+Level,Units='s/m')
-    qcutils.CreateSeries(ds,outList[2],rst,FList=flagList,Descr='Aerodynamic resistance from Penman-Monteith inversion, '+attribute+Level,Units='s/m')
-    qcutils.CreateSeries(ds,outList[3],Gst,FList=flagList,Descr='Conductance from Penman-Monteith inversion, '+attribute+Level,Units='mmolH2O/(m2ground s)')
-    for listindex in range(0,4):
-        #badindex = numpy.where((numpy.mod(ds.series[outList[listindex]]['Flag'],10) != 0) | (abs(ds.series[outList[listindex]]['Data']-float(-9999)) > c.eps))[0]
-        #ds.series[outList[listindex]]['Data'][badindex] = numpy.float(-9999)
-        #ds.series[outList[listindex]]['Flag'][badindex] = 65
-        ds.series[outList[listindex]]['Attr']['InputSeries'] = PMin
-        ds.series[outList[listindex]]['Attr']['FsdCutoff'] = critFsd
-        ds.series[outList[listindex]]['Attr']['FeCutoff'] = critFe
-        ds.series[outList[listindex]]['Flag'][rstindex] = 61
-        ds.series[outList[listindex]]['Flag'][ravindex] = 61
-        ds.series[outList[listindex]]['Flag'][uindex] = 64
-        ds.series[outList[listindex]]['Flag'][Feindex] = 62
-        ds.series[outList[listindex]]['Flag'][Fsdindex] = 63
-        ds.series[outList[listindex]]['Data'][rstindex] = numpy.float(-9999)
-        ds.series[outList[listindex]]['Data'][ravindex] = numpy.float(-9999)
-        ds.series[outList[listindex]]['Data'][uindex] = numpy.float(-9999)
-        ds.series[outList[listindex]]['Data'][Feindex] = numpy.float(-9999)
-        ds.series[outList[listindex]]['Data'][Fsdindex] = numpy.float(-9999)
-        ds.series[outList[listindex]]['Data'][uindex] = numpy.float(-9999)
-        #ds.series[outList[listindex]]['Flag'][Fnindex] = 63
-        #Feindex = numpy.where((numpy.mod(ds.series[Label[listindex]]['Flag'],10) == 0) & (numpy.mod(ds.series[PMin[0]]['Flag'],10) != 0))[0]
-        #ds.series[Label[listindex]]['Flag'][Feindex] = ds.series[PMin[0]]['Flag'][Feindex]
-        #ds.series[Label[listindex]]['Data'][Feindex] = numpy.float(-9999)
-        #Feindex2 = numpy.where((numpy.mod(ds.series[Label[listindex]]['Flag'],10) == 0) & (ds.series[PMin[0]]['Flag'] == 30))[0]
-        #ds.series[Label[listindex]]['Flag'][Feindex2] = ds.series[PMin[0]]['Flag'][Feindex2]
-        #badindex1 = numpy.where(numpy.mod(ds.series[Label[listindex]]['Flag'],10) != 0)[0]
-        #if fqh != '':
-        #    badindex2 = numpy.where((numpy.mod(fqh,10) != 0) | (numpy.mod(fql,10) != 0))[0]
-        #    ds.series[Label[listindex]]['Data'][badindex2] = numpy.float(-9999)
-        #ds.series[Label[listindex]]['Data'][badindex1] = numpy.float(-9999)
-    
-    return
+    Gstindex = numpy.ma.where(Gst < 0)[0]
+    return rst, rstindex, Gst, Gstindex
 
 def get_soilaverages(Data):
     """
@@ -3234,7 +3265,7 @@ def MergeSeries(ds,Destination,Source,QCFlag_OK):
         ds.series[Destination]['Attr']['long_name'] = 'Merged from '+SeriesNameString
         ds.series[Destination]['Attr']['units'] = SeriesUnitString
 
-def prep_aerodynamicresistance(cf,ds,Cdmethod,Cemethod):
+def prep_aerodynamicresistance(cf,ds,Cdmethod,Cemethod,Ce_2layer):
     if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='PMin'):
         PMin = ast.literal_eval(cf['PenmanMonteith']['PMin'])
     else:
@@ -3252,8 +3283,12 @@ def prep_aerodynamicresistance(cf,ds,Cdmethod,Cemethod):
     else:
         critFe = 0.
     
+    Fe,f = qcutils.GetSeriesasMA(ds,PMin[0])
+    Fsd,f = qcutils.GetSeriesasMA(ds,PMin[6])
     Uavg,f = qcutils.GetSeriesasMA(ds,PMin[4])
     uindex = numpy.ma.where(Uavg == 0)[0]
+    Feindex = numpy.ma.where(Fe < critFe)[0]
+    Fsdindex = numpy.ma.where(Fsd < critFsd)[0]
     Uavg[uindex] = 0.000000000000001
     # use bulk transfer coefficient method
     if Cemethod == 'True':
@@ -3264,10 +3299,96 @@ def prep_aerodynamicresistance(cf,ds,Cdmethod,Cemethod):
             log.error('  PenmanMonteith:  profileq not given')
             return
         
-        outList = ['Ce','rav','rst','Gst']
+        outList = ['Ce_1layer','rav_1layer','rst_1layer','Gst_1layer']
         attribute = 'Ce with q profile, '
         log.info('  Ce method (Brutseart 1982, Stull 1988) used to estimate aerodynamic resistance, rav')
-        get_stomatalresistance(cf,ds,Uavg,uindex,outList,PMin,attribute,Level,critFsd,critFe,qList)
+        log.info('   Ce method: qList: '+str(qList))
+        Ce, rav, ravindex = get_rav(cf,ds,Uavg,PMin,qList)
+        rst, rstindex, Gst, Gstindex = get_rstGst(cf,ds,PMin,rav)
+        flagList = [PMin[1],PMin[2],PMin[3],PMin[4],PMin[5],PMin[6],PMin[7],qList[0],qList[1]]
+        qcutils.CreateSeries(ds,outList[0],Ce,FList=flagList,Descr='Bulk transfer coefficient, '+attribute+Level,Units='s/m')
+        qcutils.CreateSeries(ds,outList[1],rav,FList=flagList,Descr='Aerodynamic resistance, '+attribute+Level,Units='s/m')
+        qcutils.CreateSeries(ds,outList[2],rst,FList=flagList,Descr='Stomatal resistance from Penman-Monteith inversion, '+attribute+Level,Units='s/m')
+        qcutils.CreateSeries(ds,outList[3],Gst,FList=flagList,Descr='Conductance from Penman-Monteith inversion, '+attribute+Level,Units='mmolH2O/(m2ground s)')
+        for listindex in range(0,4):
+            ds.series[outList[listindex]]['Attr']['InputSeries'] = PMin
+            ds.series[outList[listindex]]['Attr']['FsdCutoff'] = critFsd
+            ds.series[outList[listindex]]['Attr']['FeCutoff'] = critFe
+            ds.series[outList[listindex]]['Flag'][rstindex] = 61
+            ds.series[outList[listindex]]['Flag'][ravindex] = 61
+            #ds.series[outList[listindex]]['Flag'][Gstindex] = 65
+            ds.series[outList[listindex]]['Flag'][uindex] = 64
+            ds.series[outList[listindex]]['Flag'][Feindex] = 62
+            ds.series[outList[listindex]]['Flag'][Fsdindex] = 63
+            ds.series[outList[listindex]]['Data'][rstindex] = numpy.float(-9999)
+            ds.series[outList[listindex]]['Data'][ravindex] = numpy.float(-9999)
+            #ds.series[outList[listindex]]['Data'][Gstindex] = numpy.float(-9999)
+            ds.series[outList[listindex]]['Data'][uindex] = numpy.float(-9999)
+            ds.series[outList[listindex]]['Data'][Feindex] = numpy.float(-9999)
+            ds.series[outList[listindex]]['Data'][Fsdindex] = numpy.float(-9999)
+            ds.series[outList[listindex]]['Data'][uindex] = numpy.float(-9999)
+    
+    # use 2-layer bulk transfer coefficient method
+    if Ce_2layer == 'True':
+        # rav parameterised with q profile measurements
+        if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='base_profileq'):
+            base_qList = ast.literal_eval(cf['PenmanMonteith']['base_profileq'])
+        else:
+            log.error('  PenmanMonteith:  base_profileq not given')
+            return
+        
+        if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='top_profileq'):
+            top_qList = ast.literal_eval(cf['PenmanMonteith']['top_profileq'])
+        else:
+            log.error('  PenmanMonteith:  top_profileq not given')
+            return
+        
+        if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='full_profileq'):
+            full_qList = ast.literal_eval(cf['PenmanMonteith']['full_profileq'])
+        else:
+            log.error('  PenmanMonteith:  full_profileq not given')
+            return
+        
+        outList = ['Ce_base','rav_base','Ce_top','rav_top','Ce_full','rav_full','rst_2layer','Gst_2layer']
+        attribute = 'Ce 2-layer with q profile, '
+        log.info('  Ce method (Brutseart 1982, Stull 1988) used to estimate aerodynamic resistance, rav')
+        log.info('   2-layer Ce method: lower layer qList: '+str(base_qList))
+        log.info('   2-layer Ce method: upper layer qList: '+str(top_qList))
+        log.info('   2-layer Ce method: single-layer qList: '+str(full_qList))
+        Ce_base, rav_base, ravindex_base = get_rav(cf,ds,Uavg,PMin,base_qList,layer='base_',method='Ce_2layer')
+        flagList = [PMin[1],PMin[2],PMin[3],PMin[4],PMin[5],PMin[6],PMin[7],base_qList[0],base_qList[1]]
+        qcutils.CreateSeries(ds,outList[0],Ce_base,FList=flagList,Descr='Bulk transfer coefficient, '+attribute+Level,Units='s/m')
+        qcutils.CreateSeries(ds,outList[1],rav_base,FList=flagList,Descr='Aerodynamic resistance, '+attribute+Level,Units='s/m')
+        Ce_top, rav_top, ravindex_top = get_rav(cf,ds,Uavg,PMin,top_qList,layer='top_',method='Ce_2layer')
+        flagList = [PMin[1],PMin[2],PMin[3],PMin[4],PMin[5],PMin[6],PMin[7],top_qList[0],top_qList[1]]
+        qcutils.CreateSeries(ds,outList[2],Ce_top,FList=flagList,Descr='Bulk transfer coefficient, '+attribute+Level,Units='s/m')
+        qcutils.CreateSeries(ds,outList[3],rav_top,FList=flagList,Descr='Aerodynamic resistance, '+attribute+Level,Units='s/m')
+        Ce_full, rav_full, ravindex_full = get_rav(cf,ds,Uavg,PMin,top_qList,layer='full_',method='Ce_2layer')
+        flagList = [PMin[1],PMin[2],PMin[3],PMin[4],PMin[5],PMin[6],PMin[7],full_qList[0],full_qList[1]]
+        qcutils.CreateSeries(ds,outList[4],Ce_full,FList=flagList,Descr='Bulk transfer coefficient, '+attribute+Level,Units='s/m')
+        qcutils.CreateSeries(ds,outList[5],rav_full,FList=flagList,Descr='Aerodynamic resistance, '+attribute+Level,Units='s/m')
+        rav = rav_base + rav_top
+        rav[ravindex_top] = rav_full
+        ravindex = numpy.ma.where(rav < 0)[0]
+        rst, rstindex, Gst, Gstindex = get_rstGst(cf,ds,PMin,rav)
+        flagList = [PMin[1],PMin[2],PMin[3],PMin[4],PMin[5],PMin[6],PMin[7],base_qList[0],base_qList[1],top_qList[0],top_qList[1]]
+        qcutils.CreateSeries(ds,outList[6],rst,FList=flagList,Descr='Stomatal resistance from Penman-Monteith inversion, '+attribute+Level,Units='s/m')
+        qcutils.CreateSeries(ds,outList[7],Gst,FList=flagList,Descr='Conductance from Penman-Monteith inversion, '+attribute+Level,Units='mmolH2O/(m2ground s)')
+        for listindex in range(0,8):
+            ds.series[outList[listindex]]['Attr']['InputSeries'] = PMin
+            ds.series[outList[listindex]]['Attr']['FsdCutoff'] = critFsd
+            ds.series[outList[listindex]]['Attr']['FeCutoff'] = critFe
+            ds.series[outList[listindex]]['Flag'][rstindex] = 61
+            ds.series[outList[listindex]]['Flag'][ravindex] = 61
+            ds.series[outList[listindex]]['Flag'][uindex] = 64
+            ds.series[outList[listindex]]['Flag'][Feindex] = 62
+            ds.series[outList[listindex]]['Flag'][Fsdindex] = 63
+            ds.series[outList[listindex]]['Data'][rstindex] = numpy.float(-9999)
+            ds.series[outList[listindex]]['Data'][ravindex] = numpy.float(-9999)
+            ds.series[outList[listindex]]['Data'][uindex] = numpy.float(-9999)
+            ds.series[outList[listindex]]['Data'][Feindex] = numpy.float(-9999)
+            ds.series[outList[listindex]]['Data'][Fsdindex] = numpy.float(-9999)
+            ds.series[outList[listindex]]['Data'][uindex] = numpy.float(-9999)
     
     # use drag coefficient method
     if Cdmethod == 'True':
@@ -3571,7 +3692,7 @@ def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoMean
             
         for day in range(1,dRan+1):
             xlRow = xlRow + 1
-            if ThisOne == 'rst' or ThisOne == 'Gst' or ThisOne == 'Gst_mol' or ThisOne == 'rc' or ThisOne == 'Gc' or ThisOne == 'Gc_mol':
+            if ThisOne == 'rst_2layer' or ThisOne == 'Gst_2layer' or ThisOne == 'Gst_2layer_mol' or ThisOne == 'rst_1layer' or ThisOne == 'Gst_1layer' or ThisOne == 'Gst_1layer_mol' or ThisOne == 'rc' or ThisOne == 'Gc' or ThisOne == 'Gc_mol':
                 di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day) & ((numpy.mod(ds.series[ThisOne]['Flag'],10) == 0) & (ds.series[ThisOne]['Flag'] < 60)))[0]
                 ti = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day))[0]
                 nRecs = len(ti)

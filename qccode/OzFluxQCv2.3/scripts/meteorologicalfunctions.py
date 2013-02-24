@@ -17,9 +17,9 @@ def aerodynamicresistance(Uavg,Ce):
     rav = 1 / (Uavg * Ce)
     return rav
 
-def bulktransfercoefficient(Fe,Lv,Uavg,q,qsat):
+def bulktransfercoefficient(Fe,Lv,Uavg,qa,qs):
     # Calculate the bulk transfer coefficient to be used in aerodynamic resistance, Stull 1988
-    Ce = (0 - (Fe / Lv)) / (Uavg * (q - qsat))
+    Ce = (0 - (Fe / Lv)) / (Uavg * (qa - qs))
     return Ce
 
 def delta(Ta):
