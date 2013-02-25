@@ -41,7 +41,7 @@
     </copyright>
     <module2copyright />
     <LanguageOptions name="HTML">
-      <option name="fileTypeOverride" value="1" />
+      <option name="fileTypeOverride" value="3" />
       <option name="prefixLines" value="false" />
     </LanguageOptions>
     <LanguageOptions name="Properties">
@@ -218,6 +218,11 @@
         <default-constraints vsize-policy="6" hsize-policy="0" anchor="0" fill="2" />
       </item>
     </group>
+  </component>
+  <component name="ProjectCodeStyleSettingsManager">
+    <option name="PER_PROJECT_SETTINGS">
+      <value />
+    </option>
   </component>
   <component name="ProjectDictionaryState">
     <dictionary name="simonyu" />

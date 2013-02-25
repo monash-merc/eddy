@@ -1,6 +1,6 @@
 <#assign s=JspTaglibs["/WEB-INF/struts-tags.tld"] />
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Welcome to <@s.property value="appName" /></title>
 <#include "template/header.ftl"/>
@@ -57,24 +57,40 @@
         </div>
         <div class="home_right_panel">
             <div class="paragraph_title">Welcome to the OzFlux Data Portal</div>
-            <br/>
+            <p>
+                <b>OzFlux</b> is part of the Australian Terrestrial Ecosystem Research Network (<a href="http://wwww.tern.org.au"><b>TERN</b></a>). The OzFlux
+                network consists of nearly 30 flux towers in Australia and New Zealand. OzFlux is also a
+                member of the global FluxNet community.
+            </p>
 
             <p>
-                Data from the OzFlux network of flux towers is available from this portal.
+                Data from the OzFlux network of flux towers is available from this portal. The data are
+                organised into collections with each collection representing at least one site.
             </p>
 
             <p>
-                Users can browse the contents of this portal by clicking on the “All Collections” entry above
-                and using the “Map view” or the “List view” to view the data collections.
+                Users can browse the contents of this portal by clicking on the <b>"Collections"</b> entry above
+                and using the "<a href="${base}/mapview/showMapView.jspx"><b>Map View</b></a>" or the
+                <@s.if test="%{#session.authentication_flag =='authenticated'}">
+                    "<a href="${base}/data/listAllCollections.jspx"><b>List View</b></a>"
+                </@s.if>
+                <@s.else>
+                    "<a href="${base}/pub/listPubCollections.jspx"><b>List View</b></a>"
+                </@s.else>
+                to view the data collections.
             </p>
 
-            <p>Users wishing to download data will need to log in to the portal. If you already have an
-                account, click the “Login” button above. If you would like to ask for an account, click on
-                “Register”.
+            <p>
+                The "<a href="${base}/search/showSearch.jspx"><b>Search</b></a>" entry allows users to search for data based on attributes such as site name,
+                location, period and researcher. The <b>"Resources"</b> entry contains information on the data
+                available, the data format, license information and information on utilities for accessing the
+                data files stored on this portal.
             </p>
-
-            <p>Information on the data available, the license conditions and the data file format are
-                available on the Resources page.
+            <p>
+                Users wishing to download data will need to log in to the portal. If you already have an
+                account, click the "<b>Login</b>" button above. If you would like to ask for an account, click on
+                "<b>Register</b>". Registration is free and your account will normally be activated within two
+                business days.
             </p>
         </div>
         <div style="clear:both"></div>
