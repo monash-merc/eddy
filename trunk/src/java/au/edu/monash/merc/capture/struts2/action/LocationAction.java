@@ -106,14 +106,13 @@ public class LocationAction extends DMCoreAction {
     public String listSites() {
         sitesResponse = new SitesResponse();
         try {
-
             String viewSiteNamespace = "pub";
             String viewActName = "viewColDetails.jspx";
             String viewType = "anonymous";
             long userId = getLoginUsrIdFromSession();
             if (userId != 0) {
                 viewSiteNamespace = "data";
-                viewType = "user";
+                viewType = "all";
             }
             List<Collection> collections = this.dmService.getCollectionsByLocation(CoverageType.KML.type(), this.spatialCoverage);
             List<SiteBean> siteBeans = covertToSiteBeans(collections);
@@ -123,7 +122,6 @@ public class LocationAction extends DMCoreAction {
             sitesResponse.setViewSiteNamespace(viewSiteNamespace);
             sitesResponse.setViewActName(viewActName);
             sitesResponse.setViewType(viewType);
-
         } catch (Exception ex) {
             logger.error(ex);
             sitesResponse.setSucceed(false);

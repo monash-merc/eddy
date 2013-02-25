@@ -67,7 +67,10 @@ public class AndsRMWSClient extends Stub {
 
     //private static String DEFAULT_TARGET_ENDPOINT = "http://mobs.its.monash.edu.au:7778/orabpel/ResearchMaster/AIRMANDSService/1.0";
 
-    private static String DEFAULT_TARGET_ENDPOINT = "https://gateway-qat.integration.monash.edu.au:443/AIRMANDSService";
+    //private static String DEFAULT_TARGET_ENDPOINT = "https://gateway-qat.integration.monash.edu.au:443/AIRMANDSService";
+
+    private static String DEFAULT_TARGET_ENDPOINT = "https://gateway.integration.monash.edu.au:443/AIRMANDSService";
+
 
     private static String DEFAULT_SERVICE_NAME = "AIRMANDSService";
 

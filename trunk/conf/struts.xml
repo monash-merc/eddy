@@ -568,17 +568,64 @@
         </action>
     </package>
 
-    <!-- Resource Action -->
-    <package name="core.resource" extends="core.merc" namespace="/res">
+    <!-- Site Action - resouces and help -->
+    <package name="core.resource" extends="core.merc" namespace="/site">
         <default-interceptor-ref name="noneAuthStack"/>
         <action name="*">
             <result type="freemarker">/web/res/{1}.ftl</result>
         </action>
-        <action name="resources" class="res.resourceAction" method="resources">
+        <!-- Data Information action -->
+        <action name="datainfo" class="site.resourceAction" method="datainfo">
             <result name="input">/web/common/action_error.ftl</result>
             <result name="error">/web/common/action_error.ftl</result>
-            <result name="success">/web/res/resources.ftl</result>
+            <result name="success">/web/site/datainfo.ftl</result>
         </action>
+
+        <!-- Licensing Information action -->
+        <action name="licenceinfo" class="site.resourceAction" method="licenceinfo">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/site/licenceinfo.ftl</result>
+        </action>
+
+        <!-- NetCDF action -->
+        <action name="netcdf" class="site.resourceAction" method="netcdf">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/site/netcdf.ftl</result>
+        </action>
+
+        <!-- Utilities action -->
+        <action name="utilities" class="site.resourceAction" method="utilities">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/site/utilities.ftl</result>
+        </action>
+
+        <!-- FAQ action -->
+        <action name="faq" class="site.resourceAction" method="faq">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/site/faq.ftl</result>
+        </action>
+
+        <!-- User guide action -->
+        <action name="userguide" class="site.resourceAction" method="userguide">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/site/user_guide.ftl</result>
+        </action>
+
+        <!-- download doc action -->
+        <action name="ddoc" class="site.resourceAction" method="ddoc">
+            <result name="success" type="stream">
+                <param name="contentType">${contentType}</param>
+                <param name="inputName">fileInputStream</param>
+                <param name="contentDisposition">${contentDisposition}</param>
+                <param name="bufferSize">${bufferSize}</param>
+            </result>
+        </action>
+
     </package>
 
     <!-- Map View -->

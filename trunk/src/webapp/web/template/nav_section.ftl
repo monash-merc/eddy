@@ -47,7 +47,20 @@
             </li>
         </@s.else>
             <li><a href="${base}/search/showSearch.jspx">Search</a></li>
-            <li><a href="${base}/res/resources.jspx">Resources</a></li>
+            <li><a href="#">Resources</a>
+                <ul>
+                    <li><a href="${base}/site/datainfo.jspx">Data Information</a></li>
+                    <li><a href="${base}/site/licenceinfo.jspx">Licensing Information</a></li>
+                    <li><a href="${base}/site/netcdf.jspx">NetCDF Files</a></li>
+                    <li><a href="${base}/site/utilities.jspx">Utilities</a></li>
+                </ul>
+            </li>
+            <li><a href="#">Help</a>
+                <ul>
+                    <li><a href="${base}/site/faq.jspx">FAQs</a></li>
+                    <li><a href="${base}/site/userguide.jspx">User Guides</a></li>
+                </ul>
+            </li>
             <li><a href="${base}/aboutus">About Us</a></li>
         </ul>
     </div>

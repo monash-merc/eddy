@@ -318,13 +318,13 @@ input {
 }
 
 .ozfux_nav ul li a {
-    width: 120px;
+    width: 155px;
     text-decoration: none;
     color: #FFFFFF;
     display: block;
     padding-bottom: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
     padding-top: 10px;
 }
 
@@ -347,12 +347,12 @@ input {
 
 .ozfux_nav ul ul li a {
     color: #FFFFFF;
-    width: 120px;
+    width: 155px;
     text-decoration: none;
     display: block;
     padding-bottom: 5px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
     padding-top: 5px;
 }
 
@@ -1617,13 +1617,9 @@ input {
 }
 
 .paragraph_title {
-    background: none repeat scroll 0 0 #eff2f7;
-    color: #313131;
     font-size: 14px;
-    font-weight: bold;
-    height: 22px;
-    line-height: 22px;
-    padding-left: 10px;
+    margin-top:5px;
+    margin-bottom: 15px;
 }
 
 .page_fixed_div {
