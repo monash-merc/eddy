@@ -1,20 +1,20 @@
 .map_view {
-    height: 400px;
-    width: 55%;
+     height: 460px;
+    /**width: 55%; **/
     margin-left: 5px;
     margin-bottom: 5px;
     padding: 5px 5px 5px 5px;
-    display: inline-block;
+    /**display: inline-block; **/
     border: 2px solid #FFFFFF;
 }
 
 .collection_info_div {
-    float: right;
-    width: 40%;
+    /** float: right;
+    width: 40%;*/
     margin-right: 5px;
     margin-bottom: 5px;
     padding: 5px 5px 5px 5px;
-    display: inline-block;
+    /**display: inline-block; **/
 }
 
 .site_map_top {
@@ -25,7 +25,7 @@
     margin-top: 5px;
     margin-bottom: 5px;
     text-align: center;
-    width: 55%;
+    /**width: 55%; **/
 }
 
 .mapview_error_msg_div {

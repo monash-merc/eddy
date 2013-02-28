@@ -58,7 +58,7 @@
                         </div>
                         <@s.if test="%{#colResult.funded == true}">
                             <div class="data_tern_div">
-                                [ TERN-Funded ]
+                                [ <a href="http://www.tern.org.au" target="_blank">TERN-Funded</a> ]
                             </div>
                         </@s.if>
                         <div class="data_action_link">

@@ -43,23 +43,17 @@
                 </div>
 
                 <div class="content_div">
-                    <div class="site_map_top">
-                        <span class="name_title" id="location_number_id">&nbsp;</span>
-                        <div class="comments">[ Select a site to view the collection(s) on the map ]</div>
-                    </div>
                     <div class="map_view_div">
                         <div class="map_view" id="map_view">
                         </div>
-
+                        <!-- collections details -->
                         <div class="collection_info_div">
                             <div class="collection_list_div">
 
                             </div>
                         </div>
-
                     </div>
                 </div>
-
             </div>
         </div>
         <!-- right panel -->

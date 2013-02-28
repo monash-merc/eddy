@@ -2,9 +2,9 @@ var map = null;
 var infoBox = null;
 $(document).ready(function () {
     // create map
-    var melCenter = new google.maps.LatLng(-28.071980, 147.480469);
+    var melCenter = new google.maps.LatLng(-27.994401, 147.832031);
     var myOptions = {
-        zoom:3,
+        zoom:4,
         center:melCenter,
         panControl:true,
         zoomControl:true,
@@ -14,6 +14,7 @@ $(document).ready(function () {
         mapTypeControl:true,
         scaleControl:true,
         rotateControl:true,
+        scrollwheel:false,
         mapTypeId:google.maps.MapTypeId.ROADMAP
     }
     //create a map
@@ -49,20 +50,20 @@ function getMapLocations() {
 function displayMapLocations(mapData) {
     if (mapData != null) {
         var mapLocations = new Array();
-        var count = 0;
+        //var count = 0;
         $.each(mapData, function (key, coverage) {
             mapLocations[key] = coverage.spatialCoverage;
             var location = getCoordsFromCoverageStr(mapLocations[key]);
             if (location != null && location.length == 1) {
                 var mapPoint = new MapPoint(location[0], map);
-                count++;
+                //      count++;
             }
             if (location != null && location.length > 1) {
                 //disabled the polygon
                 // var polygonCreator = new PolygonCreator(map, location);
             }
         });
-        displaySiteTitle(count);
+        // displaySiteTitle(count);
     }
 }
 
@@ -178,16 +179,16 @@ function createInfoBox() {
     return infobox;
 }
 
-function displaySiteTitle(number) {
-    if (number > 0) {
-        var mapSiteTitleDiv = $('.site_map_top');
-        var siteNumber = $('#location_number_id');
-        siteNumber.empty();
-        var html = "A total of <span class='span_number'>" + number + "</span> site(s) on the map";
-        siteNumber.append(html);
-        mapSiteTitleDiv.show();
-    }
-}
+//function displaySiteTitle(number) {
+//    if (number > 0) {
+//        var mapSiteTitleDiv = $('.site_map_top');
+//        var siteNumber = $('#location_number_id');
+//        siteNumber.empty();
+//        var html = "A total of <span class='span_number'>" + number + "</span> site(s) on the map";
+//        siteNumber.append(html);
+//        mapSiteTitleDiv.show();
+//    }
+//}
 
 function viewSites(location) {
     $.ajax({
@@ -231,20 +232,32 @@ function createCollectionListDetails(sitesResponse) {
         if (sites != null) {
             if (totalSize > 0) {
                 var html = "<div class='site_co_info'>";
-                html += "<span class='site_title'>A total of <span class='span_number'>" + totalSize + "</span> collections(s) on this site</span>";
+                html += "<span class='name_title'>A total of <span class='span_number'>" + totalSize + "</span> collections(s) on this site</span>";
                 html += "<div class='comments'>[ Select a collection to view the details ]</div>";
                 html += "</div>";
-                html += "<ul class='collection_ul'>";
+
                 $.each(sites, function (key, sitebean) {
                     var sitename = sitebean.name;
+                    var desc = sitebean.briefDesc;
+                    var funded = sitebean.funded;
                     var siteid = sitebean.id;
                     var siteownerid = sitebean.ownerId;
-
-                    html += "<li>";
+                    html += "<div class='data_display_div'>";
+                    html += "<div class='data_title'>";
                     html += "<a href='../" + namespace + "/" + actname + "?collection.id=" + siteid + "&collection.owner.id=" + siteownerid + "&viewType=" + viewtype + "' target='_blank'>" + sitename + "</a>";
-                    html += "</li>";
+                    html += "</div>";
+                    html += "<div class='data_desc_div'>" + desc + "</div>";
+                    if (funded) {
+                        html += "<div class='data_tern_div'>";
+                        html += "[ <a href='http://www.tern.org.au' target='_blank'>TERN-Funded</a> ]";
+                        html += "</div>";
+                    }
+                    html += "<div class='data_action_link'>";
+                    html += "<a href='../" + namespace + "/" + actname + "?collection.id=" + siteid + "&collection.owner.id=" + siteownerid + "&viewType=" + viewtype + "' target='_blank'>View details</a>";
+                    html += "</div>";
+                    html += "<div style='clear: both;'></div>";
+                    html += "</div>";
                 });
-                html += "</ul>";
                 baseDiv.append(html);
             } else {
                 baseDiv.append("<div class='no_co_on_site'>There is no collection on this site</div>");

@@ -168,6 +168,8 @@ input {
     width: 85px;
     border: solid 1px #E1E8F0;
     background-color: #fff;
+    color: #3a4c66;
+    font-size: 11px;
     font-weight: bold;
     text-align: center;
 }
@@ -186,6 +188,7 @@ input {
     line-height: 25px;
     border: solid 1px #E1E8F0;
     background-color: #fff;
+    color: #3a4c66;
     font-weight: bold;
     text-align: center;
 }
@@ -274,14 +277,13 @@ input {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-    text-transform: uppercase;
     font-weight: bold;
     clear: both;
 }
 
 .ozfux_nav {
-    margin-left: 165px;
-    margin-right: 165px;
+    margin-left: 150px;
+    margin-right: 150px;
 }
 
 .ozfux_nav ul ul {
@@ -318,22 +320,16 @@ input {
 }
 
 .ozfux_nav ul li a {
-    width: 155px;
+    width: 130px;
     text-decoration: none;
     color: #FFFFFF;
     display: block;
-    padding-bottom: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 10px;
+    padding: 5px;
 }
 
 .ozfux_nav ul ul {
     background: #003766;
-    padding-bottom: 0;
-    padding-left: 0;
-    padding-right: 0;
-    padding-top: 0;
+    padding: 0px;
     position: absolute;
     top: 100%;
 }
@@ -347,13 +343,10 @@ input {
 
 .ozfux_nav ul ul li a {
     color: #FFFFFF;
-    width: 155px;
+    width: 130px;
     text-decoration: none;
     display: block;
-    padding-bottom: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 5px;
+    padding: 5px;
 }
 
 .ozfux_nav ul ul li a:hover {
@@ -775,10 +768,22 @@ input {
 }
 
 .data_tern_div {
+    width: 200px;
+    display: inline-block;
+    background: url('../images/tern.png');
+    background-repeat: no-repeat;
+    background-position:left;
     margin-left: 5px;
     margin-right: 5px;
     color: #5d5a3e;
     font-size: 11px;
+    padding-top: 2px;
+    padding-left: 30px;
+}
+.data_tern_div a{
+    color: #5d5a3e;
+    font-size: 11px;
+    font-weight: bold;
 }
 
 .data_desc_div {
@@ -795,8 +800,8 @@ input {
 
 .data_action_link {
     float: right;
-    margin-left: 5px;
     margin-right: 5px;
+    display: inline-block;
 }
 
 .data_action_link a {
@@ -825,6 +830,7 @@ input {
     float: right;
     margin-left: 5px;
     margin-right: 5px;
+    display: inline-block;
 }
 
 .data_action_link2 a {
