@@ -87,7 +87,11 @@
         <div class="status_field_name_div">Metadata Registered:</div>
         <div class="status_field_value_div"><@s.property value="collection.published" /></div>
     </div>
-
+    <@s.if test="%{collection.funded == true}">
+        <div class="data_tern_div">
+            [ <a href="http://www.tern.org.au" target="_blank">TERN-Funded</a> ]
+        </div>
+    </@s.if>
 
     <div class="data_action_link2">
         <@s.if test="%{permissionBean.viewAllowed == false }">

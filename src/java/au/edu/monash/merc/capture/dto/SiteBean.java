@@ -43,6 +43,10 @@ public class SiteBean implements Serializable {
 
     private String name;
 
+    private String briefDesc;
+
+    private boolean funded;
+
     private long id;
 
     private long ownerId;
@@ -53,6 +57,22 @@ public class SiteBean implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getBriefDesc() {
+        return briefDesc;
+    }
+
+    public void setBriefDesc(String briefDesc) {
+        this.briefDesc = briefDesc;
+    }
+
+    public boolean isFunded() {
+        return funded;
+    }
+
+    public void setFunded(boolean funded) {
+        this.funded = funded;
     }
 
     public long getId() {

@@ -135,10 +135,14 @@ public class LocationAction extends DMCoreAction {
         if (collections != null) {
             for (Collection co : collections) {
                 String name = co.getName();
+                String desc = co.getBriefDesc();
+                boolean funded = co.isFunded();
                 long id = co.getId();
                 long ownerId = co.getOwner().getId();
                 SiteBean siteBean = new SiteBean();
                 siteBean.setName(name);
+                siteBean.setBriefDesc(desc);
+                siteBean.setFunded(funded);
                 siteBean.setId(id);
                 siteBean.setOwnerId(ownerId);
                 tmp.add(siteBean);

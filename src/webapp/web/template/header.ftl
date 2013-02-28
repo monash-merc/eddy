@@ -14,6 +14,6 @@
 <script type="text/javascript" src="${base}/js/jquery.autocomplete.js"></script>
 <script type='text/javascript' src='${base}/js/dialog_confirm.js'></script>
 <script type="text/javascript" src="${base}/js/popup_box.js"></script> 
-<script type="text/javascript" src="${base}/js/coin-slider.min.js"></script>
+<script type="text/javascript" src="${base}/js/coin-slider.js"></script>
 
 
