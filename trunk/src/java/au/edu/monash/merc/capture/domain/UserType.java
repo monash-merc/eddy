@@ -29,55 +29,54 @@ package au.edu.monash.merc.capture.domain;
 
 public enum UserType {
 
-	SUPERADMIN(1), ADMIN(2), REGUSER(3), ALLREGUSER(4), ANONYMOUS(5), UNKNOWN(6);
+    SUPERADMIN(1), ADMIN(2), REGUSER(3), ALLREGUSER(4), ANONYMOUS(5), UNKNOWN(6);
 
-	private int code;
+    private int code;
 
-	UserType(int code) {
-		this.code = code;
-	}
+    UserType(int code) {
+        this.code = code;
+    }
 
-	public int code() {
-		return code;
-	}
+    public int code() {
+        return code;
+    }
 
-	public static UserType fromCode(int code) {
-		switch (code) {
-		case 1:
-			return SUPERADMIN;
-		case 2:
-			return ADMIN;
-		case 3:
-			return REGUSER;
-		case 4:
-			return ALLREGUSER;
-		case 5:
-			return ANONYMOUS;
-		default:
-			return UNKNOWN;
-		}
-	}
+    public static UserType fromCode(int code) {
+        switch (code) {
+            case 1:
+                return SUPERADMIN;
+            case 2:
+                return ADMIN;
+            case 3:
+                return REGUSER;
+            case 4:
+                return ALLREGUSER;
+            case 5:
+                return ANONYMOUS;
+            default:
+                return UNKNOWN;
+        }
+    }
 
-	public String toString() {
-		switch (this) {
-		case SUPERADMIN:
-			return "superAdmin";
-		case ADMIN:
-			return "Admin";
-		case REGUSER:
-			return "RegUser";
-		case ALLREGUSER:
-			return "AllRegUser";
-		case ANONYMOUS:
-			return "Anonymous";
-		default:
-			return "Unknown";
+    public String toString() {
+        switch (this) {
+            case SUPERADMIN:
+                return "superAdmin";
+            case ADMIN:
+                return "Admin";
+            case REGUSER:
+                return "RegUser";
+            case ALLREGUSER:
+                return "AllRegUser";
+            case ANONYMOUS:
+                return "Anonymous";
+            default:
+                return "Unknown";
+        }
+    }
 
-		}
-	}
-
-	public static void main(String[] args) {
-		System.out.println(UserType.ADMIN);
-		System.out.println(UserType.ADMIN.code);
-	}
+    public static void main(String[] args) {
+        System.out.println(UserType.ADMIN);
+        System.out.println(UserType.ADMIN.code);
+    }
 }

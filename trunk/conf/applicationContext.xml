@@ -54,7 +54,7 @@
 	</bean>
 
     <!-- FreeMarker Mail-->
-    <bean id="freeMarker" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+    <bean id="mailFreeMarker" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
 		<property name="templateLoaderPath" value="classpath:mailTemplates" /><!-- FreeMarker template file -->
 		<property name="freemarkerSettings"><!-- FreeMarker env setting -->
 			<props>
@@ -64,6 +64,18 @@
 			</props>
 		</property>
 	</bean>
+
+    <!-- FreeMarker Rifcs -->
+    <bean id="rifcsFreeMarker" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath" value="classpath:rifcs_template" /><!-- FreeMarker template file -->
+        <property name="freemarkerSettings"><!-- FreeMarker env setting -->
+            <props>
+                <prop key="template_update_delay">1800</prop><!--update template delay -->
+                <prop key="default_encoding">UTF-8</prop><!--template encodding -->
+                <prop key="locale">en_US</prop><!-- template localcy -->
+            </props>
+        </property>
+    </bean>
 
     <!-- Mail Sender -->
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
