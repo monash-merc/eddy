@@ -31,6 +31,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -46,53 +47,55 @@ import freemarker.template.Template;
 @Service
 public class FreeMarkerMailServiceImpl implements MailService {
 
-	@Autowired
-	private JavaMailSender sender;
+    @Autowired
+    @Qualifier("mailSender")
+    private JavaMailSender sender;
 
-	@Autowired
-	private FreeMarkerConfigurer freeMarkerConfigurer;
+    @Autowired
+    @Qualifier("mailFreeMarker")
+    private FreeMarkerConfigurer freeMarkerConfigurer;
 
-	private Logger logger = Logger.getLogger(this.getClass().getName());
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
-	public void setFreeMarkerConfigurer(FreeMarkerConfigurer freeMarkerConfigurer) {
-		this.freeMarkerConfigurer = freeMarkerConfigurer;
-	}
+    public void setFreeMarkerConfigurer(FreeMarkerConfigurer freeMarkerConfigurer) {
+        this.freeMarkerConfigurer = freeMarkerConfigurer;
+    }
 
-	public void setSender(JavaMailSender sender) {
-		this.sender = sender;
-	}
+    public void setSender(JavaMailSender sender) {
+        this.sender = sender;
+    }
 
-	@Override
-	public void sendMail(String emailFrom, String emailTo, String emailSubject, String emailBody, boolean isHtml) {
-		try {
-			MailSenderThread sendThread = new MailSenderThread(sender, emailFrom, emailTo, emailSubject, emailBody, isHtml);
-			sendThread.startSendMail();
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			throw new MailException(e);
-		}
+    @Override
+    public void sendMail(String emailFrom, String emailTo, String emailSubject, String emailBody, boolean isHtml) {
+        try {
+            MailSenderThread sendThread = new MailSenderThread(sender, emailFrom, emailTo, emailSubject, emailBody, isHtml);
+            sendThread.startSendMail();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new MailException(e);
+        }
 
-	}
+    }
 
-	@Override
-	public void sendMail(String emailFrom, String emailTo, String emailSubject, Map<String, String> templateValues, String templateFile,
-			boolean isHtml) {
-		try {
-			String emailBody = getMailBody(templateValues, templateFile);
-			MailSenderThread sendThread = new MailSenderThread(sender, emailFrom, emailTo, emailSubject, emailBody, isHtml);
-			sendThread.startSendMail();
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			throw new MailException(e);
-		}
+    @Override
+    public void sendMail(String emailFrom, String emailTo, String emailSubject, Map<String, String> templateValues, String templateFile,
+                         boolean isHtml) {
+        try {
+            String emailBody = getMailBody(templateValues, templateFile);
+            MailSenderThread sendThread = new MailSenderThread(sender, emailFrom, emailTo, emailSubject, emailBody, isHtml);
+            sendThread.startSendMail();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new MailException(e);
+        }
 
-	}
+    }
 
-	private String getMailBody(Map<String, String> templateValueMap, String templateFile) throws Exception {
-		String htmlText = "";
-		Template tpl = freeMarkerConfigurer.getConfiguration().getTemplate(templateFile);
-		htmlText = FreeMarkerTemplateUtils.processTemplateIntoString(tpl, templateValueMap);
-		return htmlText;
-	}
+    private String getMailBody(Map<String, String> templateValueMap, String templateFile) throws Exception {
+        String htmlText = "";
+        Template tpl = freeMarkerConfigurer.getConfiguration().getTemplate(templateFile);
+        htmlText = FreeMarkerTemplateUtils.processTemplateIntoString(tpl, templateValueMap);
+        return htmlText;
+    }
 
 }

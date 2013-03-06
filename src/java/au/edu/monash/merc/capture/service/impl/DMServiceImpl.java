@@ -30,12 +30,14 @@ package au.edu.monash.merc.capture.service.impl;
 import au.edu.monash.merc.capture.adapter.DataCaptureAdapter;
 import au.edu.monash.merc.capture.adapter.DataCaptureAdapterFactory;
 import au.edu.monash.merc.capture.domain.*;
+import au.edu.monash.merc.capture.domain.Collection;
 import au.edu.monash.merc.capture.dto.*;
 import au.edu.monash.merc.capture.dto.page.Pagination;
 import au.edu.monash.merc.capture.exception.DataCaptureException;
 import au.edu.monash.merc.capture.file.FileSystemSerivce;
 import au.edu.monash.merc.capture.mail.MailService;
 import au.edu.monash.merc.capture.rifcs.RIFCSGenService;
+import au.edu.monash.merc.capture.rifcs.RifcsService;
 import au.edu.monash.merc.capture.service.*;
 import au.edu.monash.merc.capture.util.CaptureUtil;
 import au.edu.monash.merc.capture.util.stage.StageFileTransferThread;
@@ -49,10 +51,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Scope("prototype")
 @Service
@@ -97,6 +96,9 @@ public class DMServiceImpl implements DMService {
 
     @Autowired
     private RIFCSGenService rifcsGenService;
+
+    @Autowired
+    private RifcsService rifcsService;
 
     @Autowired
     private RightsService rightsService;
@@ -152,6 +154,10 @@ public class DMServiceImpl implements DMService {
 
     public void setRifcsGenService(RIFCSGenService rifcsGenService) {
         this.rifcsGenService = rifcsGenService;
+    }
+
+    public void setRifcsService(RifcsService rifcsService) {
+        this.rifcsService = rifcsService;
     }
 
     public void setRightsService(RightsService rightsService) {
@@ -677,6 +683,35 @@ public class DMServiceImpl implements DMService {
     public void sendMail(String emailFrom, String emailTo, String emailSubject, Map<String, String> templateValues, String templateFile,
                          boolean isHtml) {
         this.mailService.sendMail(emailFrom, emailTo, emailSubject, templateValues, templateFile, isHtml);
+    }
+
+    //TODO: new RIFCS
+    @Override
+    public void publishRifcs() {
+        Map<String, Object> templateMap = populateTemplateMap();
+        this.rifcsService.createRifcs("/opt/datastore/rifcs", "simontest_123456", templateMap, "collectionRifcs.ftl");
+    }
+
+    private Map<String, Object> populateTemplateMap() {
+        Map<String, Object> templateMap = new HashMap<String, Object>();
+        List<Party> parties = new ArrayList<Party>();
+        Party p1 = new Party();
+        p1.setPartyKey("part1_key1");
+        Party p2 = new Party();
+        p2.setPartyKey("part1_key2");
+        Party p3 = new Party();
+        p3.setPartyKey("part1_key3");
+        parties.add(p1);
+        parties.add(p2);
+        parties.add(p3);
+        templateMap.put("parties", parties);
+        templateMap.put("Localkey", "simontest_123456");
+        return templateMap;
+    }
+
+    private Map<String, Object> popolatePartyTemplateMap() {
+
+        return null;
     }
 
     @Override

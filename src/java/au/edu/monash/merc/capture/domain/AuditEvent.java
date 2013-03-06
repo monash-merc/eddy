@@ -66,7 +66,7 @@ public class AuditEvent extends Domain {
 	@JoinColumn(referencedColumnName = "id", nullable = false, name = "owner_id")
 	private User eventOwner;
 
-	@OneToOne(targetEntity = User.class)
+	@ManyToOne(targetEntity = User.class)
 	@JoinColumn(referencedColumnName = "id", nullable = false, name = "operator")
 	private User operator;
 

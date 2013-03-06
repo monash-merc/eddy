@@ -230,6 +230,8 @@ public interface DMService {
 
     void savePublishInfo(PublishBean pubBean);
 
+    void publishRifcs();
+
     List<Activity> getActivitiesByCollectionId(long cid);
 
     List<Party> getPartiesByCollectionId(long cid);

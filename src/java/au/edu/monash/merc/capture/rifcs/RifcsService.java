@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011, Monash e-Research Centre
+ * Copyright (c) 2010-2013, Monash e-Research Centre
  * (Monash University, Australia)
  * All rights reserved.
  *
@@ -25,31 +25,21 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package au.edu.monash.merc.capture.domain;
 
-public enum PermType {
-    REGISTERED("Registered"), ALLREGUSER("AllRegUser"), ANONYMOUS("Anonymous");
+package au.edu.monash.merc.capture.rifcs;
 
-    private String code;
+import java.util.Map;
 
-    PermType(String code) {
-        this.code = code;
-    }
+/**
+ * @author Simon Yu
+ *         <p/>
+ *         Email: xiaoming.yu@monash.edu
+ * @version 1.0
+ * @since 1.0
+ *        <p/>
+ *        Date: 5/03/13 2:49 PM
+ */
+public interface RifcsService {
 
-    public String code() {
-        return code;
-    }
-
-    public String toString() {
-        switch (this) {
-            case REGISTERED:
-                return "Registered";
-            case ALLREGUSER:
-                return "AllRegUser";
-            case ANONYMOUS:
-                return "Anonymous";
-            default:
-                return "Anonymous";
-        }
-    }
+    void createRifcs(String rifcsStoreLocaton, String identifier, Map<String, Object> templateValues, String rifcsTemplate);
 }
