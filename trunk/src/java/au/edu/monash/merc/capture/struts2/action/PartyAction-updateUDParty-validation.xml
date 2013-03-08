@@ -3,14 +3,14 @@
   		"-//OpenSymphony Group//XWork Validator 1.0.2//EN" 
   		"http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
 <validators>
-	<field name="addedPartyBean.partyKey">
+	<field name="selectedPartyBean.partyKey">
 		<field-validator type="stringlength">
 			<param name="maxLength">100</param>
 			<param name="minLength">1</param>
 			<message>${getText("ands.add.party.party.key.range")}</message>
 		</field-validator>
 	</field>
-	<field name="addedPartyBean.personTitle">
+	<field name="selectedPartyBean.personTitle">
 		<field-validator type="requiredstring" short-circuit="true">
 			<param name="trim">true</param>
 			<message>${getText("ands.add.party.party.title.required")}</message>
@@ -22,7 +22,7 @@
 		</field-validator>
 	</field>
 	
-	<field name="addedPartyBean.personGivenName">
+	<field name="selectedPartyBean.personGivenName">
 		<field-validator type="requiredstring" short-circuit="true">
 			<param name="trim">true</param>
 			<message>${getText("ands.add.party.party.first.name.required")}</message>
@@ -34,7 +34,7 @@
 		</field-validator>
 	</field>
 	
-	<field name="addedPartyBean.personFamilyName">
+	<field name="selectedPartyBean.personFamilyName">
 		<field-validator type="requiredstring" short-circuit="true">
 			<param name="trim">true</param>
 			<message>${getText("ands.add.party.party.last.name.required")}</message>
@@ -46,7 +46,7 @@
 		</field-validator>
 	</field>
 
-	<field name="addedPartyBean.email">
+	<field name="selectedPartyBean.email">
 		<field-validator type="requiredstring" short-circuit="true">
 			<param name="trim">true</param>
 			<message>${getText("ands.add.party.party.email.required")}</message>
@@ -56,7 +56,7 @@
 		</field-validator>
 	</field>
 	
-	<field name="addedPartyBean.address">
+	<field name="selectedPartyBean.address">
 		<field-validator type="requiredstring" short-circuit="true">
 			<param name="trim">true</param>
 			<message>${getText("ands.add.party.party.address.required")}</message>
@@ -68,7 +68,7 @@
 		</field-validator>
 	</field>
 	
-	<field name="addedPartyBean.url">
+	<field name="selectedPartyBean.url">
 		<field-validator type="requiredstring" short-circuit="true">
 			<param name="trim">true</param>
 			<message>${getText("ands.add.party.party.url.required")}</message>
@@ -79,7 +79,7 @@
 	</field>
 
 	 
-	<field name="addedPartyBean.groupName">
+	<field name="selectedPartyBean.groupName">
 		<field-validator type="requiredstring">
 			<param name="trim">true</param>
 			<message>${getText("ands.add.party.party.group.name.required")}</message>
@@ -91,7 +91,7 @@
 		</field-validator>
 	</field>
 	
-	<field name="addedPartyBean.originateSourceValue">
+	<field name="selectedPartyBean.originateSourceValue">
 		<field-validator type="requiredstring" short-circuit="true">
 			<param name="trim">true</param>
 			<message>${getText("ands.add.party.party.group.url.required")}</message>

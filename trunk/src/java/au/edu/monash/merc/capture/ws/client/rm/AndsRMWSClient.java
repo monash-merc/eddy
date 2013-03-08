@@ -806,12 +806,14 @@ public class AndsRMWSClient extends Stub {
             // nlaid = ws.getNlaId("virginig");
             //  nlaid = ws.getNlaId("pisaac");
             // nlaid = ws.getNlaId("virginig");
-            nlaid = ws.getNlaId("jberinge");
+           // nlaid = ws.getNlaId("jberinge");
+
+            nlaid = ws.getNlaId("xiyu");
             System.out.println("====> getNlaid: " + nlaid);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        nlaid = "MON:0000015173";
+       // nlaid = "MON:0000015173";
 
         // nlaid = "MON:0000079309";
         long time2 = System.currentTimeMillis();

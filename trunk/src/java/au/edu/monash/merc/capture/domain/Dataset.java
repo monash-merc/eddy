@@ -30,215 +30,224 @@ package au.edu.monash.merc.capture.domain;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "dataset")
 public class Dataset extends Domain {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "pk_generator")
-	@TableGenerator(name = "pk_generator", pkColumnName = "pk_column_name", valueColumnName = "pk_column_value", pkColumnValue = "dataset_pk")
-	@Column(name = "id", nullable = false)
-	private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "pk_generator")
+    @TableGenerator(name = "pk_generator", pkColumnName = "pk_column_name", valueColumnName = "pk_column_value", pkColumnValue = "dataset_pk")
+    @Column(name = "id", nullable = false)
+    private long id;
 
-	@Basic
-	@Column(name = "name")
-	private String name;
+    @Basic
+    @Column(name = "name")
+    private String name;
 
-	@Basic
-	@Column(name = "extracted")
-	private boolean extracted;
+    @Basic
+    @Column(name = "extracted")
+    private boolean extracted;
 
-	@Basic
-	@Column(name = "title")
-	private String title;
+    @Basic
+    @Column(name = "ra_enabled")
+    private boolean raEnabled;
 
-	@Basic
-	@Column(name = "specification", length = 2000)
-	private String specification;
+    @Basic
+    @Column(name = "title")
+    private String title;
 
-	@Basic
-	@Column(name = "site_name", length = 100)
-	private String siteName;
+    @Basic
+    @Column(name = "specification", length = 2000)
+    private String specification;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "import_datetime")
-	private Date importDateTime;
+    @Basic
+    @Column(name = "site_name", length = 100)
+    private String siteName;
 
-	@Basic
-	@Column(name = "run_datetime_tag", length = 50)
-	private String runDateTimeTag;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "import_datetime")
+    private Date importDateTime;
 
-	@Basic
-	@Column(name = "xlmod_datetime_tag", length = 50)
-	private String xlModDateTimeTag;
+    @Basic
+    @Column(name = "run_datetime_tag", length = 50)
+    private String runDateTimeTag;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "run_datetime")
-	private Date runDateTime;
+    @Basic
+    @Column(name = "xlmod_datetime_tag", length = 50)
+    private String xlModDateTimeTag;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "xlmod_datetime")
-	private Date xlModDateTime;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "run_datetime")
+    private Date runDateTime;
 
-	@Basic
-	@Column(name = "store_location")
-	private String storeLocation;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "xlmod_datetime")
+    private Date xlModDateTime;
 
-	@Basic
-	@Column(name = "netcdf_level")
-	private String netCDFLevel;
+    @Basic
+    @Column(name = "store_location")
+    private String storeLocation;
 
-	@ManyToOne(targetEntity = Collection.class)
-	@JoinColumn(name = "collection_id", referencedColumnName = "id", nullable = false)
-	private Collection collection;
+    @Basic
+    @Column(name = "netcdf_level")
+    private String netCDFLevel;
 
-	@OneToMany(mappedBy = "dataset", fetch = FetchType.LAZY, targetEntity = GlobalMetadata.class, cascade = CascadeType.ALL)
-	private List<GlobalMetadata> globalMetadata;
+    @OneToOne(mappedBy = "dataset", targetEntity = RestrictAccess.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private RestrictAccess restrictAccess;
 
-	@OneToMany(mappedBy = "dataset", fetch = FetchType.LAZY, targetEntity = MetaVariable.class, cascade = CascadeType.ALL)
-	private List<MetaVariable> metaVariables;
+    @ManyToOne(targetEntity = Collection.class)
+    @JoinColumn(name = "collection_id", referencedColumnName = "id", nullable = false)
+    private Collection collection;
 
-	public long getId() {
-		return id;
-	}
+    @OneToMany(mappedBy = "dataset", fetch = FetchType.LAZY, targetEntity = GlobalMetadata.class, cascade = CascadeType.ALL)
+    private List<GlobalMetadata> globalMetadata;
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    @OneToMany(mappedBy = "dataset", fetch = FetchType.LAZY, targetEntity = MetaVariable.class, cascade = CascadeType.ALL)
+    private List<MetaVariable> metaVariables;
 
-	public String getName() {
-		return name;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public boolean isExtracted() {
-		return extracted;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setExtracted(boolean extracted) {
-		this.extracted = extracted;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public boolean isExtracted() {
+        return extracted;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setExtracted(boolean extracted) {
+        this.extracted = extracted;
+    }
 
-	public String getSpecification() {
-		return specification;
-	}
+    public boolean isRaEnabled() {
+        return raEnabled;
+    }
 
-	public void setSpecification(String specification) {
-		this.specification = specification;
-	}
+    public void setRaEnabled(boolean raEnabled) {
+        this.raEnabled = raEnabled;
+    }
 
-	public String getSiteName() {
-		return siteName;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setSiteName(String siteName) {
-		this.siteName = siteName;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public Date getImportDateTime() {
-		return importDateTime;
-	}
+    public String getSpecification() {
+        return specification;
+    }
 
-	public void setImportDateTime(Date importDateTime) {
-		this.importDateTime = importDateTime;
-	}
+    public void setSpecification(String specification) {
+        this.specification = specification;
+    }
 
-	public String getRunDateTimeTag() {
-		return runDateTimeTag;
-	}
+    public String getSiteName() {
+        return siteName;
+    }
 
-	public void setRunDateTimeTag(String runDateTimeTag) {
-		this.runDateTimeTag = runDateTimeTag;
-	}
+    public void setSiteName(String siteName) {
+        this.siteName = siteName;
+    }
 
-	public String getXlModDateTimeTag() {
-		return xlModDateTimeTag;
-	}
+    public Date getImportDateTime() {
+        return importDateTime;
+    }
 
-	public void setXlModDateTimeTag(String xlModDateTimeTag) {
-		this.xlModDateTimeTag = xlModDateTimeTag;
-	}
+    public void setImportDateTime(Date importDateTime) {
+        this.importDateTime = importDateTime;
+    }
 
-	public Date getRunDateTime() {
-		return runDateTime;
-	}
+    public String getRunDateTimeTag() {
+        return runDateTimeTag;
+    }
 
-	public void setRunDateTime(Date runDateTime) {
-		this.runDateTime = runDateTime;
-	}
+    public void setRunDateTimeTag(String runDateTimeTag) {
+        this.runDateTimeTag = runDateTimeTag;
+    }
 
-	public Date getXlModDateTime() {
-		return xlModDateTime;
-	}
+    public String getXlModDateTimeTag() {
+        return xlModDateTimeTag;
+    }
 
-	public void setXlModDateTime(Date xlModDateTime) {
-		this.xlModDateTime = xlModDateTime;
-	}
+    public void setXlModDateTimeTag(String xlModDateTimeTag) {
+        this.xlModDateTimeTag = xlModDateTimeTag;
+    }
 
-	public String getStoreLocation() {
-		return storeLocation;
-	}
+    public Date getRunDateTime() {
+        return runDateTime;
+    }
 
-	public void setStoreLocation(String storeLocation) {
-		this.storeLocation = storeLocation;
-	}
+    public void setRunDateTime(Date runDateTime) {
+        this.runDateTime = runDateTime;
+    }
 
-	public String getNetCDFLevel() {
-		return netCDFLevel;
-	}
+    public Date getXlModDateTime() {
+        return xlModDateTime;
+    }
 
-	public void setNetCDFLevel(String netCDFLevel) {
-		this.netCDFLevel = netCDFLevel;
-	}
+    public void setXlModDateTime(Date xlModDateTime) {
+        this.xlModDateTime = xlModDateTime;
+    }
 
-	public List<GlobalMetadata> getGlobalMetadata() {
-		return globalMetadata;
-	}
+    public String getStoreLocation() {
+        return storeLocation;
+    }
 
-	public void setGlobalMetadata(List<GlobalMetadata> globalMetadata) {
-		this.globalMetadata = globalMetadata;
-	}
+    public void setStoreLocation(String storeLocation) {
+        this.storeLocation = storeLocation;
+    }
 
-	public List<MetaVariable> getMetaVariables() {
-		return metaVariables;
-	}
+    public String getNetCDFLevel() {
+        return netCDFLevel;
+    }
 
-	public void setMetaVariables(List<MetaVariable> metaVariables) {
-		this.metaVariables = metaVariables;
-	}
+    public void setNetCDFLevel(String netCDFLevel) {
+        this.netCDFLevel = netCDFLevel;
+    }
 
-	public Collection getCollection() {
-		return collection;
-	}
+    public RestrictAccess getRestrictAccess() {
+        return restrictAccess;
+    }
 
-	public void setCollection(Collection collection) {
-		this.collection = collection;
-	}
+    public void setRestrictAccess(RestrictAccess restrictAccess) {
+        this.restrictAccess = restrictAccess;
+    }
+
+    public List<GlobalMetadata> getGlobalMetadata() {
+        return globalMetadata;
+    }
+
+    public void setGlobalMetadata(List<GlobalMetadata> globalMetadata) {
+        this.globalMetadata = globalMetadata;
+    }
+
+    public List<MetaVariable> getMetaVariables() {
+        return metaVariables;
+    }
+
+    public void setMetaVariables(List<MetaVariable> metaVariables) {
+        this.metaVariables = metaVariables;
+    }
+
+    public Collection getCollection() {
+        return collection;
+    }
+
+    public void setCollection(Collection collection) {
+        this.collection = collection;
+    }
 }
