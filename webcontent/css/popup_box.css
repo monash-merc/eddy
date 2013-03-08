@@ -1,5 +1,4 @@
 #pw_overlay {
-   
   background-color:#eee; cursor:wait;
   position: fixed;
   margin: auto;
@@ -53,6 +52,5 @@
   right: 5px;
   bottom:1px;
   cursor: pointer;
-  cursor: hand;
 }
 

@@ -141,6 +141,7 @@ public class Collection extends Domain {
     @Cascade({CascadeType.DELETE})
     private List<Dataset> datasets = new ArrayList<Dataset>();
 
+    //TODO: to be removed
     @ManyToMany(targetEntity = Activity.class)
     @JoinTable(name = "collection_activity", joinColumns = {@JoinColumn(name = "collection_id", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "activity_id", referencedColumnName = "id")}, uniqueConstraints = {@UniqueConstraint(columnNames = {
             "collection_id", "activity_id"})})
@@ -153,9 +154,14 @@ public class Collection extends Domain {
     @LazyCollection(LazyCollectionOption.TRUE)
     private List<Party> parties = new ArrayList<Party>();
 
+    //TODO to be removed
     @OneToOne(mappedBy = "collection", targetEntity = Rights.class, fetch = FetchType.LAZY)
     @Cascade({CascadeType.DELETE})
     private Rights rights;
+
+    @OneToOne(mappedBy = "collection", targetEntity = Licence.class, fetch = FetchType.LAZY)
+    @Cascade({CascadeType.DELETE})
+    private Licence licence;
 
     public long getId() {
         return id;
@@ -197,12 +203,20 @@ public class Collection extends Domain {
         this.owner = owner;
     }
 
+    public User getModifiedByUser() {
+        return modifiedByUser;
+    }
+
+    public void setModifiedByUser(User modifiedByUser) {
+        this.modifiedByUser = modifiedByUser;
+    }
+
     public String getDirPathName() {
         return dirPathName;
     }
 
-    public void setDirPathName(String dirPath) {
-        this.dirPathName = dirPath;
+    public void setDirPathName(String dirPathName) {
+        this.dirPathName = dirPathName;
     }
 
     public String getBriefDesc() {
@@ -237,12 +251,60 @@ public class Collection extends Domain {
         this.uniqueKey = uniqueKey;
     }
 
-    public List<Dataset> getDatasets() {
-        return datasets;
+    public boolean isPublished() {
+        return published;
     }
 
-    public void setDatasets(List<Dataset> datasets) {
-        this.datasets = datasets;
+    public void setPublished(boolean published) {
+        this.published = published;
+    }
+
+    public boolean isFunded() {
+        return funded;
+    }
+
+    public void setFunded(boolean funded) {
+        this.funded = funded;
+    }
+
+    public String getSpatialType() {
+        return spatialType;
+    }
+
+    public void setSpatialType(String spatialType) {
+        this.spatialType = spatialType;
+    }
+
+    public String getSpatialCoverage() {
+        return spatialCoverage;
+    }
+
+    public void setSpatialCoverage(String spatialCoverage) {
+        this.spatialCoverage = spatialCoverage;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public Date getDateFrom() {
+        return dateFrom;
+    }
+
+    public void setDateFrom(Date dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+
+    public Date getDateTo() {
+        return dateTo;
+    }
+
+    public void setDateTo(Date dateTo) {
+        this.dateTo = dateTo;
     }
 
     public List<Permission> getPermissions() {
@@ -253,12 +315,12 @@ public class Collection extends Domain {
         this.permissions = permissions;
     }
 
-    public User getModifiedByUser() {
-        return modifiedByUser;
+    public List<Dataset> getDatasets() {
+        return datasets;
     }
 
-    public void setModifiedByUser(User modifiedByUser) {
-        this.modifiedByUser = modifiedByUser;
+    public void setDatasets(List<Dataset> datasets) {
+        this.datasets = datasets;
     }
 
     public List<Activity> getActivities() {
@@ -277,22 +339,6 @@ public class Collection extends Domain {
         this.parties = parties;
     }
 
-    public boolean isPublished() {
-        return published;
-    }
-
-    public void setPublished(boolean published) {
-        this.published = published;
-    }
-
-    public boolean isFunded() {
-        return funded;
-    }
-
-    public void setFunded(boolean funded) {
-        this.funded = funded;
-    }
-
     public Rights getRights() {
         return rights;
     }
@@ -301,44 +347,11 @@ public class Collection extends Domain {
         this.rights = rights;
     }
 
-    public Location getLocation() {
-        return location;
+    public Licence getLicence() {
+        return licence;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public String getSpatialType() {
-        return spatialType;
-    }
-
-    public void setSpatialType(String spatialType) {
-        this.spatialType = spatialType;
-    }
-
-
-    public String getSpatialCoverage() {
-        return spatialCoverage;
-    }
-
-    public void setSpatialCoverage(String spatialCoverage) {
-        this.spatialCoverage = spatialCoverage;
-    }
-
-    public Date getDateFrom() {
-        return dateFrom;
-    }
-
-    public void setDateFrom(Date dateFrom) {
-        this.dateFrom = dateFrom;
-    }
-
-    public Date getDateTo() {
-        return dateTo;
-    }
-
-    public void setDateTo(Date dateTo) {
-        this.dateTo = dateTo;
+    public void setLicence(Licence licence) {
+        this.licence = licence;
     }
 }

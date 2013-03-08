@@ -406,7 +406,7 @@ $(function() {
         $('<iframe id="externalSite" class="externalSite" src="' + this.href + '" />').dialog({
             title: ($this.attr('title')) ? $this.attr('title') : 'External Site',
             autoOpen: true,
-            width: 550,
+            width: 600,
             height: 500,
             modal: true,
             resizable: true,
@@ -415,7 +415,7 @@ $(function() {
                 opacity: 0.5,
                 background: "black"
             }
-        }).width(550 - horizontalPadding).height(500 - verticalPadding);
+        }).width(600 - horizontalPadding).height(500 - verticalPadding);
 	});
 });
 

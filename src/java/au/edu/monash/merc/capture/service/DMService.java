@@ -237,6 +237,7 @@ public interface DMService {
     List<Party> getPartiesByCollectionId(long cid);
 
 
+    //TODO: remove the  rights
     void saveRights(Rights rights);
 
     void updateRights(Rights rights);
@@ -244,6 +245,18 @@ public interface DMService {
     Rights getRightsById(long id);
 
     Rights getRightsByCollectionId(long cid);
+
+    void saveLicence(Licence licence);
+
+    void updateLicence(Licence licence);
+
+    void deleteLicence(Licence licence);
+
+    void deleteLicenceById(long id);
+
+    Licence getLicenceById(long id);
+
+    Licence getLicenceByCollectionId(long cid);
 
     Party getPartyByEmail(String email);
 

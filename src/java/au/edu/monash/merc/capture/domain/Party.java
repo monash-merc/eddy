@@ -43,184 +43,196 @@ import javax.persistence.TableGenerator;
 @Table(name = "party")
 public class Party extends Domain {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "pk_generator")
-	@TableGenerator(name = "pk_generator", pkColumnName = "pk_column_name", valueColumnName = "pk_column_value", pkColumnValue = "party_pk")
-	@Column(name = "id", nullable = false)
-	private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "pk_generator")
+    @TableGenerator(name = "pk_generator", pkColumnName = "pk_column_name", valueColumnName = "pk_column_value", pkColumnValue = "party_pk")
+    @Column(name = "id", nullable = false)
+    private long id;
 
-	@Basic
-	@Column(name = "party_key")
-	private String partyKey;
+    @Basic
+    @Column(name = "party_key")
+    private String partyKey;
 
-	@Basic
-	@Column(name = "group_name")
-	private String groupName;
+    @Basic
+    @Column(name = "group_name")
+    private String groupName;
 
-	@Basic
-	@Column(name = "originate_src_type")
-	private String originateSourceType;
+    @Basic
+    @Column(name = "originate_src_type")
+    private String originateSourceType;
 
-	@Basic
-	@Column(name = "originate_src_value")
-	private String originateSourceValue;
+    @Basic
+    @Column(name = "originate_src_value")
+    private String originateSourceValue;
 
-	@Basic
-	@Column(name = "identifier_type")
-	private String identifierType;
+    @Basic
+    @Column(name = "identifier_type")
+    private String identifierType;
 
-	@Basic
-	@Column(name = "identifier_value")
-	private String identifierValue;
+    @Basic
+    @Column(name = "identifier_value")
+    private String identifierValue;
 
-	@Basic
-	@Column(name = "person_title")
-	private String personTitle;
+    @Basic
+    @Column(name = "person_title")
+    private String personTitle;
 
-	@Basic
-	@Column(name = "given_name")
-	private String personGivenName;
+    @Basic
+    @Column(name = "given_name")
+    private String personGivenName;
 
-	@Basic
-	@Column(name = "family_name")
-	private String personFamilyName;
+    @Basic
+    @Column(name = "family_name")
+    private String personFamilyName;
 
-	@Basic
-	@Column(name = "url")
-	private String url;
+    @Basic
+    @Column(name = "description", length = 2000)
+    private String description;
 
-	@Basic
-	@Column(name = "email")
-	private String email;
+    @Basic
+    @Column(name = "url")
+    private String url;
 
-	@Basic
-	@Column(name = "address")
-	private String address;
+    @Basic
+    @Column(name = "email")
+    private String email;
 
-	@Basic
-	@Column(name = "from_rm")
-	private boolean fromRm;
+    @Basic
+    @Column(name = "address")
+    private String address;
 
-	@ManyToMany(mappedBy = "parties")
-	private List<Collection> collections;
+    @Basic
+    @Column(name = "from_rm")
+    private boolean fromRm;
 
-	public long getId() {
-		return id;
-	}
+    @ManyToMany(mappedBy = "parties")
+    private List<Collection> collections;
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public String getPartyKey() {
-		return partyKey;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public void setPartyKey(String partyKey) {
-		this.partyKey = partyKey;
-	}
+    public String getPartyKey() {
+        return partyKey;
+    }
 
-	public String getGroupName() {
-		return groupName;
-	}
+    public void setPartyKey(String partyKey) {
+        this.partyKey = partyKey;
+    }
 
-	public void setGroupName(String groupName) {
-		this.groupName = groupName;
-	}
+    public String getGroupName() {
+        return groupName;
+    }
 
-	public String getOriginateSourceType() {
-		return originateSourceType;
-	}
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
 
-	public void setOriginateSourceType(String originateSourceType) {
-		this.originateSourceType = originateSourceType;
-	}
+    public String getOriginateSourceType() {
+        return originateSourceType;
+    }
 
-	public String getOriginateSourceValue() {
-		return originateSourceValue;
-	}
+    public void setOriginateSourceType(String originateSourceType) {
+        this.originateSourceType = originateSourceType;
+    }
 
-	public void setOriginateSourceValue(String originateSourceValue) {
-		this.originateSourceValue = originateSourceValue;
-	}
+    public String getOriginateSourceValue() {
+        return originateSourceValue;
+    }
 
-	public String getIdentifierType() {
-		return identifierType;
-	}
+    public void setOriginateSourceValue(String originateSourceValue) {
+        this.originateSourceValue = originateSourceValue;
+    }
 
-	public void setIdentifierType(String identifierType) {
-		this.identifierType = identifierType;
-	}
+    public String getIdentifierType() {
+        return identifierType;
+    }
 
-	public String getIdentifierValue() {
-		return identifierValue;
-	}
+    public void setIdentifierType(String identifierType) {
+        this.identifierType = identifierType;
+    }
 
-	public void setIdentifierValue(String identifierValue) {
-		this.identifierValue = identifierValue;
-	}
+    public String getIdentifierValue() {
+        return identifierValue;
+    }
 
-	public String getPersonTitle() {
-		return personTitle;
-	}
+    public void setIdentifierValue(String identifierValue) {
+        this.identifierValue = identifierValue;
+    }
 
-	public void setPersonTitle(String personTitle) {
-		this.personTitle = personTitle;
-	}
+    public String getPersonTitle() {
+        return personTitle;
+    }
 
-	public String getPersonGivenName() {
-		return personGivenName;
-	}
+    public void setPersonTitle(String personTitle) {
+        this.personTitle = personTitle;
+    }
 
-	public void setPersonGivenName(String personGivenName) {
-		this.personGivenName = personGivenName;
-	}
+    public String getPersonGivenName() {
+        return personGivenName;
+    }
 
-	public String getPersonFamilyName() {
-		return personFamilyName;
-	}
+    public void setPersonGivenName(String personGivenName) {
+        this.personGivenName = personGivenName;
+    }
 
-	public void setPersonFamilyName(String personFamilyName) {
-		this.personFamilyName = personFamilyName;
-	}
+    public String getPersonFamilyName() {
+        return personFamilyName;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public void setPersonFamilyName(String personFamilyName) {
+        this.personFamilyName = personFamilyName;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public boolean isFromRm() {
-		return fromRm;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setFromRm(boolean fromRm) {
-		this.fromRm = fromRm;
-	}
+    public String getAddress() {
+        return address;
+    }
 
-	public List<Collection> getCollections() {
-		return collections;
-	}
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-	public void setCollections(List<Collection> collections) {
-		this.collections = collections;
-	}
+    public boolean isFromRm() {
+        return fromRm;
+    }
+
+    public void setFromRm(boolean fromRm) {
+        this.fromRm = fromRm;
+    }
+
+    public List<Collection> getCollections() {
+        return collections;
+    }
+
+    public void setCollections(List<Collection> collections) {
+        this.collections = collections;
+    }
 }

@@ -141,7 +141,7 @@ public interface ActConstants {
 	static String DATASET_DELETE_ACTION = "data/deleteDataset.jspx";
 	 
 	//ands metadata registration
-	static  String ANDS_MD_REG_SHOW_ACTION= "data/showMdReg.jspx";
+	static  String ANDS_MD_REG_SHOW_ACTION= "data/showMdRegister.jspx";
 	
 	static  String ANDS_MD_REG_SELECT_ACTIVITY_ACTION= "data/selectActivity.jspx";
 	

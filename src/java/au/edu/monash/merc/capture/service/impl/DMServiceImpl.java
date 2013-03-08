@@ -104,6 +104,9 @@ public class DMServiceImpl implements DMService {
     private RightsService rightsService;
 
     @Autowired
+    private LicenceService licenceService;
+
+    @Autowired
     private LocationService locationService;
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
@@ -162,6 +165,10 @@ public class DMServiceImpl implements DMService {
 
     public void setRightsService(RightsService rightsService) {
         this.rightsService = rightsService;
+    }
+
+    public void setLicenceService(LicenceService licenceService) {
+        this.licenceService = licenceService;
     }
 
     public void setLocationService(LocationService locationService) {
@@ -721,14 +728,8 @@ public class DMServiceImpl implements DMService {
         // parties
         List<Party> parties = new ArrayList<Party>();
         for (PartyBean partybean : partyList) {
-            Party p = null;
-            if (!partybean.isFromRm()) {
-                // search the party detail by the person's first name and last name from the database;
-                p = getPartyByEmail(partybean.getEmail());
-            } else {
-                // search the party detail by the party's key
-                p = getPartyByPartyKey(partybean.getPartyKey());
-            }
+            // search the party detail by the party's key
+            Party p = getPartyByPartyKey(partybean.getPartyKey());
             // if party not found from the database, we just save it into database;
             if (p == null) {
                 p = copyPartyBeanToParty(partybean);
@@ -814,6 +815,7 @@ public class DMServiceImpl implements DMService {
         return this.collectionService.getPublishedCoByIdentifier(identifier);
     }
 
+    //TODO: to be removed
     @Override
     public void saveRights(Rights rights) {
         this.rightsService.saveRights(rights);
@@ -835,6 +837,36 @@ public class DMServiceImpl implements DMService {
     }
 
     @Override
+    public void saveLicence(Licence licence) {
+        this.licenceService.saveLicence(licence);
+    }
+
+    @Override
+    public void updateLicence(Licence licence) {
+        this.licenceService.updateLicence(licence);
+    }
+
+    @Override
+    public void deleteLicence(Licence licence) {
+        this.licenceService.deleteLicence(licence);
+    }
+
+    @Override
+    public void deleteLicenceById(long id) {
+        this.licenceService.deleteLicenceById(id);
+    }
+
+    @Override
+    public Licence getLicenceById(long id) {
+        return this.licenceService.getLicenceById(id);
+    }
+
+    @Override
+    public Licence getLicenceByCollectionId(long cid) {
+        return this.licenceService.getLicenceByCollectionId(cid);
+    }
+
+    @Override
     public Party getPartyByEmail(String email) {
         return this.partyService.getPartyByEmail(email);
     }
@@ -850,9 +882,9 @@ public class DMServiceImpl implements DMService {
         List<Party> parties = new ArrayList<Party>();
 
         if (StringUtils.contains(userNameOrEmail, "@")) {
-            Party p = this.getPartyByEmail(userNameOrEmail);
-            if (p != null) {
-                parties.add(p);
+            Party  foundParty = this.getPartyByEmail(userNameOrEmail);
+            if (foundParty != null) {
+                parties.add(foundParty);
             }
             return parties;
         }

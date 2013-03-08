@@ -202,7 +202,6 @@ input {
     line-height: 25px;
 }
 
-
 .stage_pane_div {
     font-size: 12px;
 }
@@ -772,7 +771,7 @@ input {
     display: inline-block;
     background: url('../images/tern.png');
     background-repeat: no-repeat;
-    background-position:left;
+    background-position: left;
     margin-left: 5px;
     margin-right: 5px;
     color: #5d5a3e;
@@ -780,7 +779,8 @@ input {
     padding-top: 2px;
     padding-left: 30px;
 }
-.data_tern_div a{
+
+.data_tern_div a {
     color: #5d5a3e;
     font-size: 11px;
     font-weight: bold;
@@ -847,6 +847,43 @@ input {
 }
 
 .data_action_link2 a:hover {
+    text-decoration: none;
+    background-color: #006377;
+    color: #fff;
+    height: 22px;
+    line-height: 22px;
+    font-size: 11px;
+}
+
+.party_display_div {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.metadata_spec {
+    display: inline-block;
+    padding-right: 10px;
+    color: #858585
+}
+
+.metadata_act_link {
+    display: inline-block;
+}
+
+.metadata_act_link a {
+    min-width: 90px;
+    height: 22px;
+    line-height: 22px;
+    display: inline-block;
+    font-weight: bold;
+    text-align: center;
+    color: #3a4c66;
+    text-decoration: none;
+    border: solid 1px #E1E8F0;
+    font-size: 11px;
+}
+
+.metadata_act_link a:hover {
     text-decoration: none;
     background-color: #006377;
     color: #fff;
@@ -946,6 +983,7 @@ input {
     padding: 5px;
     font-size: 11px;
 }
+
 .display_data_tab2 {
     width: 100%;
     text-align: left;
@@ -1003,43 +1041,6 @@ input {
     color: #c5a463;
     font-size: 11px;
 }
-
-/** TODO: removed **/
-.tab_div {
-    margin: 0 auto;
-    padding-top: 2px;
-    padding-bottom: 2px;
-}
-
-.tab_div a {
-    width: 60px;
-    border: solid 1px #C2C9D7;
-    padding-left: 5px;
-    padding-right: 5px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    font-size: 11px;
-    text-decoration: none;
-    font-weight: bold;
-    text-align: center;
-    color: #003766;
-}
-
-.tab_div a:hover {
-    width: 60px;
-    padding-left: 5px;
-    padding-right: 5px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    border: solid 1px #999;
-    color: #fff;
-    background-color: #006377;
-    font-weight: bold;
-    text-align: center;
-    font-size: 11px;
-}
-
-/** End of  TODO: removed **/
 
 .name_title {
     display: block;
@@ -1188,6 +1189,7 @@ input {
     background-color: #f3f3f3;
 }
 
+/** need removed? **/
 .table_ds_data {
     text-align: left;
     border: solid 1px #E1E8F0;
@@ -1215,6 +1217,7 @@ input {
 .var_td td {
     color: #7e7e7e;
 }
+/** end of need removed? **/
 
 .ds_div_border_block {
     margin-left: 15px;
@@ -1228,6 +1231,84 @@ input {
     color: #909090;
     text-align: justify;
     padding: 5px;
+}
+
+/** IFrame popup **/
+
+.popup_main_div {
+    width: 540px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 2px;
+    margin-top: 2px;
+    padding: 5px;
+    text-align: center;
+}
+
+.popup_title {
+    background: #F2F2F2;
+    color: #212121;
+    font-weight: bold;
+    font-family: Arial, Verdana, sans-serif;
+    height: 22px;
+    line-height: 22px;
+    text-align: left;
+    padding-left: 10px;
+}
+
+.popup_spec {
+    margin: 5px;
+    padding: 5px;
+    text-align: justify;
+}
+
+.popup_row {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-align: left;
+    border: solid 1px #F2F2F2;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.popup_input_div {
+    margin: 5px;
+    padding: 5px;
+}
+
+
+.popup_input_field_title {
+    display: inline-block;
+    float: left;
+    width: 100px;
+    height: 22px;
+    padding-left: 5px;
+}
+
+.popup_input_value_section {
+    display: inline-block;
+    padding-left: 5px;
+    text-align: left;
+}
+
+.popup_button_div {
+    text-align: center;
+    padding: 10px;
+}
+
+
+
+.mcpop_out_display {
+    border: 1px solid #f4f7fb;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 5px;
+    color: #003766;
 }
 
 /**   ========= End of Refactored CSS ====== **/
@@ -1624,7 +1705,7 @@ input {
 
 .paragraph_title {
     font-size: 14px;
-    margin-top:5px;
+    margin-top: 5px;
     margin-bottom: 15px;
 }
 
@@ -2671,7 +2752,6 @@ input {
     border-right: dotted 1px #E1E8F0;
     padding: 3px 5px 4px 10px;
 }
-
 
 /** ==== START of Footer Section ==== **/
 

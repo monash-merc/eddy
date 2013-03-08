@@ -348,6 +348,14 @@
         </action>
 
         <!-- show the metadata registration -->
+        <action name="showMdRegister" class="data.metadataRegAction" method="showMdRegister">
+            <result name="input">/web/mdreg/metadata_register.ftl</result>
+            <result name="error">/web/mdreg/metadata_register_error.ftl</result>
+            <result name="success">/web/mdreg/metadata_register.ftl</result>
+        </action>
+
+
+        <!-- show the metadata registration -->
         <action name="showMdReg" class="data.mdRegAction" method="showMdReg">
             <result name="input">/web/mdreg/md_reg.ftl</result>
             <result name="error">/web/mdreg/mdreg_error.ftl</result>
@@ -369,14 +377,14 @@
         </action>
 
         <!-- show show search party action -->
-        <action name="showSearchParty" class="data.mdRegAction" method="showSearchParty">
+        <action name="showSearchParty" class="data.partyAction" method="showSearchParty">
             <result name="input">/web/mdreg/search_party.ftl</result>
             <result name="error">/web/mdreg/search_party.ftl</result>
             <result name="success">/web/mdreg/search_party.ftl</result>
         </action>
 
         <!--  search party action -->
-        <action name="searchParty" class="data.mdRegAction" method="searchParty">
+        <action name="searchParty" class="data.partyAction" method="searchParty">
             <result name="input">/web/mdreg/search_party.ftl</result>
             <result name="error">/web/mdreg/search_party.ftl</result>
             <result name="pnotfound" type="chain">
@@ -388,35 +396,35 @@
         </action>
 
         <!-- select search party action -->
-        <action name="selectParty" class="data.mdRegAction" method="selectParty">
+        <action name="selectParty" class="data.partyAction" method="selectParty">
             <result name="input">/web/mdreg/search_party_results.ftl</result>
             <result name="error">/web/mdreg/search_party_results.ftl</result>
             <result name="success">/web/mdreg/party_detail.ftl</result>
         </action>
 
         <!-- show add an user-defined party -->
-        <action name="showAddUDParty" class="data.mdRegAction" method="showAddUDParty">
+        <action name="showAddUDParty" class="data.partyAction" method="showAddUDParty">
             <result name="input">/web/mdreg/add_ud_party.ftl</result>
             <result name="error">/web/mdreg/add_ud_party.ftl</result>
             <result name="success">/web/mdreg/add_ud_party.ftl</result>
         </action>
 
         <!-- add an user-defined party -->
-        <action name="addUDParty" class="data.mdRegAction" method="addUDParty">
+        <action name="addUDParty" class="data.partyAction" method="addUDParty">
             <result name="input">/web/mdreg/add_ud_party.ftl</result>
             <result name="error">/web/mdreg/add_ud_party.ftl</result>
             <result name="success">/web/mdreg/party_detail.ftl</result>
         </action>
 
         <!-- show edit user defined party -->
-        <action name="showEditUDParty" class="data.mdRegAction" method="showEditUDParty">
+        <action name="showEditUDParty" class="data.partyAction" method="showEditUDParty">
             <result name="input">/web/mdreg/update_ud_party.ftl</result>
             <result name="error">/web/mdreg/update_ud_party.ftl</result>
             <result name="success">/web/mdreg/update_ud_party.ftl</result>
         </action>
 
         <!-- update user-defined party -->
-        <action name="updateUDParty" class="data.mdRegAction" method="updateUDParty">
+        <action name="updateUDParty" class="data.partyAction" method="updateUDParty">
             <result name="input">/web/mdreg/update_ud_party.ftl</result>
             <result name="error">/web/mdreg/update_ud_party.ftl</result>
             <result name="success">/web/mdreg/party_detail.ftl</result>

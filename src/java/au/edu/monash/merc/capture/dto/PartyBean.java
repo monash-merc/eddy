@@ -63,6 +63,8 @@ public class PartyBean implements Serializable {
 
     private boolean fromRm;
 
+    private String description;
+
     public long getId() {
         return id;
     }
@@ -189,5 +191,13 @@ public class PartyBean implements Serializable {
 
     public void setFromRm(boolean fromRm) {
         this.fromRm = fromRm;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
