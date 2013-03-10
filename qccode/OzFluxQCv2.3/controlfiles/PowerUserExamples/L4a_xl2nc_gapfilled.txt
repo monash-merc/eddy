@@ -17,6 +17,7 @@ netCDFv3 = False
     contact  = "james.cleverly@uts.edu.au"
     canopy_height = "6.5m"
     comment = "CF convention version"
+    comment1 = "GPP & Re corrected 2 March 2013"
     data_url = "http://ozflux.its.monash.edu.au/"
     end_datetime = "2012-12-31 23:30"
     history = ""

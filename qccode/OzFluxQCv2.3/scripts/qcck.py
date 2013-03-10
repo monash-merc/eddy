@@ -208,8 +208,8 @@ def do_qcchecks(cf,ds,series=''):
         range_code = 16
         diurnal_code = 17
     if level == 'L4':
-        range_code = 38
-        diurnal_code = 39
+        range_code = 82
+        diurnal_code = 83
     if len(series)==0:
         series = cf['Variables'].keys()
     # do the range check

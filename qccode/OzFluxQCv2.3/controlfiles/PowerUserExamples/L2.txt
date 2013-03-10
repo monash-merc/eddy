@@ -1,6 +1,6 @@
 [General]
-Platform = Mac    # Mac or PC
-netCDFv3 = False
+    Platform = Mac    # Mac or PC
+    netCDFv3 = False
 
 [Files]
     [[L1]]
@@ -15,7 +15,7 @@ netCDFv3 = False
         xlFlagFileName = ASM_EC_2012_flagstats_L2.xls
 
 [Output]
-#noDefaultXl = True   # uncomment to load controlfile for excel output
+    #noDefaultXl = True   # uncomment to load controlfile for excel output
 
 [Variables]
     [[Fn]]
@@ -1536,12 +1536,12 @@ netCDFv3 = False
     [[TC_600cm]]
 
 [PlotSpec]
-#Width = 23.5    # office
-#Height = 11.5   # office
-Width = 19.5    # home
-Height = 11.4   # home
-#Width = 17      # field
-#Height = 9.5    # field
+    #Width = 23.5    # office
+    #Height = 11.5   # office
+    Width = 19.5    # home
+    Height = 11.4   # home
+    #Width = 17      # field
+    #Height = 9.5    # field
 
 [Plots]
     [[1]]
