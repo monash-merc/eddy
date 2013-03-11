@@ -134,7 +134,7 @@
         <div class="home_right_panel">
             <div class="paragraph_title">Welcome to the OzFlux Data Portal</div>
             <p>
-                <b>OzFlux</b> is part of the Australian Terrestrial Ecosystem Research Network (<a href="http://wwww.tern.org.au"><b>TERN</b></a>). The OzFlux
+                <b>OzFlux</b> is part of the Australian Terrestrial Ecosystem Research Network (<a href="http://www.tern.org.au"><b>TERN</b></a>). The OzFlux
                 network consists of nearly 30 flux towers in Australia and New Zealand. OzFlux is also a
                 member of the global FluxNet community.
             </p>

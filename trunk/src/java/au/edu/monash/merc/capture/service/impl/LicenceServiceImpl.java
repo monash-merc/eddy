@@ -84,6 +84,6 @@ public class LicenceServiceImpl implements LicenceService {
 
     @Override
     public Licence getLicenceByCollectionId(long cid) {
-        return this.getLicenceByCollectionId(cid);
+        return this.licenceDao.getLicenceByCollectionId(cid);
     }
 }

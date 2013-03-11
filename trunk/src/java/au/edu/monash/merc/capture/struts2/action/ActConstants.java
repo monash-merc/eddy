@@ -179,7 +179,17 @@ public interface ActConstants {
 	static String DELETE_USER_EVENT_ACTION = "admin/deleteUserEvent.jspx";
 
 	static String DISPLAY_USER_HOME_ACTION = "admin/displayUserHome.jspx";
-	
+
+
+    static String LICENCE_TERN = "tern";
+
+    static String LICENCE_USER_DEFINED = "user_licence";
+
+    static String LICENCE_TERN_LABEL = "TERN Licence";
+
+    static String LICENCE_USER_DEFINED_LABEL = "Define Your Own Licence";
+
+    //TODO: to be removed
 	static String RIGHTS_CCCL_TYPE = "cccl_license";
 	
 	static String RIGHTS_CCPD_TYPE = "ccpd_license";

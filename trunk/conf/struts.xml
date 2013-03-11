@@ -376,6 +376,7 @@
             <result name="success">/web/mdreg/mdreg_finished.ftl</result>
         </action>
 
+
         <!-- show show search party action -->
         <action name="showSearchParty" class="data.partyAction" method="showSearchParty">
             <result name="input">/web/mdreg/search_party.ftl</result>
@@ -430,6 +431,22 @@
             <result name="success">/web/mdreg/party_detail.ftl</result>
         </action>
 
+        <!-- collection license options action -->
+        <action name="licenceOptions" class="data.licenceAction" method="showLicenceOptions">
+            <result name="input">/web/mdreg/licence_error.ftl</result>
+            <result name="error">/web/mdreg/licence_error.ftl</result>
+            <result name="success">/web/mdreg/licence_options.ftl</result>
+        </action>
+
+        <!-- select licence action -->
+        <action name="selectLicence" class="data.licenceAction" method="selectLicence">
+            <result name="input">/web/mdreg/licence_options.ftl</result>
+            <result name="error">/web/mdreg/licence_options.ftl</result>
+            <result name="success">/web/mdreg/licence_content.ftl</result>
+        </action>
+
+
+        <!-- to be removed for rights -->
         <!-- collection righst or license options -->
         <action name="rightsOptions" class="data.rightsAction" method="showRightsOptions">
             <result name="input">/web/mdreg/rights_error.ftl</result>
