@@ -81,6 +81,13 @@ input {
     width: 25px;
 }
 
+.radio_box {
+    height: 14px;
+    line-height: 14px;
+    width: 25px;
+}
+
+
 .input_file {
     font-family: Arial, Helvetica, sans-serif;
     padding: 1px;
@@ -157,6 +164,21 @@ input {
     border-bottom: solid 1px #C2C9D7;
     text-decoration: none;
     width: 70px;
+    height: 22px;
+    padding-bottom: 2px;
+    cursor: pointer;
+    font-weight: normal;
+    text-align: center;
+}
+
+.input_button_simple {
+    background: none repeat scroll 0 0 #eff2f7;
+    border-left: solid 1px #E1E8F0;
+    border-top: solid 1px #E1E8F0;
+    border-right: solid 1px #C2C9D7;
+    border-bottom: solid 1px #C2C9D7;
+    text-decoration: none;
+    width: 110px;
     height: 22px;
     padding-bottom: 2px;
     cursor: pointer;
@@ -855,12 +877,13 @@ input {
     font-size: 11px;
 }
 
-.party_display_div {
+.metada_reg_display_div {
     margin-left: 10px;
     margin-right: 10px;
 }
 
 .metadata_spec {
+    width: 250px;
     display: inline-block;
     padding-right: 10px;
     color: #858585
@@ -890,6 +913,30 @@ input {
     height: 22px;
     line-height: 22px;
     font-size: 11px;
+}
+
+.ozflux_activity_name {
+    padding: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.ozflux_activity_desc {
+    padding: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.data_licence_div {
+    padding: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.publish_term_conditions {
+    text-align: justify;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 /** ==== End of collection ====**/
@@ -1217,6 +1264,7 @@ input {
 .var_td td {
     color: #7e7e7e;
 }
+
 /** end of need removed? **/
 
 .ds_div_border_block {
@@ -1277,7 +1325,6 @@ input {
     padding: 5px;
 }
 
-
 .popup_input_field_title {
     display: inline-block;
     float: left;
@@ -1296,8 +1343,6 @@ input {
     text-align: center;
     padding: 10px;
 }
-
-
 
 .mcpop_out_display {
     border: 1px solid #f4f7fb;

@@ -28,13 +28,11 @@
 
 package au.edu.monash.merc.capture.struts2.action;
 
+import au.edu.monash.merc.capture.domain.Licence;
 import au.edu.monash.merc.capture.domain.Party;
 import au.edu.monash.merc.capture.domain.UserType;
 import au.edu.monash.merc.capture.dto.PartyBean;
-import au.edu.monash.merc.capture.rifcs.PartyActivityWSService;
-import au.edu.monash.merc.capture.service.ldap.LdapService;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -54,16 +52,9 @@ import java.util.List;
 @Controller("data.metadataRegAction")
 public class MetadataRegistrationAction extends DMCoreAction {
 
-    @Autowired
-    private PartyActivityWSService paWsService;
-
-    @Autowired
-    private LdapService ldapService;
-
     private List<PartyBean> partyList;
 
-    private boolean userDefinedLicence;
-
+    private Licence licence;
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
@@ -115,9 +106,17 @@ public class MetadataRegistrationAction extends DMCoreAction {
             return ERROR;
         }
         //Get Licence
+
+        try {
+            this.licence = this.dmService.getLicenceByCollectionId(collection.getId());
+        } catch (Exception e) {
+            logger.error(e);
+            addActionError(getText("ands.md.registration.check.license.failed"));
+            setNavAfterExc();
+            return ERROR;
+        }
         setNavAfterSuccess();
         return SUCCESS;
-
     }
 
     //populate the PartyBeans
@@ -207,4 +206,19 @@ public class MetadataRegistrationAction extends DMCoreAction {
         }
     }
 
+    public Licence getLicence() {
+        return licence;
+    }
+
+    public void setLicence(Licence licence) {
+        this.licence = licence;
+    }
+
+    public List<PartyBean> getPartyList() {
+        return partyList;
+    }
+
+    public void setPartyList(List<PartyBean> partyList) {
+        this.partyList = partyList;
+    }
 }
