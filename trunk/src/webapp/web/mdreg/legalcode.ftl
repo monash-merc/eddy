@@ -1,7 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/xhtml">
 <head><title>Creative Commons Legal Code</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-</script>
 <link href="${base}/css/fonts-min.css" type="text/css" rel="stylesheet" />
 </head>
 <body>

@@ -28,6 +28,7 @@
 
 package au.edu.monash.merc.capture.struts2.action;
 
+import au.edu.monash.merc.capture.common.LicenceType;
 import au.edu.monash.merc.capture.domain.Licence;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
@@ -58,8 +59,8 @@ public class LicenceAction extends DMCoreAction {
 
     @PostConstruct
     public void initLicenceOpts() {
-        licenceMap.put(ActConstants.LICENCE_TERN, ActConstants.LICENCE_TERN_LABEL);
-        licenceMap.put(ActConstants.LICENCE_USER_DEFINED, ActConstants.LICENCE_USER_DEFINED_LABEL);
+        licenceMap.put(LicenceType.TERN.type(), ActConstants.LICENCE_TERN_LABEL);
+        licenceMap.put(LicenceType.USERDEFINED.type(), ActConstants.LICENCE_USER_DEFINED_LABEL);
     }
 
     /**
@@ -73,7 +74,7 @@ public class LicenceAction extends DMCoreAction {
                 Licence existedLicence = this.dmService.getLicenceByCollectionId(collection.getId());
                 if (existedLicence == null) {
                     licence = new Licence();
-                    licence.setLicenceType(ActConstants.LICENCE_TERN);
+                    licence.setLicenceType(LicenceType.TERN.type());
                 } else {
                     this.licence = existedLicence;
                 }
@@ -87,9 +88,27 @@ public class LicenceAction extends DMCoreAction {
     }
 
     public String selectLicence() {
+        try {
+            String requiredLT = licence.getLicenceType();
 
+            Licence existedLicence = this.dmService.getLicenceByCollectionId(collection.getId());
+            if (existedLicence != null) {
+                String existedLT = existedLicence.getLicenceType();
+                if (requiredLT.equals(existedLT)) {
+                    licence = existedLicence;
+                }
+            } else {
+                if (requiredLT.equals(LicenceType.TERN.type())) {
+                    licence.setContents("TERN Licence");
+                }
+            }
+            return SUCCESS;
 
-        return SUCCESS;
+        } catch (Exception e) {
+            logger.error(e);
+            addActionError(getText("license.show.selected.type.failed"));
+            return ERROR;
+        }
     }
 
     public Licence getLicence() {

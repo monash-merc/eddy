@@ -12,7 +12,7 @@
     </style>
 </head>
 <body>
-<div class="popup_main_div">
+<div class="popup_main_div" >
 <#include "../template/action_errors.ftl" />
     <div class="popup_title">
         Add an associated researcher
