@@ -5,6 +5,17 @@
 <head>
     <title><@s.property value="pageTitle" /></title>
 <#include "../template/jquery_header.ftl"/>
+    <script type="text/javascript">
+        $(function () {
+            $.superbox.settings = {
+                closeTxt:"Close",
+                loadTxt:"Loading...",
+                nextTxt:"Next",
+                prevTxt:"Previous"
+            };
+            $.superbox();
+        });
+    </script>
 </head>
 <body>
 <!-- Navigation Section including sub nav menu -->
@@ -73,7 +84,7 @@
                             Please select the associated researcher(s)
                         </div>
                         <div class="metadata_act_link">
-                            <a href="${base}/data/showSearchParty.jspx" title="Adding the associated researcher" id="addtionalParty">Add Researcher</a>
+                            <a href="${base}/data/showSearchParty.jspx" title="Adding an associated researcher" rel="superbox[iframe.addparty][600x500]">Add Researcher</a>
                         </div>
                         <div style="clear: both;"></div>
                     </div>
@@ -140,7 +151,7 @@
                                 Please select the collection Licence
                             </div>
                             <div class="metadata_act_link">
-                                <a href="${base}/data/licenceOptions.jspx?collection.id=<@s.property value='collection.id' />" title="Select Licence" id="selectLicence">Select Licence</a> &nbsp;
+                                <a href="${base}/data/licenceOptions.jspx?collection.id=<@s.property value='collection.id' />" title="Select Licence" rel="superbox[iframe.licence][600x500]">Select Licence</a> &nbsp;
                             </div>
                             <div style="clear: both;"></div>
                         </div>

@@ -347,6 +347,28 @@ $('input[name=extractAllOrGlobal]').live('click', function () {
 });
 
 
+$('#cancelLicence').live('click', function (e) {
+    e.preventDefault();
+    closePopupWindows();
+});
+
+$('#saveLicence').live('click', function (e) {
+    e.preventDefault();
+    var type = $('#plicence_type').val();
+    var licence = $('#plicence_contents').val();
+
+    if (licence == null || licence == "") {
+        alert("The Licence must be provided!");
+    } else {
+        window.parent.$('#licence_type').val(type);
+        window.parent.$('#licence_contents').val(licence);
+        window.parent.$('#display_licence').text(licence);
+        closePopupWindows();
+    }
+});
+
+
+// TODO: remove
 $(function () {
     $('a#selectLicence').click(function (e) {
         e.preventDefault();
@@ -354,13 +376,13 @@ $(function () {
         var horizontalPadding = 20;
         var verticalPadding = 20;
 
-        $('<iframe id="externalSite" class="externalSite" src="' + this.href + '" />').dialog({
+        $('<iframe id="externalSite" class="externalSite" scrolling="no" src="' + this.href + '" />').dialog({
             title:($this.attr('title')) ? $this.attr('title') : 'External Site',
             autoOpen:true,
             width:600,
             height:520,
             modal:true,
-            resizable:true,
+            resizable:false,
             autoResize:true,
             overlay:{
                 opacity:0.5,
@@ -394,24 +416,26 @@ $('#saveRights').live('click', function (e) {
 
 $('#cancelRights').live('click', function (e) {
     e.preventDefault();
-    window.parent.$('#externalSite').dialog('close');
-    window.parent.$('#externalSite').remove();
+    //  window.parent.$('#externalSite').dialog('close');
+    // window.parent.$('#externalSite').remove();
+    closePopupWindows();
 });
+
 
 $(function () {
     $('a#addtionalParty').click(function (e) {
         e.preventDefault();
         var $this = $(this);
-        var horizontalPadding = 20;
-        var verticalPadding = 20;
+        var horizontalPadding = 0;
+        var verticalPadding = 0;
 
-        $('<iframe id="externalSite" class="externalSite" src="' + this.href + '" />').dialog({
+        $('<iframe id="externalSite" scrolling="no" class="externalSite" src="' + this.href + '" />').dialog({
             title:($this.attr('title')) ? $this.attr('title') : 'External Site',
             autoOpen:true,
             width:600,
             height:520,
             modal:true,
-            resizable:true,
+            resizable:false,
             autoResize:true,
             overlay:{
                 opacity:0.5,
@@ -420,6 +444,7 @@ $(function () {
         }).width(600 - horizontalPadding).height(520 - verticalPadding);
     });
 });
+
 
 $('#cancelAddParty').live('click', function (e) {
     e.preventDefault();
@@ -505,9 +530,13 @@ $('#save_rm_party').live('click', function (e) {
             "</div>\n</td>\n</tr>\n"
         );
     }
-    //close the parent windows
-    closeParentWindows();
+    //close the Popup windows
+    closePopupWindows();
 });
+
+function closePopupWindows() {
+    window.parent.$.superbox.close();
+}
 
 function closeParentWindows() {
     //close the popup windows

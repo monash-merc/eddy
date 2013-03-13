@@ -87,7 +87,6 @@ input {
     width: 25px;
 }
 
-
 .input_file {
     font-family: Arial, Helvetica, sans-serif;
     padding: 1px;
@@ -1097,10 +1096,10 @@ input {
 
 /** successful Message ====**/
 .pane {
-    background: #EFF2F7;
+    background: #F2F2F2;
     position: relative;
     margin: 5px auto;
-    border: solid 1px #EFF2F7;
+    border: solid 1px #F2F2F2;
     -moz-border-radius: 5px;
     border-radius: 5px;
     color: #726E4C;
@@ -1344,16 +1343,13 @@ input {
     padding: 10px;
 }
 
-.mcpop_out_display {
-    border: 1px solid #f4f7fb;
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-bottom: 5px;
-    margin-top: 5px;
-    padding-top: 20px;
-    padding-bottom: 20px;
+.licence_contents {
+    margin: 5px;
+    text-align: left;
     padding-left: 5px;
-    color: #003766;
+    padding-right: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 /**   ========= End of Refactored CSS ====== **/

@@ -11,7 +11,7 @@
         }
     </style>
 </head>
-<body>
+<body width="500">
 <div class="popup_main_div">
 <#include "../template/action_errors.ftl" />
     <div class="popup_title">
@@ -32,7 +32,7 @@
 
     <div class="popup_button_div">
         <@s.hidden name="collection.id" />
-        <input type="button" value="Cancel" class="input_button_style" id="cancelRights"/> &nbsp;&nbsp; <@s.submit value="%{getText('license.next.button')}" cssClass="input_button_style" />
+        <input type="button" value="Cancel" class="input_button_style" id="cancelLicence"/> &nbsp;&nbsp; <@s.submit value="%{getText('license.next.button')}" cssClass="input_button_style" />
     </div>
 </@s.form>
 </div>
