@@ -30,7 +30,7 @@
         <#include "../template/action_errors.ftl" />
             <div style="clear:both"></div>
             <div class="left_display_inner">
-            <@s.form action="preRegMd.jspx" namespace="/data" method="post" id="mdRegForm">
+            <@s.form action="mdRegister.jspx" namespace="/data" method="post" id="mdRegForm">
                 <@s.hidden name="collection.id" id="col"/>
                 <@s.hidden name="collection.name" id="coname"/>
                 <@s.hidden name="collection.description" id="desc"/>
@@ -64,6 +64,10 @@
                             Modified date: <@s.date name="collection.modifiedTime" format="yyyy-MM-dd hh:mm" />
                         </span>
                     </div>
+                    <div class="input_field_row">
+                        <div class="status_field_name_div">Metadata Registered:</div>
+                        <div class="status_field_value_div"><@s.property value="collection.published" /></div>
+                    </div>
                     <@s.if test="%{collection.funded == true}">
                         <div class="data_tern_div">
                             [ <a href="http://www.tern.org.au" target="_blank">TERN-Funded</a> ]
@@ -96,33 +100,31 @@
                             <@s.if test="%{partyList != null && partyList.size > 0}">
                                 <@s.iterator status="ptState" value="partyList" id="party" >
                                 <tr>
-                                    <td width="50">
+                                    <td width="50" align="center">
                                         <@s.checkbox name="partyList[${ptState.index}].selected"  cssClass="check_box" />
                                     </td>
                                     <td>
-                                        <div>
-                                            <@s.property value="#party.personTitle" /> <@s.property value="#party.personGivenName" /> <@s.property value="#party.personFamilyName" />
-                                            ( <@s.property value="#party.groupName" /> - <@s.property value="#party.email" /> )
-                                            <@s.hidden name="partyList[${ptState.index}].partyKey" />
-                                            <@s.hidden name="partyList[${ptState.index}].personTitle" />
-                                            <@s.hidden name="partyList[${ptState.index}].personGivenName" />
-                                            <@s.hidden name="partyList[${ptState.index}].personFamilyName" />
-                                            <@s.hidden name="partyList[${ptState.index}].email" />
-                                            <@s.hidden name="partyList[${ptState.index}].address" />
-                                            <@s.hidden name="partyList[${ptState.index}].url" />
-                                            <@s.hidden name="partyList[${ptState.index}].identifierType"  />
-                                            <@s.hidden name="partyList[${ptState.index}].identifierValue" />
-                                            <@s.hidden name="partyList[${ptState.index}].originateSourceType" />
-                                            <@s.hidden name="partyList[${ptState.index}].originateSourceValue" />
-                                            <@s.hidden name="partyList[${ptState.index}].groupName" />
-                                            <@s.hidden name="partyList[${ptState.index}].fromRm" />
-                                        </div>
+                                        <@s.property value="#party.personTitle" /> <@s.property value="#party.personGivenName" /> <@s.property value="#party.personFamilyName" />
+                                        ( <@s.property value="#party.groupName" /> - <@s.property value="#party.email" /> )
+                                        <@s.hidden name="partyList[${ptState.index}].partyKey" />
+                                        <@s.hidden name="partyList[${ptState.index}].personTitle" />
+                                        <@s.hidden name="partyList[${ptState.index}].personGivenName" />
+                                        <@s.hidden name="partyList[${ptState.index}].personFamilyName" />
+                                        <@s.hidden name="partyList[${ptState.index}].email" />
+                                        <@s.hidden name="partyList[${ptState.index}].address" />
+                                        <@s.hidden name="partyList[${ptState.index}].url" />
+                                        <@s.hidden name="partyList[${ptState.index}].identifierType"  />
+                                        <@s.hidden name="partyList[${ptState.index}].identifierValue" />
+                                        <@s.hidden name="partyList[${ptState.index}].originateSourceType" />
+                                        <@s.hidden name="partyList[${ptState.index}].originateSourceValue" />
+                                        <@s.hidden name="partyList[${ptState.index}].groupName" />
+                                        <@s.hidden name="partyList[${ptState.index}].fromRm" />
                                     </td>
                                 </tr>
                                 </@s.iterator>
                             </@s.if>
                             <@s.else>
-                            <div class="placeholder_div">
+                            <div class="none_party_div">
                                 The associated researcher(s) not found, please select an associated researcher
                             </div>
                             </@s.else>
@@ -135,10 +137,10 @@
                 </div>
                 <div class="data_display_div">
                     <div class="ozflux_activity_name">
-                        The name of OzFlux activity
+                        <@s.property value="activity.name" />
                     </div>
                     <div class="ozflux_activity_desc">
-                        The description of OzFlux activity
+                        <@s.property value="activity.description" />
                     </div>
                 </div>
                 <div class="content_none_border_div">
@@ -151,18 +153,24 @@
                                 Please select the collection Licence
                             </div>
                             <div class="metadata_act_link">
-                                <a href="${base}/data/licenceOptions.jspx?collection.id=<@s.property value='collection.id' />" title="Select Licence" rel="superbox[iframe.licence][600x500]">Select Licence</a> &nbsp;
+                                <a href="${base}/data/licenceOptions.jspx?collection.id=<@s.property value='collection.id' />" title="Select Licence" rel="superbox[iframe.licence][600x500]">Select
+                                    Licence</a> &nbsp;
                             </div>
                             <div style="clear: both;"></div>
                         </div>
                     </@s.if>
                 </div>
                 <div class="data_display_div">
-                    <@s.if test="%{licence == null}">
-                        <div class="placeholder_div">
+                    <@s.if test="%{licence.contents == null}">
+                        <div class="none_licence_div">
                             The licence not found, please selected a licence
                         </div>
                     </@s.if>
+                    <@s.hidden name="licence.licenceType" id="licence_type"/>
+                    <@s.hidden name="licence.contents" id="licence_contents"/>
+                    <div class="data_licence_div">
+                        <@s.property value="licence.contents" />
+                    </div>
                 </div>
 
                 <div class="content_none_border_div">

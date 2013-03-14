@@ -692,13 +692,6 @@ public class DMServiceImpl implements DMService {
         this.mailService.sendMail(emailFrom, emailTo, emailSubject, templateValues, templateFile, isHtml);
     }
 
-    //TODO: new RIFCS
-    @Override
-    public void publishRifcs() {
-        Map<String, Object> templateMap = populateTemplateMap();
-        this.rifcsService.createRifcs("/opt/datastore/rifcs", "simontest_123456", templateMap, "collectionRifcs.ftl");
-    }
-
     private Map<String, Object> populateTemplateMap() {
         Map<String, Object> templateMap = new HashMap<String, Object>();
         List<Party> parties = new ArrayList<Party>();
@@ -721,6 +714,36 @@ public class DMServiceImpl implements DMService {
         return null;
     }
 
+    //TODO: new RIFCS
+    @Override
+    public void publishRifcs(MetadataRegistrationBean metadataRegistrationBean) {
+        List<PartyBean> partyList = metadataRegistrationBean.getPartyList();
+        // parties
+        List<Party> parties = new ArrayList<Party>();
+        for (PartyBean partybean : partyList) {
+            //we only deal with the selected parties
+            if (partybean.isSelected()) {
+                // search the party detail by the party's key
+                Party p = getPartyByPartyKey(partybean.getPartyKey());
+                // if party not found from the database, we just save it into database;
+                if (p == null) {
+                    p = copyPartyBeanToParty(partybean);
+                    saveParty(p);
+                }
+                parties.add(p);
+            }
+        }
+        Collection collection = metadataRegistrationBean.getCollection();
+        collection.setParties(parties);
+
+        // set the collection true
+        collection.setPublished(true);
+        // update the collection first
+        this.updateCollection(collection);
+
+
+    }
+
     @Override
     public void savePublishInfo(PublishBean pubBean) {
 
@@ -737,6 +760,7 @@ public class DMServiceImpl implements DMService {
             }
             parties.add(p);
         }
+
 
         Collection collection = pubBean.getCollection();
         collection.setParties(parties);
@@ -882,7 +906,7 @@ public class DMServiceImpl implements DMService {
         List<Party> parties = new ArrayList<Party>();
 
         if (StringUtils.contains(userNameOrEmail, "@")) {
-            Party  foundParty = this.getPartyByEmail(userNameOrEmail);
+            Party foundParty = this.getPartyByEmail(userNameOrEmail);
             if (foundParty != null) {
                 parties.add(foundParty);
             }

@@ -354,6 +354,13 @@
             <result name="success">/web/mdreg/metadata_register.ftl</result>
         </action>
 
+        <!-- The metadata registration -->
+        <action name="mdRegister" class="data.metadataRegAction" method="mdRegister">
+            <result name="input">/web/mdreg/metadata_register.ftl</result>
+            <result name="error">/web/mdreg/metadata_register_error.ftl</result>
+            <result name="success">/web/mdreg/metadata_register_finished.ftl</result>
+        </action>
+
 
         <!-- show the metadata registration -->
         <action name="showMdReg" class="data.mdRegAction" method="showMdReg">

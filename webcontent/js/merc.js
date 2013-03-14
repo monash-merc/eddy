@@ -349,7 +349,7 @@ $('input[name=extractAllOrGlobal]').live('click', function () {
 
 $('#cancelLicence').live('click', function (e) {
     e.preventDefault();
-    closePopupWindows();
+    closePopupWindow();
 });
 
 $('#saveLicence').live('click', function (e) {
@@ -357,99 +357,17 @@ $('#saveLicence').live('click', function (e) {
     var type = $('#plicence_type').val();
     var licence = $('#plicence_contents').val();
 
-    if (licence == null || licence == "") {
+    if (licence == null || licence.trim() == "") {
         alert("The Licence must be provided!");
     } else {
         window.parent.$('#licence_type').val(type);
         window.parent.$('#licence_contents').val(licence);
-        window.parent.$('#display_licence').text(licence);
-        closePopupWindows();
+        window.parent.$('.data_licence_div').text(licence);
+        //remove the none licence div first
+        removeNoneLicenceDiv();
+        //then close the popup window
+        closePopupWindow();
     }
-});
-
-
-// TODO: remove
-$(function () {
-    $('a#selectLicence').click(function (e) {
-        e.preventDefault();
-        var $this = $(this);
-        var horizontalPadding = 20;
-        var verticalPadding = 20;
-
-        $('<iframe id="externalSite" class="externalSite" scrolling="no" src="' + this.href + '" />').dialog({
-            title:($this.attr('title')) ? $this.attr('title') : 'External Site',
-            autoOpen:true,
-            width:600,
-            height:520,
-            modal:true,
-            resizable:false,
-            autoResize:true,
-            overlay:{
-                opacity:0.5,
-                background:"black"
-            }
-        }).width(600 - horizontalPadding).height(520 - verticalPadding);
-    });
-});
-
-$('#saveRights').live('click', function (e) {
-    e.preventDefault();
-    var type = $('#prights_type').val();
-    var comm = $('#prights_comm').val();
-    var deri = $('#prights_deri').val();
-    var juri = $('#prights_juri').val();
-    var rights = $('#prights_cont').val();
-
-    if (rights == null || rights == "") {
-        alert("The rights has not been provided");
-    } else {
-        window.parent.$('#frights_type').val(type);
-        window.parent.$('#frights_comm').val(comm);
-        window.parent.$('#frights_deri').val(deri);
-        window.parent.$('#frights_juri').val(juri);
-        window.parent.$('#frights_cont').val(rights);
-        window.parent.$('#display_rights').text(rights);
-        window.parent.$('#externalSite').dialog('close');
-        window.parent.$('#externalSite').remove();
-    }
-});
-
-$('#cancelRights').live('click', function (e) {
-    e.preventDefault();
-    //  window.parent.$('#externalSite').dialog('close');
-    // window.parent.$('#externalSite').remove();
-    closePopupWindows();
-});
-
-
-$(function () {
-    $('a#addtionalParty').click(function (e) {
-        e.preventDefault();
-        var $this = $(this);
-        var horizontalPadding = 0;
-        var verticalPadding = 0;
-
-        $('<iframe id="externalSite" scrolling="no" class="externalSite" src="' + this.href + '" />').dialog({
-            title:($this.attr('title')) ? $this.attr('title') : 'External Site',
-            autoOpen:true,
-            width:600,
-            height:520,
-            modal:true,
-            resizable:false,
-            autoResize:true,
-            overlay:{
-                opacity:0.5,
-                background:"black"
-            }
-        }).width(600 - horizontalPadding).height(520 - verticalPadding);
-    });
-});
-
-
-$('#cancelAddParty').live('click', function (e) {
-    e.preventDefault();
-    window.parent.$('#externalSite').dialog('close');
-    window.parent.$('#externalSite').remove();
 });
 
 $('#save_rm_party').live('click', function (e) {
@@ -506,10 +424,8 @@ $('#save_rm_party').live('click', function (e) {
             window.parent.$('#ands_party_div').append('<tbody />');
         }
         var rowIndex = window.parent.$("#ands_party_div > tbody > tr").length;
-        //alert("party table rows: " + rowIndex);
-        closePartyNotFoundDiv();
-        var findTbody = window.parent.$('#ands_party_div > tbody:last');
 
+        var findTbody = window.parent.$('#ands_party_div > tbody:last');
         $(findTbody).append("<tr>\n<td align='center' width='50'>\n<input id='mdRegForm_partyList_" + rowIndex + "__selected' class='check_box' type='checkbox' checked='checked' name='partyList[" + rowIndex + "].selected' value='true' />\n" +
             "</td>\n" +
             "<td>\n<div>" + pTitle + " " + pGivenName + " " + pSName + " ( " + pGroupName + " - " + pEmail + " )\n" +
@@ -529,27 +445,28 @@ $('#save_rm_party').live('click', function (e) {
             "<input id='mdRegForm_partyList_" + rowIndex + "__fromRm' type='hidden' name='partyList[" + rowIndex + "].fromRm' value='" + pFromRm + "' />\n" +
             "</div>\n</td>\n</tr>\n"
         );
+        removeNonePartyDiv();
     }
     //close the Popup windows
-    closePopupWindows();
+    closePopupWindow();
 });
 
-function closePopupWindows() {
+function closePopupWindow() {
     window.parent.$.superbox.close();
 }
 
-function closeParentWindows() {
-    //close the popup windows
-    window.parent.$('#externalSite').dialog('close');
-    window.parent.$('#externalSite').remove();
-}
-;
-
-function closePartyNotFoundDiv() {
-    var pnf = window.parent.$(".placeholder_div");
+function removeNonePartyDiv() {
+    var pnf = window.parent.$(".none_party_div");
     if (pnf != null) {
-        window.parent.$('.placeholder_div').remove();
+        window.parent.$('.none_party_div').remove();
     }
+}
 
+
+function removeNoneLicenceDiv() {
+    var pnf = window.parent.$(".none_licence_div");
+    if (pnf != null) {
+        window.parent.$('.none_licence_div').remove();
+    }
 }
  

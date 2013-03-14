@@ -72,14 +72,14 @@ public class MDRegisterAction extends DMCoreAction {
 
     public String showMdReg() {
         setViewColDetailLink(ActConstants.VIEW_COLLECTION_DETAILS_ACTION);
-
-        try {
-            this.dmService.publishRifcs();
-        } catch (Exception ex) {
-            logger.error(ex);
-            addActionError("rifcs freemarker rifcs service error");
-            return ERROR;
-        }
+//
+//        try {
+//            this.dmService.publishRifcs();
+//        } catch (Exception ex) {
+//            logger.error(ex);
+//            addActionError("rifcs freemarker rifcs service error");
+//            return ERROR;
+//        }
         try {
             String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
             boolean mdRegEnabled = Boolean.valueOf(mdRegEnabledStr);

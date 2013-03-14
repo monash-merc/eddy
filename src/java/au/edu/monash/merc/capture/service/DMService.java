@@ -225,17 +225,15 @@ public interface DMService {
 
     void sendMail(String emailFrom, String emailTo, String emailSubject, String emailBody, boolean isHtml);
 
-    void sendMail(String emailFrom, String emailTo, String emailSubject, Map<String, String> templateValues, String templateFile,
-                  boolean isHtml);
+    void sendMail(String emailFrom, String emailTo, String emailSubject, Map<String, String> templateValues, String templateFile, boolean isHtml);
 
     void savePublishInfo(PublishBean pubBean);
 
-    void publishRifcs();
+    void publishRifcs(MetadataRegistrationBean metadataRegistrationBean);
 
     List<Activity> getActivitiesByCollectionId(long cid);
 
     List<Party> getPartiesByCollectionId(long cid);
-
 
     //TODO: remove the  rights
     void saveRights(Rights rights);

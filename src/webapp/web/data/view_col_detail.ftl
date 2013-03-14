@@ -127,18 +127,11 @@
         </@s.if>
         <@s.if test="%{mdRegEnabled}">
             <@s.if test="%{collection.owner.id == user.id || user.userType == 1 || user.userType ==2}">
-                <!-- modal window for register with ands -->
+
                 <a href="${base}/${andsMdRegLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}"
-                   id="wait_modal" name='wait_modal'
                    title="Public registration of the metadata associated with this collection with the Research Data Australia website">
                     <@s.text name="ands.md.registration.title" />
                 </a>
-
-                <div id='mask'></div>
-                <div id='modal_window'>
-                    Calling Metadata Registration Service, please wait ... <img src="${base}/images/wait_loader.gif"
-                                                                                class="loading_image">
-                </div>
             </@s.if>
         </@s.if>
     </div>
