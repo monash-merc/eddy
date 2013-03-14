@@ -17,6 +17,13 @@
         <#include "../template/action_errors.ftl" />
             <div style="clear:both"></div>
             <div class="left_display_inner">
+            <@s.if test="%{actionSuccessMsg != null}">
+                <div class="content_none_border_div">
+                    <div class="none_border_block">
+                        <#include "../template/action_success_msg.ftl"/>
+                    </div>
+                </div>
+            </@s.if>
                 <div class="data_display_div">
                     <div class="data_title">
                     <@s.property value="collection.name"/>

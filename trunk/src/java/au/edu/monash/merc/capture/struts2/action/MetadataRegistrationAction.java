@@ -28,15 +28,24 @@
 
 package au.edu.monash.merc.capture.struts2.action;
 
+import au.edu.monash.merc.capture.common.LicenceType;
+import au.edu.monash.merc.capture.config.ConfigSettings;
+import au.edu.monash.merc.capture.domain.AuditEvent;
 import au.edu.monash.merc.capture.domain.Licence;
 import au.edu.monash.merc.capture.domain.Party;
 import au.edu.monash.merc.capture.domain.UserType;
+import au.edu.monash.merc.capture.dto.MetadataRegistrationBean;
 import au.edu.monash.merc.capture.dto.PartyBean;
+import au.edu.monash.merc.capture.dto.RegisterActivity;
+import au.edu.monash.merc.capture.util.CaptureUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -54,9 +63,21 @@ public class MetadataRegistrationAction extends DMCoreAction {
 
     private List<PartyBean> partyList;
 
+    private RegisterActivity activity;
+
     private Licence licence;
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
+
+    @PostConstruct
+    public void initReg() {
+        licence = new Licence();
+        licence.setLicenceType(LicenceType.TERN.type());
+        activity = new RegisterActivity();
+        activity.setKey(this.configSetting.getPropValue(ConfigSettings.OZFLUX_ACTIVITY_KEY));
+        activity.setName(this.configSetting.getPropValue(ConfigSettings.OZFLUX_ACTIVITY_NAME));
+        activity.setDescription(this.configSetting.getPropValue(ConfigSettings.OZFLUX_ACTIVITY_DESCRIPTION));
+    }
 
     public String showMdRegister() {
 
@@ -108,7 +129,14 @@ public class MetadataRegistrationAction extends DMCoreAction {
         //Get Licence
 
         try {
-            this.licence = this.dmService.getLicenceByCollectionId(collection.getId());
+            if (collection.isFunded()) {
+                this.licence.setContents(this.configSetting.getPropValue(ConfigSettings.TERN_DATA_LICENCE));
+            } else {
+                Licence foundLicence = this.dmService.getLicenceByCollectionId(collection.getId());
+                if (foundLicence != null) {
+                    this.licence = foundLicence;
+                }
+            }
         } catch (Exception e) {
             logger.error(e);
             addActionError(getText("ands.md.registration.check.license.failed"));
@@ -117,6 +145,166 @@ public class MetadataRegistrationAction extends DMCoreAction {
         }
         setNavAfterSuccess();
         return SUCCESS;
+    }
+
+    public String mdRegister() {
+
+        setViewColDetailLink(ActConstants.VIEW_COLLECTION_DETAILS_ACTION);
+        try {
+            user = retrieveLoggedInUser();
+        } catch (Exception e) {
+            logger.error(e);
+            addActionError(getText("ands.md.registration.get.user.failed"));
+            setNavAfterExc();
+            return ERROR;
+        }
+
+        //user not logged in
+        if (user == null) {
+            logger.error(getText("ands.md.registration.permission.denied"));
+            addActionError(getText("ands.md.registration.permission.denied"));
+            setNavAfterExc();
+            return ERROR;
+        }
+
+        try {
+            collection = this.dmService.getCollection(collection.getId(), collection.getOwner().getId());
+        } catch (Exception e) {
+            logger.error(e);
+            addActionError(getText("ands.md.registration.get.collection.failed"));
+            setNavAfterExc();
+            return ERROR;
+        }
+        //check the unique key for this collection
+        String existedUniqueKey = collection.getUniqueKey();
+        if (StringUtils.isBlank(existedUniqueKey)) {
+            try {
+                String uuidKey = pidService.genUUIDWithPrefix();
+                collection.setUniqueKey(uuidKey);
+            } catch (Exception e) {
+                logger.error(e);
+                addActionError(getText("ands.md.registration.create.unique.key.failed"));
+                setNavAfterExc();
+                return INPUT;
+            }
+        }
+
+        //only the owner and system admin can publish this collection
+        if ((user.getId() != collection.getOwner().getId()) && (user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
+            logger.error(getText("ands.md.registration.none.owner.or.admin.permission.denied"));
+            addActionError(getText("ands.md.registration.none.owner.or.admin.permission.denied"));
+            setNavAfterExc();
+            return ERROR;
+        }
+        //if any error, just return
+        if (validateMetadataReg()) {
+            return INPUT;
+        }
+
+        // populate the url of this collection
+        String serverQName = getServerQName();
+        String appContext = getAppContextPath();
+        StringBuffer collectionUrl = new StringBuffer();
+        collectionUrl.append(serverQName).append(appContext).append(ActConstants.URL_PATH_DEIM);
+        collectionUrl.append("pub/viewColDetails.jspx?collection.id=" + collection.getId() + "&collection.owner.id=" + collection.getOwner().getId() + "&viewType=anonymous");
+        // create handle if handle service is enabled
+        String hdlEnabledStr = configSetting.getPropValue(ConfigSettings.HANDLE_SERVICE_ENABLED);
+        String existedHandle = collection.getPersistIdentifier();
+
+        // if no existed hanlde. it will be created if handle ws is enabaled
+        if (existedHandle == null) {
+            if (Boolean.valueOf(hdlEnabledStr)) {
+                try {
+                    String handle = pidService.genHandleIdentifier(collectionUrl.toString());
+                    // String hdlResolver = configSetting.getPropValue(ConfigSettings.HANDLE_RESOLVER_SERVER);
+                    // collection.setPersistIdentifier(hdlResolver + "/" + handle);
+                    collection.setPersistIdentifier(handle);
+                } catch (Exception e) {
+                    logger.error(e);
+                    addActionError(getText("ands.md.registration.create.handle.failed"));
+                    setNavAfterExc();
+                    return INPUT;
+                }
+            } else {
+                collection.setPersistIdentifier(collection.getUniqueKey());
+            }
+        }
+
+        try {
+            MetadataRegistrationBean mdRegBean = createMdRegistrationBean(serverQName, collectionUrl.toString());
+            this.dmService.publishRifcs(mdRegBean);
+            // save the metadata registration auditing info
+            recordMDRegAuditEvent();
+        } catch (Exception e) {
+            logger.error(e);
+            addActionError(getText("ands.md.registration.register.failed"));
+            setNavAfterExc();
+            return INPUT;
+        }
+        addActionMessage(getText("ands.md.registration.register.success"));
+        setActionSuccessMsg(getText("ands.md.registration.register.success"));
+        setNavAfterSuccess();
+        return SUCCESS;
+    }
+
+    // save the auditing information for metadata registration
+    private void recordMDRegAuditEvent() {
+        AuditEvent ev = new AuditEvent();
+        ev.setCreatedTime(GregorianCalendar.getInstance().getTime());
+        ev.setEvent(getText("ands.md.registration.audit.info", new String[]{collection.getName()}));
+        ev.setEventOwner(collection.getOwner());
+        ev.setOperator(user);
+        recordActionAuditEvent(ev);
+    }
+
+    private MetadataRegistrationBean createMdRegistrationBean(String serverName, String collectionUrl) {
+
+        MetadataRegistrationBean mdRegBean = new MetadataRegistrationBean();
+        mdRegBean.setCollection(this.collection);
+        mdRegBean.setPartyList(this.partyList);
+        mdRegBean.setLicence(this.licence);
+        //rifcs store location
+        mdRegBean.setRifcsStoreLocation(configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_STORE_LOCATION));
+        //physical address of collection
+        mdRegBean.setPhysicalAddress(configSetting.getPropValue(ConfigSettings.DATA_COLLECTIONS_PHYSICAL_LOCATION));
+        //collection rifcs template
+        mdRegBean.setRifcsCollectionTemplate(configSetting.getPropValue(ConfigSettings.RIFCS_COLLECTION_TEMPLATE));
+        //party rifcs template
+        mdRegBean.setRifcsPartyTemplate(configSetting.getPropValue(ConfigSettings.RIFCS_PARTY_TEMPLATE));
+        //group name
+        mdRegBean.setRifcsGroupName(configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_GROUP_NAME));
+        //collection url
+        mdRegBean.setCollectionUrl(CaptureUtil.replaceURLAmpsands(collectionUrl));
+        //server name
+        mdRegBean.setAppName(serverName);
+
+        return mdRegBean;
+    }
+
+    public boolean validateMetadataReg() {
+        boolean hasError = false;
+        boolean atLeastOnePartySelected = false;
+        if (partyList != null) {
+            for (PartyBean ptb : partyList) {
+                if (ptb.isSelected()) {
+                    atLeastOnePartySelected = true;
+                }
+            }
+        }
+        if (!atLeastOnePartySelected) {
+            addFieldError("partyRequired", getText("ands.md.registration.party.required"));
+            hasError = true;
+        }
+        if (StringUtils.isBlank(licence.getContents())) {
+            addFieldError("licence", getText("ands.md.registration.license.required"));
+            hasError = true;
+        }
+        // set navigations
+        if (hasError) {
+            setNavAfterExc();
+            setViewColDetailLink(ActConstants.VIEW_COLLECTION_DETAILS_ACTION);
+        }
+        return hasError;
     }
 
     //populate the PartyBeans
@@ -204,6 +392,14 @@ public class MetadataRegistrationAction extends DMCoreAction {
             setPageTitle(startNav, secondNav + " - " + thirdNav + " Error");
             navigationBar = generateNavLabel(startNav, startNavLink, secondNav, secondNavLink, thirdNav, null);
         }
+    }
+
+    public RegisterActivity getActivity() {
+        return activity;
+    }
+
+    public void setActivity(RegisterActivity activity) {
+        this.activity = activity;
     }
 
     public Licence getLicence() {

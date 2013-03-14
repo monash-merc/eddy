@@ -29,6 +29,7 @@
 package au.edu.monash.merc.capture.struts2.action;
 
 import au.edu.monash.merc.capture.common.LicenceType;
+import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.Licence;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
@@ -99,7 +100,7 @@ public class LicenceAction extends DMCoreAction {
                 }
             } else {
                 if (requiredLT.equals(LicenceType.TERN.type())) {
-                    licence.setContents("TERN Licence");
+                    this.licence.setContents(this.configSetting.getPropValue(ConfigSettings.TERN_DATA_LICENCE));
                 }
             }
             return SUCCESS;

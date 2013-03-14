@@ -142,6 +142,18 @@ public class ConfigSettings {
     // Collection License
     public static String CCLICENSE_REST_WS_URL = "cclicense.ws.url";
 
+    public static String TERN_DATA_LICENCE = "tern.data.licence";
+
+    public static String OZFLUX_ACTIVITY_KEY = "ozflux.activity.key";
+
+    public static String OZFLUX_ACTIVITY_NAME = "ozflux.activity.name";
+
+    public static String OZFLUX_ACTIVITY_DESCRIPTION = "ozflux.activity.description";
+
+    public static String RIFCS_COLLECTION_TEMPLATE = "rifcs.collection.template";
+
+    public static String RIFCS_PARTY_TEMPLATE = "rifcs.party.template";
+
     @Autowired
     @Qualifier("sysPropertyConfigurer")
     private SystemPropertiesConfigurer sysPropertyConfigurer;
