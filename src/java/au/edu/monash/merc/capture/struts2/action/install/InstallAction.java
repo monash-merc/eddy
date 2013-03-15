@@ -199,7 +199,6 @@ public class InstallAction extends InstallBaseAction {
 		appProp.setMdRegEnabled(true);
 		appProp.setRifcsStoreLocation("/opt/ands_rifcs");
 		appProp.setAndsRegGroupName("Monash University");
-		appProp.setResearchFieldCode("960501");
 
 		// researcher master web service call
 		appProp.setRmWsName("AIRMANDSService");
@@ -324,10 +323,7 @@ public class InstallAction extends InstallBaseAction {
 				addFieldError("groupname", "The group name in the rif-cs must be provided");
 				hasError = true;
 			}
-			if (StringUtils.isBlank(appProp.getResearchFieldCode())) {
-				addFieldError("anzsrcode", "The research field code must be provided");
-				hasError = true;
-			}
+
 			if (StringUtils.isBlank(appProp.getRmWsName())) {
 				addFieldError("rmwsname", "The researcher master web service name must be provided");
 				hasError = true;

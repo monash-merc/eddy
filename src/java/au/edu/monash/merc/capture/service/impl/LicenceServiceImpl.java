@@ -63,6 +63,11 @@ public class LicenceServiceImpl implements LicenceService {
     }
 
     @Override
+    public void mergeLicence(Licence licence) {
+        this.licenceDao.merge(licence);
+    }
+
+    @Override
     public void updateLicence(Licence licence) {
         this.licenceDao.update(licence);
     }

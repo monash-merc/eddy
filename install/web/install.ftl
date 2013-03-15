@@ -121,11 +121,6 @@
 					<td><div class="name_comment">* The group name in the RIF-CS file</div></td>
 				</tr>
 				<tr>
-					<td>Research Field Code: </td>
-					<td><@s.textfield name="appProp.researchFieldCode" cssClass="install_input_field" /></td>
-					<td><div class="name_comment">* The research field code value</div></td>
-				</tr>
-				<tr>
 					<td>Researcher Master Web Service Name: </td>
 					<td><@s.textfield name="appProp.rmWsName" cssClass="install_input_field" /></td>
 					<td><div class="name_comment">* The researcher master web service name</div></td>

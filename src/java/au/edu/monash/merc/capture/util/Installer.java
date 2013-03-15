@@ -147,7 +147,6 @@ public class Installer {
 			String rifcspath = CaptureUtil.normalizePath(appProp.getRifcsStoreLocation());
 			s = s.replaceFirst("ANDS_RIFCS_STORE_LOCATION", rifcspath);
 			s = s.replaceFirst("ANDS_MD_REG_GROUP_NAME", appProp.getAndsRegGroupName());
-			s = s.replaceFirst("RESEARCH_FIELD_CODE", appProp.getResearchFieldCode());
 			s = s.replaceFirst("RM_WS_NAME", appProp.getRmWsName());
 			s = s.replaceFirst("RM_WS_ENDPOINT_ADDRESS", appProp.getRmWsEndpointAddress());
 			s = s.replaceFirst("RM_WS_TIMEOUT", String.valueOf(appProp.getRmWsTimeout()));
