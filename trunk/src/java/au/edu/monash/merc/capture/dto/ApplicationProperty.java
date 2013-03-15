@@ -31,294 +31,284 @@ import java.io.Serializable;
 
 public class ApplicationProperty implements Serializable {
 
-	private String appName;
+    private String appName;
 
-	private String storeLocation;
+    private String storeLocation;
 
-	private String collectionPhysicalLocation;
+    private String collectionPhysicalLocation;
 
-	private String adminEmail;
+    private String adminEmail;
 
-	private String adminName;
+    private String adminName;
 
-	private String adminPassword;
+    private String adminPassword;
 
-	private String systemServiceEmail;
+    private String systemServiceEmail;
 
-	private int loginTryTimes;
+    private int loginTryTimes;
 
-	private int blockWaitingTimes;
+    private int blockWaitingTimes;
 
-	private String securityHashSeq;
+    private String securityHashSeq;
 
-	private String googleApiKey;
+    private String googleApiKey;
 
-	private boolean stageEnabled;
+    private boolean stageEnabled;
 
-	private String stageLocation;
+    private String stageLocation;
 
-	private boolean mdRegEnabled;
+    private boolean mdRegEnabled;
 
-	private String rifcsStoreLocation;
+    private String rifcsStoreLocation;
 
-	private String rmWsName;
+    private String rmWsName;
 
-	private String rmWsEndpointAddress;
+    private String rmWsEndpointAddress;
 
-	private int rmWsTimeout;
+    private int rmWsTimeout;
 
-	private String andsRegGroupName;
+    private String andsRegGroupName;
 
-	private String researchFieldCode;
+    private boolean hdlWsEnabled;
 
-	private boolean hdlWsEnabled;
+    private String hdlWsHostName;
 
-	private String hdlWsHostName;
+    private int hdlWsHostPort;
 
-	private int hdlWsHostPort;
+    private String hdlWsAppId;
 
-	private String hdlWsAppId;
+    private String hdlWsPath;
 
-	private String hdlWsPath;
+    private String hdlWsMethod;
 
-	private String hdlWsMethod;
+    private String authDomain;
 
-	private String authDomain;
+    private String hdlResolverAddress;
 
-	private String hdlResolverAddress;
+    private String ccLicenseWsAddress;
 
-	private String ccLicenseWsAddress;
+    public String getAppName() {
+        return appName;
+    }
 
-	public String getAppName() {
-		return appName;
-	}
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
 
-	public void setAppName(String appName) {
-		this.appName = appName;
-	}
+    public String getStoreLocation() {
+        return storeLocation;
+    }
 
-	public String getStoreLocation() {
-		return storeLocation;
-	}
+    public void setStoreLocation(String storeLocation) {
+        this.storeLocation = storeLocation;
+    }
 
-	public void setStoreLocation(String storeLocation) {
-		this.storeLocation = storeLocation;
-	}
+    public boolean isStageEnabled() {
+        return stageEnabled;
+    }
 
-	public boolean isStageEnabled() {
-		return stageEnabled;
-	}
+    public void setStageEnabled(boolean stageEnabled) {
+        this.stageEnabled = stageEnabled;
+    }
 
-	public void setStageEnabled(boolean stageEnabled) {
-		this.stageEnabled = stageEnabled;
-	}
+    public String getStageLocation() {
+        return stageLocation;
+    }
 
-	public String getStageLocation() {
-		return stageLocation;
-	}
+    public void setStageLocation(String stageLocation) {
+        this.stageLocation = stageLocation;
+    }
 
-	public void setStageLocation(String stageLocation) {
-		this.stageLocation = stageLocation;
-	}
+    public String getAdminEmail() {
+        return adminEmail;
+    }
 
-	public String getAdminEmail() {
-		return adminEmail;
-	}
+    public void setAdminEmail(String adminEmail) {
+        this.adminEmail = adminEmail;
+    }
 
-	public void setAdminEmail(String adminEmail) {
-		this.adminEmail = adminEmail;
-	}
+    public String getAdminName() {
+        return adminName;
+    }
 
-	public String getAdminName() {
-		return adminName;
-	}
-
-	public void setAdminName(String adminName) {
-		this.adminName = adminName;
-	}
-
-	public String getAdminPassword() {
-		return adminPassword;
-	}
-
-	public void setAdminPassword(String adminPassword) {
-		this.adminPassword = adminPassword;
-	}
-
-	public String getSystemServiceEmail() {
-		return systemServiceEmail;
-	}
-
-	public void setSystemServiceEmail(String systemServiceEmail) {
-		this.systemServiceEmail = systemServiceEmail;
-	}
-
-	public int getLoginTryTimes() {
-		return loginTryTimes;
-	}
-
-	public void setLoginTryTimes(int loginTryTimes) {
-		this.loginTryTimes = loginTryTimes;
-	}
-
-	public int getBlockWaitingTimes() {
-		return blockWaitingTimes;
-	}
-
-	public void setBlockWaitingTimes(int blockWaitingTimes) {
-		this.blockWaitingTimes = blockWaitingTimes;
-	}
-
-	public String getSecurityHashSeq() {
-		return securityHashSeq;
-	}
-
-	public void setSecurityHashSeq(String securityHashSeq) {
-		this.securityHashSeq = securityHashSeq;
-	}
-
-	public String getGoogleApiKey() {
-		return googleApiKey;
-	}
-
-	public void setGoogleApiKey(String googleApiKey) {
-		this.googleApiKey = googleApiKey;
-	}
-
-	public boolean isMdRegEnabled() {
-		return mdRegEnabled;
-	}
-
-	public void setMdRegEnabled(boolean mdRegEnabled) {
-		this.mdRegEnabled = mdRegEnabled;
-	}
-
-	public String getRifcsStoreLocation() {
-		return rifcsStoreLocation;
-	}
-
-	public void setRifcsStoreLocation(String rifcsStoreLocation) {
-		this.rifcsStoreLocation = rifcsStoreLocation;
-	}
-
-	public String getRmWsName() {
-		return rmWsName;
-	}
-
-	public void setRmWsName(String rmWsName) {
-		this.rmWsName = rmWsName;
-	}
-
-	public String getRmWsEndpointAddress() {
-		return rmWsEndpointAddress;
-	}
-
-	public void setRmWsEndpointAddress(String rmWsEndpointAddress) {
-		this.rmWsEndpointAddress = rmWsEndpointAddress;
-	}
-
-	public int getRmWsTimeout() {
-		return rmWsTimeout;
-	}
-
-	public void setRmWsTimeout(int rmWsTimeout) {
-		this.rmWsTimeout = rmWsTimeout;
-	}
-
-	public String getResearchFieldCode() {
-		return researchFieldCode;
-	}
-
-	public void setResearchFieldCode(String researchFieldCode) {
-		this.researchFieldCode = researchFieldCode;
-	}
-
-	public String getCollectionPhysicalLocation() {
-		return collectionPhysicalLocation;
-	}
-
-	public void setCollectionPhysicalLocation(String collectionPhysicalLocation) {
-		this.collectionPhysicalLocation = collectionPhysicalLocation;
-	}
-
-	public String getAndsRegGroupName() {
-		return andsRegGroupName;
-	}
-
-	public void setAndsRegGroupName(String andsRegGroupName) {
-		this.andsRegGroupName = andsRegGroupName;
-	}
-
-	public boolean isHdlWsEnabled() {
-		return hdlWsEnabled;
-	}
-
-	public void setHdlWsEnabled(boolean hdlWsEnabled) {
-		this.hdlWsEnabled = hdlWsEnabled;
-	}
-
-	public String getHdlWsHostName() {
-		return hdlWsHostName;
-	}
-
-	public void setHdlWsHostName(String hdlWsHostName) {
-		this.hdlWsHostName = hdlWsHostName;
-	}
-
-	public int getHdlWsHostPort() {
-		return hdlWsHostPort;
-	}
-
-	public void setHdlWsHostPort(int hdlWsHostPort) {
-		this.hdlWsHostPort = hdlWsHostPort;
-	}
-
-	public String getHdlWsAppId() {
-		return hdlWsAppId;
-	}
-
-	public void setHdlWsAppId(String hdlWsAppId) {
-		this.hdlWsAppId = hdlWsAppId;
-	}
-
-	public String getHdlWsPath() {
-		return hdlWsPath;
-	}
-
-	public void setHdlWsPath(String hdlWsPath) {
-		this.hdlWsPath = hdlWsPath;
-	}
-
-	public String getHdlWsMethod() {
-		return hdlWsMethod;
-	}
-
-	public void setHdlWsMethod(String hdlWsMethod) {
-		this.hdlWsMethod = hdlWsMethod;
-	}
-
-	public String getAuthDomain() {
-		return authDomain;
-	}
-
-	public void setAuthDomain(String authDomain) {
-		this.authDomain = authDomain;
-	}
-
-	public String getHdlResolverAddress() {
-		return hdlResolverAddress;
-	}
-
-	public void setHdlResolverAddress(String hdlResolverAddress) {
-		this.hdlResolverAddress = hdlResolverAddress;
-	}
-
-	public String getCcLicenseWsAddress() {
-		return ccLicenseWsAddress;
-	}
-
-	public void setCcLicenseWsAddress(String ccLicenseWsAddress) {
-		this.ccLicenseWsAddress = ccLicenseWsAddress;
-	}
+    public void setAdminName(String adminName) {
+        this.adminName = adminName;
+    }
+
+    public String getAdminPassword() {
+        return adminPassword;
+    }
+
+    public void setAdminPassword(String adminPassword) {
+        this.adminPassword = adminPassword;
+    }
+
+    public String getSystemServiceEmail() {
+        return systemServiceEmail;
+    }
+
+    public void setSystemServiceEmail(String systemServiceEmail) {
+        this.systemServiceEmail = systemServiceEmail;
+    }
+
+    public int getLoginTryTimes() {
+        return loginTryTimes;
+    }
+
+    public void setLoginTryTimes(int loginTryTimes) {
+        this.loginTryTimes = loginTryTimes;
+    }
+
+    public int getBlockWaitingTimes() {
+        return blockWaitingTimes;
+    }
+
+    public void setBlockWaitingTimes(int blockWaitingTimes) {
+        this.blockWaitingTimes = blockWaitingTimes;
+    }
+
+    public String getSecurityHashSeq() {
+        return securityHashSeq;
+    }
+
+    public void setSecurityHashSeq(String securityHashSeq) {
+        this.securityHashSeq = securityHashSeq;
+    }
+
+    public String getGoogleApiKey() {
+        return googleApiKey;
+    }
+
+    public void setGoogleApiKey(String googleApiKey) {
+        this.googleApiKey = googleApiKey;
+    }
+
+    public boolean isMdRegEnabled() {
+        return mdRegEnabled;
+    }
+
+    public void setMdRegEnabled(boolean mdRegEnabled) {
+        this.mdRegEnabled = mdRegEnabled;
+    }
+
+    public String getRifcsStoreLocation() {
+        return rifcsStoreLocation;
+    }
+
+    public void setRifcsStoreLocation(String rifcsStoreLocation) {
+        this.rifcsStoreLocation = rifcsStoreLocation;
+    }
+
+    public String getRmWsName() {
+        return rmWsName;
+    }
+
+    public void setRmWsName(String rmWsName) {
+        this.rmWsName = rmWsName;
+    }
+
+    public String getRmWsEndpointAddress() {
+        return rmWsEndpointAddress;
+    }
+
+    public void setRmWsEndpointAddress(String rmWsEndpointAddress) {
+        this.rmWsEndpointAddress = rmWsEndpointAddress;
+    }
+
+    public int getRmWsTimeout() {
+        return rmWsTimeout;
+    }
+
+    public void setRmWsTimeout(int rmWsTimeout) {
+        this.rmWsTimeout = rmWsTimeout;
+    }
+
+    public String getCollectionPhysicalLocation() {
+        return collectionPhysicalLocation;
+    }
+
+    public void setCollectionPhysicalLocation(String collectionPhysicalLocation) {
+        this.collectionPhysicalLocation = collectionPhysicalLocation;
+    }
+
+    public String getAndsRegGroupName() {
+        return andsRegGroupName;
+    }
+
+    public void setAndsRegGroupName(String andsRegGroupName) {
+        this.andsRegGroupName = andsRegGroupName;
+    }
+
+    public boolean isHdlWsEnabled() {
+        return hdlWsEnabled;
+    }
+
+    public void setHdlWsEnabled(boolean hdlWsEnabled) {
+        this.hdlWsEnabled = hdlWsEnabled;
+    }
+
+    public String getHdlWsHostName() {
+        return hdlWsHostName;
+    }
+
+    public void setHdlWsHostName(String hdlWsHostName) {
+        this.hdlWsHostName = hdlWsHostName;
+    }
+
+    public int getHdlWsHostPort() {
+        return hdlWsHostPort;
+    }
+
+    public void setHdlWsHostPort(int hdlWsHostPort) {
+        this.hdlWsHostPort = hdlWsHostPort;
+    }
+
+    public String getHdlWsAppId() {
+        return hdlWsAppId;
+    }
+
+    public void setHdlWsAppId(String hdlWsAppId) {
+        this.hdlWsAppId = hdlWsAppId;
+    }
+
+    public String getHdlWsPath() {
+        return hdlWsPath;
+    }
+
+    public void setHdlWsPath(String hdlWsPath) {
+        this.hdlWsPath = hdlWsPath;
+    }
+
+    public String getHdlWsMethod() {
+        return hdlWsMethod;
+    }
+
+    public void setHdlWsMethod(String hdlWsMethod) {
+        this.hdlWsMethod = hdlWsMethod;
+    }
+
+    public String getAuthDomain() {
+        return authDomain;
+    }
+
+    public void setAuthDomain(String authDomain) {
+        this.authDomain = authDomain;
+    }
+
+    public String getHdlResolverAddress() {
+        return hdlResolverAddress;
+    }
+
+    public void setHdlResolverAddress(String hdlResolverAddress) {
+        this.hdlResolverAddress = hdlResolverAddress;
+    }
+
+    public String getCcLicenseWsAddress() {
+        return ccLicenseWsAddress;
+    }
+
+    public void setCcLicenseWsAddress(String ccLicenseWsAddress) {
+        this.ccLicenseWsAddress = ccLicenseWsAddress;
+    }
 
 }

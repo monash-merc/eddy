@@ -29,6 +29,7 @@ package au.edu.monash.merc.capture.service.impl;
 
 import au.edu.monash.merc.capture.adapter.DataCaptureAdapter;
 import au.edu.monash.merc.capture.adapter.DataCaptureAdapterFactory;
+import au.edu.monash.merc.capture.common.CoverageType;
 import au.edu.monash.merc.capture.domain.*;
 import au.edu.monash.merc.capture.domain.Collection;
 import au.edu.monash.merc.capture.dto.*;
@@ -692,22 +693,6 @@ public class DMServiceImpl implements DMService {
         this.mailService.sendMail(emailFrom, emailTo, emailSubject, templateValues, templateFile, isHtml);
     }
 
-    private Map<String, Object> populateTemplateMap() {
-        Map<String, Object> templateMap = new HashMap<String, Object>();
-        List<Party> parties = new ArrayList<Party>();
-        Party p1 = new Party();
-        p1.setPartyKey("part1_key1");
-        Party p2 = new Party();
-        p2.setPartyKey("part1_key2");
-        Party p3 = new Party();
-        p3.setPartyKey("part1_key3");
-        parties.add(p1);
-        parties.add(p2);
-        parties.add(p3);
-        templateMap.put("parties", parties);
-        templateMap.put("Localkey", "simontest_123456");
-        return templateMap;
-    }
 
     private Map<String, Object> popolatePartyTemplateMap() {
 
@@ -740,8 +725,87 @@ public class DMServiceImpl implements DMService {
         collection.setPublished(true);
         // update the collection first
         this.updateCollection(collection);
+        //check the licence
+        Licence dataLicence = metadataRegistrationBean.getLicence();
+        Licence foundLicence = this.getLicenceByCollectionId(collection.getId());
+        if (foundLicence == null) {
+            dataLicence.setCollection(collection);
+            this.saveLicence(dataLicence);
+        } else {
+            dataLicence.setId(foundLicence.getId());
+            dataLicence.setCollection(collection);
+            this.mergeLicence(dataLicence);
+        }
+        //create collection rifcs
+        String rifcsStoreLocation = metadataRegistrationBean.getRifcsStoreLocation();
+        String uniqueKey = collection.getUniqueKey();
+        String collectionRifTemp = metadataRegistrationBean.getRifcsCollectionTemplate();
+        Map<String, Object> collectionTempValues = populateCollectionRifcsMap(metadataRegistrationBean, parties);
+        this.rifcsService.createRifcs(rifcsStoreLocation, uniqueKey, collectionTempValues, collectionRifTemp);
+    }
 
+    private Map<String, Object> populateCollectionRifcsMap(MetadataRegistrationBean mdRegBean, List<Party> selectedParties) {
+        Map<String, Object> templateMap = new HashMap<String, Object>();
+        Collection collection = mdRegBean.getCollection();
+        String serverName = mdRegBean.getAppName();
+        String groupName = mdRegBean.getRifcsGroupName();
+        String localKey = collection.getUniqueKey();
+        String identifier = collection.getPersistIdentifier();
+        String collectionName = collection.getName();
+        String collectionDesc = collection.getDescription();
+        String collectionUrl = mdRegBean.getCollectionUrl();
+        String postalAddress = mdRegBean.getPhysicalAddress();
+        String dateFrom = CaptureUtil.formateDateToW3CDTF(collection.getDateFrom());
+        String dateTo = CaptureUtil.formateDateToW3CDTF(collection.getDateTo());
+        Location location = null;
+        Location spatialLocation = collection.getLocation();
 
+        if (spatialLocation != null) {
+            String spatialType = spatialLocation.getSpatialType();
+            if (!CoverageType.fromType(spatialType).equals(CoverageType.UNKNOWN)) {
+                location = new Location();
+                if (CoverageType.fromType(spatialType).equals(CoverageType.GLOBAL)) {
+                    location.setSpatialType("text");
+                    location.setSpatialCoverage(spatialLocation.getSpatialCoverage());
+                } else {
+                    location.setSpatialType(spatialLocation.getSpatialType());
+                    location.setSpatialCoverage(spatialLocation.getSpatialCoverage());
+                }
+            }
+        }
+
+        Licence licence = mdRegBean.getLicence();
+        String licenceContents = licence.getContents();
+        templateMap.put("groupName", groupName);
+        //check if it's handle key, then we add the handle server url
+        String identifierkey = identifier;
+        if (identifier != null && StringUtils.contains(identifier, "/")) {
+            identifierkey = "http://hdl.handle.net" + "/" + identifier;
+        }
+        templateMap.put("identifier", identifierkey);
+
+        templateMap.put("originatingSrc", serverName);
+        templateMap.put("localKey", localKey);
+
+        //if handle provided, just put the handle identifier
+        if (identifier != null && StringUtils.contains(identifier, "/")) {
+            String handleId = "http://hdl.handle.net" + "/" + identifier;
+            templateMap.put("handleId", handleId);
+        }
+
+        templateMap.put("collectionName", collectionName);
+        templateMap.put("collectionUrl", collectionUrl);
+        templateMap.put("physicalAddress", postalAddress);
+        //if location provided, then set the location
+        if (location != null) {
+            templateMap.put("location", location);
+        }
+        templateMap.put("temporalDateFrom", dateFrom);
+        templateMap.put("temporalDateTo", dateTo);
+        templateMap.put("parties", selectedParties);
+        templateMap.put("collectionDesc", collectionDesc);
+        templateMap.put("licenceContents", licenceContents);
+        return templateMap;
     }
 
     @Override
@@ -863,6 +927,11 @@ public class DMServiceImpl implements DMService {
     @Override
     public void saveLicence(Licence licence) {
         this.licenceService.saveLicence(licence);
+    }
+
+    @Override
+    public void mergeLicence(Licence licence) {
+        this.licenceService.mergeLicence(licence);
     }
 
     @Override

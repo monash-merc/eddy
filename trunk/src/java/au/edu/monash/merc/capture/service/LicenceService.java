@@ -33,6 +33,8 @@ public interface LicenceService {
 
     void saveLicence(Licence licence);
 
+    void mergeLicence(Licence licence);
+
     void updateLicence(Licence licence);
 
     void deleteLicence(Licence licence);
