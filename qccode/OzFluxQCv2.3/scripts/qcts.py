@@ -1063,7 +1063,7 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
             if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Ce_2layer') and cf['PenmanMonteith']['Ce_2layer'] == 'True':
                 if 'rav_2layer' in ds.series.keys() and 'GE_2layer' in ds.series.keys() and 'rE_2layer' in ds.series.keys() and 'rav_base' in ds.series.keys() and 'GE_base' in ds.series.keys() and 'rE_base' in ds.series.keys() and 'rav_top' in ds.series.keys() and 'GE_top' in ds.series.keys() and 'rE_top' in ds.series.keys() and 'rav_full' in ds.series.keys() and 'GE_full' in ds.series.keys() and 'rE_full' in ds.series.keys():
                     PMout = ['rav_2layer','rE_2layer','GE_2layer','rav_base','rE_base','GE_base','rav_top','rE_top','GE_top','rav_full','rE_full','GE_full']
-                    for listindex in range(0,9):
+                    for listindex in range(0,12):
                         if PMout[listindex] not in OutList:
                             OutList.append(PMout[listindex])
                         MinMaxOutList.append(PMout[listindex])
@@ -1105,7 +1105,7 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
             if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Ce_2layer') and cf['PenmanMonteith']['Ce_2layer'] == 'True':
                 if 'rav_2layer' in ds.series.keys() and 'GE_2layer' in ds.series.keys() and 'rE_2layer' in ds.series.keys() and 'rav_base' in ds.series.keys() and 'GE_base' in ds.series.keys() and 'rE_base' in ds.series.keys() and 'rav_top' in ds.series.keys() and 'GE_top' in ds.series.keys() and 'rE_top' in ds.series.keys() and 'rav_full' in ds.series.keys() and 'GE_full' in ds.series.keys() and 'rE_full' in ds.series.keys():
                     PMout = ['rav_2layer','rE_2layer','GE_2layer','rav_base','rE_base','GE_base','rav_top','rE_top','GE_top','rav_full','rE_full','GE_full']
-                    for listindex in range(0,6):
+                    for listindex in range(0,12):
                         if PMout[listindex] not in OutList:
                             OutList.append(PMout[listindex])
                         MeanOutList.append(PMout[listindex])
@@ -1114,8 +1114,8 @@ def ComputeDailySums(cf,ds,SumList,SubSumList,MinMaxList,MeanList,SoilList):
             
             if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='Cdmethod') and cf['PenmanMonteith']['Cdmethod'] == 'True':
                 if 'GC' in ds.series.keys() and 'rC' in ds.series.keys():
-                    PMout = ['rC','GC']
-                    for listindex in range(0,2):
+                    PMout = ['ram','rC','GC']
+                    for listindex in range(0,3):
                         if PMout[listindex] not in OutList:
                             OutList.append(PMout[listindex])
                         MeanOutList.append(PMout[listindex])
@@ -2748,6 +2748,12 @@ def get_canopyresistance(cf,ds,Uavg,uindex,PMin,Level,critFsd,critFe):
     rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
     gamma = mf.gamma(ps,Cpm,Lv)
     delta = mf.delta(Ta)
+    if 'gamma' not in ds.series.keys():
+        qcutils.CreateSeries(ds,'gamma',gamma,FList=[PMin[3],'Cpm','Lv'],Descr='Psychrometric coefficient',Units='kPa/C')
+    
+    if 'delta' not in ds.series.keys():
+        qcutils.CreateSeries(ds,'delta',delta,FList=[PMin[1]],Descr='Slope of the saturation vapour pressure v temperature curve',Units='kPa/C')
+    
     Feindex = numpy.ma.where(Fe < critFe)[0]
     Fsdindex = numpy.ma.where(Fsd < critFsd)[0]
     #Fnindex = numpy.where(Fn < 0)[0]
@@ -2923,6 +2929,12 @@ def get_rstGst(cf,ds,PMin,rav):
     rhom,f = qcutils.GetSeriesasMA(ds,'rhom')
     gamma = mf.gamma(ps,Cpm,Lv)
     delta = mf.delta(Ta)
+    if 'gamma' not in ds.series.keys():
+        qcutils.CreateSeries(ds,'gamma',gamma,FList=[PMin[3],'Cpm','Lv'],Descr='Psychrometric coefficient',Units='kPa/C')
+    
+    if 'delta' not in ds.series.keys():
+        qcutils.CreateSeries(ds,'delta',delta,FList=[PMin[1]],Descr='Slope of the saturation vapour pressure v temperature curve',Units='kPa/C')
+    
     rst = ((((((delta * (Fn - Fg) / (Lv)) + (rhom * Cpm * (VPD / ((Lv) * rav)))) / (Fe / (Lv))) - delta) / gamma) - 1) * rav
     rstindex = numpy.ma.where(rst < 0)[0]
     Gst = (1 / rst) * (Ah * 1000) / 18

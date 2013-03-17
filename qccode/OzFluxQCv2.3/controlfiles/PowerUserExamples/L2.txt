@@ -13,9 +13,12 @@
         xlFileName = ASM_EC_2012_L2.xls
         xlFlagFilePath = ../AliceSpringsMulga/level2/
         xlFlagFileName = ASM_EC_2012_flagstats_L2.xls
+    [[PNG]]
+        PNGFilePath = ../AliceSpringsMulga/level2/PNG/
 
 [Output]
     #noDefaultXl = True   # uncomment to load controlfile for excel output
+    PNGFile = True
 
 [Variables]
     [[Fn]]

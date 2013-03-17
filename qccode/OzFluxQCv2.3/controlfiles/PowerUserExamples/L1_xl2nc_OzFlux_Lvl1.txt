@@ -1,8 +1,8 @@
 [General]
-InLevel = L1
-OutLevel = L1
-Platform = Mac    # Mac or PC
-netCDFv3 = False
+    InLevel = L1
+    OutLevel = L1
+    Platform = Mac    # Mac or PC
+    netCDFv3 = False
 
 [Files]
     [[L1]]
@@ -266,7 +266,7 @@ netCDFv3 = False
         [[[Attr]]]
             long_name = "CO2 concentration"
             units    = "mg/m3"
-            ancillary_variables = "Cc_7500 QC flag"
+            ancillary_variables = "Cc_7500_Av QC flag"
             standard_name = "mass_concentration_of_carbon_dioxide_in_air"
     [[Ah_7500_Av]]
         [[[xl]]]
