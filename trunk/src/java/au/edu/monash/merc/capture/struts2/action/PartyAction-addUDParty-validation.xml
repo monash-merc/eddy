@@ -78,19 +78,6 @@
 		</field-validator>
 	</field>
 
-	 
-	<field name="selectedPartyBean.groupName">
-		<field-validator type="requiredstring">
-			<param name="trim">true</param>
-			<message>${getText("ands.add.party.party.group.name.required")}</message>
-		</field-validator>
-		<field-validator type="stringlength">
-			<param name="maxLength">100</param>
-			<param name="minLength">1</param>
-			<message>${getText("ands.add.party.party.group.name.range")}</message>
-		</field-validator>
-	</field>
-	
 	<field name="selectedPartyBean.originateSourceValue">
 		<field-validator type="requiredstring" short-circuit="true">
 			<param name="trim">true</param>

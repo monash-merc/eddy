@@ -118,8 +118,6 @@ public class ViewColDetailsAction extends DMCoreAction {
                 mdRegEnabled = Boolean.valueOf(mdRegEnabledStr).booleanValue();
                 //populate if the rifcs registration is enabled for non-ldap user
 
-                String mdRegNonLdapEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_MD_REGISTER_FOR_NON_LDAP_USER_SUPPORTED);
-                boolean mdRegNonLdapEnabled = Boolean.valueOf(mdRegNonLdapEnabledStr).booleanValue();
                 if (user != null) {
                     //see if it's a ldap user
                     String passwd = user.getPassword();
@@ -129,12 +127,9 @@ public class ViewColDetailsAction extends DMCoreAction {
                     }
 
                     if (mdRegEnabled) {
-                        //if metadata registration is enabled, but non-monash user is not supported
-                        //we still need to enable an admin to registration metadata
-                        if (!monUser && !mdRegNonLdapEnabled) {
-                            if ((user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
-                                mdRegEnabled = false;
-                            }
+                        //only the owner of a collectio and an admin they can register the metadata
+                        if ((user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
+                            mdRegEnabled = false;
                         }
                     }
                 }

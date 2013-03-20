@@ -13,7 +13,10 @@
 	font-size:12px; 
 	text-align:left; 
 	background:#fff; 
-	border:1px solid #365e81; /** #c2c9d7 */;
+	border:1px solid #003766; /** #c2c9d7 */;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 #confirm-container .header {
 	font-size: 12px; 
@@ -21,9 +24,9 @@
 	height:20px; 
 	line-height:20px; 
 	width:418px; 
-	background-color: #365e81; /**#003766;*/ 
+	background-color: #003766; /**#003766;*/
 	color:#fff; 
-	border:1px solid #365e81; /**#003766; */
+	border:1px solid #003766; /**#003766; */
 	font-weight: normal;
 }
 #confirm-container .header span {

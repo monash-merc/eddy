@@ -3,7 +3,7 @@
                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xsi:schemaLocation="http://ands.org.au/standards/rif-cs/registryObjects http://services.ands.org.au/documentation/rifcs/1.2.0/schema/registryObjects.xsd">
     <registryObject group="${groupName}">
-        <key>${identifier}</key>
+        <key>${keyId}</key>
         <originatingSource>${originatingSrc}</originatingSource>
         <collection type="collection">
             <identifier type="local">${localKey}</identifier>
@@ -46,6 +46,7 @@
                 <key>MON399d1cdc-a788-4a05-9f01-d3dcbcafdf8d</key>
                 <relation type="isOutputOf"/>
             </relatedObject>
+            <subject type="gcmd">Strategic basic research</subject>
             <subject type="anzsrc-toa">Strategic basic research</subject>
             <subject type="anzsrc-toa">Applied research</subject>
             <subject type="anzsrc-for">0401</subject>
@@ -65,9 +66,11 @@
             <description type="rights" xml:lang="en">
             ${licenceContents}
             </description>
-            <description type="accessRights" xml:lang="en">
-                This is access rights (dummy)
-            </description>
+            <citationInfo>
+                <fullCitation style="Harvard">
+                ${creator} (${publicationYear}): ${collectionName}. ${publisher}. ${citationIdentifier}
+                </fullCitation>
+            </citationInfo>
         </collection>
     </registryObject>
 </registryObjects>

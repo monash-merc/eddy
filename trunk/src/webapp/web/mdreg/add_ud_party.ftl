@@ -36,7 +36,7 @@
                 <div class="popup_input_field_title">
                     Title:
                 </div>
-                <div class="input_field_value_section">
+                <div class="popup_input_value_section">
                     <@s.textfield name="selectedPartyBean.personTitle" />
                     <div class="comments">
                         <@s.text name="ands.add.party.party.title.hint" />
@@ -48,7 +48,7 @@
                 <div class="popup_input_field_title">
                     First Name:
                 </div>
-                <div class="input_field_value_section">
+                <div class="popup_input_value_section">
                     <@s.textfield name="selectedPartyBean.personGivenName" />
                     <div class="comments">
                         <@s.text name="ands.add.party.party.first.name.hint" />
@@ -61,7 +61,7 @@
                 <div class="popup_input_field_title">
                     Last Name:
                 </div>
-                <div class="input_field_value_section">
+                <div class="popup_input_value_section">
                     <@s.textfield name="selectedPartyBean.personFamilyName" />
                     <div class="comments">
                         <@s.text name="ands.add.party.party.last.name.hint" />
@@ -74,7 +74,7 @@
                 <div class="popup_input_field_title">
                     Email:
                 </div>
-                <div class="input_field_value_section">
+                <div class="popup_input_value_section">
                     <@s.textfield name="selectedPartyBean.email" />
                     <div class="comments">
                         <@s.text name="ands.add.party.party.email.hint" />
@@ -87,7 +87,7 @@
                 <div class="popup_input_field_title">
                     Address:
                 </div>
-                <div class="input_field_value_section">
+                <div class="popup_input_value_section">
                     <@s.textarea name="selectedPartyBean.address"  cssClass="input_textarea" style="width: 300px; height: 80px;" />
                     <div class="comments">
                         <@s.text name="ands.add.party.party.address.hint" />
@@ -100,7 +100,7 @@
                 <div class="popup_input_field_title">
                     Web URL:
                 </div>
-                <div class="input_field_value_section">
+                <div class="popup_input_value_section">
                     <@s.textfield name="selectedPartyBean.url" />
                     <div class="comments">
                         <@s.text name="ands.add.party.party.url.hint" />
@@ -113,7 +113,7 @@
                 <div class="popup_input_field_title">
                     Description:
                 </div>
-                <div class="input_field_value_section">
+                <div class="popup_input_value_section">
                     <@s.textarea name="selectedPartyBean.description"  cssClass="input_textarea" style="width: 300px; height: 80px;" />
                     <div class="comments">
                         <@s.text name="ands.add.party.party.desc.hint" />
@@ -126,8 +126,8 @@
                 <div class="popup_input_field_title">
                     Group Name:
                 </div>
-                <div class="input_field_value_section">
-                    <@s.textfield name="selectedPartyBean.groupName" />
+                <div class="popup_input_value_section">
+                    <@s.select id="groupName" name="selectedPartyBean.groupKey" headerKey="${selectedPartyBean.groupKey}" list="organizations" cssClass="input_select_field" />
                     <div class="comments">
                         <@s.text name="ands.add.party.party.group.name.hint" />
                     </div>
@@ -139,7 +139,7 @@
                 <div class="popup_input_field_title">
                     Group Web Site:
                 </div>
-                <div class="input_field_value_section">
+                <div class="popup_input_value_section">
                     <@s.textfield name="selectedPartyBean.originateSourceValue" />
                     <div class="comments">
                         <@s.text name="ands.add.party.party.group.url.hint" />

@@ -53,6 +53,17 @@
 		<property name="ignoreUnresolvablePlaceholders" value="true" />
 	</bean>
 
+    <!-- country properties -->
+    <bean id="nlaIdPropertyConfigurer" class="au.edu.monash.merc.capture.config.SystemPropertiesConfigurer" scope="singleton">
+        <property name="locations">
+            <list>
+                <value>classpath:nlaid.properties</value>
+            </list>
+        </property>
+        <property name="ignoreResourceNotFound" value="true" />
+        <property name="ignoreUnresolvablePlaceholders" value="true" />
+    </bean>
+
     <!-- FreeMarker Mail-->
     <bean id="mailFreeMarker" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
 		<property name="templateLoaderPath" value="classpath:mailTemplates" /><!-- FreeMarker template file -->

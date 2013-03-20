@@ -104,7 +104,7 @@
                 </div>
                 <div class="left_middle_no_border_panel">
                     <table class="table_data">
-                        <tr class="bg_grey_tr">
+                        <tr>
                             <td width="100">
                                 <center>Select All <br/><@s.checkbox name="selectedAll" id="ds_select_all" /></center>
                             </td>

@@ -54,6 +54,10 @@ public class Party extends Domain {
     private String partyKey;
 
     @Basic
+    @Column(name = "group_key")
+    private String groupKey;
+
+    @Basic
     @Column(name = "group_name")
     private String groupName;
 
@@ -122,6 +126,14 @@ public class Party extends Domain {
 
     public void setPartyKey(String partyKey) {
         this.partyKey = partyKey;
+    }
+
+    public String getGroupKey() {
+        return groupKey;
+    }
+
+    public void setGroupKey(String groupKey) {
+        this.groupKey = groupKey;
     }
 
     public String getGroupName() {

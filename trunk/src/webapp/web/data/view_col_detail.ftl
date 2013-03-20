@@ -13,6 +13,16 @@
             </@s.if>
             }
         }
+        ;
+        $(function () {
+            $.superbox.settings = {
+                closeTxt:"Close",
+                loadTxt:"Loading...",
+                nextTxt:"Next",
+                prevTxt:"Previous"
+            };
+            $.superbox();
+        });
     </script>
 </head>
 <body>
@@ -233,8 +243,7 @@
                         <div class="data_action_link">
                             <@s.if test="%{permissionBean.viewAllowed}">
                                 <@s.if test="%{#ds.extracted}">
-                                    <a href="${base}/${viewDatasetLink}?dataset.id=<@s.property value='#ds.id' />&collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}"
-                                       title="Dataset - ${ds.name}" id="viewdataset">View Metadata</a>
+                                    <a href="${base}/${viewDatasetLink}?dataset.id=<@s.property value='#ds.id' />&collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}" title="Dataset - ${ds.name}" rel="superbox[iframe.viewmetadata][600x500]">View Metadata</a>
                                 </@s.if>
                             </@s.if>
 

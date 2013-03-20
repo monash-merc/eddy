@@ -114,6 +114,11 @@ public class CaptureUtil {
         return sdfDestination.format(dateTime);
     }
 
+    public static String dateToYYYY(Date dateTime) {
+        SimpleDateFormat sdfDestination = new SimpleDateFormat("yyyy");
+        return sdfDestination.format(dateTime);
+    }
+
     public static String generateIdBasedOnTimeStamp() {
         String suffix = null;
         synchronized (lock) {
@@ -269,6 +274,8 @@ public class CaptureUtil {
         System.out.println("is today? " + CaptureUtil.isToday(day));
 
         System.out.println("==date to string: " + dateToYYYYMMDDStr(day));
+
+        System.out.println("==date to year string: " + dateToYYYY(day));
 
         String endwithSplashStr = "/opt/test/simontestdir";
 

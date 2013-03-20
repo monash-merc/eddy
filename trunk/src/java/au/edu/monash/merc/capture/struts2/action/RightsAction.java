@@ -27,16 +27,6 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
-
 import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.Rights;
 import au.edu.monash.merc.capture.dto.CCLicense;
@@ -44,9 +34,14 @@ import au.edu.monash.merc.capture.dto.CCWSField;
 import au.edu.monash.merc.capture.dto.LicenseField;
 import au.edu.monash.merc.capture.service.CreativeLicenseService;
 import au.edu.monash.merc.capture.util.CaptureUtil;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Scope("prototype")
-@Controller("data.rightsAction")
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class RightsAction extends DMCoreAction {
 
 	private Rights rights;

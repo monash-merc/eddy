@@ -75,8 +75,6 @@ public class ConfigSettings {
     // ANDS RIF-CS Configuration
     public static String ANDS_RIFCS_REG_ENABLED = "ands.rifcs.register.enabled";
 
-    public static String ANDS_MD_REGISTER_FOR_NON_LDAP_USER_SUPPORTED = "ands.rifcs.register.non.ladp.user.supported";
-
     public static String ANDS_PARTY_ACTIVITY_WS_NAME = "ands.party.activtiy.rm.ws.name";
 
     public static String ANDS_PARTY_ACTIVITY_WS_ENDPOINT = "ands.party.activtiy.rm.ws.endpoint";
@@ -152,7 +150,9 @@ public class ConfigSettings {
 
     public static String RIFCS_COLLECTION_TEMPLATE = "rifcs.collection.template";
 
-    public static String RIFCS_PARTY_TEMPLATE = "rifcs.party.template";
+    public static String RIFCS_RM_PARTY_TEMPLATE = "rifcs.rm.party.template";
+
+    public static String RIFCS_NONE_RM_PARTY_TEMPLATE = "rifcs.none.rm.party.template";
 
     @Autowired
     @Qualifier("sysPropertyConfigurer")

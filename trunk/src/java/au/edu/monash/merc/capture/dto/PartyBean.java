@@ -33,6 +33,8 @@ public class PartyBean implements Serializable {
 
     private long id;
 
+    private String groupKey;
+
     private String groupName;
 
     private String partyKey;
@@ -71,6 +73,14 @@ public class PartyBean implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getGroupKey() {
+        return groupKey;
+    }
+
+    public void setGroupKey(String groupKey) {
+        this.groupKey = groupKey;
     }
 
     public String getGroupName() {

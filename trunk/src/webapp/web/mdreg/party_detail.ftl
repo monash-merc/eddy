@@ -124,6 +124,7 @@
 			    <@s.hidden name="selectedPartyBean.identifierValue" id = "ands_p_idvalue" />
 			    <@s.hidden name="selectedPartyBean.originateSourceType" id = "ands_p_srctype"/>
 			    <@s.hidden name="selectedPartyBean.originateSourceValue" id = "ands_p_srcvalue" />
+			    <@s.hidden name="selectedPartyBean.groupKey" id = "ands_p_groupkey"/>
 			    <@s.hidden name="selectedPartyBean.groupName" id = "ands_p_groupname"/>
 			    <@s.hidden name="selectedPartyBean.fromRm" id = "ands_p_fromrm"/>
             </div>

@@ -65,6 +65,8 @@ public class MetadataRegistrationBean implements Serializable {
 
     private String rifcsCollectionTemplate;
 
+    private String rifcsRMPartyTemplate;
+
     private String rifcsPartyTemplate;
 
     public List<PartyBean> getPartyList() {
@@ -145,6 +147,14 @@ public class MetadataRegistrationBean implements Serializable {
 
     public void setRifcsCollectionTemplate(String rifcsCollectionTemplate) {
         this.rifcsCollectionTemplate = rifcsCollectionTemplate;
+    }
+
+    public String getRifcsRMPartyTemplate() {
+        return rifcsRMPartyTemplate;
+    }
+
+    public void setRifcsRMPartyTemplate(String rifcsRMPartyTemplate) {
+        this.rifcsRMPartyTemplate = rifcsRMPartyTemplate;
     }
 
     public String getRifcsPartyTemplate() {

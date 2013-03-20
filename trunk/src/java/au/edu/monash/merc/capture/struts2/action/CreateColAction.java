@@ -191,8 +191,6 @@ public class CreateColAction extends DMCoreAction {
             // set user type is the owner of collection
             viewType = ActConstants.UserViewType.USER.toString();
 
-            String mdRegNonLdapEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_MD_REGISTER_FOR_NON_LDAP_USER_SUPPORTED);
-            boolean mdRegNonLdapEnabled = Boolean.valueOf(mdRegNonLdapEnabledStr).booleanValue();
             if (user != null) {
                 //see if it's a ldap user
                 String passwd = user.getPassword();
@@ -202,12 +200,9 @@ public class CreateColAction extends DMCoreAction {
                 }
 
                 if (mdRegEnabled) {
-                    //if metadata registration is enabled, but non-monash user is not supported
-                    //we still need to enable an admin to registration metadata
-                    if (!monUser && !mdRegNonLdapEnabled) {
-                        if ((user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
-                            mdRegEnabled = false;
-                        }
+                    //owner of a collection and an admin they can register the metadata
+                    if ((user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
+                        mdRegEnabled = false;
                     }
                 }
             }

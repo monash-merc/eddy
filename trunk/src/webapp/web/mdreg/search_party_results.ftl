@@ -83,6 +83,7 @@
                             <@s.hidden name="foundPartyBeans[${ptState.index}].identifierValue" />
                             <@s.hidden name="foundPartyBeans[${ptState.index}].originateSourceType" />
                             <@s.hidden name="foundPartyBeans[${ptState.index}].originateSourceValue" />
+                            <@s.hidden name="foundPartyBeans[${ptState.index}].groupKey" />
                             <@s.hidden name="foundPartyBeans[${ptState.index}].groupName" />
                             <@s.hidden name="foundPartyBeans[${ptState.index}].fromRm" />
                             <@s.hidden name="searchCnOrEmail" />
