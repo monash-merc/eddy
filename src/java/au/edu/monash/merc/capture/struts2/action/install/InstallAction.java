@@ -198,7 +198,7 @@ public class InstallAction extends InstallBaseAction {
 
 		appProp.setMdRegEnabled(true);
 		appProp.setRifcsStoreLocation("/opt/ands_rifcs");
-		appProp.setAndsRegGroupName("Monash University");
+		appProp.setAndsRegGroupName("OzFlux: Australian and New Zealand Flux Research and Monitoring");
 
 		// researcher master web service call
 		appProp.setRmWsName("AIRMANDSService");

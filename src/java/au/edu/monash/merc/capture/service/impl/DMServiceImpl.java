@@ -37,6 +37,7 @@ import au.edu.monash.merc.capture.dto.page.Pagination;
 import au.edu.monash.merc.capture.exception.DataCaptureException;
 import au.edu.monash.merc.capture.file.FileSystemSerivce;
 import au.edu.monash.merc.capture.mail.MailService;
+import au.edu.monash.merc.capture.rifcs.PartyActivityWSService;
 import au.edu.monash.merc.capture.rifcs.RIFCSGenService;
 import au.edu.monash.merc.capture.rifcs.RifcsService;
 import au.edu.monash.merc.capture.service.*;
@@ -110,6 +111,9 @@ public class DMServiceImpl implements DMService {
     @Autowired
     private LocationService locationService;
 
+    @Autowired
+    private PartyActivityWSService paWsService;
+
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     public void setCollectionService(CollectionService collectionService) {
@@ -174,6 +178,10 @@ public class DMServiceImpl implements DMService {
 
     public void setLocationService(LocationService locationService) {
         this.locationService = locationService;
+    }
+
+    public void setPaWsService(PartyActivityWSService paWsService) {
+        this.paWsService = paWsService;
     }
 
     public boolean checkWritePermission(String path) {
@@ -742,6 +750,21 @@ public class DMServiceImpl implements DMService {
         String collectionRifTemp = metadataRegistrationBean.getRifcsCollectionTemplate();
         Map<String, Object> collectionTempValues = populateCollectionRifcsMap(metadataRegistrationBean, parties);
         this.rifcsService.createRifcs(rifcsStoreLocation, uniqueKey, collectionTempValues, collectionRifTemp);
+
+        String noneRMPartyTemp = metadataRegistrationBean.getRifcsPartyTemplate();
+        String rmPartyTemp = metadataRegistrationBean.getRifcsRMPartyTemplate();
+        for (Party party : parties) {
+            String partyKey = party.getPartyKey();
+            if (party.isFromRm()) {
+                PartyBean rmPartyBean = this.paWsService.getParty(party.getPartyKey());
+                String rifcsContents = rmPartyBean.getRifcsContent();
+                Map<String, Object> rmPartyTempValues = populateRMPartyRifcsMap(rifcsContents);
+                this.rifcsService.createRifcs(rifcsStoreLocation, partyKey, rmPartyTempValues, rmPartyTemp);
+            } else {
+                Map<String, Object> partyTempValues = populateNoneRMPartyRifcsMap(party);
+                this.rifcsService.createRifcs(rifcsStoreLocation, partyKey, partyTempValues, noneRMPartyTemp);
+            }
+        }
     }
 
     private Map<String, Object> populateCollectionRifcsMap(MetadataRegistrationBean mdRegBean, List<Party> selectedParties) {
@@ -778,11 +801,11 @@ public class DMServiceImpl implements DMService {
         String licenceContents = licence.getContents();
         templateMap.put("groupName", groupName);
         //check if it's handle key, then we add the handle server url
-        String identifierkey = identifier;
+        String keyId = identifier;
         if (identifier != null && StringUtils.contains(identifier, "/")) {
-            identifierkey = "http://hdl.handle.net" + "/" + identifier;
+            keyId = "http://hdl.handle.net" + "/" + identifier;
         }
-        templateMap.put("identifier", identifierkey);
+        templateMap.put("keyId", keyId);
 
         templateMap.put("originatingSrc", serverName);
         templateMap.put("localKey", localKey);
@@ -805,6 +828,61 @@ public class DMServiceImpl implements DMService {
         templateMap.put("parties", selectedParties);
         templateMap.put("collectionDesc", collectionDesc);
         templateMap.put("licenceContents", licenceContents);
+
+        //citation metadata
+        User owner = collection.getOwner();
+        String givenName = owner.getFirstName();
+        String familyName = owner.getLastName();
+        String creator = givenName + " " + familyName;
+
+        Date date = collection.getCreatedTime();
+        String publicationYear = CaptureUtil.dateToYYYY(date);
+
+        String publisher = mdRegBean.getRifcsGroupName();
+
+        String citationIdentifier = "local: " + identifier;
+        if (identifier != null && StringUtils.contains(identifier, "/")) {
+            citationIdentifier = "hdl: " + identifier;
+        }
+        templateMap.put("creator", creator);
+        templateMap.put("publicationYear", publicationYear);
+        templateMap.put("publisher", publisher);
+        templateMap.put("citationIdentifier", citationIdentifier);
+        return templateMap;
+    }
+
+    private Map<String, Object> populateNoneRMPartyRifcsMap(Party party) {
+        Map<String, Object> templateMap = new HashMap<String, Object>();
+        String groupName = party.getGroupName();
+        String localKey = party.getPartyKey();
+        String originatingSrc = party.getOriginateSourceValue();
+        Date date = GregorianCalendar.getInstance().getTime();
+        String dateModified = CaptureUtil.formatDateToUTC(date);
+        String personTitle = party.getPersonTitle();
+        String givenName = party.getPersonGivenName();
+        String familyName = party.getPersonFamilyName();
+        String webSite = party.getUrl();
+        String emailAddress = party.getEmail();
+        String partyDesc = party.getDescription();
+        templateMap.put("groupName", groupName);
+        templateMap.put("localKey", localKey);
+        templateMap.put("originatingSrc", originatingSrc);
+        templateMap.put("dateModified", dateModified);
+        templateMap.put("identifierKey", localKey);
+        templateMap.put("personTitle", personTitle);
+        templateMap.put("givenName", givenName);
+        templateMap.put("familyName", familyName);
+        templateMap.put("webSite", webSite);
+        templateMap.put("emailAddress", emailAddress);
+        if (StringUtils.isNotBlank(partyDesc)) {
+            templateMap.put("partyDesc", partyDesc);
+        }
+        return templateMap;
+    }
+
+    private Map<String, Object> populateRMPartyRifcsMap(String partyContents) {
+        Map<String, Object> templateMap = new HashMap<String, Object>();
+        templateMap.put("partyContents", partyContents);
         return templateMap;
     }
 

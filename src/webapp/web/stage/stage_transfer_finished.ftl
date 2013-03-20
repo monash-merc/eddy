@@ -56,11 +56,12 @@
 		</div>
 		<div class="none_border_space_block"></div>
 	</div>
-	<div class="right_container_panel">		 
-		 <@s.if test="%{#session.authentication_flag =='authenticated'}">  
-		 	<#include "../template/subnav_section.ftl" />
-		</@s.if>
-	</div>
+    <!-- right panel -->
+    <div class="right_display_div">
+    <@s.if test="%{#session.authentication_flag =='authenticated'}">
+            <#include "../template/sub_nav.ftl" />
+        </@s.if>
+    </div>
 	
 	<div style="clear:both"></div>
 </div> 

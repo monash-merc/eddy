@@ -361,29 +361,6 @@
             <result name="success">/web/mdreg/metadata_register_finished.ftl</result>
         </action>
 
-
-        <!-- show the metadata registration -->
-        <action name="showMdReg" class="data.mdRegAction" method="showMdReg">
-            <result name="input">/web/mdreg/md_reg.ftl</result>
-            <result name="error">/web/mdreg/mdreg_error.ftl</result>
-            <result name="success">/web/mdreg/md_reg.ftl</result>
-        </action>
-
-        <!-- metadata registration preview -->
-        <action name="preRegMd" class="data.mdRegAction" method="preRegMd">
-            <result name="input">/web/mdreg/md_reg.ftl</result>
-            <result name="error">/web/mdreg/mdreg_error.ftl</result>
-            <result name="success">/web/mdreg/mdreg_preview.ftl</result>
-        </action>
-
-        <!-- metadata registration -->
-        <action name="mdReg" class="data.mdRegAction" method="mdReg">
-            <result name="input">/web/mdreg/mdreg_preview.ftl</result>
-            <result name="error">/web/mdreg/mdreg_error.ftl</result>
-            <result name="success">/web/mdreg/mdreg_finished.ftl</result>
-        </action>
-
-
         <!-- show show search party action -->
         <action name="showSearchParty" class="data.partyAction" method="showSearchParty">
             <result name="input">/web/mdreg/search_party.ftl</result>
@@ -451,49 +428,6 @@
             <result name="error">/web/mdreg/licence_options.ftl</result>
             <result name="success">/web/mdreg/licence_content.ftl</result>
         </action>
-
-
-        <!-- to be removed for rights -->
-        <!-- collection righst or license options -->
-        <action name="rightsOptions" class="data.rightsAction" method="showRightsOptions">
-            <result name="input">/web/mdreg/rights_error.ftl</result>
-            <result name="error">/web/mdreg/rights_error.ftl</result>
-            <result name="success">/web/mdreg/rights_options.ftl</result>
-        </action>
-
-        <!-- select rights option -->
-        <action name="selectRights" class="data.rightsAction" method="selectRights">
-            <result name="input">/web/mdreg/rights_options.ftl</result>
-            <result name="error">/web/mdreg/rights_options.ftl</result>
-            <result name="success">/web/mdreg/rights_template.ftl</result>
-        </action>
-
-        <!--creative commons license -->
-        <action name="cccllicense" class="data.rightsAction" method="cccllicense">
-            <result name="input">/web/mdreg/rights_template.ftl</result>
-            <result name="error">/web/mdreg/rights_template.ftl</result>
-            <result name="success">/web/mdreg/rights_contents.ftl</result>
-        </action>
-
-        <!-- cc0 wavier license -->
-        <action name="ccpdlicense" class="data.rightsAction" method="ccpdlicense">
-            <result name="input">/web/mdreg/rights_template.ftl</result>
-            <result name="error">/web/mdreg/rights_template.ftl</result>
-            <result name="success">/web/mdreg/rights_waiver.ftl</result>
-        </action>
-
-        <!-- user-defined license -->
-        <action name="userlicense" class="data.rightsAction" method="userlicense">
-            <result name="input">/web/mdreg/rights_template.ftl</result>
-            <result name="error">/web/mdreg/rights_template.ftl</result>
-            <result name="success">/web/mdreg/rights_contents.ftl</result>
-        </action>
-
-        <!-- legal code -->
-        <action name="legalcode" class="data.rightsAction" method="showLegalCode">
-            <result name="success">/web/mdreg/legalcode.ftl</result>
-        </action>
-
     </package>
 
     <!-- collection permissions package -->

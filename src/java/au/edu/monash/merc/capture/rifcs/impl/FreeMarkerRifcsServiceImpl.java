@@ -30,6 +30,7 @@ package au.edu.monash.merc.capture.rifcs.impl;
 
 import au.edu.monash.merc.capture.exception.RIFCSException;
 import au.edu.monash.merc.capture.rifcs.RifcsService;
+import au.edu.monash.merc.capture.util.CaptureUtil;
 import freemarker.template.Template;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -69,7 +70,8 @@ public class FreeMarkerRifcsServiceImpl implements RifcsService {
     @Override
     public void createRifcs(String rifcsStoreLocaton, String identifier, Map<String, Object> templateValues, String rifcsTemplate) {
         try {
-            Writer rifcsWriter = new FileWriter(new File(rifcsStoreLocaton + File.separator + identifier + RIFCS_EXT));
+            String rifcsFileName = CaptureUtil.pathEncode(identifier);
+            Writer rifcsWriter = new FileWriter(new File(rifcsStoreLocaton + File.separator + rifcsFileName + RIFCS_EXT));
             Template template = this.rifcsFreeMarker.getConfiguration().getTemplate(rifcsTemplate);
             template.process(templateValues, rifcsWriter);
         } catch (Exception ex) {

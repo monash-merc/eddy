@@ -269,8 +269,10 @@ public class MetadataRegistrationAction extends DMCoreAction {
         mdRegBean.setPhysicalAddress(configSetting.getPropValue(ConfigSettings.DATA_COLLECTIONS_PHYSICAL_LOCATION));
         //collection rifcs template
         mdRegBean.setRifcsCollectionTemplate(configSetting.getPropValue(ConfigSettings.RIFCS_COLLECTION_TEMPLATE));
-        //party rifcs template
-        mdRegBean.setRifcsPartyTemplate(configSetting.getPropValue(ConfigSettings.RIFCS_PARTY_TEMPLATE));
+        //none rm party rifcs template
+        mdRegBean.setRifcsPartyTemplate(configSetting.getPropValue(ConfigSettings.RIFCS_NONE_RM_PARTY_TEMPLATE));
+        //rm party rifcs template
+        mdRegBean.setRifcsRMPartyTemplate(configSetting.getPropValue(ConfigSettings.RIFCS_RM_PARTY_TEMPLATE));
         //group name
         mdRegBean.setRifcsGroupName(configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_GROUP_NAME));
         //collection url

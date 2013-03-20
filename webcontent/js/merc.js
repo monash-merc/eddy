@@ -42,29 +42,6 @@ $(document).ready(function () {
     });
 });
 
-$(function () {
-    $('a#viewdataset').click(function (e) {
-        e.preventDefault();
-        var $this = $(this);
-        var horizontalPadding = 30;
-        var verticalPadding = 30;
-
-        $('<iframe id="externalSite" class="externalSite" src="' + this.href + '" />').dialog({
-            title:($this.attr('title')) ? $this.attr('title') : 'External Site',
-            autoOpen:true,
-            width:730,
-            height:400,
-            modal:true,
-            resizable:true,
-            autoResize:true,
-            overlay:{
-                opacity:0.5,
-                background:"black"
-            }
-        }).width(730 - horizontalPadding).height(400 - verticalPadding);
-    });
-});
-
 $(document).ready(function () {
     $("#add_permission").click(function () {
         var value_index = $("#selected_username").val();
@@ -222,68 +199,6 @@ function keepViewAllowedTrueForDyn(name) {
 ;
 
 
-$(document).ready(function () {
-    $('div #add_var_div_id a').live('click', function () {
-        var rowIndex = $("#search_tab > tbody > tr").length;
-        //	alert("add variable clicked tr size: " + rowIndex);
-        $('#search_tab > tbody:last').append("<tr><td align='right'>Variable Name</td>\n" +
-            "<td align='left'> \n" +
-            "<input type='text' name='searchBean.varBeans[" + rowIndex + "].varName' value='' id='search_jspx_searchBean_varBeans_" + rowIndex + "__varName'/>\n" +
-            "</td><td>" +
-
-            "<table class='search_inner_tab' id='searchBean.varBeans[" + rowIndex + "]'>\n" +
-            "<thead>\n" +
-            "<tr>\n" +
-            "<td colspan='4' class='lightbg_td'>\n" +
-            "<div class='search_inline_div' id='add_att_div_id'>" +
-            "More <b>attributes</b> search conditions &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-            "<a href='#' id='" + rowIndex + "'> <b>Add</b> <img src='/ands/images/add.gif' align='top' border='0'/></a>" +
-            "</div>\n</td>\n</tr>\n</thead>\n" +
-            "<tbody>\n" +
-            "<tr>\n" +
-            "<td align='right'>Attribute</td>\n" +
-            "<td align='left'>	<input type='text' name='searchBean.varBeans[" + rowIndex + "].attBeans[0].attributeName' value='' id='search_jspx_searchBean_varBeans_" + rowIndex + "__attBeans_0__attributeName' /></td>\n" +
-            "<td>\n" +
-            "<select name='searchBean.varBeans[" + rowIndex + "].attBeans[0].comparison' id='search_jspx_searchBean_varBeans_" + rowIndex + "__attBeans_0__comparison' >\n" +
-            "<option value='equals'>equals</option>\n" +
-            "<option selected='selected' value='likes'>likes</option>\n" +
-            "</select>" +
-            "</td>\n" +
-            "<td>\n" +
-            "<input type='text' name='searchBean.varBeans[" + rowIndex + "].attBeans[0].value'  value=''  id='search_jspx_searchBean_varBeans_" + rowIndex + "__attBeans_0__value' />\n" +
-            "</td>\n</tr>\n" +
-            "</tbody></table></td>\n</tr>\n");
-    })
-});
-
-$(document).ready(function () {
-    $("div #add_att_div_id a").live('click', function () {
-        var a_id = $(this).attr('id');
-        //alert(" a id: " + a_id);
-        // var rows = $(this).parent().parent().parent().parent().parent().children("tbody").children("tr").length;
-        var var_tab_id = "searchBean.varBeans[" + a_id + "]";
-
-        var rows = $(this).parents("table:first").children("tbody").children("tr").length;
-
-        var findTbody = $(this).parents("table:first").children("tbody:last");
-        $(findTbody).append("<tr>" +
-            "<td align='right'>Attribute</td>\n" +
-            "<td align='left'>	<input type='text' name='searchBean.varBeans[" + a_id + "].attBeans[" + rows + "].attributeName' value='' id='search_jspx_searchBean_varBeans_" + a_id + "__attBeans_" + rows + "__attributeName' /></td>\n" +
-            "<td>\n" +
-            "<select name='searchBean.varBeans[" + a_id + "].attBeans[" + rows + "].comparison' id='search_jspx_searchBean_varBeans_" + a_id + "__attBeans_" + rows + "__comparison' >\n" +
-            "<option value='equals'>equals</option>\n" +
-            "<option selected='selected' value='likes'>likes</option>\n" +
-            "</select>" +
-            "</td>\n" +
-            "<td>\n" +
-            "<input type='text' name='searchBean.varBeans[" + a_id + "].attBeans[" + rows + "].value'  value=''  id='search_jspx_searchBean_varBeans_" + a_id + "__attBeans_" + rows + "__value' />\n" +
-            "</td>\n" +
-            "</tr>\n");
-
-    })
-});
-
-
 $("#permission_req input[type=checkbox]").live('click', function () {
     var act = $(this).attr('name');
     //alert(act);
@@ -386,14 +301,15 @@ $('#save_rm_party').live('click', function (e) {
     var pIdValue = $('#ands_p_idvalue').val();
     var pSrcType = $('#ands_p_srctype').val();
     var pSrcValue = $('#ands_p_srcvalue').val();
+    var pGroupKey = $('#ands_p_groupkey').val();
     var pGroupName = $('#ands_p_groupname').val();
     var pFromRm = $('#ands_p_fromrm').val();
     //try to find a party which already added in the form
     //then the party key will be used as identifier value to find a party which is already added
-    var alreadyAddedPKey = window.parent.$("input[value=" + pKey + "]").val();
+    var alreadyAddedPKey = window.parent.$("input[value='" + pKey + "']").val();
     //if this party is already added we have to update it
     if (alreadyAddedPKey != null) {
-        var partyKeyName = window.parent.$("input[value=" + pKey + "]").attr('name');
+        var partyKeyName = window.parent.$("input[value='" + pKey + "']").attr('name');
         var startIndex = partyKeyName.indexOf("[") + 1;
         var endIndex = partyKeyName.indexOf("]");
         var keyIndex = partyKeyName.substring(startIndex, endIndex);
@@ -415,6 +331,7 @@ $('#save_rm_party').live('click', function (e) {
             "<input id='mdRegForm_partyList_" + keyIndex + "__identifierValue' type='hidden' name='partyList[" + keyIndex + "].identifierValue' value='" + pIdValue + "' />\n" +
             "<input id='mdRegForm_partyList_" + keyIndex + "__originateSourceType' type='hidden' name='partyList[" + keyIndex + "].originateSourceType' value='" + pSrcType + "' />\n" +
             "<input id='mdRegForm_partyList_" + keyIndex + "__originateSourceValue' type='hidden' name='partyList[" + keyIndex + "].originateSourceValue' value='" + pSrcValue + "' />\n" +
+            "<input id='mdRegForm_partyList_" + keyIndex + "__groupKey' type='hidden' name='partyList[" + keyIndex + "].groupKey' value='" + pGroupKey + "' />\n" +
             "<input id='mdRegForm_partyList_" + keyIndex + "__groupName' type='hidden' name='partyList[" + keyIndex + "].groupName' value='" + pGroupName + "' />\n" +
             "<input id='mdRegForm_partyList_" + keyIndex + "__fromRm' type='hidden' name='partyList[" + keyIndex + "].fromRm' value='" + pFromRm + "' />\n" +
             "</div>\n</td>\n";
@@ -441,6 +358,7 @@ $('#save_rm_party').live('click', function (e) {
             "<input id='mdRegForm_partyList_" + rowIndex + "__identifierValue' type='hidden' name='partyList[" + rowIndex + "].identifierValue' value='" + pIdValue + "' />\n" +
             "<input id='mdRegForm_partyList_" + rowIndex + "__originateSourceType' type='hidden' name='partyList[" + rowIndex + "].originateSourceType' value='" + pSrcType + "' />\n" +
             "<input id='mdRegForm_partyList_" + rowIndex + "__originateSourceValue' type='hidden' name='partyList[" + rowIndex + "].originateSourceValue' value='" + pSrcValue + "' />\n" +
+            "<input id='mdRegForm_partyList_" + rowIndex + "__groupKey' type='hidden' name='partyList[" + rowIndex + "].groupKey' value='" + pGroupKey + "' />\n" +
             "<input id='mdRegForm_partyList_" + rowIndex + "__groupName' type='hidden' name='partyList[" + rowIndex + "].groupName' value='" + pGroupName + "' />\n" +
             "<input id='mdRegForm_partyList_" + rowIndex + "__fromRm' type='hidden' name='partyList[" + rowIndex + "].fromRm' value='" + pFromRm + "' />\n" +
             "</div>\n</td>\n</tr>\n"
@@ -461,7 +379,6 @@ function removeNonePartyDiv() {
         window.parent.$('.none_party_div').remove();
     }
 }
-
 
 function removeNoneLicenceDiv() {
     var pnf = window.parent.$(".none_licence_div");

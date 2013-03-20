@@ -5,12 +5,12 @@
 <#include "../template/jquery_header.ftl"/>
 </head>
 <body>
-<div class="ds_div_border_block">
-	<table class="table_ds_data">
-		<tr class="ds_tr_bg_hig">
+<div class="popup_main_div">
+	<table class="dataset_md_tab">
+		<tr class="dataset_md_title">
 			<td colspan="2" height="20"><b>Global Attributes</b></td>
 		</tr>
-		<tr class="ds_var_td">
+		<tr class="dataset_md_var">
 			<td height="20"><b>Name</b></td>
 			<td><b> Value </b></td>
 		</tr>
@@ -20,16 +20,16 @@
 			<td><@s.property value="#gmata.value" /></td>
 		</tr>
 		</@s.iterator>
-		<tr class="ds_tr_bg_hig">
+		<tr class="dataset_md_title">
 			<td colspan="2" height="20"><b>Variables</b></td>
 		</tr>
 		 
 		<@s.iterator status="vMeta" value="dataset.metaVariables" id="vdata" >
-			<tr class="ds_var_td">
+			<tr class="dataset_md_var">
 				<td><@s.property value="#vdata.dataType" /></td><td><@s.property value="#vdata.nameDimensions" /></td>
 			</tr>
 			<@s.iterator status="vMetaAttr" value="#vdata.metaAttributes" id="metaAttr" >
-				<tr class="var_td">
+				<tr class="dataset_md_attr">
 					<td align="right"><@s.property value="#metaAttr.name" /> = </td>
 					<td align="left"><@s.property value="#metaAttr.value" /></td>
 				</tr>

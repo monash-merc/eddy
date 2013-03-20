@@ -279,6 +279,9 @@ public class BaseAction extends ActionSupport implements SessionAware, ServletRe
         pageSizeMap.put(30, 30);
         pageSizeMap.put(40, 40);
         pageSizeMap.put(50, 50);
+        pageSizeMap.put(100, 100);
+        pageSizeMap.put(150, 150);
+        pageSizeMap.put(200, 200);
 
         // if sorted by user name required
         // orderByMap.put("user", "user");
@@ -303,6 +306,9 @@ public class BaseAction extends ActionSupport implements SessionAware, ServletRe
         pageSizeMap.put(30, 30);
         pageSizeMap.put(40, 40);
         pageSizeMap.put(50, 50);
+        pageSizeMap.put(100, 100);
+        pageSizeMap.put(150, 150);
+        pageSizeMap.put(200, 200);
 
         orderByMap.put("name", "name");
         orderByMap.put("importDateTime", "imported time");
@@ -323,6 +329,9 @@ public class BaseAction extends ActionSupport implements SessionAware, ServletRe
         pageSizeMap.put(30, 30);
         pageSizeMap.put(40, 40);
         pageSizeMap.put(50, 50);
+        pageSizeMap.put(100, 100);
+        pageSizeMap.put(150, 150);
+        pageSizeMap.put(200, 200);
 
         orderByMap.put("displayName", "display name");
         orderByMap.put("userType", "user type");
@@ -341,6 +350,9 @@ public class BaseAction extends ActionSupport implements SessionAware, ServletRe
         pageSizeMap.put(30, 30);
         pageSizeMap.put(40, 40);
         pageSizeMap.put(50, 50);
+        pageSizeMap.put(100, 100);
+        pageSizeMap.put(150, 150);
+        pageSizeMap.put(200, 200);
 
         orderByMap.put("createdTime", "created date");
 
