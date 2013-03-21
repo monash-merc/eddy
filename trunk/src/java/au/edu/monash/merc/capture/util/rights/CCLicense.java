@@ -25,13 +25,60 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package au.edu.monash.merc.capture.repository;
+package au.edu.monash.merc.capture.util.rights;
 
-import au.edu.monash.merc.capture.domain.Rights;
+import java.io.Serializable;
 
-public interface IRightsRepository {
+public class CCLicense implements Serializable {
+	private String licenseName;
 
-    Rights getRightsByCollectionId(long cid);
+	private String licenseURI;
 
-    void deleteRightsById(long id);
+	private String licenseHtml;
+
+	private String licenseHrefText;
+
+	public CCLicense() {
+
+	}
+
+	public CCLicense(String licenseName, String licenseURI, String licenseHtml, String licenseHrefText) {
+		super();
+		this.licenseName = licenseName;
+		this.licenseURI = licenseURI;
+		this.licenseHtml = licenseHtml;
+		this.licenseHrefText = licenseHrefText;
+	}
+
+	public String getLicenseName() {
+		return licenseName;
+	}
+
+	public void setLicenseName(String licenseName) {
+		this.licenseName = licenseName;
+	}
+
+	public String getLicenseURI() {
+		return licenseURI;
+	}
+
+	public void setLicenseURI(String licenseURI) {
+		this.licenseURI = licenseURI;
+	}
+
+	public String getLicenseHtml() {
+		return licenseHtml;
+	}
+
+	public void setLicenseHtml(String licenseHtml) {
+		this.licenseHtml = licenseHtml;
+	}
+
+	public String getLicenseHrefText() {
+		return licenseHrefText;
+	}
+
+	public void setLicenseHrefText(String licenseHrefText) {
+		this.licenseHrefText = licenseHrefText;
+	}
 }

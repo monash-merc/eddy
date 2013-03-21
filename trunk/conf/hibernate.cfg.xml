@@ -9,7 +9,6 @@
         <mapping class="au.edu.monash.merc.capture.domain.Avatar"/>
         <mapping class="au.edu.monash.merc.capture.domain.Collection"/>
         <mapping class="au.edu.monash.merc.capture.domain.Location"/>
-        <mapping class="au.edu.monash.merc.capture.domain.Rights"/>
         <mapping class="au.edu.monash.merc.capture.domain.Licence"/>
         <mapping class="au.edu.monash.merc.capture.domain.Activity"/>
         <mapping class="au.edu.monash.merc.capture.domain.Party"/>

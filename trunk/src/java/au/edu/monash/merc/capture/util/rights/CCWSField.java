@@ -25,11 +25,75 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package au.edu.monash.merc.capture.rifcs;
+package au.edu.monash.merc.capture.util.rights;
 
-import au.edu.monash.merc.capture.dto.PublishBean;
+import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
-public interface RIFCSGenService {
+/**
+ * Wrapper class for representation of a license field declaration. A license field is a single "question" which must be
+ * answered to successfully generate a license.
+ * 
+ */
+public class CCWSField implements Serializable {
 
-    String publishCollectionRifcs(PublishBean publishBean);
+	private String id;
+	private String label;
+	private String description;
+	private String type;
+
+	private List<LicenseField> licenseFields;
+
+	public CCWSField() {
+		super();
+		licenseFields = new LinkedList<LicenseField>();
+	}
+
+	public CCWSField(String id, String label) {
+		super();
+		this.licenseFields = new LinkedList<LicenseField>();
+		this.id = id;
+		this.label = label;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public List<LicenseField> getLicenseFields() {
+		return licenseFields;
+	}
+
+	public void setLicenseFields(List<LicenseField> licenseFields) {
+		this.licenseFields = licenseFields;
+	}
 }

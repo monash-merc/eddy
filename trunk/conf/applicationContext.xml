@@ -19,108 +19,116 @@
     <context:component-scan base-package="au.edu.monash.merc.capture"/>
 
     <!-- JDBC and Mail Properties -->
-	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations">
-			<list>
-				<value>classpath:jdbc.properties</value>
-				<value>classpath:mail.properties</value>
-			</list>
-		</property>
-		<property name="ignoreResourceNotFound" value="false" />
-		<property name="ignoreUnresolvablePlaceholders" value="true" />
-	</bean>
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:jdbc.properties</value>
+                <value>classpath:mail.properties</value>
+            </list>
+        </property>
+        <property name="ignoreResourceNotFound" value="false"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
 
-	<!-- System properties -->
+    <!-- System properties -->
     <bean id="sysPropertyConfigurer" class="au.edu.monash.merc.capture.config.SystemPropertiesConfigurer">
-		<property name="locations">
-			<list>
-				<value>classpath:dataCapture.properties</value>
-				<value>classpath:ldap.properties</value>
-			</list>
-		</property>
-		<property name="ignoreResourceNotFound" value="false" />
-		<property name="ignoreUnresolvablePlaceholders" value="true" />
-	</bean>
+        <property name="locations">
+            <list>
+                <value>classpath:dataCapture.properties</value>
+                <value>classpath:ldap.properties</value>
+            </list>
+        </property>
+        <property name="ignoreResourceNotFound" value="false"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
 
     <!-- country properties -->
-	<bean id="countryPropertyConfigurer" class="au.edu.monash.merc.capture.config.SystemPropertiesConfigurer" scope="singleton">
-		<property name="locations">
-			<list>
-				<value>classpath:country.properties</value>
-			</list>
-		</property>
-		<property name="ignoreResourceNotFound" value="true" />
-		<property name="ignoreUnresolvablePlaceholders" value="true" />
-	</bean>
+    <bean id="countryPropertyConfigurer" class="au.edu.monash.merc.capture.config.SystemPropertiesConfigurer" scope="singleton">
+        <property name="locations">
+            <list>
+                <value>classpath:country.properties</value>
+            </list>
+        </property>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+    </bean>
 
-    <!-- country properties -->
+    <!-- nla ids of universities properties -->
     <bean id="nlaIdPropertyConfigurer" class="au.edu.monash.merc.capture.config.SystemPropertiesConfigurer" scope="singleton">
         <property name="locations">
             <list>
                 <value>classpath:nlaid.properties</value>
             </list>
         </property>
-        <property name="ignoreResourceNotFound" value="true" />
-        <property name="ignoreUnresolvablePlaceholders" value="true" />
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
     </bean>
 
     <!-- FreeMarker Mail-->
     <bean id="mailFreeMarker" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
-		<property name="templateLoaderPath" value="classpath:mailTemplates" /><!-- FreeMarker template file -->
-		<property name="freemarkerSettings"><!-- FreeMarker env setting -->
-			<props>
-				<prop key="template_update_delay">1800</prop><!--update template delay -->
-				<prop key="default_encoding">UTF-8</prop><!--template encodding -->
-				<prop key="locale">en_US</prop><!-- template localcy -->
-			</props>
-		</property>
-	</bean>
+        <property name="templateLoaderPath" value="classpath:mailTemplates"/>
+        <!-- FreeMarker template file -->
+        <property name="freemarkerSettings"><!-- FreeMarker env setting -->
+            <props>
+                <prop key="template_update_delay">1800</prop>
+                <!--update template delay -->
+                <prop key="default_encoding">UTF-8</prop>
+                <!--template encodding -->
+                <prop key="locale">en_US</prop>
+                <!-- template localcy -->
+            </props>
+        </property>
+    </bean>
 
     <!-- FreeMarker Rifcs -->
     <bean id="rifcsFreeMarker" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
-        <property name="templateLoaderPath" value="classpath:rifcs_template" /><!-- FreeMarker template file -->
+        <property name="templateLoaderPath" value="classpath:rifcs_template"/>
+        <!-- FreeMarker template file -->
         <property name="freemarkerSettings"><!-- FreeMarker env setting -->
             <props>
-                <prop key="template_update_delay">1800</prop><!--update template delay -->
-                <prop key="default_encoding">UTF-8</prop><!--template encodding -->
-                <prop key="locale">en_US</prop><!-- template localcy -->
+                <prop key="template_update_delay">1800</prop>
+                <!--update template delay -->
+                <prop key="default_encoding">UTF-8</prop>
+                <!--template encodding -->
+                <prop key="locale">en_US</prop>
+                <!-- template localcy -->
             </props>
         </property>
     </bean>
 
     <!-- Mail Sender -->
-	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host" value="${smtp.mail.server}" />
-		<property name="port" value="${mail.server.port}" />
-		<property name="username" value="${mail.server.username}" />
-		<property name="password" value="${mail.server.userpassword}" />
-		<property name="javaMailProperties">
-			<props>
-				<!-- Use SMTP-AUTH to authenticate to SMTP server -->
-				<prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
-				<!-- Use TLS to encrypt communication with SMTP server -->
-				<prop key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable}</prop>
-			</props>
-		</property>
-	</bean>
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${smtp.mail.server}"/>
+        <property name="port" value="${mail.server.port}"/>
+        <property name="username" value="${mail.server.username}"/>
+        <property name="password" value="${mail.server.userpassword}"/>
+        <property name="javaMailProperties">
+            <props>
+                <!-- Use SMTP-AUTH to authenticate to SMTP server -->
+                <prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+                <!-- Use TLS to encrypt communication with SMTP server -->
+                <prop key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable}</prop>
+            </props>
+        </property>
+    </bean>
 
     <!-- Datasource -->
-	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-		<property name="driverClass" value="${jdbc.driverClassName}" />
-		<property name="jdbcUrl" value="${jdbc.url}" />
-		<property name="user" value="${jdbc.username}" />
-		<property name="password" value="${jdbc.password}" />
-		<property name="autoCommitOnClose" value="true" />
-		<property name="checkoutTimeout" value="${cpool.checkoutTimeout}" />
-		<property name="initialPoolSize" value="${cpool.minPoolSize}" />
-		<property name="minPoolSize" value="${cpool.minPoolSize}" />
-		<property name="maxPoolSize" value="${cpool.maxPoolSize}" />
-		<property name="maxIdleTime" value="${cpool.maxIdleTime}" />
-		<property name="acquireIncrement" value="${cpool.acquireIncrement}" />
-		<property name="maxIdleTimeExcessConnections" value="${cpool.maxIdleTimeExcessConnections}" />
-		<property name="numHelperThreads" value="${cpool.numHelperThreads}" />
-		<property name="maxAdministrativeTaskTime" value="${cpool.maxAdministrativeTaskTime}" />
-	</bean>
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driverClassName}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="user" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="autoCommitOnClose" value="true"/>
+        <property name="checkoutTimeout" value="${cpool.checkoutTimeout}"/>
+        <property name="initialPoolSize" value="${cpool.minPoolSize}"/>
+        <property name="minPoolSize" value="${cpool.minPoolSize}"/>
+        <property name="maxPoolSize" value="${cpool.maxPoolSize}"/>
+        <property name="maxIdleTime" value="${cpool.maxIdleTime}"/>
+        <property name="acquireIncrement" value="${cpool.acquireIncrement}"/>
+        <property name="maxIdleTimeExcessConnections" value="${cpool.maxIdleTimeExcessConnections}"/>
+        <property name="numHelperThreads" value="${cpool.numHelperThreads}"/>
+        <property name="maxAdministrativeTaskTime" value="${cpool.maxAdministrativeTaskTime}"/>
+    </bean>
 
     <!-- Annotation Session Factory Bean -->
     <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean" destroy-method="destroy">
@@ -145,27 +153,27 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-	<!-- ANNOTATION DRIVEN TRANSACTIONS -->
-	<tx:annotation-driven transaction-manager="transactionManager" />
+    <!-- ANNOTATION DRIVEN TRANSACTIONS -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
 
 
-	<!-- ASPECT CONFIGURATION -->
-	<tx:advice id="txAdvice" transaction-manager="transactionManager">
-		<tx:attributes>
-			<tx:method name="save*" propagation="REQUIRED" />
-			<tx:method name="create*" propagation="REQUIRED" />
-			<tx:method name="update*" propagation="REQUIRED" />
-			<tx:method name="delete*" propagation="REQUIRED" />
-			<tx:method name="set*" propagation="REQUIRED" />
-			<tx:method name="capture*" propagation="REQUIRED" />
-			<tx:method name="get*" propagation="SUPPORTS" read-only="true" />
-			<tx:method name="check*" propagation="SUPPORTS" read-only="true" />
-		</tx:attributes>
-	</tx:advice>
+    <!-- ASPECT CONFIGURATION -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="save*" propagation="REQUIRED"/>
+            <tx:method name="create*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="delete*" propagation="REQUIRED"/>
+            <tx:method name="set*" propagation="REQUIRED"/>
+            <tx:method name="capture*" propagation="REQUIRED"/>
+            <tx:method name="get*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="check*" propagation="SUPPORTS" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
 
-	<aop:config>
-		<aop:pointcut id="serviceOp" expression="execution(* au.edu.monash.merc.capture.service.impl.*ServiceImpl.*(..))" />
-		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOp" />
-	</aop:config>
+    <aop:config>
+        <aop:pointcut id="serviceOp" expression="execution(* au.edu.monash.merc.capture.service.impl.*ServiceImpl.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOp"/>
+    </aop:config>
 
 </beans>

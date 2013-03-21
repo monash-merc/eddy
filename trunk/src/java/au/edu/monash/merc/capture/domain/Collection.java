@@ -27,33 +27,15 @@
  */
 package au.edu.monash.merc.capture.domain;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
-
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "collection")
@@ -141,7 +123,6 @@ public class Collection extends Domain {
     @Cascade({CascadeType.DELETE})
     private List<Dataset> datasets = new ArrayList<Dataset>();
 
-    //TODO: to be removed
     @ManyToMany(targetEntity = Activity.class)
     @JoinTable(name = "collection_activity", joinColumns = {@JoinColumn(name = "collection_id", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "activity_id", referencedColumnName = "id")}, uniqueConstraints = {@UniqueConstraint(columnNames = {
             "collection_id", "activity_id"})})
@@ -153,11 +134,6 @@ public class Collection extends Domain {
             "collection_id", "party_id"})})
     @LazyCollection(LazyCollectionOption.TRUE)
     private List<Party> parties = new ArrayList<Party>();
-
-    //TODO to be removed
-    @OneToOne(mappedBy = "collection", targetEntity = Rights.class, fetch = FetchType.LAZY)
-    @Cascade({CascadeType.DELETE})
-    private Rights rights;
 
     @OneToOne(mappedBy = "collection", targetEntity = Licence.class, fetch = FetchType.LAZY)
     @Cascade({CascadeType.DELETE})
@@ -337,14 +313,6 @@ public class Collection extends Domain {
 
     public void setParties(List<Party> parties) {
         this.parties = parties;
-    }
-
-    public Rights getRights() {
-        return rights;
-    }
-
-    public void setRights(Rights rights) {
-        this.rights = rights;
     }
 
     public Licence getLicence() {

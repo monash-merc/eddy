@@ -39,9 +39,6 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
-import au.edu.monash.merc.capture.dto.CCLicense;
-import au.edu.monash.merc.capture.dto.CCWSField;
-import au.edu.monash.merc.capture.dto.LicenseField;
 import au.edu.monash.merc.capture.exception.ConfigException;
 
 public class CCSLicenseUtil {
