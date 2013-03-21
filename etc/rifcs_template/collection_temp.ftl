@@ -31,10 +31,12 @@
             <#if location??>
                 <spatial type="${location.spatialType}">${location.spatialCoverage}</spatial>
             </#if>
+            <#if temporalDateFrom?? && temporalDateTo??>
                 <temporal>
                     <date type="dateFrom" dateFormat="W3CDTF">${temporalDateFrom}</date>
                     <date type="dateTo" dateFormat="W3CDTF">${temporalDateTo}</date>
                 </temporal>
+            </#if>
             </coverage>
         <#list parties as party>
             <relatedObject>

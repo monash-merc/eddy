@@ -29,8 +29,8 @@ package au.edu.monash.merc.capture.service;
 
 import java.util.List;
 
-import au.edu.monash.merc.capture.dto.CCLicense;
-import au.edu.monash.merc.capture.dto.CCWSField;
+import au.edu.monash.merc.capture.util.rights.CCLicense;
+import au.edu.monash.merc.capture.util.rights.CCWSField;
 
 public interface CreativeLicenseService {
 

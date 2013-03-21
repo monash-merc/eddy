@@ -138,8 +138,7 @@ public interface DMService {
 
     void stageTransfer(StageTransferBean transferBean);
 
-    Dataset captureStageData(TransferFileBean fBean, DataCaptureAdapter adapter, Collection co, String stageDir, String destRootPath,
-                             boolean transferExistedFile);
+    Dataset captureStageData(TransferFileBean fBean, DataCaptureAdapter adapter, Collection co, String stageDir, String destRootPath, boolean transferExistedFile);
 
     void deleteDataset(Collection co, Dataset ds, String rootPath);
 
@@ -227,22 +226,9 @@ public interface DMService {
 
     void sendMail(String emailFrom, String emailTo, String emailSubject, Map<String, String> templateValues, String templateFile, boolean isHtml);
 
-    void savePublishInfo(PublishBean pubBean);
-
     void publishRifcs(MetadataRegistrationBean metadataRegistrationBean);
 
-    List<Activity> getActivitiesByCollectionId(long cid);
-
     List<Party> getPartiesByCollectionId(long cid);
-
-    //TODO: remove the  rights
-    void saveRights(Rights rights);
-
-    void updateRights(Rights rights);
-
-    Rights getRightsById(long id);
-
-    Rights getRightsByCollectionId(long cid);
 
     void saveLicence(Licence licence);
 
@@ -269,8 +255,4 @@ public interface DMService {
     void saveParty(Party party);
 
     void updateParty(Party party);
-
-    Activity getActivityByActKey(String activityKey);
-
-    void saveActivity(Activity activity);
 }

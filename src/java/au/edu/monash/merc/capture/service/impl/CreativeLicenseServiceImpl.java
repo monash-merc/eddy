@@ -32,8 +32,8 @@ import java.util.List;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import au.edu.monash.merc.capture.dto.CCLicense;
-import au.edu.monash.merc.capture.dto.CCWSField;
+import au.edu.monash.merc.capture.util.rights.CCLicense;
+import au.edu.monash.merc.capture.util.rights.CCWSField;
 import au.edu.monash.merc.capture.service.CreativeLicenseService;
 import au.edu.monash.merc.capture.util.rights.CCSLicenseUtil;
 

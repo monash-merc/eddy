@@ -38,7 +38,6 @@ import au.edu.monash.merc.capture.exception.DataCaptureException;
 import au.edu.monash.merc.capture.file.FileSystemSerivce;
 import au.edu.monash.merc.capture.mail.MailService;
 import au.edu.monash.merc.capture.rifcs.PartyActivityWSService;
-import au.edu.monash.merc.capture.rifcs.RIFCSGenService;
 import au.edu.monash.merc.capture.rifcs.RifcsService;
 import au.edu.monash.merc.capture.service.*;
 import au.edu.monash.merc.capture.util.CaptureUtil;
@@ -94,16 +93,7 @@ public class DMServiceImpl implements DMService {
     private PartyService partyService;
 
     @Autowired
-    private ActivityService activityService;
-
-    @Autowired
-    private RIFCSGenService rifcsGenService;
-
-    @Autowired
     private RifcsService rifcsService;
-
-    @Autowired
-    private RightsService rightsService;
 
     @Autowired
     private LicenceService licenceService;
@@ -152,24 +142,12 @@ public class DMServiceImpl implements DMService {
         this.partyService = partyService;
     }
 
-    public void setActivityService(ActivityService activityService) {
-        this.activityService = activityService;
-    }
-
     public void setMailService(MailService mailService) {
         this.mailService = mailService;
     }
 
-    public void setRifcsGenService(RIFCSGenService rifcsGenService) {
-        this.rifcsGenService = rifcsGenService;
-    }
-
     public void setRifcsService(RifcsService rifcsService) {
         this.rifcsService = rifcsService;
-    }
-
-    public void setRightsService(RightsService rightsService) {
-        this.rightsService = rightsService;
     }
 
     public void setLicenceService(LicenceService licenceService) {
@@ -886,63 +864,6 @@ public class DMServiceImpl implements DMService {
         return templateMap;
     }
 
-    @Override
-    public void savePublishInfo(PublishBean pubBean) {
-
-        List<PartyBean> partyList = pubBean.getPartyList();
-        // parties
-        List<Party> parties = new ArrayList<Party>();
-        for (PartyBean partybean : partyList) {
-            // search the party detail by the party's key
-            Party p = getPartyByPartyKey(partybean.getPartyKey());
-            // if party not found from the database, we just save it into database;
-            if (p == null) {
-                p = copyPartyBeanToParty(partybean);
-                saveParty(p);
-            }
-            parties.add(p);
-        }
-
-
-        Collection collection = pubBean.getCollection();
-        collection.setParties(parties);
-        List<ProjectBean> actList = pubBean.getActivityList();
-        // activities
-        List<Activity> activities = new ArrayList<Activity>();
-        if (actList != null) {
-            for (ProjectBean projbean : actList) {
-                Activity act = this.getActivityByActKey(projbean.getActivityKey());
-                if (act == null) {
-                    act = new Activity();
-                    act.setActivityKey(projbean.getActivityKey());
-                    this.saveActivity(act);
-                }
-                activities.add(act);
-            }
-        }
-        // this.activityService.saveAll(activities);
-        collection.setActivities(activities);
-        // update the collection first
-        this.updateCollection(collection);
-
-        // save or update the previous rights
-        Rights rights = pubBean.getRights();
-        rights.setCollection(collection);
-        if (rights.getId() == 0) {
-            Rights existedRights = this.getRightsByCollectionId(collection.getId());
-            if (existedRights != null) {
-                long id = existedRights.getId();
-                rights.setId(id);
-                this.updateRights(rights);
-            } else {
-                this.saveRights(rights);
-            }
-        } else {
-            this.updateRights(rights);
-        }
-        this.rifcsGenService.publishCollectionRifcs(pubBean);
-    }
-
     private Party copyPartyBeanToParty(PartyBean pb) {
         Party pa = new Party();
         pa.setPartyKey(pb.getPartyKey());
@@ -962,11 +883,6 @@ public class DMServiceImpl implements DMService {
     }
 
     @Override
-    public List<Activity> getActivitiesByCollectionId(long cid) {
-        return this.activityService.getActivitiesByCollectionId(cid);
-    }
-
-    @Override
     public List<Party> getPartiesByCollectionId(long cid) {
         return this.partyService.getPartiesByCollectionId(cid);
     }
@@ -979,27 +895,6 @@ public class DMServiceImpl implements DMService {
     @Override
     public Collection getPublishedCoByIdentifier(String identifier) {
         return this.collectionService.getPublishedCoByIdentifier(identifier);
-    }
-
-    //TODO: to be removed
-    @Override
-    public void saveRights(Rights rights) {
-        this.rightsService.saveRights(rights);
-    }
-
-    @Override
-    public void updateRights(Rights rights) {
-        this.rightsService.updateRights(rights);
-    }
-
-    @Override
-    public Rights getRightsById(long id) {
-        return this.rightsService.getRightsById(id);
-    }
-
-    @Override
-    public Rights getRightsByCollectionId(long cid) {
-        return this.rightsService.getRightsByCollectionId(cid);
     }
 
     @Override
@@ -1087,15 +982,4 @@ public class DMServiceImpl implements DMService {
     public void updateParty(Party party) {
         this.partyService.updateParty(party);
     }
-
-    @Override
-    public Activity getActivityByActKey(String activityKey) {
-        return this.activityService.getActivityByActKey(activityKey);
-    }
-
-    @Override
-    public void saveActivity(Activity activity) {
-        this.activityService.saveActivity(activity);
-    }
-
 }
