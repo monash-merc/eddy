@@ -34,6 +34,8 @@ import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import javax.annotation.PostConstruct;
+
 @Scope("prototype")
 @Controller("data.viewColDetailsAction")
 public class ViewColDetailsAction extends DMCoreAction {
@@ -133,6 +135,7 @@ public class ViewColDetailsAction extends DMCoreAction {
                         }
                     }
                 }
+
                 // set page title and nav label
                 setNavAfterSuccess();
 
@@ -268,5 +271,4 @@ public class ViewColDetailsAction extends DMCoreAction {
     public void setRedNamespace(String redNamespace) {
         this.redNamespace = redNamespace;
     }
-
 }

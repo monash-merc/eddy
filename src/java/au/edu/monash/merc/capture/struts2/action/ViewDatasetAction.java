@@ -37,45 +37,46 @@ import au.edu.monash.merc.capture.domain.Dataset;
 @Controller("data.viewDsDataAction")
 public class ViewDatasetAction extends DMCoreAction {
 
-	private Dataset dataset;
+    private Dataset dataset;
 
-	private Logger logger = Logger.getLogger(this.getClass().getName());
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
-	public String viewDatasetData() {
-		try {
-			checkUserPermissions(collection.getId(), collection.getOwner().getId());
-		} catch (Exception e) {
-			logger.error(e);
-			addFieldError("checkPermission", getText("check.permissions.error"));
-			return INPUT;
-		}
+    public String viewDatasetData() {
+        try {
+            checkUserPermissions(collection.getId(), collection.getOwner().getId());
+        } catch (Exception e) {
+            logger.error(e);
+            addFieldError("checkPermission", getText("check.permissions.error"));
+            return INPUT;
+        }
 
-		if (!permissionBean.isViewAllowed()) {
-			addFieldError("viewPermission", getText("view.dataset.data.permission.denied"));
-			return INPUT;
-		}
+        if (!permissionBean.isViewAllowed()) {
+            addFieldError("viewPermission", getText("view.dataset.data.permission.denied"));
+            return INPUT;
+        }
 
-		try {
-			Dataset ds = this.dmService.getAllDatasetData(dataset.getId());
-			if (ds == null) {
-				addActionError(getText("view.dataset.data.failed.dataset.not.exist"));
-				return INPUT;
-			}
-			dataset = ds;
-		} catch (Exception e) {
-			logger.error(e);
-			addActionError(getText("view.dataset.data.failed"));
-			return INPUT;
-		}
-		return SUCCESS;
-	}
+        try {
+            Dataset ds = this.dmService.getAllDatasetData(dataset.getId());
+            if (ds == null) {
+                addActionError(getText("view.dataset.data.failed.dataset.not.exist"));
+                return INPUT;
+            }
+            dataset = ds;
+        } catch (Exception e) {
+            logger.error(e);
+            addActionError(getText("view.dataset.data.failed"));
+            return INPUT;
+        }
 
-	public Dataset getDataset() {
-		return dataset;
-	}
+        return SUCCESS;
+    }
 
-	public void setDataset(Dataset dataset) {
-		this.dataset = dataset;
-	}
+    public Dataset getDataset() {
+        return dataset;
+    }
+
+    public void setDataset(Dataset dataset) {
+        this.dataset = dataset;
+    }
 
 }

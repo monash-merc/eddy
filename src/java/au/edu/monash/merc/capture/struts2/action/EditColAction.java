@@ -144,6 +144,7 @@ public class EditColAction extends DMCoreAction {
 
                 // sign the updated collection object to collection
                 collection = existedCollection;
+
                 // record the audit event.
                 recordAuditEvent();
                 // convert any newline in the description into a br html tag

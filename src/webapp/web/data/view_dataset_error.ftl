@@ -5,7 +5,7 @@
 <#include "../template/jquery_header.ftl"/>
 </head>
 <body>
-	<div class="div_fixed_block">
+	<div class="content_none_border_div">
 	<#include "../template/action_errors.ftl" /> 
 	</div>
 </body>

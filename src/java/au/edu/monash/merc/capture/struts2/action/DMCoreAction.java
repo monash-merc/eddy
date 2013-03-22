@@ -91,9 +91,13 @@ public class DMCoreAction extends BaseAction {
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
+    //citation info
+    protected String publisher;
+
     @PostConstruct
     public void init() {
         googleMapApiKey = configSetting.getPropValue(ConfigSettings.GOOGLE_MAP_API_AUTHEN_KEY);
+        this.publisher = this.configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_GROUP_NAME);
     }
 
     protected void populateLinksInUsrCollection() {
@@ -375,5 +379,13 @@ public class DMCoreAction extends BaseAction {
 
     public void setPermissionBean(PermissionBean permissionBean) {
         this.permissionBean = permissionBean;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
     }
 }

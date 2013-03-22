@@ -275,9 +275,13 @@ $('#saveLicence').live('click', function (e) {
     if (licence == null || licence.trim() == "") {
         alert("The Licence must be provided!");
     } else {
+        var licenceHtml= licence;
+        if(type =='tern'){
+            licenceHtml = "<a href='" + licence +"' target='_blank'>" + licence + "</a>"
+        }
         window.parent.$('#licence_type').val(type);
         window.parent.$('#licence_contents').val(licence);
-        window.parent.$('.data_licence_div').text(licence);
+        window.parent.$('.data_licence_div').html(licenceHtml);
         //remove the none licence div first
         removeNoneLicenceDiv();
         //then close the popup window
@@ -386,4 +390,3 @@ function removeNoneLicenceDiv() {
         window.parent.$('.none_licence_div').remove();
     }
 }
- 

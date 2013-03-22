@@ -222,7 +222,7 @@
                     });
 
                     // iframe
-                    $iframe = $('<iframe src="' + $elt.attr("href") + '" name="' + $elt.attr("href") + '" frameborder="0" scrolling="no" hspace="0" width="' + curSettings.boxWidth + '" height="' + curSettings.boxHeight + '"></iframe>');
+                    $iframe = $('<iframe src="' + $elt.attr("href") + '" name="' + $elt.attr("href") + '" frameborder="0"  hspace="0" width="' + curSettings.boxWidth + '" height="' + curSettings.boxHeight + '"></iframe>');
 
                     // On iframe load
                     $iframe.load(function () {

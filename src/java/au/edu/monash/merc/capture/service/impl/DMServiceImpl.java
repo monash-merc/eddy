@@ -41,6 +41,7 @@ import au.edu.monash.merc.capture.rifcs.PartyActivityWSService;
 import au.edu.monash.merc.capture.rifcs.RifcsService;
 import au.edu.monash.merc.capture.service.*;
 import au.edu.monash.merc.capture.util.CaptureUtil;
+import au.edu.monash.merc.capture.util.io.DCFileUtils;
 import au.edu.monash.merc.capture.util.stage.StageFileTransferThread;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -685,63 +686,76 @@ public class DMServiceImpl implements DMService {
         return null;
     }
 
-    //TODO: new RIFCS
     @Override
     public void publishRifcs(MetadataRegistrationBean metadataRegistrationBean) {
-        List<PartyBean> partyList = metadataRegistrationBean.getPartyList();
-        // parties
-        List<Party> parties = new ArrayList<Party>();
-        for (PartyBean partybean : partyList) {
-            //we only deal with the selected parties
-            if (partybean.isSelected()) {
-                // search the party detail by the party's key
-                Party p = getPartyByPartyKey(partybean.getPartyKey());
-                // if party not found from the database, we just save it into database;
-                if (p == null) {
-                    p = copyPartyBeanToParty(partybean);
-                    saveParty(p);
+        String destCollectionRifcsFile = null;
+        try {
+            List<PartyBean> partyList = metadataRegistrationBean.getPartyList();
+            // parties
+            List<Party> parties = new ArrayList<Party>();
+            for (PartyBean partybean : partyList) {
+                //we only deal with the selected parties
+                if (partybean.isSelected()) {
+                    // search the party detail by the party's key
+                    Party p = getPartyByPartyKey(partybean.getPartyKey());
+                    // if party not found from the database, we just save it into database;
+                    if (p == null) {
+                        p = copyPartyBeanToParty(partybean);
+                        saveParty(p);
+                    }
+                    parties.add(p);
                 }
-                parties.add(p);
             }
-        }
-        Collection collection = metadataRegistrationBean.getCollection();
-        collection.setParties(parties);
+            Collection collection = metadataRegistrationBean.getCollection();
+            collection.setParties(parties);
 
-        // set the collection true
-        collection.setPublished(true);
-        // update the collection first
-        this.updateCollection(collection);
-        //check the licence
-        Licence dataLicence = metadataRegistrationBean.getLicence();
-        Licence foundLicence = this.getLicenceByCollectionId(collection.getId());
-        if (foundLicence == null) {
-            dataLicence.setCollection(collection);
-            this.saveLicence(dataLicence);
-        } else {
-            dataLicence.setId(foundLicence.getId());
-            dataLicence.setCollection(collection);
-            this.mergeLicence(dataLicence);
-        }
-        //create collection rifcs
-        String rifcsStoreLocation = metadataRegistrationBean.getRifcsStoreLocation();
-        String uniqueKey = collection.getUniqueKey();
-        String collectionRifTemp = metadataRegistrationBean.getRifcsCollectionTemplate();
-        Map<String, Object> collectionTempValues = populateCollectionRifcsMap(metadataRegistrationBean, parties);
-        this.rifcsService.createRifcs(rifcsStoreLocation, uniqueKey, collectionTempValues, collectionRifTemp);
-
-        String noneRMPartyTemp = metadataRegistrationBean.getRifcsPartyTemplate();
-        String rmPartyTemp = metadataRegistrationBean.getRifcsRMPartyTemplate();
-        for (Party party : parties) {
-            String partyKey = party.getPartyKey();
-            if (party.isFromRm()) {
-                PartyBean rmPartyBean = this.paWsService.getParty(party.getPartyKey());
-                String rifcsContents = rmPartyBean.getRifcsContent();
-                Map<String, Object> rmPartyTempValues = populateRMPartyRifcsMap(rifcsContents);
-                this.rifcsService.createRifcs(rifcsStoreLocation, partyKey, rmPartyTempValues, rmPartyTemp);
+            // set the collection true
+            collection.setPublished(true);
+            // update the collection first
+            this.updateCollection(collection);
+            //check the licence
+            Licence dataLicence = metadataRegistrationBean.getLicence();
+            Licence foundLicence = this.getLicenceByCollectionId(collection.getId());
+            if (foundLicence == null) {
+                dataLicence.setCollection(collection);
+                this.saveLicence(dataLicence);
             } else {
-                Map<String, Object> partyTempValues = populateNoneRMPartyRifcsMap(party);
-                this.rifcsService.createRifcs(rifcsStoreLocation, partyKey, partyTempValues, noneRMPartyTemp);
+                dataLicence.setId(foundLicence.getId());
+                dataLicence.setCollection(collection);
+                this.mergeLicence(dataLicence);
             }
+            //create collection rifcs
+            String rifcsStoreLocation = metadataRegistrationBean.getRifcsStoreLocation();
+            String uniqueKey = collection.getUniqueKey();
+            String collectionRifTemp = metadataRegistrationBean.getRifcsCollectionTemplate();
+            Map<String, Object> collectionTempValues = populateCollectionRifcsMap(metadataRegistrationBean, parties);
+            this.rifcsService.createRifcs(uniqueKey, collectionTempValues, collectionRifTemp);
+            destCollectionRifcsFile = rifcsStoreLocation + File.separator + uniqueKey + ".xml";
+            String noneRMPartyTemp = metadataRegistrationBean.getRifcsPartyTemplate();
+            String rmPartyTemp = metadataRegistrationBean.getRifcsRMPartyTemplate();
+            for (Party party : parties) {
+                String partyKey = party.getPartyKey();
+                if (party.isFromRm()) {
+                    PartyBean rmPartyBean = this.paWsService.getParty(party.getPartyKey());
+                    String rifcsContents = rmPartyBean.getRifcsContent();
+                    Map<String, Object> rmPartyTempValues = populateRMPartyRifcsMap(rifcsContents);
+                    this.rifcsService.createRifcs(partyKey, rmPartyTempValues, rmPartyTemp);
+                } else {
+                    Map<String, Object> partyTempValues = populateNoneRMPartyRifcsMap(party);
+                    this.rifcsService.createRifcs(partyKey, partyTempValues, noneRMPartyTemp);
+                }
+            }
+        } catch (Exception ex) {
+            //try to remove the collection file if already created whe exception occurs
+            if (StringUtils.isNotBlank(destCollectionRifcsFile)) {
+                try {
+                    DCFileUtils.deleteFile(destCollectionRifcsFile);
+                } catch (Exception fex) {
+                    logger.error(fex);
+                    //ignore whatever exception if deleting file error
+                }
+            }
+            throw new DataCaptureException(ex);
         }
     }
 
