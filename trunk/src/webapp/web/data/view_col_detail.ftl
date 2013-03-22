@@ -108,6 +108,11 @@
                 Apply For Permissions
             </a>
         </@s.if>
+        <@s.if test="%{#session.authentication_flag =='authenticated' && collection.owner.id != user.id}">
+            <a href="mailto:${user.email}">
+                Contact Owner
+            </a>
+        </@s.if>
         <@s.if test="%{permissionBean.editAllowed == true}">
             <a href="${base}/${showColEditLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}">
                 Edit

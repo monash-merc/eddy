@@ -137,16 +137,9 @@ public class ConfigSettings {
 
     public static String LDAP_PERSONAL_TITLE_ATTR_NAME = "ldap.personaltitle.attrName";
 
-    // Collection License
-    public static String CCLICENSE_REST_WS_URL = "cclicense.ws.url";
-
     public static String TERN_DATA_LICENCE = "tern.data.licence";
 
     public static String OZFLUX_ACTIVITY_KEY = "ozflux.activity.key";
-
-    public static String OZFLUX_ACTIVITY_NAME = "ozflux.activity.name";
-
-    public static String OZFLUX_ACTIVITY_DESCRIPTION = "ozflux.activity.description";
 
     public static String RIFCS_COLLECTION_TEMPLATE = "rifcs.collection.template";
 
