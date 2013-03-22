@@ -19,34 +19,39 @@
     <div class="popup_title">
         TERN Licence
     </div>
-    <div class="popup_spec">
-        TERN licence spec:
+    <div class="popup_row">
+        <div class="popup_spec">
+            TERN licence spec:
+        </div>
+        <@s.hidden name="licence.contents" id="plicence_contents"/>
+    </div>
+
+    <div class="popup_row">
+        <div class="tern_licence">
+            <a href="<@s.property value='licence.contents' />" target="_blank"><@s.property value="licence.contents" /></a>
+        </div>
     </div>
 </@s.if>
 <@s.else>
     <div class="popup_title">
         Define Your Own Licence
     </div>
-    <div class="popup_spec">
-        Please edit the data licence:
-    </div>
-</@s.else>
-    <div class="licence_contents">
-    <@s.if test="%{licence.licenceType == 'tern'}">
-        <@s.textarea name="licence.Contents" cssClass="input_textarea" style="width: 460px; height: 240px;" id="plicence_contents"  readonly ="true" />
-        <div class="comments">
-            <@s.text name="licence.add.tern.licence.hint" />
+
+    <div class="popup_row">
+        <div class="popup_spec">
+            Please edit the data licence:
         </div>
-    </@s.if>
-    <@s.else>
-        <@s.textarea name="licence.Contents" cssClass="input_textarea" style="width: 460px; height: 240px;" id="plicence_contents" />
+    </div>
+    <div class="licence_contents">
+        <a href="<@s.property value='licence.contents' />" target="_blank"><@s.property value="licence.contents" /></a>
+        <@s.textarea name="licence.Contents" cssClass="input_textarea" style="width: 535px; height: 240px;" id="plicence_contents" />
         <div class="comments">
             <@s.text name="licence.add.user.defined.licence.hint" />
         </div>
-    </@s.else>
     </div>
+</@s.else>
     <div class="popup_button_div">
-        <@s.hidden name="licence.licenceType" id="plicence_type"/>
+    <@s.hidden name="licence.licenceType" id="plicence_type"/>
         <input type="button" value="Back" class="input_button_style"
                onclick="window.location = '${base}/data/licenceOptions.jspx?collection.id=<@s.property value='collection.id' />&licence.licenceType=${licence.licenceType}';"> &nbsp;&nbsp;
         <input type="button" value="Save" id="saveLicence" class="input_button_style"/>

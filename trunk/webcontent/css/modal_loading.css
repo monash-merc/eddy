@@ -13,9 +13,12 @@
 	position: absolute;
 	display: none;
 	padding: 20px;
-	border: 2px solid #C0C7D5;
 	background: #ffffff;
 	color: #003766;
+    border: 3px solid #003766;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 .loading_image {

@@ -88,8 +88,7 @@
     <div class="input_field_row">
         <div class="status_field_name_div">Temporal Coverage:</div>
         <div class="status_field_value_div">
-            <@s.date name="collection.dateFrom" format="yyyy-MM-dd" />
-            &nbsp;-&nbsp;<@s.date name="collection.dateTo" format="yyyy-MM-dd" />
+            <@s.date name="collection.dateFrom" format="yyyy-MM-dd" />&nbsp;-&nbsp;<@s.date name="collection.dateTo" format="yyyy-MM-dd" />
         </div>
     </div>
 
@@ -137,7 +136,6 @@
         </@s.if>
         <@s.if test="%{mdRegEnabled}">
             <@s.if test="%{collection.owner.id == user.id || user.userType == 1 || user.userType ==2}">
-
                 <a href="${base}/${andsMdRegLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}"
                    title="Public registration of the metadata associated with this collection with the Research Data Australia website">
                     <@s.text name="ands.md.registration.title" />
@@ -147,6 +145,23 @@
     </div>
     <div style="clear: both;"></div>
 </div>
+    <@s.if test="%{collection.published == true}">
+    <div class="data_display_div">
+        <div class="citation_title">Citation Information</div>
+        <div class="citation_hints">If you make use of this collection in your research, please cite:</div>
+        <div class="citation_contents_div">
+            <@s.property value='collection.owner.firstName' />  <@s.property value='collection.owner.lastName' /> (<@s.date name="collection.createdTime" format="yyyy" />
+            ) <@s.property value="collection.name"/>
+            <@s.property value="publisher"/>
+            <@s.if test = '%{collection.persistIdentifier.indexOf("/") != -1}'>
+                hdl: <@s.property value="collection.persistIdentifier"/>
+            </@s.if>
+            <@s.else>
+                local: <@s.property value="collection.persistIdentifier"/>
+            </@s.else>
+        </div>
+    </div>
+    </@s.if>
 <!-- import the file -->
     <@s.if test="%{permissionBean.importAllowed}">
     <div class="blank_separator"></div>
@@ -232,8 +247,7 @@
             </thead>
             <tbody>
                 <@s.iterator status="dsState" value="datasets" id="ds" >
-                <tr class="tr_normal" onMouseOver="this.className='tr_highlight'"
-                    onMouseOut="this.className='tr_normal'">
+                <tr class="tr_normal" onMouseOver="this.className='tr_highlight'" onMouseOut="this.className='tr_normal'">
                     <td><@s.property value="#ds.name" /></td>
                     <td><@s.property value="#ds.siteName" /></td>
                     <td>
@@ -243,7 +257,8 @@
                         <div class="data_action_link">
                             <@s.if test="%{permissionBean.viewAllowed}">
                                 <@s.if test="%{#ds.extracted}">
-                                    <a href="${base}/${viewDatasetLink}?dataset.id=<@s.property value='#ds.id' />&collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}" title="Dataset - ${ds.name}" rel="superbox[iframe.viewmetadata][600x500]">View Metadata</a>
+                                    <a href="${base}/${viewDatasetLink}?dataset.id=<@s.property value='#ds.id' />&collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}"
+                                       title="Dataset - ${ds.name}" rel="superbox[iframe.viewmetadata][600x500]">View Metadata</a>
                                 </@s.if>
                             </@s.if>
 

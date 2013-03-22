@@ -180,7 +180,7 @@ public interface ActConstants {
 
 	static String DISPLAY_USER_HOME_ACTION = "admin/displayUserHome.jspx";
 
-    static String LICENCE_TERN_LABEL = "TERN Licence";
+    static String LICENCE_TERN_LABEL = "TERN Licence (Recommended)";
 
     static String LICENCE_USER_DEFINED_LABEL = "Define Your Own Licence";
 

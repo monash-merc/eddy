@@ -294,6 +294,7 @@ public class PartyAction extends DMCoreAction {
         } else {
             party.setGroupName(organizations.get(groupKey));
         }
+        party.setGroupName(pb.getGroupName());
         party.setFromRm(pb.isFromRm());
         return party;
     }

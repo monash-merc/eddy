@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <registryObjects xmlns="http://ands.org.au/standards/rif-cs/registryObjects"
-                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                 xsi:schemaLocation="http://ands.org.au/standards/rif-cs/registryObjects http://services.ands.org.au/documentation/rifcs/1.2.0/schema/registryObjects.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://ands.org.au/standards/rif-cs/registryObjects http://services.ands.org.au/documentation/rifcs/1.2.0/schema/registryObjects.xsd">
     <registryObject group="OzFlux: Australian and New Zealand Flux Research and Monitoring">
         <key>MON399d1cdc-a788-4a05-9f01-d3dcbcafdf8d</key>
         <originatingSource>http://www.ozflux.org.au</originatingSource>

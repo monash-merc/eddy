@@ -41,5 +41,5 @@ import java.util.Map;
  */
 public interface RifcsService {
 
-    void createRifcs(String rifcsStoreLocaton, String identifier, Map<String, Object> templateValues, String rifcsTemplate);
+    void createRifcs(String identifier, Map<String, Object> templateValues, String rifcsTemplate);
 }

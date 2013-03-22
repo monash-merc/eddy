@@ -76,6 +76,7 @@ public class LicenceAction extends DMCoreAction {
                 if (existedLicence == null) {
                     licence = new Licence();
                     licence.setLicenceType(LicenceType.TERN.type());
+                    licence.setContents(this.configSetting.getPropValue(ConfigSettings.TERN_DATA_LICENCE));
                 } else {
                     this.licence = existedLicence;
                 }
@@ -91,20 +92,23 @@ public class LicenceAction extends DMCoreAction {
     public String selectLicence() {
         try {
             String requiredLT = licence.getLicenceType();
+            System.out.println("selected licence type: " + requiredLT);
+            //if TERN licence is selected, we just put the tern licence, and return
+            if (requiredLT.equals(LicenceType.TERN.type())) {
+                this.licence.setContents(this.configSetting.getPropValue(ConfigSettings.TERN_DATA_LICENCE));
+                return SUCCESS;
+            }
 
+            //find any existed licence if available and the existed licence type is the same as the selected licence type , then we return the existed licence
             Licence existedLicence = this.dmService.getLicenceByCollectionId(collection.getId());
             if (existedLicence != null) {
                 String existedLT = existedLicence.getLicenceType();
                 if (requiredLT.equals(existedLT)) {
                     licence = existedLicence;
                 }
-            } else {
-                if (requiredLT.equals(LicenceType.TERN.type())) {
-                    this.licence.setContents(this.configSetting.getPropValue(ConfigSettings.TERN_DATA_LICENCE));
-                }
             }
-            return SUCCESS;
 
+            return SUCCESS;
         } catch (Exception e) {
             logger.error(e);
             addActionError(getText("license.show.selected.type.failed"));

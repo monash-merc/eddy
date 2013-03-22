@@ -42,9 +42,6 @@ a:hover {
 .hints_panel {
     color: #726E4C;
     padding: 10px;
-    /** border: solid 2px #F2F2F2;
-  -moz-border-radius: 5px;
-  border-radius: 5px; **/
     margin: 5px;
     font-style: italic;
 }
@@ -130,7 +127,6 @@ input {
     border: 1px solid #c2c9d7;
     padding: 1px;
 }
-
 
 .input_select_small {
     height: 20px;
@@ -441,10 +437,11 @@ input {
 }
 
 /** Date picker **/
-.ui-widget-header{
+.ui-widget-header {
     border: solid 1px #F2F2F2;
 }
-.ui-widget-content{
+
+.ui-widget-content {
     border: solid 1px #F2F2F2;
 }
 
@@ -823,6 +820,7 @@ input {
 }
 
 .data_other_info {
+    padding-top: 5px;
     margin-left: 5px;
     margin-right: 5px;
 }
@@ -884,19 +882,46 @@ input {
     font-size: 11px;
 }
 
-.dataset_md_tab{
+.citation_title {
+    padding-left: 10px;
+    font-weight: bold;
+    color: #7a7a7a;
+}
+
+.citation_hints {
+    margin: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    color: #0E774A;
+    font-size: 11px;
+}
+
+.citation_contents_div {
+    margin: 5px;
+    padding: 5px;
+    text-align: justify;
+    /**background: #fafafa; */
+    border: dotted 1px #f0e0ba;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    font-style: italic;
+    font-size: 11px;
+    color: #5c5c5c;
+}
+
+.dataset_md_tab {
     text-align: left;
     border: solid 1px #E1E8F0;
     border-collapse: collapse;
 }
-
 
 .dataset_md_tab td {
     border: solid 1px #E1E8F0;
     padding: 2px 10px 2px 10px;
 }
 
-.dataset_md_title td{
+.dataset_md_title td {
     background-color: #F5F5F5;
     height: 22px;
     line-height: 22px;
@@ -906,11 +931,10 @@ input {
     background-color: #F5F5F5;
     border: solid 1px #E1E8F0;
 }
-.dataset_md_attr td{
+
+.dataset_md_attr td {
     color: #7e7e7e;
 }
-
-
 
 .metada_reg_display_div {
     margin-left: 10px;
@@ -950,7 +974,7 @@ input {
     font-size: 11px;
 }
 
-.register_md_div{
+.register_md_div {
     border: solid 1px #f2f2f2;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
@@ -963,22 +987,6 @@ input {
     margin-right: 5px;
     text-align: justify;
 }
-
-.ozflux_activity_name {
-    padding-left: 10px;
-    padding-right: 10px;
-    margin-left: 5px;
-    margin-right: 5px;
-    color: #003766;
-    font-weight: bolder;
-}
-.ozflux_activity_desc{
-    padding: 5px;
-    margin-left: 5px;
-    margin-right: 5px;
-    text-align: justify;
-}
-
 
 .none_party_div {
     margin: 10px;
@@ -994,7 +1002,6 @@ input {
     color: #b24f3c;
 }
 
-
 .data_licence_div {
     padding: 5px;
     margin-left: 5px;
@@ -1009,7 +1016,6 @@ input {
 }
 
 /** ==== End of collection ====**/
-
 
 .bottom_line_center_block {
     margin-left: auto;
@@ -1323,17 +1329,19 @@ input {
 }
 
 .licence_contents {
-    margin: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
     text-align: left;
-    padding-left: 5px;
-    padding-right: 5px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+}
+
+.tern_licence {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 /**   ========= End of Refactored CSS ====== **/
-
-
 
 .p_title {
     /**background:none repeat scroll 0 0 #F5F5F5;*/
@@ -1346,8 +1354,6 @@ input {
     line-height: 22px;
     padding-left: 10px;
 }
-
-
 
 .pop_pane {
     color: #c96b2f;
@@ -1363,7 +1369,6 @@ input {
     right: 10px;
     cursor: pointer;
 }
-
 
 .use_policy {
     display: block;
@@ -1441,14 +1446,11 @@ input {
     font-size: 11px;
 }
 
-
-
 .status_tname_div {
     color: #666666;
     font-size: 11px;
     display: inline;
 }
-
 
 .inline_td_div {
     float: right;
@@ -1517,7 +1519,6 @@ input {
     font-size: 11px;
 }
 
-
 .home_left_panel {
     float: left;
     width: 280px;
@@ -1551,8 +1552,6 @@ input {
     margin-top: 5px;
     margin-bottom: 15px;
 }
-
-
 
 .main_big_border {
     width: 978px;
@@ -1593,7 +1592,6 @@ input {
     margin-bottom: 5px;
     margin-right: 10px;
     margin-top: 5px;
-    /**border: solid 1px #e1e8f0;*/
 }
 
 .install_input_field {
@@ -1606,13 +1604,11 @@ input {
     font-size: 12px;
 }
 
-
 .left_container_panel {
     width: 800px;
     border-right: solid 1px #c0c7d5;
     float: left;
 }
-
 
 .left_middle_no_border_panel {
     margin-left: auto;
@@ -1627,17 +1623,6 @@ input {
     width: 100%;
     height: 4px;
 }
-
-
-
-
-
-.div_fixed_block {
-    margin-top: 10px;
-    float: left;
-    width: 700px;
-}
-
 
 .single_border_block {
     margin-left: 15px;
@@ -1657,7 +1642,6 @@ input {
     text-align: center;
     height: 200px;
 }
-
 
 .none_border_block a {
     width: 50px;
@@ -1686,27 +1670,20 @@ input {
     font-size: 11px;
 }
 
-
-
-
 .table_col {
     text-align: left;
     width: 100%;
 }
 
-
-
-  /** TODO: **/
+/** TODO: **/
 .tr_normal {
     background-color: #fff;
 }
-
 
 .links_div {
     padding-top: 2px;
     padding-bottom: 2px;
 }
-
 
 .radio_opts {
     height: 22px;
