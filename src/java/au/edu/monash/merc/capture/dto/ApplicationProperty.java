@@ -45,6 +45,8 @@ public class ApplicationProperty implements Serializable {
 
     private String systemServiceEmail;
 
+    private String dataLicence;
+
     private int loginTryTimes;
 
     private int blockWaitingTimes;
@@ -60,6 +62,14 @@ public class ApplicationProperty implements Serializable {
     private boolean mdRegEnabled;
 
     private String rifcsStoreLocation;
+
+    private String activityKey;
+
+    private String collectionRifcsTemplate;
+
+    private String partyRifcsTemplate;
+
+    private String rmPartyRifcsTemplate;
 
     private String rmWsName;
 
@@ -84,8 +94,6 @@ public class ApplicationProperty implements Serializable {
     private String authDomain;
 
     private String hdlResolverAddress;
-
-    private String ccLicenseWsAddress;
 
     public String getAppName() {
         return appName;
@@ -151,6 +159,14 @@ public class ApplicationProperty implements Serializable {
         this.systemServiceEmail = systemServiceEmail;
     }
 
+    public String getDataLicence() {
+        return dataLicence;
+    }
+
+    public void setDataLicence(String dataLicence) {
+        this.dataLicence = dataLicence;
+    }
+
     public int getLoginTryTimes() {
         return loginTryTimes;
     }
@@ -197,6 +213,38 @@ public class ApplicationProperty implements Serializable {
 
     public void setRifcsStoreLocation(String rifcsStoreLocation) {
         this.rifcsStoreLocation = rifcsStoreLocation;
+    }
+
+    public String getActivityKey() {
+        return activityKey;
+    }
+
+    public void setActivityKey(String activityKey) {
+        this.activityKey = activityKey;
+    }
+
+    public String getCollectionRifcsTemplate() {
+        return collectionRifcsTemplate;
+    }
+
+    public void setCollectionRifcsTemplate(String collectionRifcsTemplate) {
+        this.collectionRifcsTemplate = collectionRifcsTemplate;
+    }
+
+    public String getPartyRifcsTemplate() {
+        return partyRifcsTemplate;
+    }
+
+    public void setPartyRifcsTemplate(String partyRifcsTemplate) {
+        this.partyRifcsTemplate = partyRifcsTemplate;
+    }
+
+    public String getRmPartyRifcsTemplate() {
+        return rmPartyRifcsTemplate;
+    }
+
+    public void setRmPartyRifcsTemplate(String rmPartyRifcsTemplate) {
+        this.rmPartyRifcsTemplate = rmPartyRifcsTemplate;
     }
 
     public String getRmWsName() {
@@ -302,13 +350,4 @@ public class ApplicationProperty implements Serializable {
     public void setHdlResolverAddress(String hdlResolverAddress) {
         this.hdlResolverAddress = hdlResolverAddress;
     }
-
-    public String getCcLicenseWsAddress() {
-        return ccLicenseWsAddress;
-    }
-
-    public void setCcLicenseWsAddress(String ccLicenseWsAddress) {
-        this.ccLicenseWsAddress = ccLicenseWsAddress;
-    }
-
 }

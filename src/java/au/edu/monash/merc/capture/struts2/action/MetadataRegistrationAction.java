@@ -75,8 +75,6 @@ public class MetadataRegistrationAction extends DMCoreAction {
         licence.setLicenceType(LicenceType.TERN.type());
         activity = new RegisterActivity();
         activity.setKey(this.configSetting.getPropValue(ConfigSettings.OZFLUX_ACTIVITY_KEY));
-        activity.setName(this.configSetting.getPropValue(ConfigSettings.OZFLUX_ACTIVITY_NAME));
-        activity.setDescription(this.configSetting.getPropValue(ConfigSettings.OZFLUX_ACTIVITY_DESCRIPTION));
     }
 
     public String showMdRegister() {

@@ -1,16 +1,12 @@
 .map_view {
-     height: 460px;
-    /**width: 55%; **/
-    margin-left: 5px;
-    margin-bottom: 5px;
+    height: 460px;
+    margin: 5px;
     padding: 5px 5px 5px 5px;
     /**display: inline-block; **/
     border: 2px solid #FFFFFF;
 }
 
 .collection_info_div {
-    /** float: right;
-    width: 40%;*/
     margin-right: 5px;
     margin-bottom: 5px;
     padding: 5px 5px 5px 5px;

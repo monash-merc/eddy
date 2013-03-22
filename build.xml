@@ -191,6 +191,7 @@
         <copy todir="${dist.pack.tmp.app.classes.dir}">
             <fileset dir="${conf.dir}">
                 <include name="**/country.properties"/>
+                <include name="**/nlaid.properties"/>
                 <include name="**/log4j.properties"/>
                 <include name="**/messageResource.properties"/>
                 <include name="**/hibernate.cfg.xml"/>

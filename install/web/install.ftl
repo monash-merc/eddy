@@ -39,6 +39,11 @@
 					<td><@s.textfield name="appProp.storeLocation" cssClass="install_input_field" /></td>
 					<td><div class="name_comment">* The dataset files store location</div></td>
 				</tr>
+                <tr>
+                    <td>Data Licence: </td>
+                    <td><@s.textfield name="appProp.dataLicence" cssClass="install_input_field" /></td>
+                    <td><div class="name_comment">* The Data Licence Url (TERN Licence)</div></td>
+                </tr>
 				<tr>
 					<td>Data Physical Location: </td>
 					<td><@s.textarea name="appProp.collectionPhysicalLocation" cssStyle="width: 300px; height: 50px;" cssClass="input_textarea" /></td>
@@ -110,16 +115,42 @@
 					<td><@s.select name="appProp.mdRegEnabled"  list="trueFalseMap" cssClass="input_select_normal"  /></td>
 					<td><div class="name_comment">* Select it if ANDS metadata registration enabled</div></td>
 				</tr>
+                <tr>
+                    <td>Group Name: </td>
+                    <td><@s.textfield name="appProp.andsRegGroupName" cssClass="install_input_field" /></td>
+                    <td><div class="name_comment">* The group name in the RIF-CS file</div></td>
+                </tr>
+
 				<tr>
 					<td>RIF-CS store Location: </td>
 					<td><@s.textfield name="appProp.rifcsStoreLocation" cssClass="install_input_field" /></td>
 					<td><div class="name_comment">* The published rif-cs store location</div></td>
 				</tr>
-				<tr>
-					<td>Group Name: </td>
-					<td><@s.textfield name="appProp.andsRegGroupName" cssClass="install_input_field" /></td>
-					<td><div class="name_comment">* The group name in the RIF-CS file</div></td>
-				</tr>
+
+                <tr>
+                    <td>OzFlux Activity Key: </td>
+                    <td><@s.textfield name="appProp.activityKey" cssClass="install_input_field" /></td>
+                    <td><div class="name_comment">* The OzFlux activity rifcs key</div></td>
+                </tr>
+
+                <tr>
+                    <td>Collection RIFCS Template: </td>
+                    <td><@s.textfield name="appProp.collectionRifcsTemplate" cssClass="install_input_field" /></td>
+                    <td><div class="name_comment">* The collection rifcs template name</div></td>
+                </tr>
+
+                <tr>
+                    <td>Party RIFCS Template: </td>
+                    <td><@s.textfield name="appProp.partyRifcsTemplate" cssClass="install_input_field" /></td>
+                    <td><div class="name_comment">* The party rifcs template name</div></td>
+                </tr>
+
+                <tr>
+                    <td>Research Master Party RIFCS Template: </td>
+                    <td><@s.textfield name="appProp.rmPartyRifcsTemplate" cssClass="install_input_field" /></td>
+                    <td><div class="name_comment">* The party rifcs template name</div></td>
+                </tr>
+
 				<tr>
 					<td>Researcher Master Web Service Name: </td>
 					<td><@s.textfield name="appProp.rmWsName" cssClass="install_input_field" /></td>
@@ -177,16 +208,7 @@
 				</tr>
 			</table>
 		</div>
-		<div class="p_title"><b>Creative Commons License Web Service Settings</b></div>
-		<div class="main_install_inner">
-			<table>	
-				<tr>
-					<td width="250">Creative Commons License Web Service URL: </td>
-					<td><@s.textfield name="appProp.ccLicenseWsAddress" cssClass="install_input_field" /></td>
-					<td><div class="name_comment">* The creative commons license web service address</div></td>
-				</tr>
-			</table>
-		</div>
+
 		<div class="p_title"><b>Database Configuration</b></div>
 		<div class="main_install_inner">
 			<table>
