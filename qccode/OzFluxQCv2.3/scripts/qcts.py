@@ -234,6 +234,13 @@ def AverageSeriesByElements(ds,Av_out,Series_in):
     SStr = ds.series[Series_in[0]]['Attr']['standard_name']
     qcutils.CreateSeries(ds,Av_out,Av_data,FList=Series_in,Descr=DStr,Units=UStr,Standard=SStr)
 
+def BypassTcorr(cf,ds):
+    for ThisOne in ds.series.keys():
+        if 'Sws' in ThisOne:
+            Sws,f = qcutils.GetSeriesasMA(ds,ThisOne)
+            Sws_bypass = -0.0663 + -0.0063 * Sws + 0.0007 * Sws ** 2
+            qcutils.CreateSeries(ds,ThisOne,Sws_bypass,FList=[ThisOne],Descr=ds.series[ThisOne]['Attr']['long_name'],Units='frac',Standard='soil_moisture_content')
+
 def CalculateAhHMP(cf,ds,e_name='e',Ta_name='Ta_HMP',Ah_name='Ah_HMP'):
     """
         Calculate the absolute humidity from vapour pressure and temperature.
@@ -2763,9 +2770,9 @@ def get_canopyresistance(cf,ds,Uavg,uindex,PMin,Level,critFsd,critFe):
     rc = ((((((delta * (Fn - Fg) / (Lv)) + (rhom * Cpm * (VPD / ((Lv) * ra)))) / (Fe / (Lv))) - delta) / gamma) - 1) * ra
     rcindex = numpy.ma.where(rc < 0)[0]
     Gc = (1 / rc) * (Ah * 1000) / 18
-    qcutils.CreateSeries(ds,'ram',ra,FList=flagList,Descr='Aerodynamic resistance from drag coefficient, Jensen/Leuning formulation, '+Level,Units='s/m')
-    qcutils.CreateSeries(ds,'rC',rc,FList=flagList,Descr='Canopy resistance from Penman-Monteith inversion, Jensen/Leuning formulation, '+Level,Units='s/m')
-    qcutils.CreateSeries(ds,'GC',Gc,FList=flagList,Descr='Canopy conductance from Penman-Monteith inversion, Jensen/Leuning formulation, '+Level,Units='mmolH2O/(m2ground s)')
+    qcutils.CreateSeries(ds,'ram',ra,FList=flagList,Descr='Aerodynamic resistance from drag coefficient, Allen/Jensen formulation, '+Level,Units='s/m')
+    qcutils.CreateSeries(ds,'rC',rc,FList=flagList,Descr='Canopy resistance from Penman-Monteith inversion, Allen/Jensen formulation, '+Level,Units='s/m')
+    qcutils.CreateSeries(ds,'GC',Gc,FList=flagList,Descr='Canopy conductance from Penman-Monteith inversion, Allen/Jensen formulation, '+Level,Units='mmolH2O/(m2ground s)')
     
     Label = ['ram','rC','GC']
     for listindex in range(0,3):
@@ -2782,6 +2789,70 @@ def get_canopyresistance(cf,ds,Uavg,uindex,PMin,Level,critFsd,critFe):
         ds.series[Label[listindex]]['Data'][Fsdindex] = numpy.float64(-9999)
     
     return
+
+def get_leafresistance(cf,ds,rinverted):
+    Fsd,Fsd_flag = qcutils.GetSeriesasMA(ds,'Fsd')
+    Hdh,f = qcutils.GetSeriesasMA(ds,'Hdh')
+    Day,f = qcutils.GetSeriesasMA(ds,'Day')
+    Month,f = qcutils.GetSeriesasMA(ds,'Month')
+    nRecs = len(Fsd)
+    if 'LAI' not in ds.series.keys():
+        log.info('  Penman-Monteith: integrating daily LAI file into data structure')
+        InLevel = 'L4LAI'
+        OutLevel = 'L4LAI'
+        qcio.autoxl2nc(cf,InLevel,OutLevel)
+        dsLAI = qcio.nc_read_series(cf,'L4LAI')
+        LAI,fd = qcutils.GetSeriesasMA(dsLAI,'LAI')
+        Day_LAI,fd = qcutils.GetSeriesasMA(dsLAI,'Day')
+        Month_LAI,fd = qcutils.GetSeriesasMA(dsLAI,'Month')
+        nDays = len(LAI)
+        LAI_expanded = numpy.ma.zeros(nRecs,float)
+        Night = numpy.ma.zeros(nRecs)
+        LAI_flag = numpy.ma.zeros(nRecs,int)
+        
+        for i in range(nRecs):
+            if Month[i] == 1 or Month[i] == 3 or Month[i] == 5 or Month[i] == 7 or Month[i] == 8 or Month[i] == 10 or Month[i] == 12:
+                dRan = 31
+            if Month[i] == 2:
+                if ds.series['Year']['Data'][0] % 4 == 0:
+                    dRan = 29
+                else:
+                    dRan = 28
+            if Month[i] == 4 or Month[i] == 6 or Month[i] == 9 or Month[i] == 11:
+                dRan = 30
+                
+            Night[i] = Day[i]
+        
+        log.info(' Penman-Monteith: filling LAI from daily LAI')
+        for z in range(nDays):
+            for i in range(nRecs):
+                if Night[i] == Day_LAI[z]:
+                    if Month[i] == Month_LAI[z]:
+                        LAI_expanded[i] = LAI[z]
+                        LAI_flag[i] = dsLAI.series['LAI']['Flag'][z]
+        
+        qcutils.CreateSeries(ds,'LAI',LAI_expanded,Flag=0,Descr='Leaf area index, spline-fit interpolation from MODIS product',Units='m2/m2')
+        ds.series['LAI']['Flag'] = LAI_flag
+    else:
+        LAI_expanded, LAI_flag = qcutils.GetSeriesasMA(ds,'LAI')
+    
+    log.info('  Penman-Monteith: computing leaf resistance from inversion surface resistance and LAI')
+    rCin, rc_flag = qcutils.GetSeriesasMA(ds,rinverted)
+    rl = rCin * 0.5 * LAI_expanded
+    rl_flag = numpy.zeros(nRecs,float)
+    Fsd_index = numpy.where(Fsd < 600)[0]
+    Fsd2_index = numpy.where(numpy.mod(Fsd_flag,10)!=0)[0]
+    rC_index = numpy.where(numpy.mod(rc_flag,10)!=0)[0]
+    LAI_index = numpy.where(numpy.mod(LAI_flag,10)!=0)[0]
+    rl[Fsd_index] = float(-9999)
+    rl_flag[Fsd_index] = 133
+    rl[Fsd2_index] = float(-9999)
+    rl_flag[Fsd2_index] = Fsd_flag[Fsd2_index]
+    rl[rC_index] = float(-9999)
+    rl_flag[rC_index] = rc_flag[rC_index]
+    rl[LAI_index] = float(-9999)
+    rl_flag[LAI_index] = LAI_flag[LAI_index]
+    return rl, rl_flag
 
 def get_minmax(Data):
     """
@@ -3389,6 +3460,11 @@ def prep_aerodynamicresistance(cf,ds,Cdmethod,Cemethod,Ce_2layer):
             ds.series[outList[listindex]]['Data'][uindex] = numpy.float(-9999)
             ds.series[outList[listindex]]['Data'][Feindex] = numpy.float(-9999)
             ds.series[outList[listindex]]['Data'][Fsdindex] = numpy.float(-9999)
+        
+        if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='rlvCe') and cf['PenmanMonteith']['rlvCe'] == 'True':
+            rlv, flag = get_leafresistance(cf,ds,outList[2])
+            qcutils.CreateSeries(ds,'rLE_1layer',rlv,Flag=0,Descr='leaf resistance from Penman-Monteith inversion, Ce-method, under well-illuminated (> 600 W m-2 Fsd) conditions',Units='s/m')
+            ds.series['rLE_1layer']['Flag'] = flag
     
     # use 2-layer bulk transfer coefficient method
     if Ce_2layer == 'True':
@@ -3543,11 +3619,21 @@ def prep_aerodynamicresistance(cf,ds,Cdmethod,Cemethod,Ce_2layer):
             ds.series[outList[listindex]]['Data'][uindex] = numpy.float(-9999)
             ds.series[outList[listindex]]['Data'][Feindex] = numpy.float(-9999)
             ds.series[outList[listindex]]['Data'][Fsdindex] = numpy.float(-9999)
+        
+        if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='rlv2layer') and cf['PenmanMonteith']['rlv2layer'] == 'True':
+            rlv, flag = get_leafresistance(cf,ds,outList[12])
+            qcutils.CreateSeries(ds,'rLE_2layer',rlv,Flag=0,Descr='leaf resistance from Penman-Monteith inversion, 2layer Ce-method, under well-illuminated (> 600 W m-2 Fsd) conditions',Units='s/m')
+            ds.series['rLE_2layer']['Flag'] = flag
     
     # use drag coefficient method
     if Cdmethod == 'True':
         log.info('  Cd method (Jensen 1990, Luening 2008) used to estimate aerodynamic resistance, ra')
         get_canopyresistance(cf,ds,Uavg,uindex,PMin,Level,critFsd,critFe)
+        
+        if qcutils.cfkeycheck(cf,Base='PenmanMonteith',ThisOne='rlm') and cf['PenmanMonteith']['rlm'] == 'True':
+            rlm, flag = get_leafresistance(cf,ds,'rC')
+            qcutils.CreateSeries(ds,'rLC',rlm,Flag=0,Descr='leaf resistance from Penman-Monteith inversion, Cd-method, under well-illuminated (> 600 W m-2 Fsd) conditions',Units='s/m')
+            ds.series['rLC']['Flag'] = flag
     
     return
 
@@ -3846,8 +3932,8 @@ def write_sums(cf,ds,ThisOne,xlCol,xlSheet,DoSum='False',DoMinMax='False',DoMean
             
         for day in range(1,dRan+1):
             xlRow = xlRow + 1
-            PMList = ['GE_1layer_mol', 'GE_2layer_mol', 'GE_top_mol', 'GE_base_mol', 'GE_full_mol', 'GC_mol', 'rav_1layer', 'rE_1layer', 'GE_1layer', 'rav_2layer', 'rE_2layer', 'GE_2layer', 'rav_base', 'rE_base', 'GE_base', 'rav_top', 'rE_top', 'GE_top', 'rav_full', 'rE_full', 'GE_full', 'ram', 'rC', 'GC']
-            CList = ['Re_mmol','Re_LRF_mmol','Re_n_mmol','Re_NEEmax_mmol','GPP','GPP_mmol']
+            PMList = ['GE_1layer_mol', 'GE_2layer_mol', 'GE_top_mol', 'GE_base_mol', 'GE_full_mol', 'GC_mol', 'rav_1layer', 'rE_1layer', 'rLE_1layer', 'GE_1layer', 'rav_2layer', 'rE_2layer', 'rLE_2layer', 'GE_2layer', 'rav_base', 'rE_base', 'GE_base', 'rav_top', 'rE_top', 'GE_top', 'rav_full', 'rE_full', 'GE_full', 'ram', 'rC', 'rLC', 'GC']
+            CList = ['Re_mmol','Re_LRF_mmol','Re_n_mmol','Re_NEEmax_mmol','GPP','GPP_mmol','C_ppm']
             VarList = PMList + CList
             if ThisOne in VarList:
                 di = numpy.where((ds.series['Month']['Data']==month) & (ds.series['Day']['Data']==day) & (numpy.mod(ds.series[ThisOne]['Flag'],10) == 0))[0]

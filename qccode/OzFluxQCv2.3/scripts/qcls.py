@@ -121,6 +121,12 @@ def l3qc(cf,ds2):
     ds3.globalattributes['QCVersion'] = __doc__
     ds3.globalattributes['L3Functions'] = ''
     
+    # bypass soil temperature correction for Sws (when Ts bad)
+    if qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassSwsTcorr') and cf['Functions']['BypassSwsTcorr'] == 'True':
+        ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', BypassSwsTcorr'
+        log.info(' Re-computing Sws without temperature correction ...')
+        qcts.BypassTcorr(cf,ds3)
+    
     # correct measured soil water content using empirical relationship to collected samples
     if qcutils.cfkeycheck(cf,Base='Functions',ThisOne='CorrectSWC') and cf['Functions']['CorrectSWC'] == 'True':
         ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', CorrectSWC'

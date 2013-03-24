@@ -36,17 +36,17 @@ def cfkeycheck(cf,Base='Variables',ThisOne=[],key=[]):
 
 def CreateSeries(ds,Label,Data,FList=[''],Flag=None,Descr='',Units='',Standard='not defined'):
     """
-    Create a series (1d array) of data in the data structure.
-    
-    If the series already exists in the data structure, data values and QC flags will be
-    overwritten but attributes will be preserved.  However, the long_name and Units attributes
-    are treated differently.  The existing long_name will have Descr appended to it.  The
-    existing units will be overwritten with units.
-    
-    This utility is the prefered method for creating or updating a data series because
-    it imnplements a consistent method for creating series in the data structure.  Direct
-    writes to the contents of the data structure are discouraged (unless PRI wrote the code!).
-    """
+        Create a series (1d array) of data in the data structure.
+        
+        If the series already exists in the data structure, data values and QC flags will be
+        overwritten but attributes will be preserved.  However, the long_name and Units attributes
+        are treated differently.  The existing long_name will have Descr appended to it.  The
+        existing units will be overwritten with units.
+        
+        This utility is the prefered method for creating or updating a data series because
+        it imnplements a consistent method for creating series in the data structure.  Direct
+        writes to the contents of the data structure are discouraged (unless PRI wrote the code!).
+        """
     ds.series['_tmp_'] = {}                       # create a temporary series to avoid premature overwrites
     # put the data into the temporary series
     ds.series['_tmp_']['Data'] = numpy.ma.filled(Data,float(-9999))
