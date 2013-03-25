@@ -309,7 +309,7 @@ public class HandleWSClient {
 		HandleWSClient hdlwsclient = new HandleWSClient();
 		HandleWSConfig hdlWsConfig = new HandleWSConfig();
 		hdlWsConfig.setIgnoreCertError(true);
-		hdlWsConfig.setHandleServiceHost("https://test.ands.org.au");
+		hdlWsConfig.setHandleServiceHost("https://demo.ands.org.au");
 		hdlWsConfig.setHandleServicePort(8443);
 		hdlWsConfig.setHandleServicePath("pids");
 		hdlWsConfig.setHandleServiceMinMethod("mint");

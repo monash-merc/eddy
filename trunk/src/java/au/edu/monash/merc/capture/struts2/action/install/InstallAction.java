@@ -212,7 +212,7 @@ public class InstallAction extends InstallBaseAction {
 
         // handle web service
         appProp.setHdlWsEnabled(true);
-        appProp.setHdlWsHostName("https://test.ands.org.au");
+        appProp.setHdlWsHostName("https://demo.ands.org.au");
         appProp.setHdlWsHostPort(8443);
         appProp.setHdlWsPath("pids");
         appProp.setHdlWsMethod("mint");
