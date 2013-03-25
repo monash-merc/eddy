@@ -112,12 +112,23 @@ public class FreeMarkerRifcsServiceImpl implements RifcsService, ResourceLoaderA
 
     @Override
     public void createRifcs(String identifier, Map<String, Object> templateValues, String rifcsTemplate) {
+        String destinationFile = null;
         try {
             String rifcsFileName = CaptureUtil.pathEncode(identifier);
-            Writer rifcsWriter = new FileWriter(new File(this.rifcsStoreLocation + File.separator + rifcsFileName + RIFCS_EXT));
+            destinationFile = this.rifcsStoreLocation + File.separator + rifcsFileName + RIFCS_EXT;
+            Writer rifcsWriter = new FileWriter(destinationFile);
             Template template = this.rifcsFreeMarker.getConfiguration().getTemplate(rifcsTemplate);
             template.process(templateValues, rifcsWriter);
         } catch (Exception ex) {
+            try {
+                //try to delete the file which is already created when an error occurred.
+                if (StringUtils.isNotBlank(destinationFile)) {
+                    logger.error("Try to delete the RIF-CS file: " + destinationFile + ", after an error occurred during the RIF-CS file creation.");
+                    DCFileUtils.deleteFile(destinationFile);
+                }
+            } catch (Exception rifEx) {
+                throw new RIFCSException("Try to delete the RIF-CS file error after an error occurred during the RIF-CS file creation");
+            }
             throw new RIFCSException(ex);
         }
     }
