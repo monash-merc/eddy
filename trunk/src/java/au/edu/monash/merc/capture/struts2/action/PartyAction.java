@@ -289,13 +289,20 @@ public class PartyAction extends DMCoreAction {
         party.setDescription(pb.getDescription());
         String groupKey = pb.getGroupKey();
         party.setGroupKey(groupKey);
-        if (groupKey.equals("-1")) {
-            party.setGroupName(this.configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_GROUP_NAME));
-        } else {
-            party.setGroupName(organizations.get(groupKey));
-        }
+        //set the group key and group name first
+        party.setGroupKey(pb.getGroupKey());
         party.setGroupName(pb.getGroupName());
-        party.setFromRm(pb.isFromRm());
+        boolean fromRM = pb.isFromRm();
+        party.setFromRm(fromRM);
+        //if party is not from researcher master, then we have to adjust it
+        if (!fromRM) {
+            if (groupKey.equals("-1")) {
+                party.setGroupName(this.configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_GROUP_NAME));
+            } else {
+                String groupName = organizations.get(groupKey);
+                party.setGroupName(groupName);
+            }
+        }
         return party;
     }
 

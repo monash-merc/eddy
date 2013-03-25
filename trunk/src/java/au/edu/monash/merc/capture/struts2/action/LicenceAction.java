@@ -92,7 +92,6 @@ public class LicenceAction extends DMCoreAction {
     public String selectLicence() {
         try {
             String requiredLT = licence.getLicenceType();
-            System.out.println("selected licence type: " + requiredLT);
             //if TERN licence is selected, we just put the tern licence, and return
             if (requiredLT.equals(LicenceType.TERN.type())) {
                 this.licence.setContents(this.configSetting.getPropValue(ConfigSettings.TERN_DATA_LICENCE));
