@@ -203,7 +203,7 @@ public class InstallAction extends InstallBaseAction {
 
 		// researcher master web service call
 		appProp.setRmWsName("AIRMANDSService");
-		appProp.setRmWsEndpointAddress("http://mobs.its.monash.edu.au:7778/orabpel/ResearchMaster/AIRMANDSService/1.0");
+		appProp.setRmWsEndpointAddress("https://gateway.integration.monash.edu.au:443/AIRMANDSService");
 		appProp.setRmWsTimeout(60000);
 
 		// handle web service
