@@ -218,7 +218,7 @@ public class MDRegisterAction extends DMCoreAction {
                     keepdoing = true;
                 }
                 if (!keepdoing) {
-                    setForRMWSException(errorMsg);
+                    setForRMWSException();
                     return ERROR;
                 }
             }
@@ -240,7 +240,7 @@ public class MDRegisterAction extends DMCoreAction {
                         keepdoing = true;
                     }
                     if (!keepdoing) {
-                        setForRMWSException(errorMsg);
+                        setForRMWSException();
                         return ERROR;
                     }
                 }
@@ -261,7 +261,7 @@ public class MDRegisterAction extends DMCoreAction {
                     }
 
                     if (!keepdoing) {
-                        setForRMWSException(errorMsg);
+                        setForRMWSException();
                         return ERROR;
                     }
                 }
@@ -275,8 +275,8 @@ public class MDRegisterAction extends DMCoreAction {
         return SUCCESS;
     }
 
-    private void setForRMWSException(String errorMsg) {
-        addActionError(getText("ands.md.registration.ws.failed") + ", " + errorMsg);
+    private void setForRMWSException() {
+        addActionError(getText("ands.md.registration.ws.failed"));
         setNavAfterExc();
     }
 
