@@ -16,7 +16,7 @@
 		class="au.edu.monash.merc.capture.struts2.multipart.MonitoredMultiPartRequest" scope="default" />
 	<constant name="struts.multipart.handler" value="merc" />
 	<constant name="struts.multipart.maxSize" value="2048000000" />
-	<!-- constant name="struts.multipart.saveDir" value="temp" / -->
+	<constant name="struts.multipart.saveDir" value="temp" />
 
 	<package name="core.merc" extends="struts-default">
 

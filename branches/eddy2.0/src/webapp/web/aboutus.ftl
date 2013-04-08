@@ -19,12 +19,12 @@
     <div class="main_body_big_left_panel">
         <div class="none_boder_left_container">
             <br/>
-
             <div class="left_middle_panel">
                 <div class="aboutus_div">
-                    The OzFlux system was built by Monash eResearch Centre as part of the ANDS funded Monash ARDC-EIF Data Capture and Metadata Store Project. The solution developed for this project
-                    has been specifically tailored to the OzFlux Research Community needs as articulated by Dr Peter Isaac of the Monash University School of Geography and Environmental Science within
-                    the Faculty of Arts. This project aimed to develop software solutions that:
+                    The Climate and Weather system was built by Monash eResearch Centre as part of the ANDS funded Monash ARDC-EIF Data Capture
+                    and Metadata Store Project. The solution developed for this project has been specifically tailored to the Monash University
+                    Climate and Weather Research Community needs as articulated by Dr Simon Clarke of the Monash University School of Mathematical
+                    Sciences within the Faculty of Science. This project aimed to develop software solutions that:
                     <ul>
                         <li>capture data and metadata from research instruments and devices</li>
                         <li>make available and automate feeds of data collection descriptions</li>
@@ -33,26 +33,15 @@
                         <li>recognise the need to facilitate the overall data stream/s from Monash to
                             the RDA which include collections with related party and activity descriptions
                             in compliance with the requirements set out in the ANDS Minimum Metadata Contents
-                            for RIF-CSThis project is supported by the Australian National Data Service (<a href="http://ands.org.au/" target="_blank">ANDS</a>).
+                            for RIF-CSThis project is supported by the <a href="http://ands.org.au/" target="_blank">Australian National Data Service (ANDS)</a>.
                             ANDS is supported by the Australian Government through the National Collaborative
                             Research Infrastructure Strategy Program and the Education Investment Fund (EIF) Super Science Initiative.
                         </li>
                     </ul>
 
                     <p>
-                        For all enquiries and assistance, please contact:
-                    </p>
-
-                    <p>
-                        <b> Peter Isaac</b> (<a href="mailto:pisaac.ozflux@gmail.com?Subject=Ozflux">pisaac.ozflux@gmail.com</a>)
-                    </p>
-
-                    <p>
-                        or
-                    </p>
-
-                    <p>
-                        <b>Eva van Gorsel</b> (<a href="mailto:eva.vangorsel@csiro.au?Subject=Ozflux">eva.vangorsel@csiro.au</a>)
+                        For all enquiries and assistance please contact the Monash eResearch Centre at
+                        <a href="mailto:merc@monash.edu?Subject=Ozflux">merc@monash.edu</a>
                     </p>
 
                 </div>

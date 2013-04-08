@@ -79,11 +79,6 @@
 					<td><@s.textfield name="appProp.securityHashSeq" cssClass="install_input_field" /></td>
 					<td><div class="name_comment">* The security hash sequence</div></td>
 				</tr>
-				<tr>
-					<td>Googel Map API Key: </td>
-					<td><@s.textfield name="appProp.googleApiKey" cssClass="install_input_field" /></td>
-					<td><div class="name_comment">* The Google Map API Key for using the Google Map</div></td>
-				</tr>
 			</table>
 		</div>
 		<div class="p_title"><b>Stage Transfer Settings</b></div>

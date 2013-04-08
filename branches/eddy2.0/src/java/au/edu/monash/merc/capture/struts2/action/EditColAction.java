@@ -139,7 +139,7 @@ public class EditColAction extends DMCoreAction {
                         //if metadata registration is enabled, but non-monash user is not supported
                         //we still need to enable an admin to registration metadata
                         if (!monUser && !mdRegNonLdapEnabled) {
-                            if ((user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
+                            if ((user.getId() != collection.getOwner().getId()) && (user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
                                 mdRegEnabled = false;
                             }
                         }
@@ -165,28 +165,6 @@ public class EditColAction extends DMCoreAction {
             return INPUT;
         }
         return SUCCESS;
-    }
-
-    private void setPrivateCoPerms(List<Permission> permissions) {
-        for (Permission perm : permissions) {
-            perm.setViewAllowed(false);
-            perm.setUpdateAllowed(false);
-            perm.setImportAllowed(false);
-            perm.setExportAllowed(false);
-            perm.setDeleteAllowed(false);
-            perm.setChangePermAllowed(false);
-        }
-    }
-
-    private void setDefaultCoPerms(List<Permission> permissions) {
-        for (Permission perm : permissions) {
-            perm.setViewAllowed(true);
-            perm.setUpdateAllowed(false);
-            perm.setImportAllowed(false);
-            perm.setExportAllowed(true);
-            perm.setDeleteAllowed(false);
-            perm.setChangePermAllowed(false);
-        }
     }
 
     private void recordAuditEvent() {

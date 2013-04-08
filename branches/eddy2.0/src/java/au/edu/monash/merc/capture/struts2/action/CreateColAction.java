@@ -185,9 +185,9 @@ public class CreateColAction extends DMCoreAction {
 
                 if (mdRegEnabled) {
                     //if metadata registration is enabled, but non-monash user is not supported
-                    //we still need to enable an admin to registration metadata
+                    //we still need to enable an admin to registration metadata   only the owner and admin can register metadata
                     if (!monUser && !mdRegNonLdapEnabled) {
-                        if ((user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
+                        if ((user.getId() != collection.getOwner().getId()) && (user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
                             mdRegEnabled = false;
                         }
                     }

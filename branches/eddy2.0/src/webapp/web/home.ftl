@@ -2,13 +2,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Welcome to <@s.property value="appName" /></title>
+    <title>Welcome to <@s.property value="appName" /></title>
 <#include "template/header.ftl"/>
-<script>
-$(document).ready(function() {
-	$('#merc').coinslider({ hoverPause: true, width: 250,height: 300, opacity: 0.5 });
-});
-</script>
+    <script>
+        $(document).ready(function() {
+            $('#merc').coinslider({ hoverPause: true, width: 250,height: 300, opacity: 0.5 });
+        });
+    </script>
 </head>
 
 <body>
@@ -16,70 +16,66 @@ $(document).ready(function() {
 <#include "template/nav_section.ftl" />
 <!-- Navigation Title -->
 <div class="title_panel">
-	<div class="div_inline">&nbsp;&nbsp;</div>
-	<div class="div_inline"><img src="${base}/images/link_arrow.png" border="0"/></div>
-	<div class="div_inline"><@s.text name="home.action.title" /></div>	
+    <div class="div_inline">&nbsp;&nbsp;</div>
+    <div class="div_inline"><img src="${base}/images/link_arrow.png" border="0"/></div>
+    <div class="div_inline"><@s.text name="home.action.title" /></div>
 </div>
 <div class="main_body_container">
-	<div class="main_body_big_left_panel">
-		<br />
-		<div>
-			<div class="home_left_panel">
-			<br/>
-				<div class="slidshow_frame_panel">
-					<div id="merc">
-						<a href="#" >
-							<img src="${base}/slideshow/DalyRiver_NT_small.jpg" alt="Daly River Site" />
+    <div class="main_body_big_left_panel">
+        <br />
+        <div>
+            <div class="home_left_panel">
+                <br/>
+                <div class="slidshow_frame_panel">
+                    <div id="merc">
+                        <a href="#" >
+                            <img src="${base}/slideshow/climateweather1.jpg" alt="Feature5" />
 							<span>
-								<b>Daly River</b><br />
-								OzFlux is a national ecosystem research network consisting of 10 flux stations.
+								<b>Feature1</b><br />
 							</span>
-						</a>
-						
-						<a href="#" >
-							<img src="${base}/slideshow/CapeTribulation_QLD_small.jpg" alt="CapeTribulation QLD" />
-							<span>
-								<b>Cape Tribulation QLD</b>
-							</span>
-						</a>
-						<a href="#" >
-							<img src="${base}/slideshow/NewWallaby_VIC_small.jpg" alt="New Wallaby VIC" />
-							<span>
-								<b>New Wallaby VIC</b>
-							</span>
-						</a>
-						<a href="#" >
-							<img src="${base}/slideshow/Tumbarumba2_NSW_small.jpg" alt="Tumbarumba NSW" />
-							<span>
-								<b>Tumbarumba NSW</b>
-							</span>
-						</a>
-					</div>
-				</div>
-			</div>
-			<div class="home_right_panel">
-				<div class="paragraph_title">Introduction</div>
-				<br/>
-				<p>
-				OzFlux is a national ecosystem research network consisting of 10 flux stations at present with a further 6 planned for installation in 2011,
-				all funded under the TERN 1 initiative. Funding for 6 more sites has been requested under the TERN-EIF initiative.  The final network of 21 sites
-				 will provide the Australian and global ecosystem modelling communities with nationally consistent observations of energy, carbon and water exchange 
-				 between the atmosphere and key Australian ecosystems.  OzFlux is part of an international network (FluxNet) of over 500 flux stations that is designed
-				  to provide continuous, long-term micrometeorological measurements to monitor the state of ecosystems globally.
-				</p>
-				<p>
-				A Central Node administered by CSIRO Marine and Atmospheric Research coordinates the OzFlux network, determines protocols for measurements, 
-				data processing and quality control, provides a database to archive data from each site and provides training to site operators as required.  
-				A 7 member Steering Committee chaired by Dr Helen Cleugh (CMAR) and Associate Professor Mike Liddell (James Cook University) provides scientific 
-				leadership for the network and coordinates logistics as required.
-				</p>
-			</div>
-            <div style="clear:both"></div>
-		</div>
-        <br/>
-	</div>
-	<div style="clear:both"></div>
+                        </a>
 
+                        <a href="#" >
+                            <img src="${base}/slideshow/climateweather2.jpg" alt="Feature5" />
+							<span>
+								<b>Feature2</b>
+							</span>
+                        </a>
+                        <a href="#" >
+                            <img src="${base}/slideshow/climateweather3.jpg" alt="Feature5" />
+							<span>
+								<b>Feature3</b>
+							</span>
+                        </a>
+                        <a href="#" >
+                            <img src="${base}/slideshow/climateweather4.jpg" alt="Feature5" />
+							<span>
+								<b>Feature4</b>
+							</span>
+                        </a>
+                        <a href="#" >
+                            <img src="${base}/slideshow/climateweather5.jpg" alt="Feature5" />
+							<span>
+								<b>Feature5</b>
+							</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="home_right_panel">
+                <div class="paragraph_title">Introduction</div>
+                <br/>
+                <p>
+                    Monash researchers and research students create significant datasets, mainly through numerical climate model simulations.
+                    The proposed infrastructure will help to revisit and reuse the work carried out by research students and postdoctoral researchers who have left MW&C (Monash Weather & Climate) after finishing their degree or when their contract has ended. Particularly large amounts of data will be created in the coming years when the newly deployed Australian ACCESS climate model is evaluated by a team of postdoctoral researchers. These simulations will be done on the NCI computer platforms in collaboration with other Australian universities, the Bureau of Meteorology and CSIRO. It will be very beneficial for the MW&C researchers to be able to manage this data efficiently and publish it so that other participants will be able to process the data further. Funding of more than $2,000,000 has been secured for this work. In 2010-12 MW&C will carry out a suite of computer simulations to study the urban meteorology in a changing climate. Simulations will assess rainfall patterns in localised urban environments to inform the development, adoption, and operation of stormwater harvesting solutions in collaboration with the Institute for Sustainable Water Researchers, Monash University.
+                </p>
+            </div>
+            <div style="clear: both"></div>
+        </div>
+        <br/>
+    </div>
+    <div style="clear:both"></div>
 </div>
 <br/>
 <!--

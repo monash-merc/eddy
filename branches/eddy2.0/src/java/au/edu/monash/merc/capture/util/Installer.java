@@ -135,7 +135,6 @@ public class Installer {
 			s = s.replaceFirst("BLOCK_WAITING_TIMES", String.valueOf(appProp.getBlockWaitingTimes()));
 			String securityhash = appProp.getSecurityHashSeq();
 			s = s.replaceFirst("SECURITY_HASH_SEQ", MD5.hash(securityhash));
-			s = s.replaceFirst("GOOGLE_MAP_API_KEY", appProp.getGoogleApiKey());
 
 			// set stage transfer properties if any
 			s = s.replaceFirst("STAGE_TRANSFER_ENABLED", String.valueOf(appProp.isStageEnabled()));
