@@ -27,27 +27,18 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import au.edu.monash.merc.capture.config.ConfigSettings;
-import au.edu.monash.merc.capture.domain.AuditEvent;
-import au.edu.monash.merc.capture.domain.Collection;
-import au.edu.monash.merc.capture.domain.Dataset;
-import au.edu.monash.merc.capture.domain.PermType;
-import au.edu.monash.merc.capture.domain.Permission;
-import au.edu.monash.merc.capture.domain.UserType;
+import au.edu.monash.merc.capture.domain.*;
 import au.edu.monash.merc.capture.dto.PermissionBean;
 import au.edu.monash.merc.capture.dto.page.Pagination;
 import au.edu.monash.merc.capture.identifier.IdentifierService;
 import au.edu.monash.merc.capture.service.DMService;
 import au.edu.monash.merc.capture.util.CaptureUtil;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Date;
+import java.util.List;
 
 public class DMCoreAction extends BaseAction {
 
@@ -87,14 +78,7 @@ public class DMCoreAction extends BaseAction {
 
     protected PermissionBean permissionBean;
 
-    protected String googleMapApiKey;
-
     private Logger logger = Logger.getLogger(this.getClass().getName());
-
-    @PostConstruct
-    public void init() {
-        googleMapApiKey = configSetting.getPropValue(ConfigSettings.GOOGLE_MAP_API_AUTHEN_KEY);
-    }
 
     protected void populateLinksInUsrCollection() {
         showColEditLink = ActConstants.SHOW_COLLECTION_EDIT_ACTION;
@@ -359,14 +343,6 @@ public class DMCoreAction extends BaseAction {
 
     public void setViewType(String viewType) {
         this.viewType = viewType;
-    }
-
-    public String getGoogleMapApiKey() {
-        return googleMapApiKey;
-    }
-
-    public void setGoogleMapApiKey(String googleMapApiKey) {
-        this.googleMapApiKey = googleMapApiKey;
     }
 
     public PermissionBean getPermissionBean() {

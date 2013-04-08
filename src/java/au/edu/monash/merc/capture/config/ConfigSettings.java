@@ -65,8 +65,6 @@ public class ConfigSettings {
 
     public static String USER_HASH_SEQUENCE = "user.security.hash.sequence";
 
-    public static String GOOGLE_MAP_API_AUTHEN_KEY = "google.map.api.auth.key";
-
     // Stage Transfer Configuration
     public static String STAGE_TRANSFER_ENABLED = "stage.transfer.enabled";
 
