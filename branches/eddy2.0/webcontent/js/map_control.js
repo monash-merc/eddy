@@ -616,8 +616,6 @@ function mctStartRegion(tool, controlDivId) {
         else {
             mctBeginDrawing(controlDivId, '');
         }
-
-
     }
 }
 

@@ -27,6 +27,7 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
+import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.*;
 import au.edu.monash.merc.capture.dto.PermissionBean;
 import au.edu.monash.merc.capture.dto.page.Pagination;
@@ -111,6 +112,47 @@ public class DMCoreAction extends BaseAction {
             }
         } else {
             return description;
+        }
+    }
+
+    protected boolean checkMetadataRegPerm() {
+
+        String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
+        boolean metadataRegAllowed = Boolean.valueOf(mdRegEnabledStr).booleanValue();
+        //user not logged in, just return false
+        if (user == null) {
+            return false;
+        }
+        //if metadata registration disabled, just return false
+        if (!metadataRegAllowed) {
+            return false;
+        } else {
+            boolean mdRegNonLdapEnabled = Boolean.valueOf(configSetting.getPropValue(ConfigSettings.ANDS_MD_REGISTER_FOR_NON_LDAP_USER_SUPPORTED)).booleanValue();
+            //see if it's a ldap user
+            String passwd = user.getPassword();
+            boolean monUser = true;
+            if (!StringUtils.endsWithIgnoreCase(passwd, "ldap")) {
+                monUser = false;
+            }
+
+            if (monUser) {  //for monash user, if an user is  the owner of a collection or admin can register the metadata
+                if ((user.getId() == collection.getOwner().getId()) || (user.getUserType() != UserType.ADMIN.code()) || (user.getUserType() != UserType.SUPERADMIN.code())) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                if (mdRegNonLdapEnabled) {
+                    //for none monash user if it allows to register metadata, we only allow the owner  or admin can register the metadata of the collection
+                    if ((user.getId() == collection.getOwner().getId()) || (user.getUserType() != UserType.ADMIN.code()) || (user.getUserType() != UserType.SUPERADMIN.code())) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else { //not allow the none monash user to register the metadata. just return false
+                    return false;
+                }
+            }
         }
     }
 
