@@ -113,31 +113,8 @@ public class ViewColDetailsAction extends DMCoreAction {
                 String stageTransferEnabledStr = configSetting.getPropValue(ConfigSettings.STAGE_TRANSFER_ENABLED);
                 stageTransferEnabled = Boolean.valueOf(stageTransferEnabledStr).booleanValue();
 
-                // populate the rifcs registration if enabled
-                String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
-                mdRegEnabled = Boolean.valueOf(mdRegEnabledStr).booleanValue();
-                //populate if the rifcs registration is enabled for non-ldap user
-
-                String mdRegNonLdapEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_MD_REGISTER_FOR_NON_LDAP_USER_SUPPORTED);
-                boolean mdRegNonLdapEnabled = Boolean.valueOf(mdRegNonLdapEnabledStr).booleanValue();
-                if (user != null) {
-                    //see if it's a ldap user
-                    String passwd = user.getPassword();
-                    boolean monUser = true;
-                    if (!StringUtils.endsWithIgnoreCase(passwd, "ldap")) {
-                        monUser = false;
-                    }
-
-                    if (mdRegEnabled) {
-                        //if metadata registration is enabled, but non-monash user is not supported
-                        //we still need to enable an admin to registration metadata
-                        if (!monUser && !mdRegNonLdapEnabled) {
-                            if ((user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
-                                mdRegEnabled = false;
-                            }
-                        }
-                    }
-                }
+                // populate the rifcs registration permission
+                mdRegEnabled = checkMetadataRegPerm();
                 // set page title and nav label
                 setNavAfterSuccess();
 
