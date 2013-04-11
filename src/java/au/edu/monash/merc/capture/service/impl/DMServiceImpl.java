@@ -67,6 +67,9 @@ public class DMServiceImpl implements DMService {
     private DatasetService datasetService;
 
     @Autowired
+    private CPermissionService cPermissionService;
+
+    @Autowired
     private PermissionService permissionService;
 
     @Autowired
@@ -113,6 +116,10 @@ public class DMServiceImpl implements DMService {
 
     public void setDatasetService(DatasetService datasetService) {
         this.datasetService = datasetService;
+    }
+
+    public void setcPermissionService(CPermissionService cPermissionService) {
+        this.cPermissionService = cPermissionService;
     }
 
     public void setPermissionService(PermissionService permissionService) {
@@ -492,6 +499,101 @@ public class DMServiceImpl implements DMService {
     }
 
     @Override
+    public void savePermission(CPermission permission) {
+        this.cPermissionService.savePermission(permission);
+    }
+
+    @Override
+    public CPermission getPermissionById(long id) {
+        return this.cPermissionService.getPermissionById(id);
+    }
+
+    @Override
+    public void updatePermission(CPermission permission) {
+        this.cPermissionService.updatePermission(permission);
+    }
+
+    @Override
+    public void mergePermission(CPermission permission) {
+        this.cPermissionService.mergePermission(permission);
+    }
+
+    @Override
+    public void deletePermission(CPermission permission) {
+        this.cPermissionService.deletePermission(permission);
+    }
+
+    @Override
+    public CPermission getUserCollectionPermission(long collectionId, long userId) {
+        return this.cPermissionService.getUserCollectionPermission(collectionId, userId);
+    }
+
+    @Override
+    public CPermission getAllRegUserCollectionPermission(long collectionId) {
+        return this.cPermissionService.getAllRegUserCollectionPermission(collectionId);
+    }
+
+    @Override
+    public CPermission getAnonymousCollectionPermission(long collectionId) {
+        return this.cPermissionService.getAnonymousCollectionPermission(collectionId);
+    }
+
+    @Override
+    public List<CPermission> getCollectionPermissions(long cid) {
+        return this.cPermissionService.getCollectionPermissions(cid);
+    }
+
+    @Override
+    public InheritPermissionBean getUserInheritPermission(long coId, long userId) {
+        return this.cPermissionService.getUserInheritPermission(coId, userId);
+    }
+
+    @Override
+    public void deletePermissionByPermId(long permissionId) {
+        this.cPermissionService.deletePermissionByPermId(permissionId);
+    }
+
+    @Override
+    public void deletePermissionsByCollectionId(long collectionId) {
+        this.cPermissionService.deletePermissionsByCollectionId(collectionId);
+    }
+
+    @Override
+    public List<CPermission> saveCollectionPermissions(AssignedPermissions assignedPerms) {
+        List<CPermission> grantedPerms = new ArrayList<CPermission>();
+        List<CPermission> permissionsUpdated = assignedPerms.getUpdatedPermissions();
+        List<CPermission> permissionsNew = assignedPerms.getNewPermissions();
+        List<Long> permissionsDeleted = assignedPerms.getDeletedPermissions();
+        //update the permissions
+        for (CPermission cperm : permissionsUpdated) {
+            this.updatePermission(cperm);
+            grantedPerms.add(cperm);
+        }
+        //delete the permissions
+        for (Long permId : permissionsDeleted) {
+            this.deletePermissionByPermId(permId);
+        }
+
+        for (CPermission cperm : permissionsNew) {
+            Long coId = cperm.getCollection().getId();
+            Long permUserId = cperm.getPermForUser().getId();
+            CPermission existedPerm = this.getUserCollectionPermission(coId, permUserId);
+            if (existedPerm == null) {
+                this.savePermission(cperm);
+                grantedPerms.add(cperm);
+            } else {
+                cperm.setId(existedPerm.getId());
+                this.mergePermission(cperm);
+                grantedPerms.add(cperm);
+            }
+        }
+        return grantedPerms;
+    }
+
+
+    //TODO to be removed
+
+    @Override
     public List<Permission> getUserCoPerms(long permForUsrId, long coId) {
         return this.permissionService.getUserCoPerms(permForUsrId, coId);
     }
@@ -566,10 +668,10 @@ public class DMServiceImpl implements DMService {
         deleteUserPermissionsByIds(assignedPerms.getDeletePermsIds());
     }
 
-    @Override
-    public List<Permission> getCollectionPermissions(long cid) {
-        return this.permissionService.getCollectionPermissions(cid);
-    }
+//    @Override
+//    public List<Permission> getCollectionPermissions(long cid) {
+//        return this.permissionService.getCollectionPermissions(cid);
+//    }
 
     @Override
     public void saveUserRequestedPerm(ManagablePerm<Permission> requestPermission, long permRequestId) {
@@ -680,12 +782,6 @@ public class DMServiceImpl implements DMService {
         this.mailService.sendMail(emailFrom, emailTo, emailSubject, templateValues, templateFile, isHtml);
     }
 
-
-    private Map<String, Object> popolatePartyTemplateMap() {
-
-        return null;
-    }
-
     @Override
     public void publishRifcs(MetadataRegistrationBean metadataRegistrationBean) {
         String destCollectionRifcsFile = null;
@@ -731,6 +827,8 @@ public class DMServiceImpl implements DMService {
             Map<String, Object> collectionTempValues = populateCollectionRifcsMap(metadataRegistrationBean, parties);
             this.rifcsService.createRifcs(uniqueKey, collectionTempValues, collectionRifTemp);
             destCollectionRifcsFile = rifcsStoreLocation + File.separator + uniqueKey + ".xml";
+
+            //party
             String noneRMPartyTemp = metadataRegistrationBean.getRifcsPartyTemplate();
             String rmPartyTemp = metadataRegistrationBean.getRifcsRMPartyTemplate();
             for (Party party : parties) {
@@ -763,13 +861,11 @@ public class DMServiceImpl implements DMService {
         Map<String, Object> templateMap = new HashMap<String, Object>();
         Collection collection = mdRegBean.getCollection();
         String serverName = mdRegBean.getAppName();
-        String groupName = mdRegBean.getRifcsGroupName();
         String localKey = collection.getUniqueKey();
         String identifier = collection.getPersistIdentifier();
         String collectionName = collection.getName();
         String collectionDesc = collection.getDescription();
         String collectionUrl = mdRegBean.getCollectionUrl();
-        String postalAddress = mdRegBean.getPhysicalAddress();
         String dateFrom = CaptureUtil.formateDateToW3CDTF(collection.getDateFrom());
         String dateTo = CaptureUtil.formateDateToW3CDTF(collection.getDateTo());
         Location location = null;
@@ -791,7 +887,7 @@ public class DMServiceImpl implements DMService {
 
         Licence licence = mdRegBean.getLicence();
         String licenceContents = licence.getContents();
-        templateMap.put("groupName", groupName);
+        //templateMap.put("groupName", groupName);
         //check if it's handle key, then we add the handle server url
         String keyId = identifier;
         if (identifier != null && StringUtils.contains(identifier, "/")) {
@@ -810,7 +906,7 @@ public class DMServiceImpl implements DMService {
 
         templateMap.put("collectionName", collectionName);
         templateMap.put("collectionUrl", collectionUrl);
-        templateMap.put("physicalAddress", postalAddress);
+
         //if location provided, then set the location
         if (location != null) {
             templateMap.put("location", location);

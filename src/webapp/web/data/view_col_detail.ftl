@@ -113,7 +113,7 @@
                 Contact Owner
             </a>
         </@s.if>
-        <@s.if test="%{permissionBean.editAllowed == true}">
+        <@s.if test="%{permissionBean.updateAllowed == true}">
             <a href="${base}/${showColEditLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}">
                 Edit
             </a>
@@ -134,18 +134,16 @@
                 Delete
             </a>
         </@s.if>
-        <@s.if test="%{permissionBean.changePermAllowed}">
+        <@s.if test="%{permissionBean.acAllowed}">
             <a href="${base}/${permissionLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}">
                 Permissions
             </a>
         </@s.if>
-        <@s.if test="%{mdRegEnabled}">
-            <@s.if test="%{collection.owner.id == user.id || user.userType == 1 || user.userType ==2}">
+        <@s.if test="%{permissionBean.mdRegAllowed}">
                 <a href="${base}/${andsMdRegLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}"
                    title="Public registration of the metadata associated with this collection with the Research Data Australia website">
                     <@s.text name="ands.md.registration.title" />
                 </a>
-            </@s.if>
         </@s.if>
     </div>
     <div style="clear: both;"></div>

@@ -83,7 +83,7 @@
                                 <@s.checkbox name="permReq.deleteAllowed" cssClass="check_box" disabled="true" />
                             </td>
                             <td>
-                                <@s.checkbox name="permReq.changePermAllowed" cssClass="check_box" disabled="true" />
+                                <@s.checkbox name="permReq.acAllowed" cssClass="check_box" disabled="true" />
                             </td>
                         </tr>
                         </tbody>

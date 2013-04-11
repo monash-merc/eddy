@@ -29,268 +29,217 @@ package au.edu.monash.merc.capture.struts2.action;
 
 public interface ActConstants {
 
-	static String SESSION_SECURITY_CODE = "security_code";
+    static String SESSION_SECURITY_CODE = "security_code";
 
-	static String SESSION_AUTHENTICATION_FLAG = "authentication_flag";
+    static String SESSION_AUTHENTICATION_FLAG = "authentication_flag";
 
-	static String SESSION_AUTHEN_USER_ID = "authen_user_id";
+    static String SESSION_AUTHEN_USER_ID = "authen_user_id";
 
-	static String SESSION_AUTHEN_USER_NAME = "authen_user_name";
+    static String SESSION_AUTHEN_USER_NAME = "authen_user_name";
 
-	static String SESSION_LOGIN = "authenticated";
+    static String SESSION_LOGIN = "authenticated";
 
-	static String REQUEST_URL = "request_url_path";
-	
-	static String SESSION_VIEW_PUBCO_FOR_LOGIN_USER = "view_pub_co_for_login_user";
-	
-	static String ANDS_SPATIAL_TYPE = "kmlPolyCoords";
+    static String REQUEST_URL = "request_url_path";
 
-    static String ANDS_SPATIAL_TEXT_TYPE = "text";
+    static String SEARCH_CONDITION_KEY = "search_condition_Key";
 
-    static String ANDS_SPATIAL_GLOBAL = "Global";
+    // For all logged in user - collection pagination
+    static String SESSION_VIEW_COLLECTION_PAGE_SIZE = "collection_page_size";
 
-	static String SEARCH_CONDITION_KEY = "search_condition_Key";
+    static String SESSION_VIEW_COLLECTION_ORDERBY = "collection_orderby";
 
-	static String ACTION_SUCCESS_MSG_TAG = "actionSuccessMsg";
+    static String SESSION_VIEW_COLLECTION_ORDERBY_TYPE = "collection_orderby_type";
 
-	static String DOWNLOAD_USER_DATASET_ACTION_NAME = "downloadDataset";
+    // For search pagination
+    static String SESSION_SEARCH_PAGE_SIZE = "search_page_size";
 
-	static String VIEW_USER_DATASET_ACTION_NAME = "viewDataset";
+    static String SESSION_SEARCH_ORDERBY = "search_orderby";
 
-	static String DELETE_USER_DATASET_ACTION_NAME = "deleteDataset";
-	
-	// For all logged in user - collection pagination
-	static String SESSION_VIEW_COLLECTION_PAGE_SIZE = "collection_page_size";
+    static String SESSION_SEARCH_ORDERBY_TYPE = "search_orderby_type";
 
-	static String SESSION_VIEW_COLLECTION_ORDERBY = "collection_orderby";
+    // For Events view pagination
+    static String SESSION_EVENTS_PAGE_SIZE = "event_page_size";
 
-	static String SESSION_VIEW_COLLECTION_ORDERBY_TYPE = "collection_orderby_type";
+    static String SESSION_EVENTS_ORDERBY = "event_page_orderby";
 
-	// For search pagination
-	static String SESSION_SEARCH_PAGE_SIZE = "search_page_size";
+    static String SESSION_EVENTS_ORDERBY_TYPE = "event_page_orderby_type";
 
-	static String SESSION_SEARCH_ORDERBY = "search_orderby";
+    // For Users view pagination
+    static String SESSION_USER_PAGE_SIZE = "user_page_size";
 
-	static String SESSION_SEARCH_ORDERBY_TYPE = "search_orderby_type";
+    static String SESSION_USER_ORDERBY = "user_page_orderby";
 
-	// For Events view pagination
-	static String SESSION_EVENTS_PAGE_SIZE = "event_page_size";
+    static String SESSION_USER_ORDERBY_TYPE = "user_page_orderby_type";
 
-	static String SESSION_EVENTS_ORDERBY = "event_page_orderby";
+    static String MANAGE_USER_ACTION_NAME = "admin/manageUser.jspx";
 
-	static String SESSION_EVENTS_ORDERBY_TYPE = "event_page_orderby_type";
+    static String HTTP_SCHEME = "http";
 
-	// For Users view pagination
-	static String SESSION_USER_PAGE_SIZE = "user_page_size";
+    static String HTTPS_SCHEME = "https";
 
-	static String SESSION_USER_ORDERBY = "user_page_orderby";
+    static String HTTP_SCHEME_DELIM = "://";
 
-	static String SESSION_USER_ORDERBY_TYPE = "user_page_orderby_type";
+    static String URL_PATH_DEIM = "/";
 
-	static String MANAGE_USER_ACTION_NAME = "admin/manageUser.jspx";
+    static String COLON_DEIM = ":";
 
-	static String HTTP_SCHEME = "http";
+    static String LAST_TIME_OF_DAY = " 23:59:59";
 
-	static String HTTPS_SCHEME = "https";
+    static String RESET_PWD_ACTION_NAME = "ResetPasswd";
 
-	static String HTTP_SCHEME_DELIM = "://";
+    static String ACTIVATION_ACTION_NAME = "activateAccount";
 
-	static String URL_PATH_DEIM = "/";
+    static int DEFAULT_SIZE_PER_PAGE = 10;
 
-	static String COLON_DEIM = ":";
-	
-	static String LAST_TIME_OF_DAY = " 23:59:59";
-	
-	static String RESET_PWD_ACTION_NAME = "ResetPasswd";
+    static String DEFAULT_ORDERBY_TYPE = "ASC";
 
-	static String ACTIVATION_ACTION_NAME = "activateAccount";
+    static String DESC_ORDERBY_TYPE = "DESC";
 
-	static int DEFAULT_SIZE_PER_PAGE = 10;
+    static String DATA_STORE_USER_ROOT_PREFIX = "uid_";
 
-	static String DEFAULT_ORDERBY = "name";
+    static int BRIEF_DESCRIPTION_MAX_LENGTH = 200;
 
-	static String DEFAULT_ORDERBY_TYPE = "ASC";
+    static String PAGINATION_SUFFUX = "?pageNo=";
 
-	static String DESC_ORDERBY_TYPE = "DESC";
+    // permission
+    static String SET_COLLECTION_PERMISSION_ACTION = "perm/showSetColPermissions.jspx";
 
-	static String DATA_STORE_USER_ROOT_PREFIX = "uid_";
+    static String VIEW_PERM_REQUESTS_ACTION = "perm/listPermRequests.jspx";
 
-	static int BRIEF_DESCRIPTION_MAX_LENGTH = 200;
+    static String SHOW_SEARCH_ACTION = "search/showSearch.jspx";
 
-	static String PAGINATION_SUFFUX = "?pageNo=";
+    static String SEARCH_ACTION = "search/search.jspx";
 
-	// permission
-	static String SET_COLLECTION_PERMISSION_ACTION = "perm/showSetColPermissions.jspx";
-	
-	static String VIEW_PERM_REQUESTS_ACTION = "perm/listPermRequests.jspx";
+    static String VIEW_COLLECTION_DETAILS_ACTION = "data/viewColDetails.jspx";
 
-	static String SHOW_SEARCH_ACTION = "search/showSearch.jspx";
+    static String SHOW_COLLECTION_EDIT_ACTION = "data/showEditCollection.jspx";
 
-	static String SEARCH_ACTION = "search/search.jspx";
+    static String COLLECTION_DELETE_ACTION = "data/deleteCollection.jspx";
 
-	static String VIEW_COLLECTION_DETAILS_ACTION = "data/viewColDetails.jspx";
+    static String DATASET_EXPORT_ACTION = "data/exportDataset.jspx";
 
-	static String SHOW_COLLECTION_EDIT_ACTION = "data/showEditCollection.jspx";
+    static String DATASET_VIEWDATA_ACTION = "data/viewDatasetData.jspx";
 
-	static String COLLECTION_DELETE_ACTION = "data/deleteCollection.jspx";
+    static String DATASET_DELETE_ACTION = "data/deleteDataset.jspx";
 
-	static String DATASET_EXPORT_ACTION = "data/exportDataset.jspx";
+    //ands metadata registration
+    static String ANDS_MD_REG_SHOW_ACTION = "data/showMdRegister.jspx";
 
-	static String DATASET_VIEWDATA_ACTION = "data/viewDatasetData.jspx";
+    // user collection
+    static String USER_LIST_COLLECTION_ACTION = "data/listUserCollections.jspx";
 
-	static String DATASET_DELETE_ACTION = "data/deleteDataset.jspx";
-	 
-	//ands metadata registration
-	static  String ANDS_MD_REG_SHOW_ACTION= "data/showMdRegister.jspx";
-	
-	static  String ANDS_MD_REG_SELECT_ACTIVITY_ACTION= "data/selectActivity.jspx";
-	
-	static  String ANDS_MD_REG_SELECT_RIGHTS_ACTION= "data/selectRights.jspx";
-	
-	static  String ANDS_MD_REG_PREVIEW_ACTION= "data/regPreview.jspx";
-	
-	static String ANDS_MD_REG_PARTY_RM_TYPE = "rm_party";
-	
-	static String ANDS_MD_REG_PARTY_RM_TYPE_LABEL = "Search a researcher from the Research Master Web Service";
-	
-	static String ANDS_MD_REG_PARTY_USER_DEFINED_TYPE = "user_defined_party";
-	
-	static String ANDS_MD_REG_PARTY_USER_DEFINED_TYPE_LABEL = "Manually Input a researcher information";
-	
-	// user collection
-	static String USER_LIST_COLLECTION_ACTION = "data/listUserCollections.jspx";
+    // list all user collections
+    static String LIST_ALL_COLLECTIONS_ACTION = "data/listAllCollections.jspx";
 
-	// list all user collections
-	static String LIST_ALL_COLLECTIONS_ACTION = "data/listAllCollections.jspx";
+    // public collection
+    static String PUB_LIST_COLLECTION_ACTION = "pub/listPubCollections.jspx";
 
-	// public collection
-	static String PUB_LIST_COLLECTION_ACTION = "pub/listPubCollections.jspx";
+    static String PUB_VIEW_COLLECTION_DETAILS_ACTION = "pub/viewColDetails.jspx";
 
-	static String PUB_VIEW_COLLECTION_DETAILS_ACTION = "pub/viewColDetails.jspx";
+    static String PUB_DATASET_EXPORT_ACTION = "pub/exportDataset.jspx";
 
-	static String PUB_DATASET_EXPORT_ACTION = "pub/exportDataset.jspx";
+    static String PUB_DATASET_VIEWDATA_ACTION = "pub/viewDatasetData.jspx";
 
-	static String PUB_DATASET_VIEWDATA_ACTION = "pub/viewDatasetData.jspx";
+    static String LIST_ALL_USERS_ACTION = "admin/listUsers.jspx";
 
-	static String LIST_ALL_USERS_ACTION = "admin/listUsers.jspx";
+    static String LIST_USER_EVENTS_ACTION = "admin/listUserEvents.jspx";
 
-	static String LIST_USER_EVENTS_ACTION = "admin/listUserEvents.jspx";
+    static String DELETE_USER_EVENT_ACTION = "admin/deleteUserEvent.jspx";
 
-	static String DELETE_USER_EVENT_ACTION = "admin/deleteUserEvent.jspx";
-
-	static String DISPLAY_USER_HOME_ACTION = "admin/displayUserHome.jspx";
+    static String DISPLAY_USER_HOME_ACTION = "admin/displayUserHome.jspx";
 
     static String LICENCE_TERN_LABEL = "TERN Licence (Recommended)";
 
     static String LICENCE_USER_DEFINED_LABEL = "Define Your Own Licence";
 
-    //TODO: to be removed
-	static String RIGHTS_CCCL_TYPE = "cccl_license";
-	
-	static String RIGHTS_CCPD_TYPE = "ccpd_license";
-	
-	static String RIGHTS_USEROWNER_TYPE = "user_license";
-	
-	static String RIGHTS_CCCL_LABEL = "Creative Commons Copyright License (Recommended)";
-	
-	static String RIGHTS_CCPD_LABEL = "Creative Commons Public Domain CC0";
-	
-	static String RIGHTS_USEROWNER_LABEL = "Define Your Own License";
-	
-	static String COMMERCIAL_ID = "commercial";
-	
-	static String DERIVATIVEs_ID = "derivatives"; 
-	
-	static String JURISDICTION_ID = "jurisdiction";
+    public static enum UserViewType {
+        USER("user"), ALL("all"), ANONYMOUS("anonymous");
 
-	public static enum UserViewType {
-		USER("user"), ALL("all"), ANONYMOUS("anonymous");
+        private String type;
 
-		private String type;
+        UserViewType(String type) {
+            this.type = type;
+        }
 
-		UserViewType(String type) {
-			this.type = type;
-		}
+        public String viewType() {
+            return type;
+        }
 
-		public String viewType() {
-			return type;
-		}
+        public String toString() {
+            switch (this) {
+                case USER:
+                    return "user";
+                case ALL:
+                    return "all";
+                case ANONYMOUS:
+                    return "anonymous";
+                default:
+                    return "anonymous";
 
-		public String toString() {
-			switch (this) {
-			case USER:
-				return "user";
-			case ALL:
-				return "all";
-			case ANONYMOUS:
-				return "anonymous";
-			default:
-				return "anonymous";
+            }
+        }
 
-			}
-		}
+    }
 
-	}
+    public static enum OrderByActionType {
+        USER("user"), CO("co"), EVENT("event"), SEARCHCO("searchco"), SEARCHDS("searchds");;
+        private String type;
 
-	public static enum OrderByActionType {
-		USER("user"), CO("co"), EVENT("event"), SEARCHCO("searchco"),SEARCHDS("searchds");;
-		private String type;
+        OrderByActionType(String type) {
+            this.type = type;
+        }
 
-		OrderByActionType(String type) {
-			this.type = type;
-		}
+        public String actionType() {
+            return this.type;
+        }
 
-		public String actionType() {
-			return this.type;
-		}
+        public String toString() {
+            switch (this) {
+                case USER:
+                    return "user";
+                case CO:
+                    return "co";
+                case EVENT:
+                    return "event";
+                case SEARCHCO:
+                    return "searchco";
+                case SEARCHDS:
+                    return "searchds";
+                default:
+                    return "co";
 
-		public String toString() {
-			switch (this) {
-			case USER:
-				return "user";
-			case CO:
-				return "co";
-			case EVENT:
-				return "event";
-			case SEARCHCO:
-				return "searchco";
-			case SEARCHDS:
-				return "searchds";
-			default:
-				return "co";
+            }
+        }
 
-			}
-		}
+    }
 
-	}
+    public static enum ManageType {
+        ACTIVATE("activate"), DEACTIVATE("deactivate"), SETASADMIN("setasadmin"), SETASUSER("setasuser");
 
-	public static enum ManageType {
-		ACTIVATE("activate"), DEACTIVATE("deactivate"), SETASADMIN("setasadmin"), SETASUSER("setasuser");
+        private String type;
 
-		private String type;
+        ManageType(String manageType) {
+            this.type = manageType;
+        }
 
-		ManageType(String manageType) {
-			this.type = manageType;
-		}
+        public String manageType() {
+            return this.type;
+        }
 
-		public String manageType() {
-			return this.type;
-		}
+        public String toString() {
+            switch (this) {
+                case ACTIVATE:
+                    return "activate";
+                case DEACTIVATE:
+                    return "deactivate";
+                case SETASADMIN:
+                    return "setasadmin";
+                case SETASUSER:
+                    return "setasuser";
+                default:
+                    return "activate";
 
-		public String toString() {
-			switch (this) {
-			case ACTIVATE:
-				return "activate";
-			case DEACTIVATE:
-				return "deactivate";
-			case SETASADMIN:
-				return "setasadmin";
-			case SETASUSER:
-				return "setasuser";
-			default:
-				return "activate";
-
-			}
-		}
-	}
+            }
+        }
+    }
 }

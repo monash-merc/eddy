@@ -32,7 +32,6 @@ import java.util.List;
 import au.edu.monash.merc.capture.common.CoverageType;
 import au.edu.monash.merc.capture.common.SpatialValue;
 import au.edu.monash.merc.capture.domain.Location;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -51,7 +50,7 @@ public class ShowEditColAction extends DMCoreAction {
 
     public String showEditCollection() {
         try {
-            checkUserPermissions(collection.getId(), collection.getOwner().getId());
+            permissionBean = checkPermission(collection.getId(), collection.getOwner().getId());
         } catch (Exception e) {
             logger.error(e);
             addFieldError("checkPermission", getText("check.permissions.error"));
@@ -59,13 +58,11 @@ public class ShowEditColAction extends DMCoreAction {
             return ERROR;
         }
         try {
-            if (!permissionBean.isEditAllowed()) {
+            if (!permissionBean.isUpdateAllowed()) {
                 addFieldError("updatePermission", getText("show.collection.update.page.permission.denied"));
                 setNavAfterException();
                 return ERROR;
             }
-            // List<Permission> permissions = this.dmService.getCollectionDefaultPerms(collection.getId());
-
             collection = this.dmService.getCollection(collection.getId(), collection.getOwner().getId());
             if (collection != null) {
                 // populate the user object
@@ -104,16 +101,6 @@ public class ShowEditColAction extends DMCoreAction {
             return ERROR;
         }
         return SUCCESS;
-    }
-
-    private boolean checkIsPrivateCo(List<Permission> permissions) {
-
-        for (Permission perm : permissions) {
-            if (perm.isViewAllowed()) {
-                return false;
-            }
-        }
-        return true;
     }
 
     protected void setNavAfterException() {

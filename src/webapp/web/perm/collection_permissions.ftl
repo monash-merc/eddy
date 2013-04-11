@@ -75,7 +75,7 @@
                 </div>
 
                 <div class="content_none_border_div">
-                    <div class="content_title">Permissions</div>
+                    <div class="content_title">Granted Permissions</div>
                 </div>
 
                 <div class="none_border_block">
@@ -98,93 +98,109 @@
                     <table class="display_data_tab" id="user_permissions">
                         <thead>
                         <tr>
-                            <th width="35%">User Name</th>
+                            <th width="30%">User Name</th>
                             <th width="10%">View</th>
-                            <th width="10%">Edit</th>
-                            <th width="10%">Import</th>
                             <th width="10%">Export</th>
+                            <th width="10%">Import</th>
+                            <th width="10%">RA Control</th>
+                            <th width="10%">Edit</th>
                             <th width="10%">Delete</th>
-                            <th width="15%">Access Control</th>
+                            <th width="10%">Access Control</th>
                         </tr>
                         <tr>
                             <td>
-                                All anonymous users
-                                <@s.hidden name="coPermForAnony.id"  />
-                                <@s.hidden name="coPermForAnony.uid" />
-                                <@s.hidden name="coPermForAnony.userName" />
+                                Anonymous user group
+                                <@s.hidden name="anonymousePerm.id"  />
+                                <@s.hidden name="anonymousePerm.uid" />
+                                <@s.hidden name="anonymousePerm.userName" />
                             </td>
                             <td>
-                                <@s.checkbox name="coPermForAnony.viewAllowed"  cssClass="check_box"/>
+                                <@s.hidden name="anonymousePerm.viewAllowed" />
+                                <@s.checkbox name="displayViewAllowed"  cssClass="check_box" disabled ="true" checked="checked"/>
                             </td>
                             <td>
-                                <@s.hidden name="coPermForAnony.editAllowed" />
+                                <@s.checkbox name="anonymousePerm.exportAllowed" cssClass="check_box" />
                             </td>
                             <td>
-                                <@s.hidden name="coPermForAnony.importAllowed" />
+                                <@s.hidden name="anonymousePerm.importAllowed" />
                             </td>
                             <td>
-                                <@s.checkbox name="coPermForAnony.exportAllowed" cssClass="check_box"/>
+                                <@s.hidden name="anonymousePerm.racAllowed" />
                             </td>
                             <td>
-                                <@s.hidden name="coPermForAnony.deleteAllowed" />
+                                <@s.hidden name="anonymousePerm.updateAllowed" />
                             </td>
                             <td>
-                                <@s.hidden name="coPermForAnony.changePermAllowed" />
+                                <@s.hidden name="anonymousePerm.deleteAllowed" />
+                            </td>
+                            <td>
+                                <@s.hidden name="anonymousePerm.acAllowed" />
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                All registered users
-                                <@s.hidden name="coPermForAllUser.id" />
-                                <@s.hidden name="coPermForAllUser.uid" />
-                                <@s.hidden name="coPermForAllUser.userName" />
+                                Registered user group
+                                <@s.hidden name="allRegUserPerm.id" />
+                                <@s.hidden name="allRegUserPerm.uid" />
+                                <@s.hidden name="allRegUserPerm.userName" />
                             </td>
                             <td>
-                                <@s.checkbox name="coPermForAllUser.viewAllowed" cssClass="check_box" />
+                                <@s.hidden name="allRegUserPerm.viewAllowed" />
+                                <@s.checkbox name="displayViewAllowed"  cssClass="check_box" disabled ="true" checked="checked"/>
                             </td>
                             <td>
-                                <@s.checkbox name="coPermForAllUser.editAllowed" cssClass="check_box"/>
+                                <@s.checkbox name="allRegUserPerm.exportAllowed" cssClass="check_box" />
                             </td>
                             <td>
-                                <@s.checkbox name="coPermForAllUser.importAllowed" cssClass="check_box" />
+                                <@s.hidden name="allRegUserPerm.importAllowed" />
                             </td>
                             <td>
-                                <@s.checkbox name="coPermForAllUser.exportAllowed" cssClass="check_box" />
+                                <@s.hidden name="allRegUserPerm.racAllowed" />
                             </td>
                             <td>
-                                <@s.checkbox name="coPermForAllUser.deleteAllowed" cssClass="check_box"/>
+                                <@s.hidden name="allRegUserPerm.updateAllowed" />
                             </td>
                             <td>
-                                <@s.checkbox name="coPermForAllUser.changePermAllowed" cssClass="check_box"/>
+                                <@s.hidden name="allRegUserPerm.deleteAllowed" />
                             </td>
+                            <td>
+                                <@s.hidden name="allRegUserPerm.acAllowed" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="8">&nbsp;</td>
                         </tr>
                         </thead>
                         <tbody>
-                            <@s.iterator status="permStatus" value="permissionBeans" id="permBean" >
+                            <@s.iterator status="permStatus" value="regUserPerms" id="permBean" >
                             <tr>
                                 <td>
                                     <@s.property  value="#permBean.userName" />
-                                    <@s.hidden name="permissionBeans[%{#permStatus.index}].id"  value="%{#permBean.id}" />
-                                    <@s.hidden name="permissionBeans[%{#permStatus.index}].uid" id ="user_id" value="%{#permBean.uid}" />
-                                    <@s.hidden name="permissionBeans[%{#permStatus.index}].userName" value="%{#permBean.userName}" />
+                                    <@s.hidden name="regUserPerms[%{#permStatus.index}].id"  value="%{#permBean.id}" />
+                                    <@s.hidden name="regUserPerms[%{#permStatus.index}].uid" id ="user_id" value="%{#permBean.uid}" />
+                                    <@s.hidden name="regUserPerms[%{#permStatus.index}].userName" value="%{#permBean.userName}" />
                                 </td>
                                 <td>
-                                    <@s.checkbox name="permissionBeans[%{#permStatus.index}].viewAllowed" cssClass="check_box" />
+                                    <@s.hidden name="regUserPerms[%{#permStatus.index}].viewAllowed"/>
+                                    <@s.checkbox name="displayViewAllowed" cssClass="check_box" disabled ="true" checked="checked"/>
                                 </td>
                                 <td>
-                                    <@s.checkbox name="permissionBeans[%{#permStatus.index}].editAllowed" cssClass="check_box"/>
+                                    <@s.checkbox name="regUserPerms[%{#permStatus.index}].exportAllowed" cssClass="check_box"/>
                                 </td>
                                 <td>
-                                    <@s.checkbox name="permissionBeans[%{#permStatus.index}].importAllowed" cssClass="check_box"/>
+                                    <@s.checkbox name="regUserPerms[%{#permStatus.index}].importAllowed" cssClass="check_box"/>
                                 </td>
                                 <td>
-                                    <@s.checkbox name="permissionBeans[%{#permStatus.index}].exportAllowed" cssClass="check_box"/>
+                                    <@s.checkbox name="regUserPerms[%{#permStatus.index}].racAllowed" cssClass="check_box"/>
                                 </td>
                                 <td>
-                                    <@s.checkbox name="permissionBeans[%{#permStatus.index}].deleteAllowed" cssClass="check_box"/>
+                                    <@s.checkbox name="regUserPerms[%{#permStatus.index}].updateAllowed" cssClass="check_box"/>
                                 </td>
                                 <td>
-                                    <@s.checkbox name="permissionBeans[%{#permStatus.index}].changePermAllowed" cssClass="check_box"/>
+                                    <@s.checkbox name="regUserPerms[%{#permStatus.index}].deleteAllowed" cssClass="check_box"/>
+                                </td>
+                                <td>
+                                    <@s.checkbox name="regUserPerms[%{#permStatus.index}].acAllowed" cssClass="check_box"/>
                                 </td>
                             </tr>
                             </@s.iterator>

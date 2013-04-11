@@ -84,29 +84,9 @@
 					<td><@s.textfield name="appProp.securityHashSeq" cssClass="install_input_field" /></td>
 					<td><div class="name_comment">* The security hash sequence</div></td>
 				</tr>
-				<tr>
-					<td>Googel Map API Key: </td>
-					<td><@s.textfield name="appProp.googleApiKey" cssClass="install_input_field" /></td>
-					<td><div class="name_comment">* The Google Map API Key for using the Google Map</div></td>
-				</tr>
 			</table>
 		</div>
-		<div class="p_title"><b>Stage Transfer Settings</b></div>
-		<div class="main_install_inner">
-			<table>
-				<tr>
-					<td width="250">Stage Transfer Enabled: </td>
-					<td><@s.select name="appProp.stageEnabled"  list="trueFalseMap" cssClass="input_select_normal"  /></td>
-					<td><div class="name_comment">* Select it if stage transfer enabled</div></td>
-				</tr>
-				
-				<tr>
-					<td>Staging Location: </td>
-					<td><@s.textfield name="appProp.stageLocation" cssClass="install_input_field" /></td>
-					<td><div class="name_comment">* The stagging location</div></td>
-				</tr>
-			</table>
-		</div>
+
 		<div class="p_title"><b>ANDS Metadata Registration Settings</b></div>
 		<div class="main_install_inner">
 			<table>	

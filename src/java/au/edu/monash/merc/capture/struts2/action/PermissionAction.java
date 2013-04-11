@@ -32,17 +32,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import au.edu.monash.merc.capture.domain.*;
 import au.edu.monash.merc.capture.dto.ManagablePerm;
 import au.edu.monash.merc.capture.dto.ManagablePermType;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import au.edu.monash.merc.capture.domain.Collection;
-import au.edu.monash.merc.capture.domain.PermType;
-import au.edu.monash.merc.capture.domain.Permission;
-import au.edu.monash.merc.capture.domain.User;
-import au.edu.monash.merc.capture.domain.UserType;
 import au.edu.monash.merc.capture.dto.AssignedPermissions;
 import au.edu.monash.merc.capture.dto.PermissionBean;
 
@@ -52,11 +48,11 @@ public class PermissionAction extends DMCoreAction {
 
     private Map<Long, String> activeUsers = new HashMap<Long, String>();
 
-    private List<PermissionBean> permissionBeans = new ArrayList<PermissionBean>();
+    private List<PermissionBean> regUserPerms = new ArrayList<PermissionBean>();
 
-    private PermissionBean coPermForAllUser;
+    private PermissionBean allRegUserPerm;
 
-    private PermissionBean coPermForAnony;
+    private PermissionBean anonymousePerm;
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
@@ -67,8 +63,8 @@ public class PermissionAction extends DMCoreAction {
      */
     public String showSetColPermissions() {
         try {
-            checkUserPermissions(collection.getId(), collection.getOwner().getId());
-            if (!permissionBean.isChangePermAllowed()) {
+            permissionBean = checkPermission(collection.getId(), collection.getOwner().getId());
+            if (!permissionBean.isAcAllowed()) {
                 addActionError(getText("collection.change.permissions.denied"));
                 // set page title and action navigation label.
                 setNavAfterException();
@@ -80,15 +76,15 @@ public class PermissionAction extends DMCoreAction {
                 // populate all active users
                 populateFilteredUserNames(ownerId);
 
-                // get all permission from the database
-                List<Permission> permissions = this.dmService.getCollectionPermissions(collection.getId());
+                //get all permissions for this collection
+                List<CPermission> permissions = this.dmService.getCollectionPermissions(collection.getId());
 
-                // populate the collection permissions
-                copyCoPermsToPermissionBean(permissions);
-
+                //copy the permissions into permission beans
+                copyPermissionsToPermissionBeans(permissions);
+                System.out.println("=================== start to check existed permissions: ");
+                printGrantedPermissions();
                 // set view collection details link
                 setViewColDetailsLink();
-
                 // set page title and action navigation label.
                 setNavAfterSuccess();
             } else {
@@ -130,8 +126,7 @@ public class PermissionAction extends DMCoreAction {
         String startNav = null;
         String startNavLink = null;
         String secondNav = collection.getName();
-        String secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="
-                + collection.getOwner().getId() + "&viewType=" + viewType;
+        String secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id=" + collection.getOwner().getId() + "&viewType=" + viewType;
 
         String thirdNav = getText("change.collection.permission.nav.label.name");
         if (viewType != null) {
@@ -150,46 +145,26 @@ public class PermissionAction extends DMCoreAction {
         }
     }
 
-    // Copy the Permissions to PermissionBean for editing in the web gui
-    private void copyCoPermsToPermissionBean(List<Permission> permissions) {
-        coPermForAllUser = new PermissionBean();
-        coPermForAnony = new PermissionBean();
-        permissionBeans.clear();
-        for (Permission perm : permissions) {
+    private void copyPermissionsToPermissionBeans(List<CPermission> permissions) {
+        allRegUserPerm = new PermissionBean();
+        anonymousePerm = new PermissionBean();
+        regUserPerms.clear();
+        for (CPermission perm : permissions) {
             // get default permissions for all-registered user
             if (perm.getPermType().equals(PermType.ALLREGUSER.code())) {
-                coPermForAllUser.setId(perm.getId());
-                coPermForAllUser.setUserName(perm.getPermissionForUser().getDisplayName());
-                coPermForAllUser.setUid(perm.getPermissionForUser().getId());
-                coPermForAllUser.setViewAllowed(perm.isViewAllowed());
-                coPermForAllUser.setEditAllowed(perm.isUpdateAllowed());
-                coPermForAllUser.setImportAllowed(perm.isImportAllowed());
-                coPermForAllUser.setExportAllowed(perm.isExportAllowed());
-                coPermForAllUser.setDeleteAllowed(perm.isDeleteAllowed());
-                coPermForAllUser.setChangePermAllowed(perm.isChangePermAllowed());
-                // get default permission for anonymous user
-            } else if (perm.getPermType().equals(PermType.ANONYMOUS.code())) {
-                coPermForAnony.setId(perm.getId());
-                coPermForAnony.setUserName(perm.getPermissionForUser().getDisplayName());
-                coPermForAnony.setUid(perm.getPermissionForUser().getId());
-                coPermForAnony.setViewAllowed(perm.isViewAllowed());
-                coPermForAnony.setEditAllowed(perm.isUpdateAllowed());
-                coPermForAnony.setImportAllowed(perm.isImportAllowed());
-                coPermForAnony.setExportAllowed(perm.isExportAllowed());
-                coPermForAnony.setDeleteAllowed(perm.isDeleteAllowed());
-                coPermForAnony.setChangePermAllowed(perm.isChangePermAllowed());
-            } else {// get all permission for individual users
-                PermissionBean mp = new PermissionBean();
-                mp.setId(perm.getId());
-                mp.setUid(perm.getPermissionForUser().getId());
-                mp.setUserName(perm.getPermissionForUser().getDisplayName());
-                mp.setViewAllowed(perm.isViewAllowed());
-                mp.setEditAllowed(perm.isUpdateAllowed());
-                mp.setImportAllowed(perm.isImportAllowed());
-                mp.setExportAllowed(perm.isExportAllowed());
-                mp.setDeleteAllowed(perm.isDeleteAllowed());
-                mp.setChangePermAllowed(perm.isChangePermAllowed());
-                permissionBeans.add(mp);
+                //copy the allregistered user permissions
+                allRegUserPerm = copyPermissionToPermissionBean(perm);
+            }
+
+            if (perm.getPermType().equals(PermType.ANONYMOUS.code())) {
+                //copy anonymous user permissions
+                anonymousePerm = copyPermissionToPermissionBean(perm);
+            }
+
+            if (perm.getPermType().equals(PermType.REGISTERED.code())) {
+                //copy the individual registered user permissions
+                PermissionBean individualPerm = copyPermissionToPermissionBean(perm);
+                regUserPerms.add(individualPerm);
             }
         }
     }
@@ -201,8 +176,8 @@ public class PermissionAction extends DMCoreAction {
      */
     public String setColPermissions() {
         try {
-            checkUserPermissions(collection.getId(), collection.getOwner().getId());
-            if (!permissionBean.isChangePermAllowed()) {
+            permissionBean = checkPermission(collection.getId(), collection.getOwner().getId());
+            if (!permissionBean.isAcAllowed()) {
                 addActionError(getText("collection.change.permissions.denied"));
                 // set page title and action navigation label.
                 setNavAfterException();
@@ -213,15 +188,14 @@ public class PermissionAction extends DMCoreAction {
             if (collection != null) {
                 populateFilteredUserNames(ownerId);
 
-                // get all permission from the database
-                List<Permission> permissions = this.dmService.getCollectionPermissions(collection.getId());
+                //printGrantedPermissions();
+                AssignedPermissions assignedPermissions = grantCollectionPermissions(collection);
 
-                AssignedPermissions assignedPerms = manageAssignedPerms(collection, permissions);
+                //save the granted permissions
+                List<CPermission> grantedPermissions = this.dmService.saveCollectionPermissions(assignedPermissions);
 
-                this.dmService.setCollectionPermissions(assignedPerms);
-
-                List<Permission> updatedPerms = this.dmService.getCollectionPermissions(collection.getId());
-                copyCoPermsToPermissionBean(updatedPerms);
+                //copy the permissions into permission beans
+                copyPermissionsToPermissionBeans(grantedPermissions);
 
                 setViewColDetailsLink();
                 // set action successful message
@@ -244,213 +218,276 @@ public class PermissionAction extends DMCoreAction {
         return SUCCESS;
     }
 
-    // manage the owner assigned permissions, and prepare to persist
-    private AssignedPermissions manageAssignedPerms(Collection col, List<Permission> existedPermissions) {
-        List<Permission> newPermissions = new ArrayList<Permission>();
-        List<Permission> updatePermissions = new ArrayList<Permission>();
-        List<Long> deletePermissionIds = new ArrayList<Long>();
 
-        AssignedPermissions assignPms = new AssignedPermissions();
+    private CPermission copyPermissionBeanToPermission(Collection col, PermissionBean pmBean, String permType) {
+        CPermission permission = new CPermission();
 
-        // the permissions for all-registered-user will inherited the permissions from the anonymous
-        if (coPermForAnony.isViewAllowed()) {
-            coPermForAllUser.setViewAllowed(true);
-        }
-        if (coPermForAnony.isEditAllowed()) {
-            coPermForAllUser.setEditAllowed(true);
-        }
-        if (coPermForAnony.isImportAllowed()) {
-            coPermForAllUser.setImportAllowed(true);
-        }
-        if (coPermForAnony.isExportAllowed()) {
-            coPermForAllUser.setExportAllowed(true);
-        }
-        if (coPermForAnony.isDeleteAllowed()) {
-            coPermForAllUser.setDeleteAllowed(true);
-        }
-        if (coPermForAnony.isChangePermAllowed()) {
-            coPermForAllUser.setChangePermAllowed(true);
-        }
+        if (pmBean != null) {
+            permission.setPermType(permType);
+            permission.setId(pmBean.getId());
+            long uid = pmBean.getUid();
+            //get an user for this permission based on an user id
+            User permForUser = this.userService.getUserById(uid);
+            permission.setPermForUser(permForUser);
 
-        for (PermissionBean pm : permissionBeans) {
-            // inherited the permissions from anonymous user
-            if (coPermForAnony.isViewAllowed()) {
-                pm.setViewAllowed(true);
-            }
-            if (coPermForAnony.isEditAllowed()) {
-                pm.setEditAllowed(true);
-            }
-            if (coPermForAnony.isImportAllowed()) {
-                pm.setImportAllowed(true);
-            }
-            if (coPermForAnony.isExportAllowed()) {
-                pm.setExportAllowed(true);
-            }
-            if (coPermForAnony.isDeleteAllowed()) {
-                pm.setDeleteAllowed(true);
-            }
-            if (coPermForAnony.isChangePermAllowed()) {
-                pm.setChangePermAllowed(true);
+            //set the permission collection
+            permission.setCollection(col);
+
+            boolean viewAllowed = pmBean.isViewAllowed();
+            if (viewAllowed) {
+                permission.setViewAllowed(1);
+            } else {
+                permission.setViewAllowed(0);
             }
 
-            ManagablePerm<PermissionBean> managablePerm = new ManagablePerm<PermissionBean>();
-            managablePerm.setPerm(pm);
-
-            ManagablePerm mPerm = sortAssignedPermBean(managablePerm, coPermForAllUser, coPermForAnony);
-
-            if (mPerm != null) {
-                Permission perm = new Permission();
-                PermissionBean pmb = (PermissionBean) mPerm.getPerm();
-                perm.setId(pmb.getId());
-                long uid = pmb.getUid();
-                User u = this.userService.getUserById(uid);
-                perm.setPermissionForUser(u);
-                perm.setViewAllowed(pmb.isViewAllowed());
-                perm.setUpdateAllowed(pmb.isEditAllowed());
-                perm.setImportAllowed(pmb.isImportAllowed());
-                perm.setExportAllowed(pmb.isExportAllowed());
-                perm.setDeleteAllowed(pmb.isDeleteAllowed());
-                perm.setChangePermAllowed(pmb.isChangePermAllowed());
-                perm.setPermType(PermType.REGISTERED.code());
-                perm.setCollection(col);
-
-                if (mPerm.getManagablePermType().equals(ManagablePermType.DELETE)) {
-                    deletePermissionIds.add(perm.getId());
-                }
-                if (mPerm.getManagablePermType().equals(ManagablePermType.NEW)) {
-                    perm.setId(0);
-                    newPermissions.add(perm);
-                }
-                if (mPerm.getManagablePermType().equals(ManagablePermType.UPDATE)) {
-                    updatePermissions.add(perm);
-                }
+            boolean importAllowed = pmBean.isImportAllowed();
+            if (importAllowed) {
+                permission.setImportAllowed(1);
+            } else {
+                permission.setImportAllowed(0);
             }
 
+            boolean exportAllowed = pmBean.isExportAllowed();
+            if (exportAllowed) {
+                permission.setExportAllowed(1);
+            } else {
+                permission.setExportAllowed(0);
+            }
+
+            boolean racAllowed = pmBean.isRacAllowed();
+            if (racAllowed) {
+                permission.setRacAllowed(1);
+            } else {
+                permission.setRacAllowed(0);
+            }
+
+            boolean updateAllowed = pmBean.isUpdateAllowed();
+            if (updateAllowed) {
+                permission.setUpdateAllowed(1);
+            } else {
+                permission.setUpdateAllowed(0);
+            }
+
+            boolean deleteAllowed = pmBean.isDeleteAllowed();
+            if (deleteAllowed) {
+                permission.setDeleteAllowed(1);
+            } else {
+                permission.setDeleteAllowed(0);
+            }
+
+            boolean mdRegAllowed = pmBean.isMdRegAllowed();
+            if (mdRegAllowed) {
+                permission.setMdRegisterAllowed(1);
+            } else {
+                permission.setMdRegisterAllowed(0);
+            }
+
+            boolean acAllowed = pmBean.isAcAllowed();
+            if (acAllowed) {
+                permission.setAcAllowed(1);
+            } else {
+                permission.setAcAllowed(0);
+            }
         }
-        // update all registered user permissions
-        Permission allRegUserPm = new Permission();
-        //set the existed permission id
-        allRegUserPm.setId(coPermForAllUser.getId());
-
-        if (allRegUser == null) {
-            long usrid = coPermForAllUser.getUid();
-            allRegUser = this.userService.getUserById(usrid);
-        }
-        allRegUserPm.setPermissionForUser(allRegUser);
-        allRegUserPm.setViewAllowed(coPermForAllUser.isViewAllowed());
-        allRegUserPm.setUpdateAllowed(coPermForAllUser.isEditAllowed());
-        allRegUserPm.setImportAllowed(coPermForAllUser.isImportAllowed());
-        allRegUserPm.setExportAllowed(coPermForAllUser.isExportAllowed());
-        allRegUserPm.setDeleteAllowed(coPermForAllUser.isDeleteAllowed());
-        allRegUserPm.setChangePermAllowed(coPermForAllUser.isChangePermAllowed());
-        allRegUserPm.setPermType(PermType.ALLREGUSER.code());
-        allRegUserPm.setCollection(col);
-        updatePermissions.add(allRegUserPm);
-
-        // update the anonymous permissions
-        Permission anonyUserPm = new Permission();
-        anonyUserPm.setId(coPermForAnony.getId());
-        if (anonymous == null) {
-            long usrid = coPermForAnony.getUid();
-            anonymous = this.userService.getUserById(usrid);
-        }
-        anonyUserPm.setPermissionForUser(anonymous);
-        anonyUserPm.setViewAllowed(coPermForAnony.isViewAllowed());
-        anonyUserPm.setUpdateAllowed(coPermForAnony.isEditAllowed());
-        anonyUserPm.setImportAllowed(coPermForAnony.isImportAllowed());
-        anonyUserPm.setExportAllowed(coPermForAnony.isExportAllowed());
-        anonyUserPm.setDeleteAllowed(coPermForAnony.isDeleteAllowed());
-        anonyUserPm.setChangePermAllowed(coPermForAnony.isChangePermAllowed());
-        anonyUserPm.setPermType(PermType.ANONYMOUS.code());
-        anonyUserPm.setCollection(col);
-        updatePermissions.add(anonyUserPm);
-
-        assignPms.setPermissionsNew(newPermissions);
-        assignPms.setPermissionsUpdate(updatePermissions);
-        assignPms.setDeletePermsIds(deletePermissionIds);
-
-        return assignPms;
+        return permission;
     }
 
-    private ManagablePerm<PermissionBean> sortAssignedPermBean(ManagablePerm<PermissionBean> managablePerm, PermissionBean allUserPerm, PermissionBean anonyPerm) {
-        //get the individual permission bean.
-        PermissionBean perm = managablePerm.getPerm();
-        // If none permission is allowed for the all-registered-user, the anonymous user and this individual user:
-        // a). If this individual user permission is new, we just ignore it. as it's the same as the permissions
-        // for the all-registered-user and the anonymous user.
-        // b). If this individual user permission already existed, we have to remove it.
-        if (anonyPerm.isNonePerm() && allUserPerm.isNonePerm() && perm.isNonePerm()) {
-            if (perm.getId() == 0) {
-                managablePerm.setManagablePermType(ManagablePermType.IGNORE);
-            } else {
-                managablePerm.setManagablePermType(ManagablePermType.DELETE);
-            }
-            return managablePerm;
+    private void printGrantedPermissions() {
+        System.out.println("===== anonymous permission id: " + anonymousePerm.getId());
+        System.out.println("===== anonymous uid: " + anonymousePerm.getUid());
+        System.out.println("===== anonymous view allowed: " + anonymousePerm.isViewAllowed());
+        System.out.println("===== anonymous import  allowed: " + anonymousePerm.isImportAllowed());
+        System.out.println("===== anonymous export allowed: " + anonymousePerm.isExportAllowed());
+        System.out.println("===== anonymous update allowed: " + anonymousePerm.isUpdateAllowed());
+        System.out.println("===== anonymous delete allowed: " + anonymousePerm.isDeleteAllowed());
+        System.out.println("===== anonymous ra control allowed: " + anonymousePerm.isRacAllowed());
+        System.out.println("===== anonymous access control allowed: " + anonymousePerm.isAcAllowed());
+        System.out.println("===== anonymous mdreg allowed: " + anonymousePerm.isMdRegAllowed());
+        System.out.println("");
+
+        System.out.println("===== allRegisteredUser permission id: " + allRegUserPerm.getId());
+        System.out.println("===== allRegisteredUser uid: " + allRegUserPerm.getUid());
+        System.out.println("===== allRegisteredUser view allowed: " + allRegUserPerm.isViewAllowed());
+        System.out.println("===== allRegisteredUser import  allowed: " + allRegUserPerm.isImportAllowed());
+        System.out.println("===== allRegisteredUser export allowed: " + allRegUserPerm.isExportAllowed());
+        System.out.println("===== allRegisteredUser update allowed: " + allRegUserPerm.isUpdateAllowed());
+        System.out.println("===== allRegisteredUser delete allowed: " + allRegUserPerm.isDeleteAllowed());
+        System.out.println("===== allRegisteredUser ra control allowed: " + allRegUserPerm.isRacAllowed());
+        System.out.println("===== allRegisteredUser access control allowed: " + allRegUserPerm.isAcAllowed());
+        System.out.println("===== allRegisteredUser mdreg allowed: " + allRegUserPerm.isMdRegAllowed());
+        System.out.println("");
+
+        for (PermissionBean pm : regUserPerms) {
+            System.out.println("===== a registered user permission id: " + pm.getId());
+            System.out.println("===== a registered user uid: " + pm.getUid());
+            System.out.println("===== a registered user view allowed: " + pm.isViewAllowed());
+            System.out.println("===== a registered user import  allowed: " + pm.isImportAllowed());
+            System.out.println("===== a registered user export allowed: " + pm.isExportAllowed());
+            System.out.println("===== a registered user update allowed: " + pm.isUpdateAllowed());
+            System.out.println("===== a registered user delete allowed: " + pm.isDeleteAllowed());
+            System.out.println("===== a registered user ra control allowed: " + pm.isRacAllowed());
+            System.out.println("===== a registered user access control allowed: " + pm.isAcAllowed());
+            System.out.println("===== a registered user mdreg allowed: " + pm.isMdRegAllowed());
+            System.out.println("");
         }
-        // if none permission is assigned for the anonymous user and the all-registered-user, but assigned for the
-        // individual user:
-        // a). If this individual user permission is new, just create it.
-        // b). If this individual user permission already existed, we just update it.
-        if (anonyPerm.isNonePerm() && allUserPerm.isNonePerm() && !perm.isNonePerm()) {
-            if (perm.getId() == 0) {
-                managablePerm.setManagablePermType(ManagablePermType.NEW);
-            } else {
-                managablePerm.setManagablePermType(ManagablePermType.UPDATE);
-            }
-            return managablePerm;
+    }
+
+    //grant the collection permissions
+    private AssignedPermissions grantCollectionPermissions(Collection col) {
+        //check the hierarchic permissions for anonymous group
+        checkHierarchicPerms(anonymousePerm);
+        //check the hierarchic permissions for all registered group
+        checkHierarchicPerms(allRegUserPerm);
+        //check the hierarchic permissions for each registered user
+        for (PermissionBean pm : regUserPerms) {
+            checkHierarchicPerms(pm);
         }
 
-        // if none permission is assigned for the anonymous user and the individual user. but assigned to the
-        // all-registered-user, which mean the owner would not give any permissions to this registered user:
-        // a). If this individual user permission is new, just create it.
-        // b). If this individual user permission already existed, we just update it.
-        if (anonyPerm.isNonePerm() && !allUserPerm.isNonePerm() && perm.isNonePerm()) {
-            if (perm.getId() == 0) {
-                managablePerm.setManagablePermType(ManagablePermType.NEW);
-            } else {
-                managablePerm.setManagablePermType(ManagablePermType.UPDATE);
+        //get the inherited group permissions for all registered user group
+        getInheritedGroupPerimssions(anonymousePerm, allRegUserPerm);
+        //get the inherited group permissions for each registered user
+        for (PermissionBean pm : regUserPerms) {
+            getInheritedGroupPerimssions(allRegUserPerm, pm);
+        }
+        printGrantedPermissions();
+
+        return assignPermissionForCollection(col);
+    }
+
+    //check the hierarchic permissions
+    private void checkHierarchicPerms(PermissionBean pmBean) {
+        if (pmBean != null) {
+            if (pmBean.isAcAllowed()) {
+                pmBean.setDeleteAllowed(true);
+                pmBean.setUpdateAllowed(true);
+                pmBean.setRacAllowed(true);
+                pmBean.setImportAllowed(true);
+                pmBean.setExportAllowed(true);
+                pmBean.setViewAllowed(true);
             }
-            return managablePerm;
+            if (pmBean.isDeleteAllowed()) {
+                pmBean.setUpdateAllowed(true);
+                pmBean.setRacAllowed(true);
+                pmBean.setImportAllowed(true);
+                pmBean.setExportAllowed(true);
+                pmBean.setViewAllowed(true);
+            }
+            if (pmBean.isUpdateAllowed()) {
+                pmBean.setRacAllowed(true);
+                pmBean.setImportAllowed(true);
+                pmBean.setExportAllowed(true);
+                pmBean.setViewAllowed(true);
+            }
+            if (pmBean.isRacAllowed()) {
+                pmBean.setImportAllowed(true);
+                pmBean.setExportAllowed(true);
+                pmBean.setViewAllowed(true);
+            }
+            if (pmBean.isImportAllowed()) {
+                pmBean.setViewAllowed(true);
+            }
+            if (pmBean.isExportAllowed()) {
+                pmBean.setViewAllowed(true);
+            }
+        }
+    }
+
+    //get the inherited group permissions
+    private void getInheritedGroupPerimssions(PermissionBean groupPermissionBean, PermissionBean toPermissionBean) {
+
+        boolean viewAllowed = groupPermissionBean.isViewAllowed();
+        if (viewAllowed) {
+            toPermissionBean.setViewAllowed(true);
         }
 
-        // if the permissions are assigned for the all-registered-user and the individual user:
-        // 1. If this individual user permission is new:
-        // a): if the individual permissions are the same as the all-registered-user permissions,just ignore
-        // b): otherwise we create a new permission for the individual user.
-        //
-        // 2). If this individual user permission already existed:
-        // a): if the individual permissions are the same as the all-registered-user permissions,just remove it.
-        // b): otherwise we update permission for the individual user.
-        if (!allUserPerm.isNonePerm() && !perm.isNonePerm()) {
-            if (perm.getId() == 0) {
-                if ((eqaulsPerms(allUserPerm, perm))) {
-                    managablePerm.setManagablePermType(ManagablePermType.IGNORE);
+        boolean updateAllowed = groupPermissionBean.isUpdateAllowed();
+        if (updateAllowed) {
+            toPermissionBean.setUpdateAllowed(true);
+        }
+
+        boolean importAllowed = groupPermissionBean.isImportAllowed();
+        if (importAllowed) {
+            toPermissionBean.setImportAllowed(true);
+        }
+
+        boolean exportAllowed = groupPermissionBean.isExportAllowed();
+        if (exportAllowed) {
+            toPermissionBean.setExportAllowed(true);
+        }
+
+        boolean deleteAllowed = groupPermissionBean.isDeleteAllowed();
+        if (deleteAllowed) {
+            toPermissionBean.setDeleteAllowed(true);
+        }
+
+        boolean mdRegAllowed = groupPermissionBean.isMdRegAllowed();
+        if (mdRegAllowed) {
+            toPermissionBean.setMdRegAllowed(true);
+        }
+
+        boolean racAllowed = groupPermissionBean.isRacAllowed();
+        if (racAllowed) {
+            toPermissionBean.setRacAllowed(true);
+        }
+
+        boolean acAllowed = groupPermissionBean.isAcAllowed();
+        if (acAllowed) {
+            toPermissionBean.setAcAllowed(true);
+        }
+    }
+
+    //assign the collection permissions
+    private AssignedPermissions assignPermissionForCollection(Collection col) {
+
+        //covert the permission bean for anonymous user
+        CPermission permAnonymous = copyPermissionBeanToPermission(col, anonymousePerm, PermType.ANONYMOUS.code());
+        //covert the permission bean for all registered user
+        CPermission permAllRegUser = copyPermissionBeanToPermission(col, allRegUserPerm, PermType.ALLREGUSER.code());
+
+        List<CPermission> permissionsNew = new ArrayList<CPermission>();
+        List<CPermission> permissionsUpdated = new ArrayList<CPermission>();
+        List<Long> permissionsDeleted = new ArrayList<Long>();
+        //add the permission for anonymous into updated list
+        permissionsUpdated.add(permAnonymous);
+        //add the permission for all registered user into updated list
+        permissionsUpdated.add(permAllRegUser);
+
+        //check the individual user permission
+        for (PermissionBean pm : regUserPerms) {
+            //if it's the same as the all registered user group's permission, we have to remove it
+            if (eqaulsPerms(pm, allRegUserPerm)) {
+                long permId = pm.getId();
+                if (permId != 0) {
+                    permissionsDeleted.add(permId);
                 } else {
-                    // create a new permission
-                    managablePerm.setManagablePermType(ManagablePermType.NEW);
+                    //ignore this permission as it's the same as the all registered user group's permissions
                 }
-            } else {
-                if ((eqaulsPerms(allUserPerm, perm))) {
-                    managablePerm.setManagablePermType(ManagablePermType.DELETE);
+            } else {//if it is not the same as the all registered user group's permissions. we have to check whether it's to update or create a new one
+                CPermission permIndividual = copyPermissionBeanToPermission(col, pm, PermType.REGISTERED.code());
+                long permId = permIndividual.getId();
+                if (permId == 0) {
+                    permissionsNew.add(permIndividual);
                 } else {
-                    managablePerm.setManagablePermType(ManagablePermType.UPDATE);
+                    permissionsUpdated.add(permIndividual);
                 }
             }
-            return managablePerm;
         }
-        return null;
+        AssignedPermissions assignedPermissions = new AssignedPermissions();
+        assignedPermissions.setUpdatedPermissions(permissionsUpdated);
+        assignedPermissions.setNewPermissions(permissionsNew);
+        assignedPermissions.setDeletedPermissions(permissionsDeleted);
+        return assignedPermissions;
     }
 
     private boolean eqaulsPerms(PermissionBean aPerm, PermissionBean bPerm) {
-        if ((aPerm.isViewAllowed() != bPerm.isViewAllowed()) || (aPerm.isEditAllowed() != bPerm.isEditAllowed())
-                || (aPerm.isImportAllowed() != bPerm.isImportAllowed()) || (aPerm.isExportAllowed() != bPerm.isExportAllowed())
-                || (aPerm.isDeleteAllowed() != bPerm.isDeleteAllowed()) || (aPerm.isChangePermAllowed() != bPerm.isChangePermAllowed())) {
+        if ((aPerm.isImportAllowed() != bPerm.isImportAllowed()) || (aPerm.isExportAllowed() != bPerm.isExportAllowed())
+                || (aPerm.isUpdateAllowed() != bPerm.isUpdateAllowed()) || (aPerm.isRacAllowed() != bPerm.isRacAllowed())
+                || (aPerm.isDeleteAllowed() != bPerm.isDeleteAllowed()) || (aPerm.isAcAllowed() != bPerm.isAcAllowed())) {
             return false;
         } else {
             return true;
         }
     }
-
 
     // populate all active user names
     private void populateFilteredUserNames(long ownerId) {
@@ -476,27 +513,27 @@ public class PermissionAction extends DMCoreAction {
         this.activeUsers = activeUsers;
     }
 
-    public List<PermissionBean> getPermissionBeans() {
-        return permissionBeans;
+    public List<PermissionBean> getRegUserPerms() {
+        return regUserPerms;
     }
 
-    public void setPermissionBeans(List<PermissionBean> permissionBeans) {
-        this.permissionBeans = permissionBeans;
+    public void setRegUserPerms(List<PermissionBean> regUserPerms) {
+        this.regUserPerms = regUserPerms;
     }
 
-    public PermissionBean getCoPermForAllUser() {
-        return coPermForAllUser;
+    public PermissionBean getAllRegUserPerm() {
+        return allRegUserPerm;
     }
 
-    public void setCoPermForAllUser(PermissionBean coPermForAllUser) {
-        this.coPermForAllUser = coPermForAllUser;
+    public void setAllRegUserPerm(PermissionBean allRegUserPerm) {
+        this.allRegUserPerm = allRegUserPerm;
     }
 
-    public PermissionBean getCoPermForAnony() {
-        return coPermForAnony;
+    public PermissionBean getAnonymousePerm() {
+        return anonymousePerm;
     }
 
-    public void setCoPermForAnony(PermissionBean coPermForAnony) {
-        this.coPermForAnony = coPermForAnony;
+    public void setAnonymousePerm(PermissionBean anonymousePerm) {
+        this.anonymousePerm = anonymousePerm;
     }
 }

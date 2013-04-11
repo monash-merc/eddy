@@ -27,11 +27,10 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
+import au.edu.monash.merc.capture.domain.Dataset;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-
-import au.edu.monash.merc.capture.domain.Dataset;
 
 @Scope("prototype")
 @Controller("data.viewDsDataAction")
@@ -43,7 +42,7 @@ public class ViewDatasetAction extends DMCoreAction {
 
     public String viewDatasetData() {
         try {
-            checkUserPermissions(collection.getId(), collection.getOwner().getId());
+            permissionBean = checkPermission(collection.getId(), collection.getOwner().getId());
         } catch (Exception e) {
             logger.error(e);
             addFieldError("checkPermission", getText("check.permissions.error"));

@@ -160,6 +160,36 @@ public interface DMService {
 
     Dataset getAllDatasetData(long dsId);
 
+
+    void savePermission(CPermission permission);
+
+    CPermission getPermissionById(long id);
+
+    void updatePermission(CPermission permission);
+
+    void mergePermission(CPermission permission);
+
+    void deletePermission(CPermission permission);
+
+    CPermission getUserCollectionPermission(long collectionId, long userId);
+
+    CPermission getAllRegUserCollectionPermission(long collectionId);
+
+    CPermission getAnonymousCollectionPermission(long collectionId);
+
+    List<CPermission> getCollectionPermissions(long cid);
+
+    InheritPermissionBean getUserInheritPermission(final long coId, final long userId);
+
+    void deletePermissionByPermId(long permissionId);
+
+    void deletePermissionsByCollectionId(long collectionId);
+
+    List<CPermission> saveCollectionPermissions(AssignedPermissions assignedPerms);
+
+
+    //TODO: to be removed after changing the permission domain
+
     List<Permission> getUserCoPerms(long permForUsrId, long coId);
 
     List<Permission> getCollectionDefaultPerms(long cid);
@@ -186,7 +216,7 @@ public interface DMService {
 
     void setCollectionPermissions(AssignedPermissions assignedPerms);
 
-    List<Permission> getCollectionPermissions(long cid);
+   // List<Permission> getCollectionPermissions(long cid);
 
     void saveUserRequestedPerm(ManagablePerm<Permission> requestPermission, long permRequestId);
 
@@ -205,6 +235,11 @@ public interface DMService {
     void updatePermissionRequest(PermissionRequest permRequest);
 
     Pagination<PermissionRequest> getPermRequestsByPages(long ownerId, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+
+    //TODO end of Permission
+
+
+
 
     void saveAuditEvent(AuditEvent event);
 

@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <registryObjects xmlns="http://ands.org.au/standards/rif-cs/registryObjects"
                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xsi:schemaLocation="http://ands.org.au/standards/rif-cs/registryObjects http://services.ands.org.au/documentation/rifcs/1.2.0/schema/registryObjects.xsd">
-    <registryObject group="${groupName}">
+    <registryObject group="OzFlux: Australian and New Zealand Flux Research and Monitoring">
         <key>${keyId}</key>
         <originatingSource>${originatingSrc}</originatingSource>
         <collection type="collection">
@@ -23,7 +23,7 @@
             <location>
                 <address>
                     <physical type="postalAddress">
-                        <addressPart type="text">${physicalAddress}</addressPart>
+                        <addressPart type="text">CSIRO Marine and Atmospheric Research, Pye Laboratory, Clunies Ross Street, ACTON, ACT 2600</addressPart>
                     </physical>
                 </address>
             </location>
@@ -41,49 +41,26 @@
         <#list parties as party>
             <relatedObject>
                 <key>${party.partyKey}</key>
-                <relation type="isManagedBy"/>
+                <relation type="isOwnedBy"/>
             </relatedObject>
         </#list>
             <relatedObject>
                 <key>MON399d1cdc-a788-4a05-9f01-d3dcbcafdf8d</key>
                 <relation type="isOutputOf"/>
             </relatedObject>
-            <subject type="gcmd">Earth Science</subject>
-            <subject type="gcmd">Atmosphere</subject>
-            <subject type="gcmd">Land Surface</subject>
-            <subject type="gcmd">Atmospheric Pressure</subject>
-            <subject type="gcmd">Atmospheric Radiation</subject>
-            <subject type="gcmd">Atmospheric Temperature</subject>
-            <subject type="gcmd">Atmospheric Water Vapour</subject>
-            <subject type="gcmd">Atmospheric Winds</subject>
-            <subject type="gcmd">Precipitation</subject>
-            <subject type="gcmd">Soils</subject>
-            <subject type="gcmd">Surface Radiative Properties</subject>
-            <subject type="gcmd">Surface pressure</subject>
-            <subject type="gcmd">Surface air temperature</subject>
-            <subject type="gcmd">Humidity</subject>
-            <subject type="gcmd">Evapotranspiration</subject>
-            <subject type="gcmd">Surface winds</subject>
-            <subject type="gcmd">Turbulence</subject>
-            <subject type="gcmd">Wind stress</subject>
-            <subject type="gcmd">Rain</subject>
-            <subject type="gcmd">Soil moisture</subject>
-            <subject type="gcmd">Water content</subject>
-            <subject type="gcmd">Soil temperature</subject>
-            <subject type="gcmd">Albedo</subject>
-            <subject type="anzsrc-toa">Strategic basic research</subject>
-            <subject type="anzsrc-toa">Applied research</subject>
+            <subject type="gcmd">Earth Science - Atmosphere - Atmospheric Pressure</subject>
+            <subject type="gcmd">Earth Science - Atmosphere - Atmospheric Pressure</subject>
+            <subject type="gcmd">Earth Science - Atmosphere - Atmospheric Temperature</subject>
+            <subject type="gcmd">Earth Science - Atmosphere - Atmospheric Water Vapour</subject>
+            <subject type="gcmd">Earth Science - Atmosphere - Atmospheric Winds</subject>
+            <subject type="gcmd">Earth Science - Atmosphere - Precipitation</subject>
+            <subject type="gcmd">Earth Science - Land Surface - Soils</subject>
+            <subject type="gcmd">Earth Science - Land Surface - Surface Radiative Properties</subject>
             <subject type="anzsrc-for">0401</subject>
             <subject type="anzsrc-for">0406</subject>
             <subject type="anzsrc-for">0501</subject>
             <subject type="anzsrc-for">0503</subject>
             <subject type="anzsrc-for">0602</subject>
-            <subject type="anzsrc-seo">8201</subject>
-            <subject type="anzsrc-seo">8298</subject>
-            <subject type="anzsrc-seo">9602</subject>
-            <subject type="anzsrc-seo">9603</subject>
-            <subject type="anzsrc-seo">9605</subject>
-            <subject type="anzsrc-seo">9613</subject>
             <description type="full" xml:lang="en">
             ${collectionDesc}
             </description>

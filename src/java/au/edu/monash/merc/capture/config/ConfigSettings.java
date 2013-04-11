@@ -65,13 +65,6 @@ public class ConfigSettings {
 
     public static String USER_HASH_SEQUENCE = "user.security.hash.sequence";
 
-    public static String GOOGLE_MAP_API_AUTHEN_KEY = "google.map.api.auth.key";
-
-    // Stage Transfer Configuration
-    public static String STAGE_TRANSFER_ENABLED = "stage.transfer.enabled";
-
-    public static String DATA_STAGE_LOCATION = "data.stage.location";
-
     // ANDS RIF-CS Configuration
     public static String ANDS_RIFCS_REG_ENABLED = "ands.rifcs.register.enabled";
 
@@ -82,8 +75,6 @@ public class ConfigSettings {
     public static String ANDS_PARTY_ACTIVITY_WS_TIMEOUT = "ands.party.activtiy.rm.ws.timeout";
 
     public static String ANDS_RIFCS_STORE_LOCATION = "ands.rifcs.files.store.location";
-
-    public static String ANDS_RIFCS_REG_ANZSRC_CODE = "ands.rifcs.register.anzsrc.code";
 
     public static String ANDS_RIFCS_REG_GROUP_NAME = "ands.rifcs.register.group.name";
 

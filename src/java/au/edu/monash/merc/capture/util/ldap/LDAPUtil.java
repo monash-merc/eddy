@@ -478,10 +478,10 @@ public class LDAPUtil {
 		ldap.setGivennameAttrName(givennameAttrName);
 		ldap.setSnAttrName(snAttrName);
 
-		String usrdn = ldap.findUserDn("xiyu");
-		System.out.println("user dn: " + usrdn);
+		//String usrdn = ldap.findUserDn("xiyu");
+		//System.out.println("user dn: " + usrdn);
 		// ldap.login("mercsaka", "merc27jira");
-		LdapUser luser = ldap.findUserInfo("Virginia.Gutierre@monash.edu");
+		LdapUser luser = ldap.findUserInfo("sIMON YUA");
 		if (luser != null) {
 			System.out.println("title: " + luser.getTitle());
 			System.out.println("display name: " + luser.getDisplayName());
@@ -490,7 +490,9 @@ public class LDAPUtil {
 			System.out.println("frist name: " + luser.getFirstName());
 			System.out.println("gender : " + luser.getGender());
 			System.out.println("mail: " + luser.getMail());
-		}
+		} else{
+            System.out.println("ldap user is not found");
+        }
 		LdapUser usr = ldap.validateLdapUser("mercsaka", "merc27jira");
 		if (usr == null) {
 			System.out.println("user is not found");

@@ -127,6 +127,8 @@
                         <div class="input_field_value_section">
                             <div class="comments">
                                 Choose a method for marking spatial coverage from the options in the grey bar above the map.
+                                <br/>
+                                * (A region is not supported on the collection map view)
                             </div>
                             <script type="text/javascript">mctSetMapControl("spatialcvg");</script>
                         </div>

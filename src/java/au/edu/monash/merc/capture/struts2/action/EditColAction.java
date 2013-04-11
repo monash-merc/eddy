@@ -35,6 +35,7 @@ import au.edu.monash.merc.capture.domain.Collection;
 import au.edu.monash.merc.capture.domain.Location;
 import au.edu.monash.merc.capture.domain.Permission;
 import au.edu.monash.merc.capture.domain.UserType;
+import au.edu.monash.merc.capture.dto.PermissionBean;
 import au.edu.monash.merc.capture.util.CaptureUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -55,8 +56,6 @@ import java.util.List;
 public class EditColAction extends DMCoreAction {
 
     private String colNameBeforeUpdate;
-
-    private boolean stageTransferEnabled;
 
     private boolean mdRegEnabled;
 
@@ -125,8 +124,6 @@ public class EditColAction extends DMCoreAction {
                 existedCollection.setLocation(location);
 
 
-                // retrieve the permissions for all registered users and anonymous users
-                List<Permission> permissions = this.dmService.getCollectionDefaultPerms(collection.getId());
                 existedCollection.setModifiedByUser(user);
 
                 this.dmService.updateCollection(existedCollection);
@@ -155,27 +152,14 @@ public class EditColAction extends DMCoreAction {
                 // populate the list dataset in this user collection.
                 datasets = this.dmService.getDatasetByCollectionIdUsrId(collection.getId(), collection.getOwner().getId());
 
-                // populate the stage transfer if enabled;
-                String stageEnabledStr = configSetting.getPropValue(ConfigSettings.STAGE_TRANSFER_ENABLED);
-                stageTransferEnabled = Boolean.valueOf(stageEnabledStr).booleanValue();
-
                 // populate the rifcs registration if enabled
                 String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
                 mdRegEnabled = Boolean.valueOf(mdRegEnabledStr).booleanValue();
 
-                if (user != null) {
-                    //see if it's a ldap user
-                    String passwd = user.getPassword();
-                    boolean monUser = true;
-                    if (!StringUtils.endsWithIgnoreCase(passwd, "ldap")) {
-                        monUser = false;
-                    }
-
-                    if (mdRegEnabled) {
-                        //owner of a collection and an admin they can register the metadata
-                        if ((user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
-                            mdRegEnabled = false;
-                        }
+                //The owner of a collection or an admin they can register the metadata
+                if (user != null && mdRegEnabled) {
+                    if ((user.getId() == collection.getOwner().getId()) || (user.getUserType() == UserType.ADMIN.code()) || (user.getUserType() == UserType.SUPERADMIN.code())) {
+                        permissionBean.setMdRegAllowed(true);
                     }
                 }
                 // populate the collectionlinks
@@ -200,28 +184,6 @@ public class EditColAction extends DMCoreAction {
         return SUCCESS;
     }
 
-    private void setPrivateCoPerms(List<Permission> permissions) {
-        for (Permission perm : permissions) {
-            perm.setViewAllowed(false);
-            perm.setUpdateAllowed(false);
-            perm.setImportAllowed(false);
-            perm.setExportAllowed(false);
-            perm.setDeleteAllowed(false);
-            perm.setChangePermAllowed(false);
-        }
-    }
-
-    private void setDefaultCoPerms(List<Permission> permissions) {
-        for (Permission perm : permissions) {
-            perm.setViewAllowed(true);
-            perm.setUpdateAllowed(false);
-            perm.setImportAllowed(false);
-            perm.setExportAllowed(true);
-            perm.setDeleteAllowed(false);
-            perm.setChangePermAllowed(false);
-        }
-    }
-
     private void recordAuditEvent() {
         AuditEvent ev = new AuditEvent();
         ev.setCreatedTime(GregorianCalendar.getInstance().getTime());
@@ -234,7 +196,7 @@ public class EditColAction extends DMCoreAction {
     public void validateEditCollection() {
         boolean hasErrors = false;
         try {
-            checkUserPermissions(collection.getId(), collection.getOwner().getId());
+            permissionBean = checkPermission(collection.getId(), collection.getOwner().getId());
         } catch (Exception e) {
             logger.error(e);
             addFieldError("checkPermission", getText("check.permissions.error"));
@@ -242,7 +204,7 @@ public class EditColAction extends DMCoreAction {
             return;
         }
 
-        if (!permissionBean.isEditAllowed()) {
+        if (!permissionBean.isUpdateAllowed()) {
             addFieldError("updatePermission", getText("collection.update.permission.denied"));
             setNavAfterException();
             return;
@@ -377,14 +339,6 @@ public class EditColAction extends DMCoreAction {
 
     public void setColNameBeforeUpdate(String colNameBeforeUpdate) {
         this.colNameBeforeUpdate = colNameBeforeUpdate;
-    }
-
-    public boolean isStageTransferEnabled() {
-        return stageTransferEnabled;
-    }
-
-    public void setStageTransferEnabled(boolean stageTransferEnabled) {
-        this.stageTransferEnabled = stageTransferEnabled;
     }
 
     public boolean isMdRegEnabled() {

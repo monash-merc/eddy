@@ -53,10 +53,8 @@ public class DeleteColAction extends DMCoreAction {
      * @return a String represents SUCCESS or ERROR.
      */
     public String deleteCollection() {
-
         try {
-
-            checkUserPermissions(collection.getId(), collection.getOwner().getId());
+            permissionBean = checkPermission(collection.getId(), collection.getOwner().getId());
             if (!permissionBean.isDeleteAllowed()) {
                 addActionError(getText("delete.collection.permission.denied"));
                 setNavAfterException();
