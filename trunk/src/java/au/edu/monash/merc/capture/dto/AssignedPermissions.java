@@ -30,37 +30,70 @@ package au.edu.monash.merc.capture.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import au.edu.monash.merc.capture.domain.CPermission;
 import au.edu.monash.merc.capture.domain.Permission;
 
 public class AssignedPermissions {
 
-	private List<Permission> permissionsNew = new ArrayList<Permission>();
+    //TODO: to be removed
+    private List<Permission> permissionsNew = new ArrayList<Permission>();
 
-	private List<Permission> permissionsUpdate = new ArrayList<Permission>();
+    private List<Permission> permissionsUpdate = new ArrayList<Permission>();
 
-	private List<Long> deletePermsIds = new ArrayList<Long>();
+    private List<Long> deletePermsIds = new ArrayList<Long>();
 
-	public List<Permission> getPermissionsNew() {
-		return permissionsNew;
-	}
+    public List<Permission> getPermissionsNew() {
+        return permissionsNew;
+    }
 
-	public void setPermissionsNew(List<Permission> permissionsNew) {
-		this.permissionsNew = permissionsNew;
-	}
+    public void setPermissionsNew(List<Permission> permissionsNew) {
+        this.permissionsNew = permissionsNew;
+    }
 
-	public List<Permission> getPermissionsUpdate() {
-		return permissionsUpdate;
-	}
+    public List<Permission> getPermissionsUpdate() {
+        return permissionsUpdate;
+    }
 
-	public void setPermissionsUpdate(List<Permission> permissionsUpdate) {
-		this.permissionsUpdate = permissionsUpdate;
-	}
+    public void setPermissionsUpdate(List<Permission> permissionsUpdate) {
+        this.permissionsUpdate = permissionsUpdate;
+    }
 
-	public List<Long> getDeletePermsIds() {
-		return deletePermsIds;
-	}
+    public List<Long> getDeletePermsIds() {
+        return deletePermsIds;
+    }
 
-	public void setDeletePermsIds(List<Long> deletePermsIds) {
-		this.deletePermsIds = deletePermsIds;
-	}
+    public void setDeletePermsIds(List<Long> deletePermsIds) {
+        this.deletePermsIds = deletePermsIds;
+    }
+    //END of TODO:
+
+    private List<CPermission> newPermissions = new ArrayList<CPermission>();
+
+    private List<CPermission> updatedPermissions = new ArrayList<CPermission>();
+
+    private List<Long> deletedPermissions = new ArrayList<Long>();
+
+    public List<CPermission> getNewPermissions() {
+        return newPermissions;
+    }
+
+    public void setNewPermissions(List<CPermission> newPermissions) {
+        this.newPermissions = newPermissions;
+    }
+
+    public List<CPermission> getUpdatedPermissions() {
+        return updatedPermissions;
+    }
+
+    public void setUpdatedPermissions(List<CPermission> updatedPermissions) {
+        this.updatedPermissions = updatedPermissions;
+    }
+
+    public List<Long> getDeletedPermissions() {
+        return deletedPermissions;
+    }
+
+    public void setDeletedPermissions(List<Long> deletedPermissions) {
+        this.deletedPermissions = deletedPermissions;
+    }
 }

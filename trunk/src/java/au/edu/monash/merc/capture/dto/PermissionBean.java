@@ -39,7 +39,7 @@ public class PermissionBean implements Serializable {
 
     private boolean viewAllowed;
 
-    private boolean editAllowed;
+    private boolean updateAllowed;
 
     private boolean importAllowed;
 
@@ -47,7 +47,11 @@ public class PermissionBean implements Serializable {
 
     private boolean deleteAllowed;
 
-    private boolean changePermAllowed;
+    private boolean mdRegAllowed;
+
+    private boolean acAllowed;
+
+    private boolean racAllowed;
 
     public long getId() {
         return id;
@@ -81,12 +85,12 @@ public class PermissionBean implements Serializable {
         this.viewAllowed = viewAllowed;
     }
 
-    public boolean isEditAllowed() {
-        return editAllowed;
+    public boolean isUpdateAllowed() {
+        return updateAllowed;
     }
 
-    public void setEditAllowed(boolean editAllowed) {
-        this.editAllowed = editAllowed;
+    public void setUpdateAllowed(boolean updateAllowed) {
+        this.updateAllowed = updateAllowed;
     }
 
     public boolean isImportAllowed() {
@@ -113,25 +117,43 @@ public class PermissionBean implements Serializable {
         this.deleteAllowed = deleteAllowed;
     }
 
-    public boolean isChangePermAllowed() {
-        return changePermAllowed;
+    public boolean isMdRegAllowed() {
+        return mdRegAllowed;
     }
 
-    public void setChangePermAllowed(boolean changePermAllowed) {
-        this.changePermAllowed = changePermAllowed;
+    public void setMdRegAllowed(boolean mdRegAllowed) {
+        this.mdRegAllowed = mdRegAllowed;
+    }
+
+    public boolean isAcAllowed() {
+        return acAllowed;
+    }
+
+    public void setAcAllowed(boolean acAllowed) {
+        this.acAllowed = acAllowed;
+    }
+
+    public boolean isRacAllowed() {
+        return racAllowed;
+    }
+
+    public void setRacAllowed(boolean racAllowed) {
+        this.racAllowed = racAllowed;
     }
 
     public void setFullPermissions() {
         this.viewAllowed = true;
-        this.editAllowed = true;
+        this.updateAllowed = true;
         this.importAllowed = true;
         this.exportAllowed = true;
         this.deleteAllowed = true;
-        this.changePermAllowed = true;
+        this.mdRegAllowed = false;
+        this.acAllowed = true;
+        this.racAllowed = true;
     }
 
     public boolean isNonePerm() {
-        if (!this.viewAllowed && !this.editAllowed && !this.importAllowed && !this.exportAllowed && !this.deleteAllowed && !this.changePermAllowed) {
+        if (!this.importAllowed && !this.exportAllowed && !this.racAllowed && !this.updateAllowed && !this.deleteAllowed && !this.acAllowed) {
             return true;
         } else {
             return false;

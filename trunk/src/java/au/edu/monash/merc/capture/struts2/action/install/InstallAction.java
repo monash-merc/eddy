@@ -191,11 +191,6 @@ public class InstallAction extends InstallBaseAction {
         appProp.setLoginTryTimes(3);
         appProp.setBlockWaitingTimes(15);
         appProp.setSecurityHashSeq("whateveryouwanttomakeitmoresecuritymerc!");
-        // google map api key
-        appProp.setGoogleApiKey("ABQIAAAA-mrDIEKQPrjqNppfCE72fRTOuUOUNYT0s-gj7pnIyScfnVnBMBS3qGdjN89x3dyZRLzSWVbTBfOBBQ");
-
-        appProp.setStageEnabled(false);
-        appProp.setStageLocation("/opt/ands_staging");
 
         appProp.setMdRegEnabled(true);
         appProp.setAndsRegGroupName("OzFlux: Australian and New Zealand Flux Research and Monitoring");
@@ -308,10 +303,6 @@ public class InstallAction extends InstallBaseAction {
         }
         if (StringUtils.isBlank(appProp.getSecurityHashSeq())) {
             addFieldError("securityHash", "The security hash sequence must be provided");
-            hasError = true;
-        }
-        if (StringUtils.isBlank(appProp.getGoogleApiKey())) {
-            addFieldError("googlemapkey", "The Google Map API Key must be provided");
             hasError = true;
         }
 

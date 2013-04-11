@@ -41,218 +41,205 @@ import au.edu.monash.merc.capture.domain.Dataset;
 @Controller("data.deleteDStAction")
 public class DeleteDSAction extends DMCoreAction {
 
-	private Dataset dataset;
+    private Dataset dataset;
 
-	private boolean stageTransferEnabled;
+    private boolean mdRegEnabled;
 
-	private boolean mdRegEnabled;
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
-	private Logger logger = Logger.getLogger(this.getClass().getName());
+    public String deleteDataset() {
 
-	public String deleteDataset() {
+        try {
+            Dataset ds = this.dmService.getDatasetById(dataset.getId());
+            collection = ds.getCollection();
 
-		try {
-			Dataset ds = this.dmService.getDatasetById(dataset.getId());
-			collection = ds.getCollection();
+            String dataStorePath = configSetting.getPropValue(ConfigSettings.DATA_STORE_LOCATION);
+            // set the collection modified time and modified by an user
+            collection.setModifiedTime(GregorianCalendar.getInstance().getTime());
+            collection.setModifiedByUser(user);
 
-			String dataStorePath = configSetting.getPropValue(ConfigSettings.DATA_STORE_LOCATION);
-			// set the collection modified time and modified by an user
-			collection.setModifiedTime(GregorianCalendar.getInstance().getTime());
-			collection.setModifiedByUser(user);
+            this.dmService.deleteDataset(collection, ds, dataStorePath);
+            // data.dataset.delete.dataset.file.success.msg
+            // set action successful message
+            recordAuditEvent(ds);
+            retrieveAllDatasets();
 
-			this.dmService.deleteDataset(collection, ds, dataStorePath);
-			// data.dataset.delete.dataset.file.success.msg
-			// set action successful message
-			recordAuditEvent(ds);
-			retrieveAllDatasets();
-			// populate the stage transfer if enabled;
-			String stageEnabledStr = configSetting.getPropValue(ConfigSettings.STAGE_TRANSFER_ENABLED);
-			stageTransferEnabled = Boolean.valueOf(stageEnabledStr).booleanValue();
+            // populate the rifcs registration if enabled
+            String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
+            mdRegEnabled = Boolean.valueOf(mdRegEnabledStr).booleanValue();
+            // set user type is the owner of collection
+            viewType = ActConstants.UserViewType.USER.toString();
+            populateLinksInUsrCollection();
 
-			// populate the rifcs registration if enabled
-			String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
-			mdRegEnabled = Boolean.valueOf(mdRegEnabledStr).booleanValue();
-			// set user type is the owner of collection
-			viewType = ActConstants.UserViewType.USER.toString();
-			populateLinksInUsrCollection();
+            setActionSuccessMsg(getText("delete.dataset.success", new String[]{ds.getName()}));
+            setNavAfterSuccess();
+        } catch (Exception e) {
+            addFieldError("export", getText("failed.to.delete.dataset"));
+            logger.error(e);
+            try {
+                retrieveCollection();
+                retrieveAllDatasets();
+                setNavAfterExcInDS();
+            } catch (Exception ex) {
+                addFieldError("getCollectionError", getText("dataset.delete.get.collection.details.failed"));
+                collectionError = true;
+                setNavAfterColExc();
+                return INPUT;
+            }
+            return INPUT;
+        }
+        return SUCCESS;
+    }
 
-			setActionSuccessMsg(getText("delete.dataset.success", new String[] { ds.getName() }));
-			setNavAfterSuccess();
-		} catch (Exception e) {
-			addFieldError("export", getText("failed.to.delete.dataset"));
-			logger.error(e);
-			try {
-				retrieveCollection();
-				retrieveAllDatasets();
-				setNavAfterExcInDS();
-			} catch (Exception ex) {
-				addFieldError("getCollectionError", getText("dataset.delete.get.collection.details.failed"));
-				collectionError = true;
-				setNavAfterColExc();
-				return INPUT;
-			}
-			return INPUT;
-		}
-		return SUCCESS;
-	}
+    private void recordAuditEvent(Dataset dataset) {
+        AuditEvent ev = new AuditEvent();
+        ev.setCreatedTime(GregorianCalendar.getInstance().getTime());
+        ev.setEvent(dataset.getName() + " has been deleted from the " + collection.getName());
+        ev.setEventOwner(collection.getOwner());
+        ev.setOperator(user);
+        recordActionAuditEvent(ev);
+    }
 
-	private void recordAuditEvent(Dataset dataset) {
-		AuditEvent ev = new AuditEvent();
-		ev.setCreatedTime(GregorianCalendar.getInstance().getTime());
-		ev.setEvent(dataset.getName() + " has been deleted from the " + collection.getName());
-		ev.setEventOwner(collection.getOwner());
-		ev.setOperator(user);
-		recordActionAuditEvent(ev);
-	}
+    public void validateDeleteDataset() {
 
-	public void validateDeleteDataset() {
+        boolean hasError = false;
+        try {
+            retrieveCollection();
+            // collection = this.dmService.getCollection(collection.getId(), collection.getOwner().getId());
+        } catch (Exception e) {
+            addFieldError("collectionerror", getText("dataset.delete.get.collection.details.failed"));
+            collectionError = true;
+            setNavAfterColExc();
+            return;
+        }
 
-		boolean hasError = false;
-		try {
-			retrieveCollection();
-			// collection = this.dmService.getCollection(collection.getId(), collection.getOwner().getId());
-		} catch (Exception e) {
-			addFieldError("collectionerror", getText("dataset.delete.get.collection.details.failed"));
-			collectionError = true;
-			setNavAfterColExc();
-			return;
-		}
+        if (collection == null) {
+            addFieldError("collectionerror", getText("dataset.delete.get.collection.details.failed"));
+            collectionError = true;
+            setNavAfterColExc();
+            return;
+        }
 
-		if (collection == null) {
-			addFieldError("collectionerror", getText("dataset.delete.get.collection.details.failed"));
-			collectionError = true;
-			setNavAfterColExc();
-			return;
-		}
+        try {
+            permissionBean = checkPermission(collection.getId(), collection.getOwner().getId());
+        } catch (Exception e) {
+            addFieldError("checkPermission", getText("check.permissions.error"));
+            collectionError = true;
+            setNavAfterColExc();
+            return;
+        }
 
-		try {
-			checkUserPermissions(collection.getId(), collection.getOwner().getId());
-		} catch (Exception e) {
-			addFieldError("checkPermission", getText("check.permissions.error"));
-			collectionError = true;
-			setNavAfterColExc();
-			return;
-		}
+        if (!permissionBean.isDeleteAllowed()) {
+            addFieldError("exportPermission", getText("dataset.delete.permission.denied"));
+            hasError = true;
+        }
+        try {
+            dataset = this.dmService.getDatasetById(dataset.getId());
+            if (dataset == null) {
+                addFieldError("dataset", getText("dataset.delete.failed.nonexisted.dataset.file"));
+                hasError = true;
+            }
+        } catch (Exception e) {
+            addFieldError("dataset", getText("dataset.delete.failed.can.not.get.dataset.file"));
+            hasError = true;
+        }
+        if (hasError) {
+            try {
+                retrieveCollection();
+                retrieveAllDatasets();
+                setNavAfterExcInDS();
+            } catch (Exception e) {
+                addFieldError("getCollectionError", getText("dataset.delete.get.collection.details.failed"));
+                collectionError = true;
+                setNavAfterColExc();
+            }
+        }
 
-		if (!permissionBean.isDeleteAllowed()) {
-			addFieldError("exportPermission", getText("dataset.delete.permission.denied"));
-			hasError = true;
-		}
-		try {
-			dataset = this.dmService.getDatasetById(dataset.getId());
-			if (dataset == null) {
-				addFieldError("dataset", getText("dataset.delete.failed.nonexisted.dataset.file"));
-				hasError = true;
-			}
-		} catch (Exception e) {
-			addFieldError("dataset", getText("dataset.delete.failed.can.not.get.dataset.file"));
-			hasError = true;
-		}
-		if (hasError) {
-			try {
-				retrieveCollection();
-				retrieveAllDatasets();
-				setNavAfterExcInDS();
-			} catch (Exception e) {
-				addFieldError("getCollectionError", getText("dataset.delete.get.collection.details.failed"));
-				collectionError = true;
-				setNavAfterColExc();
-			}
-		}
+    }
 
-	}
+    private void setNavAfterExcInDS() {
+        String startNav = null;
+        String startNavLink = null;
+        String secondNav = collection.getName();
+        String thirdNav = getText("delete.dataset.error");
 
-	private void setNavAfterExcInDS() {
-		String startNav = null;
-		String startNavLink = null;
-		String secondNav = collection.getName();
-		String thirdNav = getText("delete.dataset.error");
+        if (viewType != null) {
+            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+                startNav = getText("mycollection.nav.label.name");
+                startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
+            }
 
-		if (viewType != null) {
-			if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
-				startNav = getText("mycollection.nav.label.name");
-				startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
-			}
+            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+                startNav = getText("allcollection.nav.label.name");
+                startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
+            }
+            setPageTitle(startNav, secondNav);
+            String secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="
+                    + collection.getOwner().getId() + "&viewType=" + viewType;
+            navigationBar = generateNavLabel(startNav, startNavLink, secondNav, secondNavLink, thirdNav, null);
+        }
+    }
 
-			if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
-				startNav = getText("allcollection.nav.label.name");
-				startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
-			}
-			setPageTitle(startNav, secondNav);
-			String secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="
-					+ collection.getOwner().getId() + "&viewType=" + viewType;
-			navigationBar = generateNavLabel(startNav, startNavLink, secondNav, secondNavLink, thirdNav, null);
-		}
-	}
+    private void setNavAfterColExc() {
+        String startNav = null;
+        String startNavLink = null;
+        String secondNav = getText("delete.dataset.error");
 
-	private void setNavAfterColExc() {
-		String startNav = null;
-		String startNavLink = null;
-		String secondNav = getText("delete.dataset.error");
+        if (viewType != null) {
+            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+                startNav = getText("mycollection.nav.label.name");
+                startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
+            }
 
-		if (viewType != null) {
-			if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
-				startNav = getText("mycollection.nav.label.name");
-				startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
-			}
+            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+                startNav = getText("allcollection.nav.label.name");
+                startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
+            }
+            setPageTitle(startNav, secondNav);
+            navigationBar = generateNavLabel(startNav, startNavLink, secondNav, null, null, null);
+        }
+    }
 
-			if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
-				startNav = getText("allcollection.nav.label.name");
-				startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
-			}
-			setPageTitle(startNav, secondNav);
-			navigationBar = generateNavLabel(startNav, startNavLink, secondNav, null, null, null);
-		}
-	}
+    private void setNavAfterSuccess() {
 
-	private void setNavAfterSuccess() {
+        String startNav = null;
+        String startNavLink = null;
 
-		String startNav = null;
-		String startNavLink = null;
+        String secondNav = collection.getName();
+        if (viewType != null) {
+            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+                startNav = getText("mycollection.nav.label.name");
+                startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
+            }
 
-		String secondNav = collection.getName();
-		if (viewType != null) {
-			if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
-				startNav = getText("mycollection.nav.label.name");
-				startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
-			}
+            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+                startNav = getText("allcollection.nav.label.name");
+                startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
+            }
 
-			if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
-				startNav = getText("allcollection.nav.label.name");
-				startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
-			}
+            // set the new page title after successful creating a new collection.
+            setPageTitle(startNav, secondNav);
 
-			// set the new page title after successful creating a new collection.
-			setPageTitle(startNav, secondNav);
+            String secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="
+                    + collection.getOwner().getId() + "&viewType=" + viewType;
 
-			String secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="
-					+ collection.getOwner().getId() + "&viewType=" + viewType;
+            navigationBar = generateNavLabel(startNav, startNavLink, secondNav, secondNavLink, null, null);
+        }
+    }
 
-			navigationBar = generateNavLabel(startNav, startNavLink, secondNav, secondNavLink, null, null);
-		}
-	}
+    public Dataset getDataset() {
+        return dataset;
+    }
 
-	public Dataset getDataset() {
-		return dataset;
-	}
+    public void setDataset(Dataset dataset) {
+        this.dataset = dataset;
+    }
 
-	public void setDataset(Dataset dataset) {
-		this.dataset = dataset;
-	}
+    public boolean isMdRegEnabled() {
+        return mdRegEnabled;
+    }
 
-	public boolean isStageTransferEnabled() {
-		return stageTransferEnabled;
-	}
-
-	public void setStageTransferEnabled(boolean stageTransferEnabled) {
-		this.stageTransferEnabled = stageTransferEnabled;
-	}
-
-	public boolean isMdRegEnabled() {
-		return mdRegEnabled;
-	}
-
-	public void setMdRegEnabled(boolean mdRegEnabled) {
-		this.mdRegEnabled = mdRegEnabled;
-	}
+    public void setMdRegEnabled(boolean mdRegEnabled) {
+        this.mdRegEnabled = mdRegEnabled;
+    }
 }

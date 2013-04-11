@@ -49,154 +49,166 @@ $(document).ready(function () {
         var rowIndex = $("#user_permissions > tbody > tr").length;
 
         //if an user permissions already added, just return.
-        var el = $("input[id=user_id][value=" + value_index + "]").val();
+        var el = $("input[id='user_id'][value='" + value_index + "']").val();
         if (el != null) {
             return;
         }
-
+        var allRegExportAllowed = $("input[name='allRegUserPerm.exportAllowed']").is(":checked");
         if (value_index != '-1') {
-            $('#user_permissions > tbody:last').append("<tr>" +
-                "<td>" + selectedText + "" +
-                "<input type='hidden' name='permissionBeans[" + rowIndex + "].id' value='0' id='permissionBeans_" + rowIndex + "__id'/>" +
-                "<input type='hidden' name='permissionBeans[" + rowIndex + "].uid' value='" + value_index + "' id='user_id'/></td>" +
-                "<input type='hidden' name='permissionBeans[" + rowIndex + "].userName' value='" + selectedText + "' id='permissionBeans_" + rowIndex + "__userName'/></td>" +
-                "<td><input type='checkbox' class='check_box' name='permissionBeans[" + rowIndex + "].viewAllowed' value='true' id='permissionBeans_" + rowIndex + "__viewAllowed'/></td>" +
-                "<td><input type='checkbox' class='check_box' name='permissionBeans[" + rowIndex + "].editAllowed' value='true' id='permissionBeans_" + rowIndex + "__editAllowed'/></td>" +
-                "<td><input type='checkbox' class='check_box' name='permissionBeans[" + rowIndex + "].importAllowed' value='true'  id='permissionBeans_" + rowIndex + "__importAllowed'/></td>" +
-                "<td><input type='checkbox' class='check_box' name='permissionBeans[" + rowIndex + "].exportAllowed' value='true'  id='permissionBeans_" + rowIndex + "__exportAllowed'/></td>" +
-                "<td><input type='checkbox' class='check_box' name='permissionBeans[" + rowIndex + "].deleteAllowed' value='true'  id='permissionBeans_" + rowIndex + "__deleteAllowed'/></td>" +
-                "<td><input type='checkbox' class='check_box' name='permissionBeans[" + rowIndex + "].changePermAllowed' value='true'  id='permissionBeans_" + rowIndex + "__changePermAllowed'/></td>" +
-                "</tr>");
+            var permHtml = "<tr>";
+            permHtml += "<td>" + selectedText;
+            permHtml += "<input type='hidden' name='regUserPerms[" + rowIndex + "].id' value='0' id='regUserPerms" + rowIndex + "__id'/>";
+            permHtml += "<input type='hidden' name='regUserPerms[" + rowIndex + "].uid' value='" + value_index + "' id='user_id'/></td>";
+            permHtml += "<input type='hidden' name='regUserPerms[" + rowIndex + "].userName' value='" + selectedText + "' id='regUserPerms" + rowIndex + "__userName'/></td>";
+            permHtml += "<td><input type='hidden' name='regUserPerms[" + rowIndex + "].viewAllowed' value='true' id='regUserPerms" + rowIndex + "__viewAllowed'/><input type='checkbox' class='check_box' name='displayViewAllowed' cssClass='check_box' disabled ='true' checked='checked'/></td>";
+            if (allRegExportAllowed) {
+                permHtml += "<td><input type='checkbox' class='check_box' name='regUserPerms[" + rowIndex + "].exportAllowed' value='true' checked='checked' id='regUserPerms" + rowIndex + "__exportAllowed'/></td>";
+            } else {
+                permHtml += "<td><input type='checkbox' class='check_box' name='regUserPerms[" + rowIndex + "].exportAllowed' value='true' id='regUserPerms" + rowIndex + "__exportAllowed'/></td>";
+            }
+            permHtml += "<td><input type='checkbox' class='check_box' name='regUserPerms[" + rowIndex + "].importAllowed' value='true' id='regUserPerms" + rowIndex + "__importAllowed'/></td>";
+            permHtml += "<td><input type='checkbox' class='check_box' name='regUserPerms[" + rowIndex + "].racAllowed' value='true' id='regUserPerms" + rowIndex + "__racAllowed'/></td>";
+            permHtml += "<td><input type='checkbox' class='check_box' name='regUserPerms[" + rowIndex + "].updateAllowed' value='true' id='regUserPerms" + rowIndex + "__updateAllowed'/></td>";
+            permHtml += "<td><input type='checkbox' class='check_box' name='regUserPerms[" + rowIndex + "].deleteAllowed' value='true' id='regUserPerms" + rowIndex + "__deleteAllowed'/></td>";
+            permHtml += "<td><input type='checkbox' class='check_box' name='regUserPerms[" + rowIndex + "].acAllowed' value='true' id='regUserPerms" + rowIndex + "__acAllowed'/></td>";
+            permHtml += "</tr>";
+
+            $('#user_permissions > tbody:last').append(permHtml);
         }
     });
 });
 
 
+function setAllRegUserExportTrue() {
+    $("input[name='allRegUserPerm.exportAllowed']").attr('checked', true);
+}
+
+function setIndividualExportTrue() {
+    var rowIndex = $("#user_permissions > tbody > tr").length;
+    for (var i = 0; i < rowIndex; i++) {
+        ($("input[name='regUserPerms[" + i + "].exportAllowed']").attr('checked', true));
+    }
+}
+
 $("#user_permissions input[type=checkbox]").live('click', function () {
-    var act = $(this).attr('name');
-    if ($(this).is(":checked")) {
-        //alert(act);
-        if (act == 'coPermForAllUser.editAllowed' || act == 'coPermForAllUser.importAllowed' || act == 'coPermForAllUser.exportAllowed' || act == 'coPermForAllUser.deleteAllowed' || act == 'coPermForAllUser.changePermAllowed') {
-            setViewTrueForAllRegUser();
-        }
-        if (act == 'coPermForAnony.editAllowed' || act == 'coPermForAnony.importAllowed' || act == 'coPermForAnony.exportAllowed' || act == 'coPermForAnony.deleteAllowed' || act == 'coPermForAnony.changePermAllowed') {
-            setViewTrueForAnonymous();
-        }
-        //for dynamically added user permission
-        if ((act.indexOf('permissionBeans') != -1) && (act.indexOf('editAllowed') != -1)) {
-            setViewAllowedTrueForDyn(act);
-        }
-        if ((act.indexOf('permissionBeans') != -1) && (act.indexOf('importAllowed') != -1)) {
-            setViewAllowedTrueForDyn(act);
-        }
-        if ((act.indexOf('permissionBeans') != -1) && (act.indexOf('exportAllowed') != -1)) {
-            setViewAllowedTrueForDyn(act);
-        }
-        if ((act.indexOf('permissionBeans') != -1) && (act.indexOf('deleteAllowed') != -1)) {
-            setViewAllowedTrueForDyn(act);
-        }
-        if ((act.indexOf('permissionBeans') != -1) && (act.indexOf('changePermAllowed') != -1)) {
-            setViewAllowedTrueForDyn(act);
-        }
-    } else {//for dynamic added checkbox
-        if ((act.indexOf('permissionBeans') != -1) && (act.indexOf('viewAllowed') != -1)) {
-            foreViewAllowedTrueForDyn(act);
-        }
-    }
-});
-//for all-registered users
-$("input[name='coPermForAllUser.viewAllowed']").live('click', function () {
-    if ($(this).is(":checked") == false) {
-        if ($("input[name='coPermForAllUser.editAllowed']").is(":checked")) {
-            keepViewAllowedTrueForAllUsers();
-        }
-        if ($("input[name='coPermForAllUser.importAllowed']").is(":checked")) {
-            keepViewAllowedTrueForAllUsers();
-        }
-        if ($("input[name='coPermForAllUser.exportAllowed']").is(":checked")) {
-            keepViewAllowedTrueForAllUsers();
-        }
-        if ($("input[name='coPermForAllUser.deleteAllowed']").is(":checked")) {
-            keepViewAllowedTrueForAllUsers();
-        }
-        if ($("input[name='coPermForAllUser.changePermAllowed']").is(":checked")) {
-            keepViewAllowedTrueForAllUsers();
-        }
-    }
-});
+        var act = $(this).attr('name');
+        var checkBoxNamePreFix = act.substring(0, act.indexOf('.'));
+        if ($(this).is(":checked")) {
+            if (act == 'anonymousePerm.exportAllowed') {
+                setAllRegUserExportTrue()
+                setIndividualExportTrue();
+            }
+            if (act == 'allRegUserPerm.exportAllowed') {
+                setIndividualExportTrue();
+            }
 
-//for all-annonymous user
-$("input[name='coPermForAnony.viewAllowed']").live('click', function () {
-    if ($(this).is(":checked") == false) {
-        if ($("input[name='coPermForAnony.editAllowed']").is(":checked")) {
-            keepViewAllowedTrueForAnonymous();
-        }
-        if ($("input[name='coPermForAnony.importAllowed']").is(":checked")) {
-            keepViewAllowedTrueForAnonymous();
-        }
-        if ($("input[name='coPermForAnony.exportAllowed']").is(":checked")) {
-            keepViewAllowedTrueForAnonymous();
-        }
-        if ($("input[name='coPermForAnony.deleteAllowed']").is(":checked")) {
-            keepViewAllowedTrueForAnonymous();
-        }
-        if ($("input[name='coPermForAnony.changePermAllowed']").is(":checked")) {
-            keepViewAllowedTrueForAnonymous();
-        }
-    }
-});
-//for all-registered users
-function setViewTrueForAllRegUser() {
-    $("input[name='coPermForAllUser.viewAllowed']").attr('checked', true);
-}
-;
-function keepViewAllowedTrueForAllUsers() {
-    $("input[name='coPermForAllUser.viewAllowed']").attr('checked', true);
-}
-;
+            //check the cascading permissions
+            //if an individual user rac allowed checked
+            if ((act.indexOf('regUserPerms') != -1) && (act.indexOf('.racAllowed') != -1)) {
+                $("input[name='" + checkBoxNamePreFix + ".exportAllowed']").attr("checked", true);
+                $("input[name='" + checkBoxNamePreFix + ".importAllowed']").attr("checked", true);
+            }
+            //if an individual user update allowed checked
+            if ((act.indexOf('regUserPerms') != -1) && (act.indexOf('.updateAllowed') != -1)) {
+                $("input[name='" + checkBoxNamePreFix + ".exportAllowed']").attr("checked", true);
+                $("input[name='" + checkBoxNamePreFix + ".importAllowed']").attr("checked", true);
+                $("input[name='" + checkBoxNamePreFix + ".racAllowed']").attr("checked", true);
+            }
 
-//for anonymous users
-function setViewTrueForAnonymous() {
-    $("input[name='coPermForAnony.viewAllowed']").attr('checked', true);
-}
-;
+            //if an individual user delete allowed checked
+            if ((act.indexOf('regUserPerms') != -1) && (act.indexOf('.deleteAllowed') != -1)) {
+                $("input[name='" + checkBoxNamePreFix + ".exportAllowed']").attr("checked", true);
+                $("input[name='" + checkBoxNamePreFix + ".importAllowed']").attr("checked", true);
+                $("input[name='" + checkBoxNamePreFix + ".racAllowed']").attr("checked", true);
+                $("input[name='" + checkBoxNamePreFix + ".updateAllowed']").attr("checked", true);
+            }
 
-function keepViewAllowedTrueForAnonymous() {
-    $("input[name='coPermForAnony.viewAllowed']").attr('checked', true);
-}
-;
+            //if an individual user access control allowed checked
+            if ((act.indexOf('regUserPerms') != -1) && (act.indexOf('.acAllowed') != -1)) {
+                $("input[name='" + checkBoxNamePreFix + ".exportAllowed']").attr("checked", true);
+                $("input[name='" + checkBoxNamePreFix + ".importAllowed']").attr("checked", true);
+                $("input[name='" + checkBoxNamePreFix + ".racAllowed']").attr("checked", true);
+                $("input[name='" + checkBoxNamePreFix + ".updateAllowed']").attr("checked", true);
+                $("input[name='" + checkBoxNamePreFix + ".deleteAllowed']").attr("checked", true);
+            }
+        } else {
+            var anonyExportAllowed = $("input[name='anonymousePerm.exportAllowed']").is(":checked");
+            var allRegExportAllowed = $("input[name='allRegUserPerm.exportAllowed']").is(":checked");
 
-//for dynamic added checkbox
-function setViewAllowedTrueForDyn(name) {
-    var strv = name.substring(0, name.indexOf('.'));
-    $('input[name=' + strv + '.viewAllowed]').attr('checked', true);
-}
-;
+            //if allRegUser exportAllowed unckecked,
+            if (act == 'allRegUserPerm.exportAllowed') {
+                if (anonyExportAllowed) {
+                    $(this).attr('checked', true);
+                }
+            }
+            //The following will check the cascading permissions
+            //if an individual user exportAllowed unchecked
+            if ((act.indexOf('regUserPerms') != -1) && (act.indexOf('.exportAllowed') != -1)) {
+                if (allRegExportAllowed) {
+                    $(this).attr('checked', true);
+                }
+                if ($("input[name='" + checkBoxNamePreFix + ".acAllowed']").is(":checked")) {
+                    $(this).attr('checked', true);
+                }
+                if ($("input[name='" + checkBoxNamePreFix + ".deleteAllowed']").is(":checked")) {
+                    $(this).attr('checked', true);
+                }
+                if ($("input[name='" + checkBoxNamePreFix + ".updateAllowed']").is(":checked")) {
+                    $(this).attr('checked', true);
+                }
+                if ($("input[name='" + checkBoxNamePreFix + ".racAllowed']").is(":checked")) {
+                    $(this).attr('checked', true);
+                }
+            }
 
-function foreViewAllowedTrueForDyn(name) {
-    var strv = name.substring(0, name.indexOf('.'));
-    if ($('input[name=' + strv + '.editAllowed]').is(":checked")) {
-        keepViewAllowedTrueForDyn(strv);
-    }
-    if ($('input[name=' + strv + '.importAllowed]').is(":checked")) {
-        keepViewAllowedTrueForDyn(strv);
-    }
-    if ($('input[name=' + strv + '.exportAllowed]').is(":checked")) {
-        keepViewAllowedTrueForDyn(strv);
-    }
-    if ($('input[name=' + strv + '.deleteAllowed]').is(":checked")) {
-        keepViewAllowedTrueForDyn(strv);
-    }
-    if ($('input[name=' + strv + '.changePermAllowed]').is(":checked")) {
-        keepViewAllowedTrueForDyn(strv);
-    }
-}
-;
+            //if an individual user import allowed unchecked
+            if ((act.indexOf('regUserPerms') != -1) && (act.indexOf('.importAllowed') != -1)) {
+                if ($("input[name='" + checkBoxNamePreFix + ".acAllowed']").is(":checked")) {
+                    $(this).attr('checked', true);
+                }
+                if ($("input[name='" + checkBoxNamePreFix + ".deleteAllowed']").is(":checked")) {
+                    $(this).attr('checked', true);
+                }
+                if ($("input[name='" + checkBoxNamePreFix + ".updateAllowed']").is(":checked")) {
+                    $(this).attr('checked', true);
+                }
+                if ($("input[name='" + checkBoxNamePreFix + ".racAllowed']").is(":checked")) {
+                    $(this).attr('checked', true);
+                }
+            }
 
-function keepViewAllowedTrueForDyn(name) {
-    $('input[name=' + name + '.viewAllowed]').attr('checked', true);
-}
-;
+            //if an individual user rac allowed unchecked
+            if ((act.indexOf('regUserPerms') != -1) && (act.indexOf('.racAllowed') != -1)) {
+                if ($("input[name='" + checkBoxNamePreFix + ".acAllowed']").is(":checked")) {
+                    $(this).attr('checked', true);
+                }
+                if ($("input[name='" + checkBoxNamePreFix + ".deleteAllowed']").is(":checked")) {
+                    $(this).attr('checked', true);
+                }
+                if ($("input[name='" + checkBoxNamePreFix + ".updateAllowed']").is(":checked")) {
+                    $(this).attr('checked', true);
+                }
+            }
+            //if an individual user update allowed unchecked
+            if ((act.indexOf('regUserPerms') != -1) && (act.indexOf('.updateAllowed') != -1)) {
+                if ($("input[name='" + checkBoxNamePreFix + ".acAllowed']").is(":checked")) {
+                    $(this).attr('checked', true);
+                }
+                if ($("input[name='" + checkBoxNamePreFix + ".deleteAllowed']").is(":checked")) {
+                    $(this).attr('checked', true);
+                }
+            }
+
+            //if an individual user delete allowed unchecked
+            if ((act.indexOf('regUserPerms') != -1) && (act.indexOf('.deleteAllowed') != -1)) {
+                if ($("input[name='" + checkBoxNamePreFix + ".acAllowed']").is(":checked")) {
+                    $(this).attr('checked', true);
+                }
+            }
+        }
+    }
+)
+
 
 
 $("#permission_req input[type=checkbox]").live('click', function () {
@@ -212,6 +224,7 @@ $("#permission_req input[type=checkbox]").live('click', function () {
 function setViewPermTrueForPermReq() {
     $("input[name='permReq.viewAllowed']").attr('checked', true);
 }
+
 ;
 
 $("input[name='permReq.viewAllowed']").live('click', function () {
@@ -275,9 +288,9 @@ $('#saveLicence').live('click', function (e) {
     if (licence == null || licence.trim() == "") {
         alert("The Licence must be provided!");
     } else {
-        var licenceHtml= licence;
-        if(type =='tern'){
-            licenceHtml = "<a href='" + licence +"' target='_blank'>" + licence + "</a>"
+        var licenceHtml = licence;
+        if (type == 'tern') {
+            licenceHtml = "<a href='" + licence + "' target='_blank'>" + licence + "</a>"
         }
         window.parent.$('#licence_type').val(type);
         window.parent.$('#licence_contents').val(licence);

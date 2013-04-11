@@ -41,8 +41,6 @@ import javax.annotation.PostConstruct;
 public class ViewColDetailsAction extends DMCoreAction {
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
-    private boolean stageTransferEnabled;
-
     private boolean mdRegEnabled;
 
     private String redActionName;
@@ -58,7 +56,7 @@ public class ViewColDetailsAction extends DMCoreAction {
         try {
             // check the permission.
             try {
-                checkUserPermissions(collection.getId(), collection.getOwner().getId());
+                permissionBean = checkPermission(collection.getId(), collection.getOwner().getId());
             } catch (Exception e) {
                 addFieldError("checkPermission", getText("check.permissions.error"));
                 setNavAfterException();
@@ -67,11 +65,11 @@ public class ViewColDetailsAction extends DMCoreAction {
 
             // check if the request url is a view collection details with the pub namespace:
             // and whether an user logined in already, then we redirect it to view collection details by login user
-            long userId = getLoginUsrIdFromSession();
-            if (userId != 0 && viewType.equals(ActConstants.UserViewType.ANONYMOUS.toString())) {
+            // long userId = getLoginUsrIdFromSession();
+            if (user != null && viewType.equals(ActConstants.UserViewType.ANONYMOUS.toString())) {
                 redNamespace = REDIRECT_NAMESPACE;
                 redActionName = REDIRECT_ACTION_NAME;
-                if (userId == collection.getOwner().getId()) {
+                if (user.getId() == collection.getOwner().getId()) {
                     viewType = ActConstants.UserViewType.USER.toString();
                 } else {
                     viewType = ActConstants.UserViewType.ALL.toString();
@@ -111,31 +109,16 @@ public class ViewColDetailsAction extends DMCoreAction {
                     populateLinksInUsrCollection();
                 }
 
-                // populate the stage transfer if supported;
-                String stageTransferEnabledStr = configSetting.getPropValue(ConfigSettings.STAGE_TRANSFER_ENABLED);
-                stageTransferEnabled = Boolean.valueOf(stageTransferEnabledStr).booleanValue();
-
                 // populate the rifcs registration if enabled
                 String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
                 mdRegEnabled = Boolean.valueOf(mdRegEnabledStr).booleanValue();
-                //populate if the rifcs registration is enabled for non-ldap user
 
-                if (user != null) {
-                    //see if it's a ldap user
-                    String passwd = user.getPassword();
-                    boolean monUser = true;
-                    if (!StringUtils.endsWithIgnoreCase(passwd, "ldap")) {
-                        monUser = false;
-                    }
-
-                    if (mdRegEnabled) {
-                        //only the owner of a collectio and an admin they can register the metadata
-                        if ((user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
-                            mdRegEnabled = false;
-                        }
+                //The owner of a collection or an admin they can register the metadata
+                if (user != null && mdRegEnabled) {
+                    if ((user.getId() == collection.getOwner().getId()) || (user.getUserType() == UserType.ADMIN.code()) || (user.getUserType() == UserType.SUPERADMIN.code())) {
+                        permissionBean.setMdRegAllowed(true);
                     }
                 }
-
                 // set page title and nav label
                 setNavAfterSuccess();
 
@@ -238,14 +221,6 @@ public class ViewColDetailsAction extends DMCoreAction {
 
             navigationBar = generateNavLabel(startNav, startNavLink, secondNav, secondNavLink, null, null);
         }
-    }
-
-    public boolean isStageTransferEnabled() {
-        return stageTransferEnabled;
-    }
-
-    public void setStageTransferEnabled(boolean stageTransferEnabled) {
-        this.stageTransferEnabled = stageTransferEnabled;
     }
 
     public boolean isMdRegEnabled() {

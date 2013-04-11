@@ -27,27 +27,22 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import au.edu.monash.merc.capture.config.ConfigSettings;
-import au.edu.monash.merc.capture.domain.AuditEvent;
-import au.edu.monash.merc.capture.domain.Collection;
-import au.edu.monash.merc.capture.domain.Dataset;
-import au.edu.monash.merc.capture.domain.PermType;
-import au.edu.monash.merc.capture.domain.Permission;
-import au.edu.monash.merc.capture.domain.UserType;
+import au.edu.monash.merc.capture.domain.*;
+import au.edu.monash.merc.capture.dto.InheritPermissionBean;
 import au.edu.monash.merc.capture.dto.PermissionBean;
 import au.edu.monash.merc.capture.dto.page.Pagination;
 import au.edu.monash.merc.capture.identifier.IdentifierService;
 import au.edu.monash.merc.capture.service.DMService;
 import au.edu.monash.merc.capture.util.CaptureUtil;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class DMCoreAction extends BaseAction {
 
@@ -87,8 +82,6 @@ public class DMCoreAction extends BaseAction {
 
     protected PermissionBean permissionBean;
 
-    protected String googleMapApiKey;
-
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     //citation info
@@ -96,7 +89,6 @@ public class DMCoreAction extends BaseAction {
 
     @PostConstruct
     public void init() {
-        googleMapApiKey = configSetting.getPropValue(ConfigSettings.GOOGLE_MAP_API_AUTHEN_KEY);
         this.publisher = this.configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_GROUP_NAME);
     }
 
@@ -134,6 +126,169 @@ public class DMCoreAction extends BaseAction {
         }
     }
 
+    protected PermissionBean checkPermission(long collectionId, long ownerId) {
+        // retrieve the logged in user if any
+        user = retrieveLoggedInUser();
+        //anonymous user
+        if (user == null) {
+            CPermission anonymoutPerm = this.dmService.getAnonymousCollectionPermission(collectionId);
+            PermissionBean pmBean = copyPermissionToPermissionBean(anonymoutPerm);
+            return pmBean;
+        }
+
+        //owner of the collection
+        if (user.getId() == ownerId) {
+            PermissionBean pmBean = new PermissionBean();
+            pmBean.setFullPermissions();
+            return pmBean;
+        }
+
+        //admin
+        if (user != null && (user.getUserType() == UserType.ADMIN.code() || (user.getUserType() == UserType.SUPERADMIN.code()))) {
+            // create a new permissions.
+            PermissionBean pmBean = new PermissionBean();
+            pmBean.setFullPermissions();
+            return pmBean;
+        }
+        //user
+        CPermission userPerm = this.dmService.getUserCollectionPermission(collectionId, user.getId());
+        if (userPerm == null) {
+            InheritPermissionBean inheritPmBean = this.dmService.getUserInheritPermission(collectionId, user.getId());
+            PermissionBean pmBean = copyInheritPermissionToPermissionBean(inheritPmBean);
+            return pmBean;
+        } else {
+            PermissionBean pmBean = copyPermissionToPermissionBean(userPerm);
+            return pmBean;
+        }
+    }
+
+    protected PermissionBean copyPermissionToPermissionBean(CPermission permission) {
+        PermissionBean pmBean = new PermissionBean();
+        if (permission != null) {
+            pmBean.setId(permission.getId());
+            pmBean.setUid(permission.getPermForUser().getId());
+            pmBean.setUserName(permission.getPermForUser().getDisplayName());
+            int viewAllowed = permission.getViewAllowed();
+            if (viewAllowed == 0) {
+                pmBean.setViewAllowed(false);
+            } else {
+                pmBean.setViewAllowed(true);
+            }
+
+            int importAllowed = permission.getImportAllowed();
+            if (importAllowed == 0) {
+                pmBean.setImportAllowed(false);
+            } else {
+                pmBean.setImportAllowed(true);
+            }
+
+            int exportAllowed = permission.getExportAllowed();
+            if (exportAllowed == 0) {
+                pmBean.setExportAllowed(false);
+            } else {
+                pmBean.setExportAllowed(true);
+            }
+
+            int mdRegAllowed = permission.getMdRegisterAllowed();
+            if (mdRegAllowed == 0) {
+                pmBean.setMdRegAllowed(false);
+            } else {
+                pmBean.setMdRegAllowed(true);
+            }
+
+            int racAllowed = permission.getRacAllowed();
+            if (racAllowed == 0) {
+                pmBean.setRacAllowed(false);
+            } else {
+                pmBean.setRacAllowed(true);
+            }
+
+            int updateAllowed = permission.getUpdateAllowed();
+            if (updateAllowed == 0) {
+                pmBean.setUpdateAllowed(false);
+            } else {
+                pmBean.setUpdateAllowed(true);
+            }
+
+            int deleteAllowed = permission.getDeleteAllowed();
+            if (deleteAllowed == 0) {
+                pmBean.setDeleteAllowed(false);
+            } else {
+                pmBean.setDeleteAllowed(true);
+            }
+
+            int acAllowed = permission.getAcAllowed();
+            if (acAllowed == 0) {
+                pmBean.setAcAllowed(false);
+            } else {
+                pmBean.setAcAllowed(true);
+            }
+        }
+        return pmBean;
+    }
+
+    private PermissionBean copyInheritPermissionToPermissionBean(InheritPermissionBean permission) {
+        PermissionBean pmBean = new PermissionBean();
+        if (permission != null) {
+            pmBean.setUid(permission.getPermUserId());
+            int viewAllowed = permission.getViewAllowed();
+            if (viewAllowed == 0) {
+                pmBean.setViewAllowed(false);
+            } else {
+                pmBean.setViewAllowed(true);
+            }
+            int updateAllowed = permission.getUpdateAllowed();
+            if (updateAllowed == 0) {
+                pmBean.setUpdateAllowed(false);
+            } else {
+                pmBean.setUpdateAllowed(true);
+            }
+
+            int importAllowed = permission.getImportAllowed();
+            if (importAllowed == 0) {
+                pmBean.setImportAllowed(false);
+            } else {
+                pmBean.setImportAllowed(true);
+            }
+
+            int exportAllowed = permission.getExportAllowed();
+            if (exportAllowed == 0) {
+                pmBean.setExportAllowed(false);
+            } else {
+                pmBean.setExportAllowed(true);
+            }
+
+            int deleteAllowed = permission.getDeleteAllowed();
+            if (deleteAllowed == 0) {
+                pmBean.setDeleteAllowed(false);
+            } else {
+                pmBean.setDeleteAllowed(true);
+            }
+
+            int mdRegAllowed = permission.getMdRegisterAllowed();
+            if (mdRegAllowed == 0) {
+                pmBean.setMdRegAllowed(false);
+            } else {
+                pmBean.setMdRegAllowed(true);
+            }
+            int acAllowed = permission.getAcAllowed();
+            if (acAllowed == 0) {
+                pmBean.setAcAllowed(false);
+            } else {
+                pmBean.setAcAllowed(true);
+            }
+
+            int racAllowed = permission.getRacAllowed();
+            if (racAllowed == 0) {
+                pmBean.setRacAllowed(false);
+            } else {
+                pmBean.setRacAllowed(true);
+            }
+        }
+        return pmBean;
+    }
+
+    //to be removed
     protected void checkUserPermissions(long colId, long ownerId) {
 
         long userId = getLoginUsrIdFromSession();
@@ -147,11 +302,11 @@ public class DMCoreAction extends BaseAction {
             permissionBean.setUserName(anonyPerm.getPermissionForUser().getDisplayName());
             permissionBean.setUid(anonyPerm.getPermissionForUser().getId());
             permissionBean.setViewAllowed(anonyPerm.isViewAllowed());
-            permissionBean.setEditAllowed(anonyPerm.isUpdateAllowed());
+            permissionBean.setUpdateAllowed(anonyPerm.isUpdateAllowed());
             permissionBean.setImportAllowed(anonyPerm.isImportAllowed());
             permissionBean.setExportAllowed(anonyPerm.isExportAllowed());
             permissionBean.setDeleteAllowed(anonyPerm.isDeleteAllowed());
-            permissionBean.setChangePermAllowed(anonyPerm.isChangePermAllowed());
+            permissionBean.setAcAllowed(anonyPerm.isChangePermAllowed());
             return;
         }
 
@@ -192,18 +347,18 @@ public class DMCoreAction extends BaseAction {
             }
             if (userPerm != null) {//if found the user permissions, just return the user permissions
                 permissionBean.setViewAllowed(userPerm.isViewAllowed());
-                permissionBean.setEditAllowed(userPerm.isUpdateAllowed());
+                permissionBean.setUpdateAllowed(userPerm.isUpdateAllowed());
                 permissionBean.setImportAllowed(userPerm.isImportAllowed());
                 permissionBean.setExportAllowed(userPerm.isExportAllowed());
                 permissionBean.setDeleteAllowed(userPerm.isDeleteAllowed());
-                permissionBean.setChangePermAllowed(userPerm.isChangePermAllowed());
+                permissionBean.setAcAllowed(userPerm.isChangePermAllowed());
             } else {//if not found the user permissions, just return the all-registered-user permissions
                 permissionBean.setViewAllowed(allRegPerm.isViewAllowed());
-                permissionBean.setEditAllowed(allRegPerm.isUpdateAllowed());
+                permissionBean.setUpdateAllowed(allRegPerm.isUpdateAllowed());
                 permissionBean.setImportAllowed(allRegPerm.isImportAllowed());
                 permissionBean.setExportAllowed(allRegPerm.isExportAllowed());
                 permissionBean.setDeleteAllowed(allRegPerm.isDeleteAllowed());
-                permissionBean.setChangePermAllowed(allRegPerm.isChangePermAllowed());
+                permissionBean.setAcAllowed(allRegPerm.isChangePermAllowed());
             }
         }
         return;
@@ -363,14 +518,6 @@ public class DMCoreAction extends BaseAction {
 
     public void setViewType(String viewType) {
         this.viewType = viewType;
-    }
-
-    public String getGoogleMapApiKey() {
-        return googleMapApiKey;
-    }
-
-    public void setGoogleMapApiKey(String googleMapApiKey) {
-        this.googleMapApiKey = googleMapApiKey;
     }
 
     public PermissionBean getPermissionBean() {

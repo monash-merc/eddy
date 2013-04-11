@@ -8,6 +8,7 @@
         <mapping class="au.edu.monash.merc.capture.domain.Profile"/>
         <mapping class="au.edu.monash.merc.capture.domain.Avatar"/>
         <mapping class="au.edu.monash.merc.capture.domain.Collection"/>
+        <mapping class="au.edu.monash.merc.capture.domain.CPermission"/>
         <mapping class="au.edu.monash.merc.capture.domain.Location"/>
         <mapping class="au.edu.monash.merc.capture.domain.Licence"/>
         <mapping class="au.edu.monash.merc.capture.domain.Activity"/>

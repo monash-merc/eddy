@@ -30,11 +30,7 @@ package au.edu.monash.merc.capture.struts2.action;
 import au.edu.monash.merc.capture.common.CoverageType;
 import au.edu.monash.merc.capture.common.SpatialValue;
 import au.edu.monash.merc.capture.config.ConfigSettings;
-import au.edu.monash.merc.capture.domain.AuditEvent;
-import au.edu.monash.merc.capture.domain.Location;
-import au.edu.monash.merc.capture.domain.PermType;
-import au.edu.monash.merc.capture.domain.Permission;
-import au.edu.monash.merc.capture.domain.UserType;
+import au.edu.monash.merc.capture.domain.*;
 import au.edu.monash.merc.capture.util.CaptureUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -55,8 +51,6 @@ import java.util.List;
 @Scope("prototype")
 @Controller("data.createColAction")
 public class CreateColAction extends DMCoreAction {
-
-    private boolean stageTransferEnabled;
 
     private boolean mdRegEnabled;
 
@@ -169,10 +163,17 @@ public class CreateColAction extends DMCoreAction {
             collection.setLocation(location);
 
             // setup a default permissions.
-            List<Permission> defaultPermissions = setDefaultPermissions();
-            collection.setPermissions(defaultPermissions);
+//            List<Permission> defaultPermissions = setDefaultPermissions();
+//            collection.setPermissions(defaultPermissions);
+
+            List<CPermission> coDefaultPerms = setCollectionDefaultPermissions(collection);
+            collection.setCpermissions(coDefaultPerms);
+
 
             this.dmService.createCollection(collection, dataStorePath);
+            // set view type is user
+            viewType = ActConstants.UserViewType.USER.viewType();
+
             // record down the event
             recordAuditEvent();
 
@@ -181,38 +182,19 @@ public class CreateColAction extends DMCoreAction {
             String htmlDesc = nlToBr(textAreaDesc);
             collection.setDescription(htmlDesc);
 
-            // populate the stage transfer if enabled;
-            String stageEnabledStr = configSetting.getPropValue(ConfigSettings.STAGE_TRANSFER_ENABLED);
-            stageTransferEnabled = Boolean.valueOf(stageEnabledStr).booleanValue();
-
             // populate the rifcs registration if enabled
             String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
             mdRegEnabled = Boolean.valueOf(mdRegEnabledStr).booleanValue();
-            // set user type is the owner of collection
-            viewType = ActConstants.UserViewType.USER.toString();
 
-            if (user != null) {
-                //see if it's a ldap user
-                String passwd = user.getPassword();
-                boolean monUser = true;
-                if (!StringUtils.endsWithIgnoreCase(passwd, "ldap")) {
-                    monUser = false;
-                }
-
-                if (mdRegEnabled) {
-                    //owner of a collection and an admin they can register the metadata
-                    if ((user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
-                        mdRegEnabled = false;
-                    }
-                }
-            }
-
-            // set the full permissions
+            //set the full permissions for owner
             setupFullPermissions();
+            //if metadata registration disabled. then we remove the metadata registration permission
+            if (!mdRegEnabled) {
+                permissionBean.setMdRegAllowed(false);
+            }
 
             // populate the collection links
             populateLinksInUsrCollection();
-
             // set action successful message
             setActionSuccessMsg(getText("create.collection.success"));
             // set page title and navigation label
@@ -267,6 +249,24 @@ public class CreateColAction extends DMCoreAction {
             }
         }
 
+    }
+
+    private List<CPermission> setCollectionDefaultPermissions(Collection co) {
+        List<CPermission> defaultPerms = new ArrayList<CPermission>();
+        //all registered user group permission
+        CPermission allRegUserPerm = new CPermission();
+        allRegUserPerm.setPermType(PermType.ALLREGUSER.code());
+        User allRegUser = this.userService.getVirtualUser(UserType.ALLREGUSER.code());
+        allRegUserPerm.setCollection(co);
+        allRegUserPerm.setPermForUser(allRegUser);
+        CPermission anonymousPerm = new CPermission();
+        anonymousPerm.setPermType(PermType.ANONYMOUS.code());
+        User anonymous = this.userService.getVirtualUser(UserType.ANONYMOUS.code());
+        anonymousPerm.setCollection(co);
+        anonymousPerm.setPermForUser(anonymous);
+        defaultPerms.add(allRegUserPerm);
+        defaultPerms.add(anonymousPerm);
+        return defaultPerms;
     }
 
     private List<Permission> setDefaultPermissions() {
@@ -338,14 +338,6 @@ public class CreateColAction extends DMCoreAction {
             return false;
         }
         return true;
-    }
-
-    public boolean isStageTransferEnabled() {
-        return stageTransferEnabled;
-    }
-
-    public void setStageTransferEnabled(boolean stageTransferEnabled) {
-        this.stageTransferEnabled = stageTransferEnabled;
     }
 
     public boolean isMdRegEnabled() {

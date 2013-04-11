@@ -97,8 +97,8 @@ public class CollectionDAO extends HibernateGenericDAO<Collection> implements IC
     public Pagination<Collection> getAllPublicCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
         // count total
         Criteria criteria = this.session().createCriteria(this.persistClass);
-        Criteria permCriteria = criteria.createCriteria("permissions");
-        permCriteria.add(Restrictions.eq("viewAllowed", true)).add(Restrictions.eq("permType", PermType.ANONYMOUS.code()));
+        Criteria permCriteria = criteria.createCriteria("cpermissions");
+        permCriteria.add(Restrictions.eq("viewAllowed", 1)).add(Restrictions.eq("permType", PermType.ANONYMOUS.code()));
 
         criteria.setProjection(Projections.rowCount());
         int total = ((Long) criteria.uniqueResult()).intValue();
@@ -107,8 +107,8 @@ public class CollectionDAO extends HibernateGenericDAO<Collection> implements IC
 
         // start to query the sharing collections
         Criteria findCriteria = this.session().createCriteria(this.persistClass);
-        Criteria findPermCriteria = findCriteria.createCriteria("permissions");
-        findPermCriteria.add(Restrictions.eq("viewAllowed", true)).add(Restrictions.eq("permType", PermType.ANONYMOUS.code()));
+        Criteria findPermCriteria = findCriteria.createCriteria("cpermissions");
+        findPermCriteria.add(Restrictions.eq("viewAllowed", 1)).add(Restrictions.eq("permType", PermType.ANONYMOUS.code()));
 
         // add orders
         if (orderBys != null && orderBys.length > 0) {

@@ -136,7 +136,7 @@ public class ImportDSAction extends DMCoreAction {
 		}
 
 		try {
-			checkUserPermissions(collection.getId(), collection.getOwner().getId());
+			permissionBean = checkPermission(collection.getId(), collection.getOwner().getId());
 		} catch (Exception e) {
 			addFieldError("checkPermission", getText("check.permissions.error"));
 			collectionError = true;
