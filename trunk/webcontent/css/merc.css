@@ -1058,6 +1058,29 @@ input {
     font-size: 11px;
 }
 
+.display_data_tab3 {
+    margin-top: 5px;
+    width: 100%;
+    text-align: left;
+    border: solid 1px #F2F2F2;
+    border-collapse: collapse;
+}
+
+.display_data_tab3 th {
+    color: #726E4C;
+    background-color: #f8f8f8;
+    border-bottom: solid 1px #F2F2F2;
+    border-right: solid 1px #F2F2F2;
+    padding: 5px;
+}
+
+.display_data_tab3 td {
+    border-bottom: solid 1px #F2F2F2;
+    border-right: solid 1px #F2F2F2;
+    padding: 5px;
+    font-size: 11px;
+}
+
 .tab_link {
     text-align: center;
 }
@@ -1203,6 +1226,12 @@ input {
     margin-right: 15px;
 }
 
+.span_spec_title {
+    color: #726E4C;
+    font-weight: bold;
+    font-size: 12px;
+}
+
 .sub_b_title {
     margin-top: 5px;
     margin-bottom: 10px;
@@ -1344,7 +1373,6 @@ input {
     cursor: pointer;
 }
 
-
 .home_left_panel {
     float: left;
     width: 280px;
@@ -1377,7 +1405,6 @@ input {
     margin-top: 5px;
     margin-bottom: 15px;
 }
-
 
 .name_comment {
     font-size: 11px;
@@ -1494,6 +1521,12 @@ input {
     font-size: 11px;
 }
 
+.permission_spec {
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 5px;
+}
+
 .tr_normal {
     background-color: #fff;
 }
@@ -1503,6 +1536,18 @@ input {
     line-height: 22px;
     padding-left: 10px;
     margin-top: 10px;
+}
+
+.remove_user_perm {
+    background: url("../images/remove_grey_icon.png");
+    display: block;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.remove_user_perm:hover {
+    background: url("../images/remove_icon.png");
 }
 
 /** ==== START of Footer Section ==== **/
@@ -1537,7 +1582,6 @@ input {
     color: #003766;
     text-decoration: none;
 }
-
 
 .site_use_policy {
     margin-left: 165px;

@@ -57,20 +57,21 @@ $(document).ready(function () {
         if (value_index != '-1') {
             var permHtml = "<tr>";
             permHtml += "<td>" + selectedText;
-            permHtml += "<input type='hidden' name='regUserPerms[" + rowIndex + "].id' value='0' id='regUserPerms" + rowIndex + "__id'/>";
-            permHtml += "<input type='hidden' name='regUserPerms[" + rowIndex + "].uid' value='" + value_index + "' id='user_id'/></td>";
-            permHtml += "<input type='hidden' name='regUserPerms[" + rowIndex + "].userName' value='" + selectedText + "' id='regUserPerms" + rowIndex + "__userName'/></td>";
-            permHtml += "<td><input type='hidden' name='regUserPerms[" + rowIndex + "].viewAllowed' value='true' id='regUserPerms" + rowIndex + "__viewAllowed'/><input type='checkbox' class='check_box' name='displayViewAllowed' cssClass='check_box' disabled ='true' checked='checked'/></td>";
+            permHtml += "<input type='hidden' name='regUserPerms[" + rowIndex + "].id' value='0' id='regUserPerms_id'/>";
+            permHtml += "<input type='hidden' name='regUserPerms[" + rowIndex + "].uid' value='" + value_index + "' id='user_id'/>";
+            permHtml += "<input type='hidden' name='regUserPerms[" + rowIndex + "].userName' value='" + selectedText + "' id='regUserPerms_userName'/></td>";
+            permHtml += "<td><input type='hidden' name='regUserPerms[" + rowIndex + "].viewAllowed' value='true' id='regUserPerms_viewAllowed'/><input type='checkbox' class='check_box' name='displayViewAllowed' cssClass='check_box' disabled ='true' checked='checked'/></td>";
             if (allRegExportAllowed) {
-                permHtml += "<td><input type='checkbox' class='check_box' name='regUserPerms[" + rowIndex + "].exportAllowed' value='true' checked='checked' id='regUserPerms" + rowIndex + "__exportAllowed'/></td>";
+                permHtml += "<td><input type='checkbox' class='check_box' name='regUserPerms[" + rowIndex + "].exportAllowed' value='true' checked='checked' id='regUserPerms_exportAllowed'/></td>";
             } else {
-                permHtml += "<td><input type='checkbox' class='check_box' name='regUserPerms[" + rowIndex + "].exportAllowed' value='true' id='regUserPerms" + rowIndex + "__exportAllowed'/></td>";
+                permHtml += "<td><input type='checkbox' class='check_box' name='regUserPerms[" + rowIndex + "].exportAllowed' value='true' id='regUserPerms_exportAllowed'/></td>";
             }
-            permHtml += "<td><input type='checkbox' class='check_box' name='regUserPerms[" + rowIndex + "].importAllowed' value='true' id='regUserPerms" + rowIndex + "__importAllowed'/></td>";
-            permHtml += "<td><input type='checkbox' class='check_box' name='regUserPerms[" + rowIndex + "].racAllowed' value='true' id='regUserPerms" + rowIndex + "__racAllowed'/></td>";
-            permHtml += "<td><input type='checkbox' class='check_box' name='regUserPerms[" + rowIndex + "].updateAllowed' value='true' id='regUserPerms" + rowIndex + "__updateAllowed'/></td>";
-            permHtml += "<td><input type='checkbox' class='check_box' name='regUserPerms[" + rowIndex + "].deleteAllowed' value='true' id='regUserPerms" + rowIndex + "__deleteAllowed'/></td>";
-            permHtml += "<td><input type='checkbox' class='check_box' name='regUserPerms[" + rowIndex + "].acAllowed' value='true' id='regUserPerms" + rowIndex + "__acAllowed'/></td>";
+            permHtml += "<td><input type='checkbox' class='check_box' name='regUserPerms[" + rowIndex + "].importAllowed' value='true' id='regUserPerms_importAllowed'/></td>";
+            permHtml += "<td><input type='checkbox' class='check_box' name='regUserPerms[" + rowIndex + "].racAllowed' value='true' id='regUserPerms_racAllowed'/></td>";
+            permHtml += "<td><input type='checkbox' class='check_box' name='regUserPerms[" + rowIndex + "].updateAllowed' value='true' id='regUserPerms_updateAllowed'/></td>";
+            permHtml += "<td><input type='checkbox' class='check_box' name='regUserPerms[" + rowIndex + "].deleteAllowed' value='true' id='regUserPerms_deleteAllowed'/></td>";
+            permHtml += "<td><input type='checkbox' class='check_box' name='regUserPerms[" + rowIndex + "].acAllowed' value='true' id='regUserPerms_acAllowed'/></td>";
+            permHtml += "<td align='center'><div class='remove_user_perm' title='remove this user permissions'>&nbsp;</div></td>";
             permHtml += "</tr>";
 
             $('#user_permissions > tbody:last').append(permHtml);
@@ -210,6 +211,90 @@ $("#user_permissions input[type=checkbox]").live('click', function () {
 )
 
 
+$('.remove_user_perm').live('click', function (event) {
+    event.preventDefault();
+    var trRowId = $(this).closest('tr');
+    var trId = trRowId.attr('id');
+    trRowId.remove();
+    resortPermissionTabIndex();
+})
+
+function resortPermissionTabIndex() {
+    var index = 0;
+
+    $('#user_permissions > tbody > tr').each(function () {
+        //permission id
+        var permId = $(this).find('#regUserPerms_id');
+        permId.attr('name', 'regUserPerms[' + index + '].id');
+
+        //perm user id
+        var permUserId = $(this).find('#user_id');
+        permUserId.attr('name', 'regUserPerms[' + index + '].uid');
+
+        //perm user name
+        var permUserName = $(this).find('#regUserPerms_userName');
+        permUserName.attr('name', 'regUserPerms[' + index + '].userName');
+
+        //perm view allowed
+        var permViewAllowed = $(this).find('#regUserPerms_viewAllowed');
+        permViewAllowed.attr('name', 'regUserPerms[' + index + '].viewAllowed');
+
+        //perm export allowed
+        var permExportAllowed = $(this).find('#regUserPerms_exportAllowed');
+        permExportAllowed.attr('name', 'regUserPerms[' + index + '].exportAllowed');
+        //_perm export allowed
+        var _permExportAllowed = $(this).find('#__checkbox_regUserPerms_exportAllowed');
+        if (_permExportAllowed != null && _permExportAllowed != 'undefined') {
+            _permExportAllowed.attr('name', '__checkbox_regUserPerms[' + index + '].exportAllowed');
+        }
+
+        //perm import allowed
+        var permImportAllowed = $(this).find('#regUserPerms_importAllowed');
+        permImportAllowed.attr('name', 'regUserPerms[' + index + '].importAllowed');
+        //_perm import allowed
+        var _permImportAllowed = $(this).find('#__checkbox_regUserPerms_importAllowed');
+        if (_permImportAllowed != null && _permImportAllowed != 'undefined') {
+            _permImportAllowed.attr('name', '__checkbox_regUserPerms[' + index + '].importAllowed');
+        }
+
+        //perm rac allowed
+        var permRacAllowed = $(this).find('#regUserPerms_racAllowed');
+        permRacAllowed.attr('name', 'regUserPerms[' + index + '].racAllowed');
+        //_perm rac allowed
+        var _permRacAllowed = $(this).find('#__checkbox_regUserPerms_racAllowed');
+        if (_permRacAllowed != null && _permRacAllowed != 'undefined') {
+            _permRacAllowed.attr('name', '__checkbox_regUserPerms[' + index + '].racAllowed');
+        }
+
+        //perm update allowed
+        var permUpdateAllowed = $(this).find('#regUserPerms_updateAllowed');
+        permUpdateAllowed.attr('name', 'regUserPerms[' + index + '].updateAllowed');
+        //_perm update allowed
+        var _permUpdateAllowed = $(this).find('#__checkbox_regUserPerms_updateAllowed');
+        if (_permUpdateAllowed != null && _permUpdateAllowed != 'undefined') {
+            _permUpdateAllowed.attr('name', '__checkbox_regUserPerms[' + index + '].updateAllowed');
+        }
+
+        //perm delete allowed
+        var permDeleteAllowed = $(this).find('#regUserPerms_deleteAllowed');
+        permDeleteAllowed.attr('name', 'regUserPerms[' + index + '].deleteAllowed');
+        //_perm delete allowed
+        var _permDeleteAllowed = $(this).find('#__checkbox_regUserPerms_deleteAllowed');
+        if (_permDeleteAllowed != null && _permDeleteAllowed != 'undefined') {
+            _permDeleteAllowed.attr('name', '__checkbox_regUserPerms[' + index + '].deleteAllowed');
+        }
+
+        //perm ac allowed
+        var permAcAllowed = $(this).find('#regUserPerms_acAllowed');
+        permAcAllowed.attr('name', 'regUserPerms[' + index + '].acAllowed');
+        //_perm ac allowed
+        var _permAcAllowed = $(this).find('#__checkbox_regUserPerms_acAllowed');
+        if (_permAcAllowed != null && _permAcAllowed != 'undefined') {
+            _permAcAllowed.attr('name', '__checkbox_regUserPerms[' + index + '].acAllowed');
+        }
+
+    });
+}
 
 $("#permission_req input[type=checkbox]").live('click', function () {
     var act = $(this).attr('name');

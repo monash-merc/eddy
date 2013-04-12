@@ -452,6 +452,9 @@ public class PermissionAction extends DMCoreAction {
         //add the permission for all registered user into updated list
         permissionsUpdated.add(permAllRegUser);
 
+        //total submitted permissions id list
+        List<Long> totalSubmittedPermissionIds = new ArrayList<Long>();
+
         //check the individual user permission
         for (PermissionBean pm : regUserPerms) {
             //if it's the same as the all registered user group's permission, we have to remove it
@@ -459,6 +462,8 @@ public class PermissionAction extends DMCoreAction {
                 long permId = pm.getId();
                 if (permId != 0) {
                     permissionsDeleted.add(permId);
+                    //added it into existed permission id list
+                    totalSubmittedPermissionIds.add(permId);
                 } else {
                     //ignore this permission as it's the same as the all registered user group's permissions
                 }
@@ -469,12 +474,22 @@ public class PermissionAction extends DMCoreAction {
                     permissionsNew.add(permIndividual);
                 } else {
                     permissionsUpdated.add(permIndividual);
+                    //added it into existed permission id list
+                    totalSubmittedPermissionIds.add(permId);
                 }
             }
         }
+        //create an Assigned permission bean
         AssignedPermissions assignedPermissions = new AssignedPermissions();
+        //set the permissions to be updated
         assignedPermissions.setUpdatedPermissions(permissionsUpdated);
+        //set the permissions to be created
         assignedPermissions.setNewPermissions(permissionsNew);
+
+        //check the existed collection permissions. try to figure out which user permissions should be removed
+        List<CPermission> existedCoPerms = this.dmService.getCollectionPermissions(col.getId());
+        updateTobeDeletedUserPermIds(existedCoPerms, totalSubmittedPermissionIds, permissionsDeleted);
+        //set the permissions to be deleted ids
         assignedPermissions.setDeletedPermissions(permissionsDeleted);
         return assignedPermissions;
     }
@@ -486,6 +501,18 @@ public class PermissionAction extends DMCoreAction {
             return false;
         } else {
             return true;
+        }
+    }
+
+    private void updateTobeDeletedUserPermIds(List<CPermission> cPermissions, List<Long> totalSubmittedIds, List<Long> permissionsDeleted) {
+        for (CPermission perm : cPermissions) {
+            String permType = perm.getPermType();
+            if (permType.equalsIgnoreCase(PermType.REGISTERED.code())) {
+                long permId = perm.getId();
+                if (!totalSubmittedIds.contains(permId)) {
+                    permissionsDeleted.add(permId);
+                }
+            }
         }
     }
 
