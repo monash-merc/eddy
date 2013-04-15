@@ -54,7 +54,7 @@
     <div style="clear: both;"></div>
 </div>
 <div class="content_none_border_div">
-    <div class="content_title">Access Control Specifications</div>
+    <div class="content_title">Permission Specifications</div>
 </div>
 
 <div class="content_div">
@@ -125,7 +125,7 @@
 </div>
 
 <div class="content_none_border_div">
-    <div class="content_title">Granted Permissions</div>
+    <div class="content_title">Permission Settings</div>
 </div>
 
 <div class="none_border_block">
