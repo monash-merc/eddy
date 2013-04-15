@@ -27,16 +27,12 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
-import java.util.List;
-
 import au.edu.monash.merc.capture.common.CoverageType;
 import au.edu.monash.merc.capture.common.SpatialValue;
 import au.edu.monash.merc.capture.domain.Location;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-
-import au.edu.monash.merc.capture.domain.Permission;
 
 @Scope("prototype")
 @Controller("data.showColEditAction")

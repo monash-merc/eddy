@@ -162,10 +162,6 @@ public class CreateColAction extends DMCoreAction {
             //save the location inot collection
             collection.setLocation(location);
 
-            // setup a default permissions.
-//            List<Permission> defaultPermissions = setDefaultPermissions();
-//            collection.setPermissions(defaultPermissions);
-
             List<CPermission> coDefaultPerms = setCollectionDefaultPermissions(collection);
             collection.setCpermissions(coDefaultPerms);
 
@@ -174,7 +170,7 @@ public class CreateColAction extends DMCoreAction {
             // set view type is user
             viewType = ActConstants.UserViewType.USER.viewType();
 
-            // record down the event
+            //record down the event
             recordAuditEvent();
 
             // convert any newline in the description into a br html tag
@@ -248,7 +244,6 @@ public class CreateColAction extends DMCoreAction {
                 addFieldError("collection.coverage.length", getText("collection.coverage.max.length"));
             }
         }
-
     }
 
     private List<CPermission> setCollectionDefaultPermissions(Collection co) {
@@ -266,35 +261,6 @@ public class CreateColAction extends DMCoreAction {
         anonymousPerm.setPermForUser(anonymous);
         defaultPerms.add(allRegUserPerm);
         defaultPerms.add(anonymousPerm);
-        return defaultPerms;
-    }
-
-    private List<Permission> setDefaultPermissions() {
-        // all-registered user
-        Permission allUserPerm = new Permission();
-        // set the permission type;
-        allUserPerm.setPermType(PermType.ALLREGUSER.code());
-
-        if (allRegUser == null) {
-            allRegUser = this.userService.getVirtualUser(UserType.ALLREGUSER.code());
-        }
-        allUserPerm.setCollection(collection);
-        allUserPerm.setPermissionForUser(allRegUser);
-
-        // anonymous user
-        Permission anonyPerm = new Permission();
-        // set the permission type.
-        anonyPerm.setPermType(PermType.ANONYMOUS.code());
-
-        if (anonymous == null) {
-            anonymous = this.userService.getVirtualUser(UserType.ANONYMOUS.code());
-        }
-        anonyPerm.setCollection(collection);
-        anonyPerm.setPermissionForUser(anonymous);
-
-        List<Permission> defaultPerms = new ArrayList<Permission>();
-        defaultPerms.add(allUserPerm);
-        defaultPerms.add(anonyPerm);
         return defaultPerms;
     }
 

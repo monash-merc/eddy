@@ -33,9 +33,7 @@ import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.AuditEvent;
 import au.edu.monash.merc.capture.domain.Collection;
 import au.edu.monash.merc.capture.domain.Location;
-import au.edu.monash.merc.capture.domain.Permission;
 import au.edu.monash.merc.capture.domain.UserType;
-import au.edu.monash.merc.capture.dto.PermissionBean;
 import au.edu.monash.merc.capture.util.CaptureUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -44,7 +42,6 @@ import org.springframework.stereotype.Controller;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 /**
  * @author simonyu
@@ -122,7 +119,6 @@ public class EditColAction extends DMCoreAction {
                 }
                 //save the location inot collection
                 existedCollection.setLocation(location);
-
 
                 existedCollection.setModifiedByUser(user);
 

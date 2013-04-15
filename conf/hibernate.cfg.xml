@@ -17,8 +17,6 @@
         <mapping class="au.edu.monash.merc.capture.domain.GlobalMetadata"/>
         <mapping class="au.edu.monash.merc.capture.domain.MetaVariable"/>
         <mapping class="au.edu.monash.merc.capture.domain.MetaAttribute"/>
-        <mapping class="au.edu.monash.merc.capture.domain.Permission"/>
-        <mapping class="au.edu.monash.merc.capture.domain.PermissionRequest"/>
         <mapping class="au.edu.monash.merc.capture.domain.RestrictAccess"/>
         <mapping class="au.edu.monash.merc.capture.domain.IPBlock"/>
         <mapping class="au.edu.monash.merc.capture.domain.AuditEvent"/>

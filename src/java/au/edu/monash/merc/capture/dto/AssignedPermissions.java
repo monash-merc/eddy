@@ -27,44 +27,12 @@
  */
 package au.edu.monash.merc.capture.dto;
 
+import au.edu.monash.merc.capture.domain.CPermission;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import au.edu.monash.merc.capture.domain.CPermission;
-import au.edu.monash.merc.capture.domain.Permission;
-
 public class AssignedPermissions {
-
-    //TODO: to be removed
-    private List<Permission> permissionsNew = new ArrayList<Permission>();
-
-    private List<Permission> permissionsUpdate = new ArrayList<Permission>();
-
-    private List<Long> deletePermsIds = new ArrayList<Long>();
-
-    public List<Permission> getPermissionsNew() {
-        return permissionsNew;
-    }
-
-    public void setPermissionsNew(List<Permission> permissionsNew) {
-        this.permissionsNew = permissionsNew;
-    }
-
-    public List<Permission> getPermissionsUpdate() {
-        return permissionsUpdate;
-    }
-
-    public void setPermissionsUpdate(List<Permission> permissionsUpdate) {
-        this.permissionsUpdate = permissionsUpdate;
-    }
-
-    public List<Long> getDeletePermsIds() {
-        return deletePermsIds;
-    }
-
-    public void setDeletePermsIds(List<Long> deletePermsIds) {
-        this.deletePermsIds = deletePermsIds;
-    }
 
     private long collectionId;
 

@@ -40,7 +40,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -129,6 +128,7 @@ public class DMCoreAction extends BaseAction {
     protected PermissionBean checkPermission(long collectionId, long ownerId) {
         // retrieve the logged in user if any
         user = retrieveLoggedInUser();
+
         //anonymous user
         if (user == null) {
             CPermission anonymoutPerm = this.dmService.getAnonymousCollectionPermission(collectionId);
@@ -150,6 +150,7 @@ public class DMCoreAction extends BaseAction {
             pmBean.setFullPermissions();
             return pmBean;
         }
+
         //user
         CPermission userPerm = this.dmService.getUserCollectionPermission(collectionId, user.getId());
         if (userPerm == null) {
@@ -286,82 +287,6 @@ public class DMCoreAction extends BaseAction {
             }
         }
         return pmBean;
-    }
-
-    //to be removed
-    protected void checkUserPermissions(long colId, long ownerId) {
-
-        long userId = getLoginUsrIdFromSession();
-        // retrieve the logged in user if any
-        user = retrieveLoggedInUser();
-        // non-login user, just create an empty permission
-        if (userId == 0) {
-            permissionBean = new PermissionBean();
-            Permission anonyPerm = this.dmService.getAnonymousPerm(colId);
-            permissionBean.setId(anonyPerm.getId());
-            permissionBean.setUserName(anonyPerm.getPermissionForUser().getDisplayName());
-            permissionBean.setUid(anonyPerm.getPermissionForUser().getId());
-            permissionBean.setViewAllowed(anonyPerm.isViewAllowed());
-            permissionBean.setUpdateAllowed(anonyPerm.isUpdateAllowed());
-            permissionBean.setImportAllowed(anonyPerm.isImportAllowed());
-            permissionBean.setExportAllowed(anonyPerm.isExportAllowed());
-            permissionBean.setDeleteAllowed(anonyPerm.isDeleteAllowed());
-            permissionBean.setAcAllowed(anonyPerm.isChangePermAllowed());
-            return;
-        }
-
-        // if user is the owner of collection
-        if (userId == ownerId) {
-            // create a new permissions.
-            permissionBean = new PermissionBean();
-            permissionBean.setFullPermissions();
-            return;
-        }
-
-        // if logged in user is an admin or super admin
-        if (user != null && (user.getUserType() == UserType.ADMIN.code() || (user.getUserType() == UserType.SUPERADMIN.code()))) {
-            // create a new permissions.
-            permissionBean = new PermissionBean();
-            permissionBean.setFullPermissions();
-            return;
-        }
-        // get the user permission for this collection, return max three permissions or min two permissions
-        List<Permission> allPerms = this.dmService.getUserCoPerms(userId, colId);
-        permissionBean = new PermissionBean();
-        Permission userPerm = null;
-        Permission anonyPerm = new Permission();
-        Permission allRegPerm = new Permission();
-
-        if (allPerms != null) {
-            for (Permission perm : allPerms) {
-                String permType = perm.getPermType();
-                if (permType.equals(PermType.REGISTERED.code())) {
-                    userPerm = perm;
-                }
-                if (permType.equals(PermType.ANONYMOUS.code())) {
-                    anonyPerm = perm;
-                }
-                if (permType.equals(PermType.ALLREGUSER.code())) {
-                    allRegPerm = perm;
-                }
-            }
-            if (userPerm != null) {//if found the user permissions, just return the user permissions
-                permissionBean.setViewAllowed(userPerm.isViewAllowed());
-                permissionBean.setUpdateAllowed(userPerm.isUpdateAllowed());
-                permissionBean.setImportAllowed(userPerm.isImportAllowed());
-                permissionBean.setExportAllowed(userPerm.isExportAllowed());
-                permissionBean.setDeleteAllowed(userPerm.isDeleteAllowed());
-                permissionBean.setAcAllowed(userPerm.isChangePermAllowed());
-            } else {//if not found the user permissions, just return the all-registered-user permissions
-                permissionBean.setViewAllowed(allRegPerm.isViewAllowed());
-                permissionBean.setUpdateAllowed(allRegPerm.isUpdateAllowed());
-                permissionBean.setImportAllowed(allRegPerm.isImportAllowed());
-                permissionBean.setExportAllowed(allRegPerm.isExportAllowed());
-                permissionBean.setDeleteAllowed(allRegPerm.isDeleteAllowed());
-                permissionBean.setAcAllowed(allRegPerm.isChangePermAllowed());
-            }
-        }
-        return;
     }
 
     protected void setupFullPermissions() {

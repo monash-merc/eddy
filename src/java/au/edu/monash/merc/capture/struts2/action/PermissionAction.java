@@ -27,20 +27,17 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import au.edu.monash.merc.capture.domain.*;
-import au.edu.monash.merc.capture.dto.ManagablePerm;
-import au.edu.monash.merc.capture.dto.ManagablePermType;
+import au.edu.monash.merc.capture.dto.AssignedPermissions;
+import au.edu.monash.merc.capture.dto.PermissionBean;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import au.edu.monash.merc.capture.dto.AssignedPermissions;
-import au.edu.monash.merc.capture.dto.PermissionBean;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Scope("prototype")
 @Controller("perm.permAction")
@@ -81,7 +78,6 @@ public class PermissionAction extends DMCoreAction {
 
                 //copy the permissions into permission beans
                 copyPermissionsToPermissionBeans(permissions);
-                System.out.println("=================== start to check existed permissions: ");
                 printGrantedPermissions();
                 // set view collection details link
                 setViewColDetailsLink();

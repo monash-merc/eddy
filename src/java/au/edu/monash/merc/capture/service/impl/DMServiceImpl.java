@@ -70,12 +70,6 @@ public class DMServiceImpl implements DMService {
     private CPermissionService cPermissionService;
 
     @Autowired
-    private PermissionService permissionService;
-
-    @Autowired
-    private PermissionRequestService permRequestService;
-
-    @Autowired
     private FileSystemSerivce fileService;
 
     @Autowired
@@ -120,10 +114,6 @@ public class DMServiceImpl implements DMService {
 
     public void setcPermissionService(CPermissionService cPermissionService) {
         this.cPermissionService = cPermissionService;
-    }
-
-    public void setPermissionService(PermissionService permissionService) {
-        this.permissionService = permissionService;
     }
 
     public void setFileService(FileSystemSerivce fileService) {
@@ -201,10 +191,6 @@ public class DMServiceImpl implements DMService {
 
     @Override
     public void deleteCollection(Collection collection, String rootPath) {
-        // delete the permissions first
-        deleteAllPermissionsByColId(collection.getId());
-        //delete the permissions request if any
-        deletePermissionRequestsByCoId(collection.getId());
         // delete it from database first
         this.collectionService.deleteCollection(collection);
         // then delete it from the file storage
@@ -213,10 +199,6 @@ public class DMServiceImpl implements DMService {
 
     @Override
     public void deletePublisheCollection(Collection collection, String storeRootPath, String rifcsRootPath) {
-        // delete the permissions first
-        deleteAllPermissionsByColId(collection.getId());
-        //delete the permissions request if any
-        deletePermissionRequestsByCoId(collection.getId());
         // delete it from database first
         // TODO:1. delete handle
         String uuidkey = collection.getUniqueKey();
@@ -601,147 +583,6 @@ public class DMServiceImpl implements DMService {
             }
         }
         return grantedPerms;
-    }
-
-
-    //TODO to be removed
-
-    @Override
-    public List<Permission> getUserCoPerms(long permForUsrId, long coId) {
-        return this.permissionService.getUserCoPerms(permForUsrId, coId);
-    }
-
-    @Override
-    public List<Permission> getCollectionDefaultPerms(long cid) {
-        return this.permissionService.getCollectionDefaultPerms(cid);
-    }
-
-    @Override
-    public Permission getAnonymousPerm(long cid) {
-        return this.permissionService.getAnonymousPerm(cid);
-    }
-
-    @Override
-    public void createUserPermission(Permission permission) {
-        this.permissionService.savePermission(permission);
-    }
-
-    @Override
-    public void deleteUserPermission(Permission permission) {
-        this.permissionService.deletePermission(permission);
-    }
-
-    @Override
-    public void deletePermissionByPId(long pId) {
-        this.permissionService.deletePermissionByPId(pId);
-    }
-
-    @Override
-    public void deleteAllPermissionsByColId(long cId) {
-        this.permissionService.deleteAllPermissionsByColId(cId);
-    }
-
-    @Override
-    public void updateUserPermission(Permission permission) {
-        this.permissionService.updatePermission(permission);
-    }
-
-    @Override
-    public void createUserPermissions(List<Permission> permissions) {
-        for (Permission p : permissions) {
-            createUserPermission(p);
-        }
-    }
-
-    @Override
-    public void updateUserPermissions(List<Permission> permissions) {
-        for (Permission p : permissions) {
-            updateUserPermission(p);
-        }
-    }
-
-    @Override
-    public void deleteUserPermissions(List<Permission> permissions) {
-        for (Permission p : permissions) {
-            deleteUserPermission(p);
-        }
-    }
-
-    @Override
-    public void deleteUserPermissionsByIds(List<Long> pids) {
-        for (Long pid : pids) {
-            deletePermissionByPId(pid.longValue());
-        }
-    }
-
-    @Override
-    public void setCollectionPermissions(AssignedPermissions assignedPerms) {
-        createUserPermissions(assignedPerms.getPermissionsNew());
-        updateUserPermissions(assignedPerms.getPermissionsUpdate());
-        deleteUserPermissionsByIds(assignedPerms.getDeletePermsIds());
-    }
-
-//    @Override
-//    public List<Permission> getCollectionPermissions(long cid) {
-//        return this.permissionService.getCollectionPermissions(cid);
-//    }
-
-    @Override
-    public void saveUserRequestedPerm(ManagablePerm<Permission> requestPermission, long permRequestId) {
-        Permission finalPerm = requestPermission.getPerm();
-        if (requestPermission.getManagablePermType().equals(ManagablePermType.DELETE)) {
-            this.deletePermissionByPId(finalPerm.getId());
-        } else if (requestPermission.getManagablePermType().equals(ManagablePermType.NEW)) {
-            this.createUserPermission(finalPerm);
-        } else if (requestPermission.getManagablePermType().equals(ManagablePermType.UPDATE)) {
-            this.updateUserPermission(finalPerm);
-        } else {
-            //ignore
-        }
-        //finally we have to delete this permission request
-        this.deletePermissionRequestById(permRequestId);
-    }
-
-
-    // Permission request section
-    @Override
-    public void savePermissionRequest(PermissionRequest permRequest) {
-        this.permRequestService.savePermissionRequest(permRequest);
-    }
-
-    @Override
-    public PermissionRequest getPermissionReqById(long id) {
-        return this.permRequestService.getPermissionReqById(id);
-    }
-
-    @Override
-    public List<PermissionRequest> getPermissionRequestsByOwner(long ownerId) {
-        return this.permRequestService.getPermissionRequestsByOwner(ownerId);
-    }
-
-    @Override
-    public void deletePermissionRequestsByCoId(long coId) {
-        this.permRequestService.deletePermissionRequestsByCoId(coId);
-    }
-
-    @Override
-    public void deletePermissionRequestById(long pmReqId) {
-        this.permRequestService.deletePermissionRequestById(pmReqId);
-    }
-
-    @Override
-    public PermissionRequest getCoPermissionRequestByReqUser(long coid, long reqUserId) {
-        return this.permRequestService.getCoPermissionRequestByReqUser(coid, reqUserId);
-    }
-
-    @Override
-    public void updatePermissionRequest(PermissionRequest permRequest) {
-        this.permRequestService.updatePermissionRequest(permRequest);
-    }
-
-    @Override
-    public Pagination<PermissionRequest> getPermRequestsByPages(long ownerId, int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
-        return this.permRequestService.getPermRequestsByPages(ownerId, startPageNo, recordsPerPage, orderBys);
     }
 
     @Override

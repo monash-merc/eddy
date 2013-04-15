@@ -76,34 +76,6 @@
                     </div>
                     <div style="clear:both"></div>
                 </div>
-                <div class="content_title">Permission Requests</div>
-                <div class="content_div">
-                <@s.if test="%{permReqPagination.pageResults.size() > 0}">
-                    <ul class="content_ul">
-                        <@s.iterator status="permReqStat" value="permReqPagination.pageResults" id="permReqResult" >
-                            <@s.if test="%{#permReqStat.index +1 <= 5}">
-                                <li>
-                                    <span class="span_inline1">
-                                        <@s.date name="#permReqResult.requestTime"  format="dd-MM-yyyy 'at' hh:mm a" />
-                                    </span>
-                                    <span class="span_inline2">
-                                        <@s.property value="#permReqResult.requestUser.displayName" /> applied for the permissions of <@s.property value="#permReqResult.collection.name" />
-                                    </span>
-                                </li>
-                            </@s.if>
-                        </@s.iterator>
-                    </ul>
-                    <div class="content_act_div">
-                        <a href="${base}/perm/listPermRequests.jspx">View Details</a>
-                    </div>
-                    <div style="clear:both"></div>
-                </@s.if>
-                <@s.else>
-                    <div class="placeholder_div">
-                        No Permissions Requests
-                    </div>
-                </@s.else>
-                </div>
 
                 <div class="content_title">Latest Events</div>
                 <div class="content_div">
