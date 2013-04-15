@@ -42,7 +42,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "collection_permission")
-public class CPermission extends Domain {
+public class Permission extends Domain {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "pk_generator")
     @TableGenerator(name = "pk_generator", pkColumnName = "pk_column_name", valueColumnName = "pk_column_value", pkColumnValue = "collection_perm_pk")

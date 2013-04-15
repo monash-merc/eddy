@@ -160,23 +160,23 @@ public interface DMService {
 
     Dataset getAllDatasetData(long dsId);
 
-    void savePermission(CPermission permission);
+    void savePermission(Permission permission);
 
-    CPermission getPermissionById(long id);
+    Permission getPermissionById(long id);
 
-    void updatePermission(CPermission permission);
+    void updatePermission(Permission permission);
 
-    void mergePermission(CPermission permission);
+    void mergePermission(Permission permission);
 
-    void deletePermission(CPermission permission);
+    void deletePermission(Permission permission);
 
-    CPermission getUserCollectionPermission(long collectionId, long userId);
+    Permission getUserCollectionPermission(long collectionId, long userId);
 
-    CPermission getAllRegUserCollectionPermission(long collectionId);
+    Permission getAllRegUserCollectionPermission(long collectionId);
 
-    CPermission getAnonymousCollectionPermission(long collectionId);
+    Permission getAnonymousCollectionPermission(long collectionId);
 
-    List<CPermission> getCollectionPermissions(long cid);
+    List<Permission> getCollectionPermissions(long cid);
 
     InheritPermissionBean getUserInheritPermission(final long coId, final long userId);
 
@@ -184,7 +184,7 @@ public interface DMService {
 
     void deletePermissionsByCollectionId(long collectionId);
 
-    List<CPermission> saveCollectionPermissions(AssignedPermissions assignedPerms);
+    List<Permission> saveCollectionPermissions(AssignedPermissions assignedPerms);
 
     void saveAuditEvent(AuditEvent event);
 

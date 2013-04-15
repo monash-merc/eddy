@@ -27,7 +27,7 @@
  */
 package au.edu.monash.merc.capture.dto;
 
-import au.edu.monash.merc.capture.domain.CPermission;
+import au.edu.monash.merc.capture.domain.Permission;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,11 +36,11 @@ public class AssignedPermissions {
 
     private long collectionId;
 
-    private CPermission anonymousPerm;
+    private Permission anonymousPerm;
 
-    private CPermission allRegisteredPerm;
+    private Permission allRegisteredPerm;
 
-    private List<CPermission> registeredUserPerms = new ArrayList<CPermission>();
+    private List<Permission> registeredUserPerms = new ArrayList<Permission>();
 
     public long getCollectionId() {
         return collectionId;
@@ -50,31 +50,31 @@ public class AssignedPermissions {
         this.collectionId = collectionId;
     }
 
-    public CPermission getAnonymousPerm() {
+    public Permission getAnonymousPerm() {
         return anonymousPerm;
     }
 
-    public void setAnonymousPerm(CPermission anonymousPerm) {
+    public void setAnonymousPerm(Permission anonymousPerm) {
         this.anonymousPerm = anonymousPerm;
     }
 
-    public CPermission getAllRegisteredPerm() {
+    public Permission getAllRegisteredPerm() {
         return allRegisteredPerm;
     }
 
-    public void setAllRegisteredPerm(CPermission allRegisteredPerm) {
+    public void setAllRegisteredPerm(Permission allRegisteredPerm) {
         this.allRegisteredPerm = allRegisteredPerm;
     }
 
-    public List<CPermission> getRegisteredUserPerms() {
+    public List<Permission> getRegisteredUserPerms() {
         return registeredUserPerms;
     }
 
-    public void setRegisteredUserPerms(List<CPermission> registeredUserPerms) {
+    public void setRegisteredUserPerms(List<Permission> registeredUserPerms) {
         this.registeredUserPerms = registeredUserPerms;
     }
 
-    public void setRegisteredUserPerm(CPermission permission) {
+    public void setRegisteredUserPerm(Permission permission) {
         this.registeredUserPerms.add(permission);
     }
 }

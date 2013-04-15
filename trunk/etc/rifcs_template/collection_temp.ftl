@@ -65,7 +65,17 @@
             ${collectionDesc}
             </description>
             <description type="rights" xml:lang="en">
+            <#if tern>
+                &lt;p&gt;
+                This data is shared under TERN Attribution-Share Alike-Non Commercial (TERN-BY-SA-NC) Data Licence v1.0 (http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0).
+                &lt;/p&gt;
+                &lt;p&gt;
+                Users can distribute, remix, and build upon the data provided that, they credit the original source and any other nominated parties,
+                AND licence any remixed or modified data under the same terms as the original data.
+                &lt;/p&gt;
+            <#else>
             ${licenceContents}
+            </#if>
             </description>
             <citationInfo>
                 <fullCitation style="Harvard">

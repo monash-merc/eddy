@@ -131,7 +131,7 @@ public class DMCoreAction extends BaseAction {
 
         //anonymous user
         if (user == null) {
-            CPermission anonymoutPerm = this.dmService.getAnonymousCollectionPermission(collectionId);
+            Permission anonymoutPerm = this.dmService.getAnonymousCollectionPermission(collectionId);
             PermissionBean pmBean = copyPermissionToPermissionBean(anonymoutPerm);
             return pmBean;
         }
@@ -152,7 +152,7 @@ public class DMCoreAction extends BaseAction {
         }
 
         //user
-        CPermission userPerm = this.dmService.getUserCollectionPermission(collectionId, user.getId());
+        Permission userPerm = this.dmService.getUserCollectionPermission(collectionId, user.getId());
         if (userPerm == null) {
             InheritPermissionBean inheritPmBean = this.dmService.getUserInheritPermission(collectionId, user.getId());
             PermissionBean pmBean = copyInheritPermissionToPermissionBean(inheritPmBean);
@@ -163,7 +163,7 @@ public class DMCoreAction extends BaseAction {
         }
     }
 
-    protected PermissionBean copyPermissionToPermissionBean(CPermission permission) {
+    protected PermissionBean copyPermissionToPermissionBean(Permission permission) {
         PermissionBean pmBean = new PermissionBean();
         if (permission != null) {
             pmBean.setId(permission.getId());
