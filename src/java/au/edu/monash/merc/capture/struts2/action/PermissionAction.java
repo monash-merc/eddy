@@ -444,53 +444,24 @@ public class PermissionAction extends DMCoreAction {
         //covert the permission bean for all registered user
         CPermission permAllRegUser = copyPermissionBeanToPermission(col, allRegUserPerm, PermType.ALLREGUSER.code());
 
-        List<CPermission> permissionsNew = new ArrayList<CPermission>();
-        List<CPermission> permissionsUpdated = new ArrayList<CPermission>();
-        List<Long> permissionsDeleted = new ArrayList<Long>();
-        //add the permission for anonymous into updated list
-        permissionsUpdated.add(permAnonymous);
-        //add the permission for all registered user into updated list
-        permissionsUpdated.add(permAllRegUser);
+        //create an Assigned permission bean
+        AssignedPermissions assignedPermissions = new AssignedPermissions();
+        //set the collection id
+        assignedPermissions.setCollectionId(col.getId());
 
-        //total submitted permissions id list
-        List<Long> totalSubmittedPermissionIds = new ArrayList<Long>();
+        //set the permission for anonymous into the assigned permission bean
+        assignedPermissions.setAnonymousPerm(permAnonymous);
+        //set the permission for all registered user into the assigned permission bean
+        assignedPermissions.setAllRegisteredPerm(permAllRegUser);
 
         //check the individual user permission
         for (PermissionBean pm : regUserPerms) {
             //if it's the same as the all registered user group's permission, we have to remove it
-            if (eqaulsPerms(pm, allRegUserPerm)) {
-                long permId = pm.getId();
-                if (permId != 0) {
-                    permissionsDeleted.add(permId);
-                    //added it into existed permission id list
-                    totalSubmittedPermissionIds.add(permId);
-                } else {
-                    //ignore this permission as it's the same as the all registered user group's permissions
-                }
-            } else {//if it is not the same as the all registered user group's permissions. we have to check whether it's to update or create a new one
-                CPermission permIndividual = copyPermissionBeanToPermission(col, pm, PermType.REGISTERED.code());
-                long permId = permIndividual.getId();
-                if (permId == 0) {
-                    permissionsNew.add(permIndividual);
-                } else {
-                    permissionsUpdated.add(permIndividual);
-                    //added it into existed permission id list
-                    totalSubmittedPermissionIds.add(permId);
-                }
+            if (!eqaulsPerms(pm, allRegUserPerm)) {
+                CPermission permForUser = copyPermissionBeanToPermission(col, pm, PermType.REGISTERED.code());
+                assignedPermissions.setRegisteredUserPerm(permForUser);
             }
         }
-        //create an Assigned permission bean
-        AssignedPermissions assignedPermissions = new AssignedPermissions();
-        //set the permissions to be updated
-        assignedPermissions.setUpdatedPermissions(permissionsUpdated);
-        //set the permissions to be created
-        assignedPermissions.setNewPermissions(permissionsNew);
-
-        //check the existed collection permissions. try to figure out which user permissions should be removed
-        List<CPermission> existedCoPerms = this.dmService.getCollectionPermissions(col.getId());
-        updateTobeDeletedUserPermIds(existedCoPerms, totalSubmittedPermissionIds, permissionsDeleted);
-        //set the permissions to be deleted ids
-        assignedPermissions.setDeletedPermissions(permissionsDeleted);
         return assignedPermissions;
     }
 
@@ -501,18 +472,6 @@ public class PermissionAction extends DMCoreAction {
             return false;
         } else {
             return true;
-        }
-    }
-
-    private void updateTobeDeletedUserPermIds(List<CPermission> cPermissions, List<Long> totalSubmittedIds, List<Long> permissionsDeleted) {
-        for (CPermission perm : cPermissions) {
-            String permType = perm.getPermType();
-            if (permType.equalsIgnoreCase(PermType.REGISTERED.code())) {
-                long permId = perm.getId();
-                if (!totalSubmittedIds.contains(permId)) {
-                    permissionsDeleted.add(permId);
-                }
-            }
         }
     }
 

@@ -560,31 +560,44 @@ public class DMServiceImpl implements DMService {
 
     @Override
     public List<CPermission> saveCollectionPermissions(AssignedPermissions assignedPerms) {
-        List<CPermission> grantedPerms = new ArrayList<CPermission>();
-        List<CPermission> permissionsUpdated = assignedPerms.getUpdatedPermissions();
-        List<CPermission> permissionsNew = assignedPerms.getNewPermissions();
-        List<Long> permissionsDeleted = assignedPerms.getDeletedPermissions();
-        //update the permissions
-        for (CPermission cperm : permissionsUpdated) {
-            this.updatePermission(cperm);
-            grantedPerms.add(cperm);
-        }
-        //delete the permissions
-        for (Long permId : permissionsDeleted) {
-            this.deletePermissionByPermId(permId);
-        }
 
-        for (CPermission cperm : permissionsNew) {
+        List<CPermission> grantedPerms = new ArrayList<CPermission>();
+        //update the anonymous permissions
+        CPermission anonymousPerm = assignedPerms.getAnonymousPerm();
+        this.updatePermission(anonymousPerm);
+        grantedPerms.add(anonymousPerm);
+
+        //update the all registered user permissions
+        CPermission allRegUserPerm = assignedPerms.getAllRegisteredPerm();
+        this.updatePermission(allRegUserPerm);
+        grantedPerms.add(allRegUserPerm);
+
+        List<CPermission> registeredUserPermsList = assignedPerms.getRegisteredUserPerms();
+        List<Long> registeredUserPermIds = new ArrayList<Long>();
+
+        List<CPermission> existedOldPerms = this.getCollectionPermissions(assignedPerms.getCollectionId());
+
+        for (CPermission cperm : registeredUserPermsList) {
             Long coId = cperm.getCollection().getId();
             Long permUserId = cperm.getPermForUser().getId();
             CPermission existedPerm = this.getUserCollectionPermission(coId, permUserId);
             if (existedPerm == null) {
                 this.savePermission(cperm);
-                grantedPerms.add(cperm);
             } else {
                 cperm.setId(existedPerm.getId());
                 this.mergePermission(cperm);
-                grantedPerms.add(cperm);
+            }
+            registeredUserPermIds.add(cperm.getId());
+            grantedPerms.add(cperm);
+        }
+
+        //try to remove the some registered users permissions which are not needed anymore
+        for (CPermission perm : existedOldPerms) {
+            long pmId = perm.getId();
+            if (perm.getPermType().equalsIgnoreCase(PermType.REGISTERED.code())) {
+                if (!registeredUserPermIds.contains(pmId)) {
+                    this.deletePermissionByPermId(pmId);
+                }
             }
         }
         return grantedPerms;

@@ -65,35 +65,48 @@ public class AssignedPermissions {
     public void setDeletePermsIds(List<Long> deletePermsIds) {
         this.deletePermsIds = deletePermsIds;
     }
-    //END of TODO:
 
-    private List<CPermission> newPermissions = new ArrayList<CPermission>();
+    private long collectionId;
 
-    private List<CPermission> updatedPermissions = new ArrayList<CPermission>();
+    private CPermission anonymousPerm;
 
-    private List<Long> deletedPermissions = new ArrayList<Long>();
+    private CPermission allRegisteredPerm;
 
-    public List<CPermission> getNewPermissions() {
-        return newPermissions;
+    private List<CPermission> registeredUserPerms = new ArrayList<CPermission>();
+
+    public long getCollectionId() {
+        return collectionId;
     }
 
-    public void setNewPermissions(List<CPermission> newPermissions) {
-        this.newPermissions = newPermissions;
+    public void setCollectionId(long collectionId) {
+        this.collectionId = collectionId;
     }
 
-    public List<CPermission> getUpdatedPermissions() {
-        return updatedPermissions;
+    public CPermission getAnonymousPerm() {
+        return anonymousPerm;
     }
 
-    public void setUpdatedPermissions(List<CPermission> updatedPermissions) {
-        this.updatedPermissions = updatedPermissions;
+    public void setAnonymousPerm(CPermission anonymousPerm) {
+        this.anonymousPerm = anonymousPerm;
     }
 
-    public List<Long> getDeletedPermissions() {
-        return deletedPermissions;
+    public CPermission getAllRegisteredPerm() {
+        return allRegisteredPerm;
     }
 
-    public void setDeletedPermissions(List<Long> deletedPermissions) {
-        this.deletedPermissions = deletedPermissions;
+    public void setAllRegisteredPerm(CPermission allRegisteredPerm) {
+        this.allRegisteredPerm = allRegisteredPerm;
+    }
+
+    public List<CPermission> getRegisteredUserPerms() {
+        return registeredUserPerms;
+    }
+
+    public void setRegisteredUserPerms(List<CPermission> registeredUserPerms) {
+        this.registeredUserPerms = registeredUserPerms;
+    }
+
+    public void setRegisteredUserPerm(CPermission permission) {
+        this.registeredUserPerms.add(permission);
     }
 }
