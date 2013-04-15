@@ -162,8 +162,8 @@ public class CreateColAction extends DMCoreAction {
             //save the location inot collection
             collection.setLocation(location);
 
-            List<CPermission> coDefaultPerms = setCollectionDefaultPermissions(collection);
-            collection.setCpermissions(coDefaultPerms);
+            List<Permission> coDefaultPerms = setCollectionDefaultPermissions(collection);
+            collection.setPermissions(coDefaultPerms);
 
 
             this.dmService.createCollection(collection, dataStorePath);
@@ -246,15 +246,18 @@ public class CreateColAction extends DMCoreAction {
         }
     }
 
-    private List<CPermission> setCollectionDefaultPermissions(Collection co) {
-        List<CPermission> defaultPerms = new ArrayList<CPermission>();
+    private List<Permission> setCollectionDefaultPermissions(Collection co) {
+        List<Permission> defaultPerms = new ArrayList<Permission>();
         //all registered user group permission
-        CPermission allRegUserPerm = new CPermission();
+        Permission allRegUserPerm = new Permission();
+        allRegUserPerm.setViewAllowed(1);
         allRegUserPerm.setPermType(PermType.ALLREGUSER.code());
         User allRegUser = this.userService.getVirtualUser(UserType.ALLREGUSER.code());
         allRegUserPerm.setCollection(co);
         allRegUserPerm.setPermForUser(allRegUser);
-        CPermission anonymousPerm = new CPermission();
+        //permission for anonymous user group
+        Permission anonymousPerm = new Permission();
+        anonymousPerm.setViewAllowed(1);
         anonymousPerm.setPermType(PermType.ANONYMOUS.code());
         User anonymous = this.userService.getVirtualUser(UserType.ANONYMOUS.code());
         anonymousPerm.setCollection(co);

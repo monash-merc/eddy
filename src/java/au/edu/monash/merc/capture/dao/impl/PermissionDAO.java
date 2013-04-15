@@ -29,10 +29,10 @@
 package au.edu.monash.merc.capture.dao.impl;
 
 import au.edu.monash.merc.capture.dao.HibernateGenericDAO;
-import au.edu.monash.merc.capture.domain.CPermission;
+import au.edu.monash.merc.capture.domain.Permission;
 import au.edu.monash.merc.capture.domain.PermType;
 import au.edu.monash.merc.capture.dto.InheritPermissionBean;
-import au.edu.monash.merc.capture.repository.ICPermissionRepository;
+import au.edu.monash.merc.capture.repository.IPermissionRepository;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Criterion;
@@ -56,34 +56,34 @@ import java.util.List;
  */
 @Scope("prototype")
 @Repository
-public class CPermissionDAO extends HibernateGenericDAO<CPermission> implements ICPermissionRepository {
+public class PermissionDAO extends HibernateGenericDAO<Permission> implements IPermissionRepository {
 
     @Override
-    public CPermission getUserCollectionPermission(long collectionId, long userId) {
+    public Permission getUserCollectionPermission(long collectionId, long userId) {
         Criteria permCriteria = this.session().createCriteria(this.persistClass);
         Criteria coCriteria = permCriteria.createCriteria("collection");
         Criteria userCriteria = permCriteria.createCriteria("permForUser");
         coCriteria.add(Restrictions.eq("id", collectionId));
         userCriteria.add(Restrictions.eq("id", userId));
-        return (CPermission) permCriteria.uniqueResult();
+        return (Permission) permCriteria.uniqueResult();
     }
 
     @Override
-    public CPermission getAnonymousCollectionPermission(long collectionId) {
+    public Permission getAnonymousCollectionPermission(long collectionId) {
         Criteria permCriteria = this.session().createCriteria(this.persistClass);
         permCriteria.add(Restrictions.eq("permType", PermType.ANONYMOUS.code()));
         Criteria coCriteria = permCriteria.createCriteria("collection");
         coCriteria.add(Restrictions.eq("id", collectionId));
-        return (CPermission) permCriteria.uniqueResult();
+        return (Permission) permCriteria.uniqueResult();
     }
 
     @Override
-    public CPermission getAllRegUserCollectionPermission(long collectionId) {
+    public Permission getAllRegUserCollectionPermission(long collectionId) {
         Criteria permCriteria = this.session().createCriteria(this.persistClass);
         permCriteria.add(Restrictions.eq("permType", PermType.ALLREGUSER.code()));
         Criteria coCriteria = permCriteria.createCriteria("collection");
         coCriteria.add(Restrictions.eq("id", collectionId));
-        return (CPermission) permCriteria.uniqueResult();
+        return (Permission) permCriteria.uniqueResult();
     }
 
     @Override
@@ -141,7 +141,7 @@ public class CPermissionDAO extends HibernateGenericDAO<CPermission> implements 
     }
 
     @Override
-    public List<CPermission> getCollectionPermissions(long cid) {
+    public List<Permission> getCollectionPermissions(long cid) {
         Criteria permCriteria = this.session().createCriteria(this.persistClass);
         Criteria coCriteria = permCriteria.createCriteria("collection");
         coCriteria.add(Restrictions.eq("id", cid));

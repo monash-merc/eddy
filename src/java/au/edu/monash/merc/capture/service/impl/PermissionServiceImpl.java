@@ -28,10 +28,10 @@
 
 package au.edu.monash.merc.capture.service.impl;
 
-import au.edu.monash.merc.capture.dao.impl.CPermissionDAO;
-import au.edu.monash.merc.capture.domain.CPermission;
+import au.edu.monash.merc.capture.dao.impl.PermissionDAO;
+import au.edu.monash.merc.capture.domain.Permission;
 import au.edu.monash.merc.capture.dto.InheritPermissionBean;
-import au.edu.monash.merc.capture.service.CPermissionService;
+import au.edu.monash.merc.capture.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -52,72 +52,72 @@ import java.util.List;
 @Scope("prototype")
 @Service
 @Transactional
-public class CPermissionServiceImpl implements CPermissionService {
+public class PermissionServiceImpl implements PermissionService {
 
     @Autowired
-    private CPermissionDAO cPermissionDao;
+    private PermissionDAO permissionDao;
 
-    public void setcPermissionDao(CPermissionDAO cPermissionDao) {
-        this.cPermissionDao = cPermissionDao;
+    public void setPermissionDao(PermissionDAO permissionDao) {
+        this.permissionDao = permissionDao;
     }
 
     @Override
-    public void savePermission(CPermission permission) {
-        this.cPermissionDao.add(permission);
+    public void savePermission(Permission permission) {
+        this.permissionDao.add(permission);
     }
 
     @Override
-    public CPermission getPermissionById(long id) {
-        return this.cPermissionDao.get(id);
+    public Permission getPermissionById(long id) {
+        return this.permissionDao.get(id);
     }
 
     @Override
-    public void updatePermission(CPermission permission) {
-        this.cPermissionDao.update(permission);
+    public void updatePermission(Permission permission) {
+        this.permissionDao.update(permission);
     }
 
     @Override
-    public void mergePermission(CPermission permission) {
-        this.cPermissionDao.merge(permission);
+    public void mergePermission(Permission permission) {
+        this.permissionDao.merge(permission);
     }
 
     @Override
-    public void deletePermission(CPermission permission) {
-        this.cPermissionDao.remove(permission);
+    public void deletePermission(Permission permission) {
+        this.permissionDao.remove(permission);
     }
 
     @Override
-    public CPermission getUserCollectionPermission(long collectionId, long userId) {
-        return this.cPermissionDao.getUserCollectionPermission(collectionId, userId);
+    public Permission getUserCollectionPermission(long collectionId, long userId) {
+        return this.permissionDao.getUserCollectionPermission(collectionId, userId);
     }
 
     @Override
-    public CPermission getAllRegUserCollectionPermission(long collectionId) {
-        return this.cPermissionDao.getAllRegUserCollectionPermission(collectionId);
+    public Permission getAllRegUserCollectionPermission(long collectionId) {
+        return this.permissionDao.getAllRegUserCollectionPermission(collectionId);
     }
 
     @Override
-    public CPermission getAnonymousCollectionPermission(long collectionId) {
-        return this.cPermissionDao.getAnonymousCollectionPermission(collectionId);
+    public Permission getAnonymousCollectionPermission(long collectionId) {
+        return this.permissionDao.getAnonymousCollectionPermission(collectionId);
     }
 
     @Override
-    public List<CPermission> getCollectionPermissions(long cid) {
-        return this.cPermissionDao.getCollectionPermissions(cid);
+    public List<Permission> getCollectionPermissions(long cid) {
+        return this.permissionDao.getCollectionPermissions(cid);
     }
 
     @Override
     public InheritPermissionBean getUserInheritPermission(long coId, long userId) {
-        return this.cPermissionDao.getUserInheritPermission(coId, userId);
+        return this.permissionDao.getUserInheritPermission(coId, userId);
     }
 
     @Override
     public void deletePermissionByPermId(long permissionId) {
-        this.cPermissionDao.deletePermissionByPermId(permissionId);
+        this.permissionDao.deletePermissionByPermId(permissionId);
     }
 
     @Override
     public void deletePermissionsByCollectionId(long collectionId) {
-        this.cPermissionDao.deletePermissionsByCollectionId(collectionId);
+        this.permissionDao.deletePermissionsByCollectionId(collectionId);
     }
 }

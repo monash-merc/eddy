@@ -74,7 +74,7 @@ public class PermissionAction extends DMCoreAction {
                 populateFilteredUserNames(ownerId);
 
                 //get all permissions for this collection
-                List<CPermission> permissions = this.dmService.getCollectionPermissions(collection.getId());
+                List<Permission> permissions = this.dmService.getCollectionPermissions(collection.getId());
 
                 //copy the permissions into permission beans
                 copyPermissionsToPermissionBeans(permissions);
@@ -141,11 +141,11 @@ public class PermissionAction extends DMCoreAction {
         }
     }
 
-    private void copyPermissionsToPermissionBeans(List<CPermission> permissions) {
+    private void copyPermissionsToPermissionBeans(List<Permission> permissions) {
         allRegUserPerm = new PermissionBean();
         anonymousePerm = new PermissionBean();
         regUserPerms.clear();
-        for (CPermission perm : permissions) {
+        for (Permission perm : permissions) {
             // get default permissions for all-registered user
             if (perm.getPermType().equals(PermType.ALLREGUSER.code())) {
                 //copy the allregistered user permissions
@@ -188,7 +188,7 @@ public class PermissionAction extends DMCoreAction {
                 AssignedPermissions assignedPermissions = grantCollectionPermissions(collection);
 
                 //save the granted permissions
-                List<CPermission> grantedPermissions = this.dmService.saveCollectionPermissions(assignedPermissions);
+                List<Permission> grantedPermissions = this.dmService.saveCollectionPermissions(assignedPermissions);
 
                 //copy the permissions into permission beans
                 copyPermissionsToPermissionBeans(grantedPermissions);
@@ -215,8 +215,8 @@ public class PermissionAction extends DMCoreAction {
     }
 
 
-    private CPermission copyPermissionBeanToPermission(Collection col, PermissionBean pmBean, String permType) {
-        CPermission permission = new CPermission();
+    private Permission copyPermissionBeanToPermission(Collection col, PermissionBean pmBean, String permType) {
+        Permission permission = new Permission();
 
         if (pmBean != null) {
             permission.setPermType(permType);
@@ -436,9 +436,9 @@ public class PermissionAction extends DMCoreAction {
     private AssignedPermissions assignPermissionForCollection(Collection col) {
 
         //covert the permission bean for anonymous user
-        CPermission permAnonymous = copyPermissionBeanToPermission(col, anonymousePerm, PermType.ANONYMOUS.code());
+        Permission permAnonymous = copyPermissionBeanToPermission(col, anonymousePerm, PermType.ANONYMOUS.code());
         //covert the permission bean for all registered user
-        CPermission permAllRegUser = copyPermissionBeanToPermission(col, allRegUserPerm, PermType.ALLREGUSER.code());
+        Permission permAllRegUser = copyPermissionBeanToPermission(col, allRegUserPerm, PermType.ALLREGUSER.code());
 
         //create an Assigned permission bean
         AssignedPermissions assignedPermissions = new AssignedPermissions();
@@ -454,7 +454,7 @@ public class PermissionAction extends DMCoreAction {
         for (PermissionBean pm : regUserPerms) {
             //if it's the same as the all registered user group's permission, we have to remove it
             if (!eqaulsPerms(pm, allRegUserPerm)) {
-                CPermission permForUser = copyPermissionBeanToPermission(col, pm, PermType.REGISTERED.code());
+                Permission permForUser = copyPermissionBeanToPermission(col, pm, PermType.REGISTERED.code());
                 assignedPermissions.setRegisteredUserPerm(permForUser);
             }
         }

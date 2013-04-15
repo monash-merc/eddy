@@ -26,9 +26,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package au.edu.monash.merc.capture.repository;
+package au.edu.monash.merc.capture.service;
 
-import au.edu.monash.merc.capture.domain.CPermission;
+import au.edu.monash.merc.capture.domain.Permission;
 import au.edu.monash.merc.capture.dto.InheritPermissionBean;
 
 import java.util.List;
@@ -40,17 +40,27 @@ import java.util.List;
  * @version 1.0
  * @since 1.0
  *        <p/>
- *        Date: 26/03/13 4:20 PM
+ *        Date: 26/03/13 4:26 PM
  */
-public interface ICPermissionRepository {
+public interface PermissionService {
 
-    CPermission getUserCollectionPermission(long collectionId, long userId);
+    void savePermission(Permission permission);
 
-    CPermission getAllRegUserCollectionPermission(long collectionId);
+    Permission getPermissionById(long id);
 
-    CPermission getAnonymousCollectionPermission(long collectionId);
+    void updatePermission(Permission permission);
 
-    List<CPermission> getCollectionPermissions(long cid);
+    void mergePermission(Permission permission);
+
+    void deletePermission(Permission permission);
+
+    Permission getUserCollectionPermission(long collectionId, long userId);
+
+    Permission getAllRegUserCollectionPermission(long collectionId);
+
+    Permission getAnonymousCollectionPermission(long collectionId);
+
+    List<Permission> getCollectionPermissions(long cid);
 
     InheritPermissionBean getUserInheritPermission(final long coId, final long userId);
 

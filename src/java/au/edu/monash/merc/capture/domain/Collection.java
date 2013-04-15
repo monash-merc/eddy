@@ -115,9 +115,9 @@ public class Collection extends Domain {
     @Column(name = "date_to")
     private Date dateTo;
 
-    @OneToMany(mappedBy = "collection", fetch = FetchType.LAZY, targetEntity = CPermission.class)
+    @OneToMany(mappedBy = "collection", fetch = FetchType.LAZY, targetEntity = Permission.class)
     @Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
-    private List<CPermission> cpermissions = new ArrayList<CPermission>();
+    private List<Permission> permissions = new ArrayList<Permission>();
 
     @OneToMany(mappedBy = "collection", targetEntity = Dataset.class, fetch = FetchType.LAZY)
     @Cascade({CascadeType.DELETE})
@@ -283,12 +283,12 @@ public class Collection extends Domain {
         this.dateTo = dateTo;
     }
 
-    public List<CPermission> getCpermissions() {
-        return cpermissions;
+    public List<Permission> getPermissions() {
+        return permissions;
     }
 
-    public void setCpermissions(List<CPermission> cpermissions) {
-        this.cpermissions = cpermissions;
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
     }
 
     public List<Dataset> getDatasets() {

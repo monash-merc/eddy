@@ -28,12 +28,12 @@
 
 package au.edu.monash.merc.capture.utest;
 
-import au.edu.monash.merc.capture.domain.CPermission;
+import au.edu.monash.merc.capture.domain.Permission;
 import au.edu.monash.merc.capture.domain.Collection;
 import au.edu.monash.merc.capture.domain.PermType;
 import au.edu.monash.merc.capture.domain.User;
 import au.edu.monash.merc.capture.dto.InheritPermissionBean;
-import au.edu.monash.merc.capture.service.CPermissionService;
+import au.edu.monash.merc.capture.service.PermissionService;
 import au.edu.monash.merc.capture.service.CollectionService;
 import au.edu.monash.merc.capture.service.UserService;
 import junit.framework.Assert;
@@ -61,10 +61,10 @@ import java.util.Calendar;
 @ContextConfiguration(locations = "classpath:applicationContext.xml")
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 @Transactional
-public class CPermissionServiceTest {
+public class PermissionServiceTest {
 
     @Autowired
-    private CPermissionService cPermissionService;
+    private PermissionService permissionService;
 
     @Autowired
     private UserService userService;
@@ -77,8 +77,8 @@ public class CPermissionServiceTest {
     private static long collectionId;
 
 
-    public void setcPermissionService(CPermissionService cPermissionService) {
-        this.cPermissionService = cPermissionService;
+    public void setPermissionService(PermissionService permissionService) {
+        this.permissionService = permissionService;
     }
 
     public void setUserService(UserService userService) {
@@ -124,9 +124,8 @@ public class CPermissionServiceTest {
         col.setModifiedByUser(u);
 
         this.collectionService.saveCollection(col);
-        ;
         collectionId = col.getId();
-        CPermission permAnonymous = new CPermission();
+        Permission permAnonymous = new Permission();
         permAnonymous.setViewAllowed(1);
         permAnonymous.setUpdateAllowed(0);
         permAnonymous.setImportAllowed(0);
@@ -139,7 +138,7 @@ public class CPermissionServiceTest {
         permAnonymous.setCollection(col);
         permAnonymous.setPermForUser(anonymous);
 
-        CPermission permAllRegUser = new CPermission();
+        Permission permAllRegUser = new Permission();
         permAllRegUser.setViewAllowed(1);
         permAllRegUser.setUpdateAllowed(0);
         permAllRegUser.setImportAllowed(0);
@@ -153,10 +152,10 @@ public class CPermissionServiceTest {
         permAllRegUser.setPermForUser(allRegUser);
 
 
-        this.cPermissionService.savePermission(permAllRegUser);
-        this.cPermissionService.savePermission(permAnonymous);
+        this.permissionService.savePermission(permAllRegUser);
+        this.permissionService.savePermission(permAnonymous);
 
-//        CPermission permissionUser = new CPermission();
+//        Permission permissionUser = new Permission();
 //        permissionUser.setViewAllowed(1);
 //        permissionUser.setUpdateAllowed(1);
 //        permissionUser.setImportAllowed(1);
@@ -169,7 +168,7 @@ public class CPermissionServiceTest {
 
     @Test
     public void getUserCollectionPermission() {
-        InheritPermissionBean cPermissionBean = this.cPermissionService.getUserInheritPermission(collectionId, userId);
+        InheritPermissionBean cPermissionBean = this.permissionService.getUserInheritPermission(collectionId, userId);
         System.out.println("=== The user permission for collecton: " + cPermissionBean.getCollectionId() + " user id : " + cPermissionBean.getPermUserId()
 
                 + " view alllowed: " + cPermissionBean.getViewAllowed()

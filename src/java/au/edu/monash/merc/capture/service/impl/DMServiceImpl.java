@@ -30,6 +30,7 @@ package au.edu.monash.merc.capture.service.impl;
 import au.edu.monash.merc.capture.adapter.DataCaptureAdapter;
 import au.edu.monash.merc.capture.adapter.DataCaptureAdapterFactory;
 import au.edu.monash.merc.capture.common.CoverageType;
+import au.edu.monash.merc.capture.common.LicenceType;
 import au.edu.monash.merc.capture.domain.*;
 import au.edu.monash.merc.capture.domain.Collection;
 import au.edu.monash.merc.capture.dto.*;
@@ -67,7 +68,7 @@ public class DMServiceImpl implements DMService {
     private DatasetService datasetService;
 
     @Autowired
-    private CPermissionService cPermissionService;
+    private PermissionService permissionService;
 
     @Autowired
     private FileSystemSerivce fileService;
@@ -112,8 +113,8 @@ public class DMServiceImpl implements DMService {
         this.datasetService = datasetService;
     }
 
-    public void setcPermissionService(CPermissionService cPermissionService) {
-        this.cPermissionService = cPermissionService;
+    public void setPermissionService(PermissionService permissionService) {
+        this.permissionService = permissionService;
     }
 
     public void setFileService(FileSystemSerivce fileService) {
@@ -481,88 +482,88 @@ public class DMServiceImpl implements DMService {
     }
 
     @Override
-    public void savePermission(CPermission permission) {
-        this.cPermissionService.savePermission(permission);
+    public void savePermission(Permission permission) {
+        this.permissionService.savePermission(permission);
     }
 
     @Override
-    public CPermission getPermissionById(long id) {
-        return this.cPermissionService.getPermissionById(id);
+    public Permission getPermissionById(long id) {
+        return this.permissionService.getPermissionById(id);
     }
 
     @Override
-    public void updatePermission(CPermission permission) {
-        this.cPermissionService.updatePermission(permission);
+    public void updatePermission(Permission permission) {
+        this.permissionService.updatePermission(permission);
     }
 
     @Override
-    public void mergePermission(CPermission permission) {
-        this.cPermissionService.mergePermission(permission);
+    public void mergePermission(Permission permission) {
+        this.permissionService.mergePermission(permission);
     }
 
     @Override
-    public void deletePermission(CPermission permission) {
-        this.cPermissionService.deletePermission(permission);
+    public void deletePermission(Permission permission) {
+        this.permissionService.deletePermission(permission);
     }
 
     @Override
-    public CPermission getUserCollectionPermission(long collectionId, long userId) {
-        return this.cPermissionService.getUserCollectionPermission(collectionId, userId);
+    public Permission getUserCollectionPermission(long collectionId, long userId) {
+        return this.permissionService.getUserCollectionPermission(collectionId, userId);
     }
 
     @Override
-    public CPermission getAllRegUserCollectionPermission(long collectionId) {
-        return this.cPermissionService.getAllRegUserCollectionPermission(collectionId);
+    public Permission getAllRegUserCollectionPermission(long collectionId) {
+        return this.permissionService.getAllRegUserCollectionPermission(collectionId);
     }
 
     @Override
-    public CPermission getAnonymousCollectionPermission(long collectionId) {
-        return this.cPermissionService.getAnonymousCollectionPermission(collectionId);
+    public Permission getAnonymousCollectionPermission(long collectionId) {
+        return this.permissionService.getAnonymousCollectionPermission(collectionId);
     }
 
     @Override
-    public List<CPermission> getCollectionPermissions(long cid) {
-        return this.cPermissionService.getCollectionPermissions(cid);
+    public List<Permission> getCollectionPermissions(long cid) {
+        return this.permissionService.getCollectionPermissions(cid);
     }
 
     @Override
     public InheritPermissionBean getUserInheritPermission(long coId, long userId) {
-        return this.cPermissionService.getUserInheritPermission(coId, userId);
+        return this.permissionService.getUserInheritPermission(coId, userId);
     }
 
     @Override
     public void deletePermissionByPermId(long permissionId) {
-        this.cPermissionService.deletePermissionByPermId(permissionId);
+        this.permissionService.deletePermissionByPermId(permissionId);
     }
 
     @Override
     public void deletePermissionsByCollectionId(long collectionId) {
-        this.cPermissionService.deletePermissionsByCollectionId(collectionId);
+        this.permissionService.deletePermissionsByCollectionId(collectionId);
     }
 
     @Override
-    public List<CPermission> saveCollectionPermissions(AssignedPermissions assignedPerms) {
+    public List<Permission> saveCollectionPermissions(AssignedPermissions assignedPerms) {
 
-        List<CPermission> grantedPerms = new ArrayList<CPermission>();
+        List<Permission> grantedPerms = new ArrayList<Permission>();
         //update the anonymous permissions
-        CPermission anonymousPerm = assignedPerms.getAnonymousPerm();
+        Permission anonymousPerm = assignedPerms.getAnonymousPerm();
         this.updatePermission(anonymousPerm);
         grantedPerms.add(anonymousPerm);
 
         //update the all registered user permissions
-        CPermission allRegUserPerm = assignedPerms.getAllRegisteredPerm();
+        Permission allRegUserPerm = assignedPerms.getAllRegisteredPerm();
         this.updatePermission(allRegUserPerm);
         grantedPerms.add(allRegUserPerm);
 
-        List<CPermission> registeredUserPermsList = assignedPerms.getRegisteredUserPerms();
+        List<Permission> registeredUserPermsList = assignedPerms.getRegisteredUserPerms();
         List<Long> registeredUserPermIds = new ArrayList<Long>();
 
-        List<CPermission> existedOldPerms = this.getCollectionPermissions(assignedPerms.getCollectionId());
+        List<Permission> existedOldPerms = this.getCollectionPermissions(assignedPerms.getCollectionId());
 
-        for (CPermission cperm : registeredUserPermsList) {
+        for (Permission cperm : registeredUserPermsList) {
             Long coId = cperm.getCollection().getId();
             Long permUserId = cperm.getPermForUser().getId();
-            CPermission existedPerm = this.getUserCollectionPermission(coId, permUserId);
+            Permission existedPerm = this.getUserCollectionPermission(coId, permUserId);
             if (existedPerm == null) {
                 this.savePermission(cperm);
             } else {
@@ -574,7 +575,7 @@ public class DMServiceImpl implements DMService {
         }
 
         //try to remove the some registered users permissions which are not needed anymore
-        for (CPermission perm : existedOldPerms) {
+        for (Permission perm : existedOldPerms) {
             long pmId = perm.getId();
             if (perm.getPermType().equalsIgnoreCase(PermType.REGISTERED.code())) {
                 if (!registeredUserPermIds.contains(pmId)) {
@@ -740,6 +741,7 @@ public class DMServiceImpl implements DMService {
         }
 
         Licence licence = mdRegBean.getLicence();
+        String licenceType = licence.getLicenceType();
         String licenceContents = licence.getContents();
         //templateMap.put("groupName", groupName);
         //check if it's handle key, then we add the handle server url
@@ -769,7 +771,14 @@ public class DMServiceImpl implements DMService {
         templateMap.put("temporalDateTo", dateTo);
         templateMap.put("parties", selectedParties);
         templateMap.put("collectionDesc", collectionDesc);
-        templateMap.put("licenceContents", licenceContents);
+        //tern licence
+        if (licenceType.equals(LicenceType.TERN.type())) {
+            templateMap.put("tern", true);
+        } else {
+            //user-defined licence
+            templateMap.put("tern", false);
+            templateMap.put("licenceContents", licenceContents);
+        }
 
         //citation metadata
         User owner = collection.getOwner();
