@@ -447,37 +447,6 @@
             <result name="input">/web/common/action_error.ftl</result>
             <result name="success">/web/perm/collection_permissions.ftl</result>
         </action>
-
-        <action name="applyForPerms" class="perm.permReqAction" method="applyForPerms">
-            <result name="input">/web/common/action_error.ftl</result>
-            <result name="error">/web/common/action_error.ftl</result>
-            <result name="success">/web/perm/perm_request.ftl</result>
-        </action>
-
-        <action name="sendPermsReq" class="perm.permReqAction" method="sendPermsReq">
-            <result name="input">/web/perm/perm_request.ftl</result>
-            <result name="error">/web/common/action_error.ftl</result>
-            <result name="success">/web/perm/perm_req_finished.ftl</result>
-        </action>
-
-        <action name="listPermRequests" class="perm.permReqAppAction" method="listPermRequests">
-            <result name="input">/web/common/action_error.ftl</result>
-            <result name="error">/web/common/action_error.ftl</result>
-            <result name="success">/web/perm/list_perm_requests.ftl</result>
-        </action>
-
-        <action name="approvePermReq" class="perm.permReqAppAction" method="approvePermReq">
-            <result name="input">/web/perm/list_perm_requests.ftl</result>
-            <result name="error">/web/common/action_error.ftl</result>
-            <result name="success">/web/perm/list_perm_requests.ftl</result>
-        </action>
-
-        <action name="rejectPermReq" class="perm.permReqAppAction" method="rejectPermReq">
-            <result name="input">/web/common/action_error.ftl</result>
-            <result name="error">/web/common/action_error.ftl</result>
-            <result name="success">/web/perm/list_perm_requests.ftl</result>
-        </action>
-
     </package>
 
     <!-- Search Function -->

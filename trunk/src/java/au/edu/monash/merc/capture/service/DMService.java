@@ -160,7 +160,6 @@ public interface DMService {
 
     Dataset getAllDatasetData(long dsId);
 
-
     void savePermission(CPermission permission);
 
     CPermission getPermissionById(long id);
@@ -186,60 +185,6 @@ public interface DMService {
     void deletePermissionsByCollectionId(long collectionId);
 
     List<CPermission> saveCollectionPermissions(AssignedPermissions assignedPerms);
-
-
-    //TODO: to be removed after changing the permission domain
-
-    List<Permission> getUserCoPerms(long permForUsrId, long coId);
-
-    List<Permission> getCollectionDefaultPerms(long cid);
-
-    Permission getAnonymousPerm(long cid);
-
-    void createUserPermission(Permission permission);
-
-    void deleteUserPermission(Permission permission);
-
-    void deletePermissionByPId(long pId);
-
-    void deleteAllPermissionsByColId(long cId);
-
-    void updateUserPermission(Permission permission);
-
-    void createUserPermissions(List<Permission> permissions);
-
-    void updateUserPermissions(List<Permission> permissions);
-
-    void deleteUserPermissions(List<Permission> permissions);
-
-    void deleteUserPermissionsByIds(List<Long> pids);
-
-    void setCollectionPermissions(AssignedPermissions assignedPerms);
-
-   // List<Permission> getCollectionPermissions(long cid);
-
-    void saveUserRequestedPerm(ManagablePerm<Permission> requestPermission, long permRequestId);
-
-    void savePermissionRequest(PermissionRequest permRequest);
-
-    PermissionRequest getPermissionReqById(long id);
-
-    List<PermissionRequest> getPermissionRequestsByOwner(long ownerId);
-
-    void deletePermissionRequestsByCoId(long coId);
-
-    void deletePermissionRequestById(long pmReqId);
-
-    PermissionRequest getCoPermissionRequestByReqUser(long coid, long reqUserId);
-
-    void updatePermissionRequest(PermissionRequest permRequest);
-
-    Pagination<PermissionRequest> getPermRequestsByPages(long ownerId, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
-
-    //TODO end of Permission
-
-
-
 
     void saveAuditEvent(AuditEvent event);
 

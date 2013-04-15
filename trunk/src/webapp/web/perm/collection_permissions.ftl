@@ -59,7 +59,7 @@
 
 <div class="content_div">
     <div class="permission_spec">There are three types of the accesss control permissions for a collection in the system:
-        <table class="display_data_tab3">
+        <table class="display_data_tab">
             <tr>
                 <td><span class="span_spec_title">Anonymous Users Group Permissions</span></td>
                 <td>The permissions for all anonymous users who are not logged in the system</td>
@@ -77,7 +77,7 @@
         <p>Permissions can be granted to <span class="span_spec_title">Anonymous Users Group</span> or <span class="span_spec_title">All Registered Users Group</span> or <span class="span_spec_title">A Registered User</span>.
 
         <div>
-            <table class="display_data_tab3">
+            <table class="display_data_tab">
                 <tr>
                     <th width="15%">Permission</th>
                     <th>Specification</th>
@@ -142,10 +142,10 @@
 
 
 <div class="content_none_border_div">
-    <table class="display_data_tab3" id="user_permissions">
+    <table class="display_data_tab" id="user_permissions">
         <thead>
         <tr>
-            <th width="22%">Group / User</th>
+            <th width="22%">Group | User</th>
             <th width="10%">View</th>
             <th width="10%">Export</th>
             <th width="10%">Import</th>
@@ -222,7 +222,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="9" style="background:#F8F8F8;"><span class="span_spec_title">Registered User Permissions</span></td>
+            <td colspan="9" style="background:#F2F2F2;"><span class="span_spec_title">Registered User Permissions</span></td>
         </tr>
         </thead>
         <tbody>

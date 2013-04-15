@@ -30,7 +30,6 @@ package au.edu.monash.merc.capture.struts2.action;
 import au.edu.monash.merc.capture.config.SystemPropertiesConfigurer;
 import au.edu.monash.merc.capture.domain.AuditEvent;
 import au.edu.monash.merc.capture.domain.Avatar;
-import au.edu.monash.merc.capture.domain.PermissionRequest;
 import au.edu.monash.merc.capture.domain.Profile;
 import au.edu.monash.merc.capture.dto.OrderBy;
 import au.edu.monash.merc.capture.dto.page.Pagination;
@@ -52,8 +51,6 @@ import java.util.Map;
 public class UserProfileAction extends DMCoreAction {
 
     Pagination<AuditEvent> eventPagination;
-
-    Pagination<PermissionRequest> permReqPagination;
 
     private Profile profile;
 
@@ -222,9 +219,6 @@ public class UserProfileAction extends DMCoreAction {
             // profile = this.dmService.getUserProfile(user.getId());
             profile = user.getProfile();
 
-            // get permissions requests
-            permReqPagination = this.dmService.getPermRequestsByPages(user.getId(), 1, 10, orderByDescTime("requestTime"));
-
             eventPagination = this.dmService.getEventByUserId(user.getId(), 1, 10, orderByDescTime("createdTime"));
 
             // reformat the display format for interests and contact details.
@@ -277,14 +271,6 @@ public class UserProfileAction extends DMCoreAction {
 
     public void setEventPagination(Pagination<AuditEvent> eventPagination) {
         this.eventPagination = eventPagination;
-    }
-
-    public Pagination<PermissionRequest> getPermReqPagination() {
-        return permReqPagination;
-    }
-
-    public void setPermReqPagination(Pagination<PermissionRequest> permReqPagination) {
-        this.permReqPagination = permReqPagination;
     }
 
     public Profile getProfile() {

@@ -103,11 +103,7 @@
     </@s.if>
 
     <div class="data_action_link2">
-        <@s.if test="%{permissionBean.viewAllowed == false }">
-            <a href="${base}/perm/applyForPerms.jspx?collection.id=<@s.property value='collection.id' />">
-                Apply For Permissions
-            </a>
-        </@s.if>
+
         <@s.if test="%{#session.authentication_flag =='authenticated' && collection.owner.id != user.id}">
             <a href="mailto:${user.email}">
                 Contact Owner
