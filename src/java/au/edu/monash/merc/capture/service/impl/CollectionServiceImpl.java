@@ -72,11 +72,6 @@ public class CollectionServiceImpl implements CollectionService {
     }
 
     @Override
-    public Pagination<Collection> getAllPublicCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
-        return this.collectionDAO.getAllPublicCollections(startPageNo, recordsPerPage, orderBys);
-    }
-
-    @Override
     public Pagination<Collection> getAllCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
         return this.collectionDAO.getAllCollections(startPageNo, recordsPerPage, orderBys);
     }

@@ -93,11 +93,10 @@ public class CollectionDAO extends HibernateGenericDAO<Collection> implements IC
     }
 
     @SuppressWarnings("unchecked")
-    @Override
     public Pagination<Collection> getAllPublicCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
         // count total
         Criteria criteria = this.session().createCriteria(this.persistClass);
-        Criteria permCriteria = criteria.createCriteria("cpermissions");
+        Criteria permCriteria = criteria.createCriteria("permissions");
         permCriteria.add(Restrictions.eq("viewAllowed", 1)).add(Restrictions.eq("permType", PermType.ANONYMOUS.code()));
 
         criteria.setProjection(Projections.rowCount());
@@ -107,7 +106,7 @@ public class CollectionDAO extends HibernateGenericDAO<Collection> implements IC
 
         // start to query the sharing collections
         Criteria findCriteria = this.session().createCriteria(this.persistClass);
-        Criteria findPermCriteria = findCriteria.createCriteria("cpermissions");
+        Criteria findPermCriteria = findCriteria.createCriteria("permissions");
         findPermCriteria.add(Restrictions.eq("viewAllowed", 1)).add(Restrictions.eq("permType", PermType.ANONYMOUS.code()));
 
         // add orders
