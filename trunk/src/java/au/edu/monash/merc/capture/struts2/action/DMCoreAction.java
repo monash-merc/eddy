@@ -27,6 +27,7 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
+import au.edu.monash.merc.capture.common.UserType;
 import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.*;
 import au.edu.monash.merc.capture.dto.InheritPermissionBean;

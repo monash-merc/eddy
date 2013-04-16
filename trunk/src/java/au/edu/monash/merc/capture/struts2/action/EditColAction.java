@@ -29,11 +29,12 @@ package au.edu.monash.merc.capture.struts2.action;
 
 import au.edu.monash.merc.capture.common.CoverageType;
 import au.edu.monash.merc.capture.common.SpatialValue;
+import au.edu.monash.merc.capture.common.UserViewType;
 import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.AuditEvent;
 import au.edu.monash.merc.capture.domain.Collection;
 import au.edu.monash.merc.capture.domain.Location;
-import au.edu.monash.merc.capture.domain.UserType;
+import au.edu.monash.merc.capture.common.UserType;
 import au.edu.monash.merc.capture.util.CaptureUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -265,11 +266,11 @@ public class EditColAction extends DMCoreAction {
                 + collection.getOwner().getId() + "&viewType=" + viewType;
         String thirdNav = getText("update.collection.error");
         if (viewType != null) {
-            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+            if (viewType.equals(UserViewType.USER.type())) {
                 startNav = getText("mycollection.nav.label.name");
                 startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
             }
-            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+            if (viewType.equals(UserViewType.ALL.type())) {
                 startNav = getText("allcollection.nav.label.name");
                 startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
             }
@@ -288,12 +289,12 @@ public class EditColAction extends DMCoreAction {
         String secondNav = getText("update.collection.error");
 
         if (viewType != null) {
-            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+            if (viewType.equals(UserViewType.USER.type())) {
                 startNav = getText("mycollection.nav.label.name");
                 startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
             }
 
-            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+            if (viewType.equals(UserViewType.ALL.type())) {
                 startNav = getText("allcollection.nav.label.name");
                 startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
             }
@@ -312,12 +313,12 @@ public class EditColAction extends DMCoreAction {
                 + collection.getOwner().getId() + "&viewType=" + viewType;
 
         if (viewType != null) {
-            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+            if (viewType.equals(UserViewType.USER.type())) {
                 startNav = getText("mycollection.nav.label.name");
                 startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
             }
 
-            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+            if (viewType.equals(UserViewType.ALL.type())) {
                 startNav = getText("allcollection.nav.label.name");
                 startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
             }

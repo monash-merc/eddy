@@ -27,6 +27,7 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
+import au.edu.monash.merc.capture.common.UserViewType;
 import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.Dataset;
 import au.edu.monash.merc.capture.dto.AttributeBean;
@@ -99,11 +100,11 @@ public class SearchAction extends DMCoreAction {
             setNav();
             long uid = getLoginUsrIdFromSession();
             if (uid == 0) {
-                viewType = ActConstants.UserViewType.ANONYMOUS.toString();
+                viewType = UserViewType.ANONYMOUS.type();
                 setViewColDetailActionName(ActConstants.PUB_VIEW_COLLECTION_DETAILS_ACTION);
             } else {
                 user = retrieveLoggedInUser();
-                viewType = ActConstants.UserViewType.ALL.toString();
+                viewType = UserViewType.ALL.type();
                 setViewColDetailActionName(ActConstants.VIEW_COLLECTION_DETAILS_ACTION);
             }
 

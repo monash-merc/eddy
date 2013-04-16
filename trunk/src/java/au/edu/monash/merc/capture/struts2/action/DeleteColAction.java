@@ -27,17 +27,16 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
-import java.util.GregorianCalendar;
-
+import au.edu.monash.merc.capture.common.UserViewType;
+import au.edu.monash.merc.capture.config.ConfigSettings;
+import au.edu.monash.merc.capture.domain.AuditEvent;
 import au.edu.monash.merc.capture.domain.Location;
+import au.edu.monash.merc.capture.domain.User;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import au.edu.monash.merc.capture.config.ConfigSettings;
-import au.edu.monash.merc.capture.domain.AuditEvent;
-import au.edu.monash.merc.capture.domain.User;
-import au.edu.monash.merc.capture.struts2.action.ActConstants.UserViewType;
+import java.util.GregorianCalendar;
 
 @Scope("prototype")
 @Controller("data.deleteColAction")
@@ -97,10 +96,10 @@ public class DeleteColAction extends DMCoreAction {
 
                 setActionSuccessMsg(getText("delete.collection.success", new String[]{collection.getName()}));
 
-                if (viewType.equals(UserViewType.USER.toString())) {
+                if (viewType.equals(UserViewType.USER.type())) {
                     requestUrl = ActConstants.USER_LIST_COLLECTION_ACTION;
                 }
-                if (viewType.equals(UserViewType.ALL.toString())) {
+                if (viewType.equals(UserViewType.ALL.type())) {
                     requestUrl = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
                 }
                 // record the action audit event
@@ -156,12 +155,12 @@ public class DeleteColAction extends DMCoreAction {
         String secondNav = getText("delete.collection.error");
 
         if (viewType != null) {
-            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+            if (viewType.equals(UserViewType.USER.type())) {
                 startNav = getText("mycollection.nav.label.name");
                 startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
             }
 
-            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+            if (viewType.equals(UserViewType.ALL.type())) {
                 startNav = getText("allcollection.nav.label.name");
                 startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
             }
@@ -180,12 +179,12 @@ public class DeleteColAction extends DMCoreAction {
         String secondNav = collection.getName();
         String thirdNav = getText("delete.collection");
         if (viewType != null) {
-            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+            if (viewType.equals(UserViewType.USER.type())) {
                 startNav = getText("mycollection.nav.label.name");
                 startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
             }
 
-            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+            if (viewType.equals(UserViewType.ALL.type())) {
                 startNav = getText("allcollection.nav.label.name");
                 startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
             }

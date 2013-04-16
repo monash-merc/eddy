@@ -31,6 +31,7 @@ import au.edu.monash.merc.capture.adapter.DataCaptureAdapter;
 import au.edu.monash.merc.capture.adapter.DataCaptureAdapterFactory;
 import au.edu.monash.merc.capture.common.CoverageType;
 import au.edu.monash.merc.capture.common.LicenceType;
+import au.edu.monash.merc.capture.common.PermType;
 import au.edu.monash.merc.capture.domain.*;
 import au.edu.monash.merc.capture.domain.Collection;
 import au.edu.monash.merc.capture.dto.*;

@@ -25,7 +25,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package au.edu.monash.merc.capture.domain;
+package au.edu.monash.merc.capture.common;
 
 public enum PermType {
     REGISTERED("Registered"), ALLREGUSER("AllRegUser"), ANONYMOUS("Anonymous");

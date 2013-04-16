@@ -27,14 +27,13 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
+import au.edu.monash.merc.capture.common.UserType;
+import au.edu.monash.merc.capture.common.UserViewType;
 import au.edu.monash.merc.capture.config.ConfigSettings;
-import au.edu.monash.merc.capture.domain.UserType;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-
-import javax.annotation.PostConstruct;
 
 @Scope("prototype")
 @Controller("data.viewColDetailsAction")
@@ -66,13 +65,13 @@ public class ViewColDetailsAction extends DMCoreAction {
             // check if the request url is a view collection details with the pub namespace:
             // and whether an user logined in already, then we redirect it to view collection details by login user
             // long userId = getLoginUsrIdFromSession();
-            if (user != null && viewType.equals(ActConstants.UserViewType.ANONYMOUS.toString())) {
+            if (user != null && viewType.equals(UserViewType.ANONYMOUS.type())) {
                 redNamespace = REDIRECT_NAMESPACE;
                 redActionName = REDIRECT_ACTION_NAME;
                 if (user.getId() == collection.getOwner().getId()) {
-                    viewType = ActConstants.UserViewType.USER.toString();
+                    viewType = UserViewType.USER.type();
                 } else {
-                    viewType = ActConstants.UserViewType.ALL.toString();
+                    viewType = UserViewType.ALL.type();
                 }
                 return REDIRECTCO;
             }
@@ -103,7 +102,7 @@ public class ViewColDetailsAction extends DMCoreAction {
                 // populate the list dataset in this user collection.
                 datasets = this.dmService.getDatasetByCollectionIdUsrId(collection.getId(), collection.getOwner().getId());
                 // populate the collection links
-                if (viewType.equals(ActConstants.UserViewType.ANONYMOUS.toString())) {
+                if (viewType.equals(UserViewType.ANONYMOUS.type())) {
                     populateLinksInPubCollection();
                 } else {
                     populateLinksInUsrCollection();
@@ -172,15 +171,15 @@ public class ViewColDetailsAction extends DMCoreAction {
         String secondNav = getText("view.collection.error");
 
         if (viewType != null) {
-            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+            if (viewType.equals(UserViewType.USER.type())) {
                 startNav = getText("mycollection.nav.label.name");
                 startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
             }
-            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+            if (viewType.equals(UserViewType.ALL.type())) {
                 startNav = getText("allcollection.nav.label.name");
                 startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
             }
-            if (viewType.equals(ActConstants.UserViewType.ANONYMOUS.toString())) {
+            if (viewType.equals(UserViewType.ANONYMOUS.type())) {
                 startNav = getText("pubcollection.nav.label.name");
                 startNavLink = ActConstants.PUB_LIST_COLLECTION_ACTION;
             }
@@ -197,20 +196,20 @@ public class ViewColDetailsAction extends DMCoreAction {
         String secondNav = collection.getName();
         String secondNavLink = null;
         if (viewType != null) {
-            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+            if (viewType.equals(UserViewType.USER.type())) {
                 startNav = getText("mycollection.nav.label.name");
                 startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
                 secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="
                         + collection.getOwner().getId() + "&viewType=" + viewType;
             }
 
-            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+            if (viewType.equals(UserViewType.ALL.type())) {
                 startNav = getText("allcollection.nav.label.name");
                 startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
                 secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="
                         + collection.getOwner().getId() + "&viewType=" + viewType;
             }
-            if (viewType.equals(ActConstants.UserViewType.ANONYMOUS.toString())) {
+            if (viewType.equals(UserViewType.ANONYMOUS.type())) {
                 startNav = getText("pubcollection.nav.label.name");
                 startNavLink = ActConstants.PUB_LIST_COLLECTION_ACTION;
                 secondNavLink = ActConstants.PUB_VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="

@@ -29,6 +29,7 @@ package au.edu.monash.merc.capture.struts2.action;
 
 import au.edu.monash.merc.capture.common.CoverageType;
 import au.edu.monash.merc.capture.common.SpatialValue;
+import au.edu.monash.merc.capture.common.UserViewType;
 import au.edu.monash.merc.capture.domain.Location;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
@@ -106,12 +107,12 @@ public class ShowEditColAction extends DMCoreAction {
         String secondNav = getText("show.collection.updating");
 
         if (viewType != null) {
-            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+            if (viewType.equals(UserViewType.USER.type())) {
                 startNav = getText("mycollection.nav.label.name");
                 startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
             }
 
-            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+            if (viewType.equals(UserViewType.ALL.type())) {
                 startNav = getText("allcollection.nav.label.name");
                 startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
             }
@@ -130,12 +131,12 @@ public class ShowEditColAction extends DMCoreAction {
 
         String thirdNav = getText("update.collection");
         if (viewType != null) {
-            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+            if (viewType.equals(UserViewType.USER.type())) {
                 startNav = getText("mycollection.nav.label.name");
                 startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
             }
 
-            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+            if (viewType.equals(UserViewType.ALL.type())) {
                 startNav = getText("allcollection.nav.label.name");
                 startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
             }

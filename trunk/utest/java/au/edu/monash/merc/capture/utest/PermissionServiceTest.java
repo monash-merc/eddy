@@ -28,13 +28,13 @@
 
 package au.edu.monash.merc.capture.utest;
 
-import au.edu.monash.merc.capture.domain.Permission;
+import au.edu.monash.merc.capture.common.PermType;
 import au.edu.monash.merc.capture.domain.Collection;
-import au.edu.monash.merc.capture.domain.PermType;
+import au.edu.monash.merc.capture.domain.Permission;
 import au.edu.monash.merc.capture.domain.User;
 import au.edu.monash.merc.capture.dto.InheritPermissionBean;
-import au.edu.monash.merc.capture.service.PermissionService;
 import au.edu.monash.merc.capture.service.CollectionService;
+import au.edu.monash.merc.capture.service.PermissionService;
 import au.edu.monash.merc.capture.service.UserService;
 import junit.framework.Assert;
 import org.junit.Before;

@@ -27,8 +27,7 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
-import au.edu.monash.merc.capture.common.CoverageType;
-import au.edu.monash.merc.capture.common.SpatialValue;
+import au.edu.monash.merc.capture.common.*;
 import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.*;
 import au.edu.monash.merc.capture.util.CaptureUtil;
@@ -168,7 +167,7 @@ public class CreateColAction extends DMCoreAction {
 
             this.dmService.createCollection(collection, dataStorePath);
             // set view type is user
-            viewType = ActConstants.UserViewType.USER.viewType();
+            viewType = UserViewType.USER.type();
 
             //record down the event
             recordAuditEvent();

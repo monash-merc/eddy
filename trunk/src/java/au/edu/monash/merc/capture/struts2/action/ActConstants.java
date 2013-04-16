@@ -152,35 +152,6 @@ public interface ActConstants {
 
     static String LICENCE_USER_DEFINED_LABEL = "Define Your Own Licence";
 
-    public static enum UserViewType {
-        USER("user"), ALL("all"), ANONYMOUS("anonymous");
-
-        private String type;
-
-        UserViewType(String type) {
-            this.type = type;
-        }
-
-        public String viewType() {
-            return type;
-        }
-
-        public String toString() {
-            switch (this) {
-                case USER:
-                    return "user";
-                case ALL:
-                    return "all";
-                case ANONYMOUS:
-                    return "anonymous";
-                default:
-                    return "anonymous";
-
-            }
-        }
-
-    }
-
     public static enum OrderByActionType {
         USER("user"), CO("co"), EVENT("event"), SEARCHCO("searchco"), SEARCHDS("searchds");;
         private String type;

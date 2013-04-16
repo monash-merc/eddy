@@ -27,15 +27,15 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
-import java.util.GregorianCalendar;
-
+import au.edu.monash.merc.capture.common.UserViewType;
+import au.edu.monash.merc.capture.config.ConfigSettings;
+import au.edu.monash.merc.capture.domain.AuditEvent;
+import au.edu.monash.merc.capture.domain.Dataset;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import au.edu.monash.merc.capture.config.ConfigSettings;
-import au.edu.monash.merc.capture.domain.AuditEvent;
-import au.edu.monash.merc.capture.domain.Dataset;
+import java.util.GregorianCalendar;
 
 @Scope("prototype")
 @Controller("data.deleteDStAction")
@@ -68,7 +68,7 @@ public class DeleteDSAction extends DMCoreAction {
             String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
             mdRegEnabled = Boolean.valueOf(mdRegEnabledStr).booleanValue();
             // set user type is the owner of collection
-            viewType = ActConstants.UserViewType.USER.toString();
+            viewType = UserViewType.USER.type();
             populateLinksInUsrCollection();
 
             setActionSuccessMsg(getText("delete.dataset.success", new String[]{ds.getName()}));
@@ -164,12 +164,12 @@ public class DeleteDSAction extends DMCoreAction {
         String thirdNav = getText("delete.dataset.error");
 
         if (viewType != null) {
-            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+            if (viewType.equals(UserViewType.USER.type())) {
                 startNav = getText("mycollection.nav.label.name");
                 startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
             }
 
-            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+            if (viewType.equals(UserViewType.ALL.type())) {
                 startNav = getText("allcollection.nav.label.name");
                 startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
             }
@@ -186,12 +186,12 @@ public class DeleteDSAction extends DMCoreAction {
         String secondNav = getText("delete.dataset.error");
 
         if (viewType != null) {
-            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+            if (viewType.equals(UserViewType.USER.type())) {
                 startNav = getText("mycollection.nav.label.name");
                 startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
             }
 
-            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+            if (viewType.equals(UserViewType.ALL.type())) {
                 startNav = getText("allcollection.nav.label.name");
                 startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
             }
@@ -207,12 +207,12 @@ public class DeleteDSAction extends DMCoreAction {
 
         String secondNav = collection.getName();
         if (viewType != null) {
-            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+            if (viewType.equals(UserViewType.USER.type())) {
                 startNav = getText("mycollection.nav.label.name");
                 startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
             }
 
-            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+            if (viewType.equals(UserViewType.ALL.type())) {
                 startNav = getText("allcollection.nav.label.name");
                 startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
             }
