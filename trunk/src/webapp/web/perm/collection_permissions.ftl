@@ -163,8 +163,7 @@
                 <@s.hidden name="anonymousePerm.userName" />
             </td>
             <td>
-                <@s.hidden name="anonymousePerm.viewAllowed" />
-                <@s.checkbox name="displayViewAllowed"  cssClass="check_box" disabled ="true" checked="checked"/>
+                <@s.checkbox name="anonymousePerm.viewAllowed" cssClass="check_box" />
             </td>
             <td>
                 <@s.checkbox name="anonymousePerm.exportAllowed" cssClass="check_box" />
@@ -196,8 +195,7 @@
                 <@s.hidden name="allRegUserPerm.userName" />
             </td>
             <td>
-                <@s.hidden name="allRegUserPerm.viewAllowed" />
-                <@s.checkbox name="displayViewAllowed"  cssClass="check_box" disabled ="true" checked="checked"/>
+                <@s.checkbox name="allRegUserPerm.viewAllowed" cssClass="check_box" />
             </td>
             <td>
                 <@s.checkbox name="allRegUserPerm.exportAllowed" cssClass="check_box" />
@@ -235,8 +233,7 @@
                     <@s.hidden name="regUserPerms[%{#permStatus.index}].userName" id="regUserPerms_userName" value="%{#permBean.userName}" />
                 </td>
                 <td>
-                    <@s.hidden name="regUserPerms[%{#permStatus.index}].viewAllowed" id="regUserPerms_viewAllowed"/>
-                    <@s.checkbox name="displayViewAllowed" cssClass="check_box" disabled ="true" checked="checked"/>
+                    <@s.checkbox name="regUserPerms[%{#permStatus.index}].viewAllowed" id="regUserPerms_viewAllowed" cssClass="check_box"/>
                 </td>
                 <td>
                     <@s.checkbox name="regUserPerms[%{#permStatus.index}].exportAllowed" id="regUserPerms_exportAllowed" cssClass="check_box"/>

@@ -89,7 +89,7 @@ public class ListAllCollectionsAction extends DMCoreAction {
 			persistPageSortParamsInSession(ActConstants.SESSION_VIEW_COLLECTION_PAGE_SIZE, ActConstants.SESSION_VIEW_COLLECTION_ORDERBY,
 					ActConstants.SESSION_VIEW_COLLECTION_ORDERBY_TYPE, ActConstants.OrderByActionType.CO.actionType());
 			// list all public collections from the database
-			pagination = this.dmService.getAllPublicCollections(pageNo, sizePerPage, populateOrderBy());
+			pagination = this.dmService.getAllCollections(pageNo, sizePerPage, populateOrderBy());
 
 			populatePaginationLinks(ActConstants.PUB_LIST_COLLECTION_ACTION, ActConstants.PAGINATION_SUFFUX);
 			viewType = ActConstants.UserViewType.ANONYMOUS.toString();

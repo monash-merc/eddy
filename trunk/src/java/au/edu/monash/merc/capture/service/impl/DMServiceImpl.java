@@ -226,11 +226,6 @@ public class DMServiceImpl implements DMService {
     }
 
     @Override
-    public Pagination<Collection> getAllPublicCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
-        return this.collectionService.getAllPublicCollections(startPageNo, recordsPerPage, orderBys);
-    }
-
-    @Override
     public Pagination<Collection> getAllCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
         return this.collectionService.getAllCollections(startPageNo, recordsPerPage, orderBys);
     }

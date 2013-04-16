@@ -39,8 +39,6 @@ public interface ICollectionRepository {
 
     Pagination<Collection> getCollectionsByUserId(long uid, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
-    Pagination<Collection> getAllPublicCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
-
     Pagination<Collection> getAllCollections(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
     Collection getCollection(long cid, long uid);

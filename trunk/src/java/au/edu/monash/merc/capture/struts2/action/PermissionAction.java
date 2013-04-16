@@ -330,9 +330,9 @@ public class PermissionAction extends DMCoreAction {
 
     //grant the collection permissions
     private AssignedPermissions grantCollectionPermissions(Collection col) {
-        //check the hierarchic permissions for anonymous group
+        //check the hierarchic permissions for anonymous group  first
         checkHierarchicPerms(anonymousePerm);
-        //check the hierarchic permissions for all registered group
+        //check the hierarchic permissions for all registered group first
         checkHierarchicPerms(allRegUserPerm);
         //check the hierarchic permissions for each registered user
         for (PermissionBean pm : regUserPerms) {
@@ -462,7 +462,7 @@ public class PermissionAction extends DMCoreAction {
     }
 
     private boolean eqaulsPerms(PermissionBean aPerm, PermissionBean bPerm) {
-        if ((aPerm.isImportAllowed() != bPerm.isImportAllowed()) || (aPerm.isExportAllowed() != bPerm.isExportAllowed())
+        if ((aPerm.isViewAllowed() != bPerm.isViewAllowed()) || (aPerm.isImportAllowed() != bPerm.isImportAllowed()) || (aPerm.isExportAllowed() != bPerm.isExportAllowed())
                 || (aPerm.isUpdateAllowed() != bPerm.isUpdateAllowed()) || (aPerm.isRacAllowed() != bPerm.isRacAllowed())
                 || (aPerm.isDeleteAllowed() != bPerm.isDeleteAllowed()) || (aPerm.isAcAllowed() != bPerm.isAcAllowed())) {
             return false;
