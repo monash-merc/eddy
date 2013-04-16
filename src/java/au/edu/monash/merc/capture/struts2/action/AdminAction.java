@@ -39,7 +39,7 @@ import org.springframework.stereotype.Controller;
 import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.Profile;
 import au.edu.monash.merc.capture.domain.User;
-import au.edu.monash.merc.capture.domain.UserType;
+import au.edu.monash.merc.capture.common.UserType;
 import au.edu.monash.merc.capture.dto.page.Pagination;
 import au.edu.monash.merc.capture.service.DMService;
 

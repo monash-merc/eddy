@@ -27,11 +27,10 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
+import au.edu.monash.merc.capture.common.UserViewType;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-
-import au.edu.monash.merc.capture.struts2.action.ActConstants;
 
 @Scope("prototype")
 @Controller("data.listAllColAction")
@@ -42,7 +41,7 @@ public class ListAllCollectionsAction extends DMCoreAction {
 
 		try {
 			user = retrieveLoggedInUser();
-			listCollections(ActConstants.UserViewType.ALL.toString());
+			listCollections(UserViewType.ALL.type());
 			setNavAfterSuccess();
 		} catch (Exception e) {
 			logger.error(e);
@@ -56,7 +55,7 @@ public class ListAllCollectionsAction extends DMCoreAction {
 	public String listUserCollections() {
 		try {
 			user = retrieveLoggedInUser();
-			listCollections(ActConstants.UserViewType.USER.toString());
+			listCollections(UserViewType.USER.type());
 			setNavAfterSuccess();
 		} catch (Exception e) {
 			logger.error(e);
@@ -70,7 +69,7 @@ public class ListAllCollectionsAction extends DMCoreAction {
 
 	public String listPubCollections() {
 		try {
-			listCollections(ActConstants.UserViewType.ANONYMOUS.toString());
+			listCollections(UserViewType.ANONYMOUS.type());
 			setNavAfterSuccess();
 		} catch (Exception e) {
 			logger.error(e);
@@ -85,33 +84,33 @@ public class ListAllCollectionsAction extends DMCoreAction {
 		// populate the view options params values to sort the pagination.
 		populateCoPageSortParams();
 		// persist the view page size, orderby and orderby type value in the session
-		if (userViewType.equals(ActConstants.UserViewType.ANONYMOUS.toString())) {// for anonymous user
+		if (userViewType.equals(UserViewType.ANONYMOUS.type())) {// for anonymous user
 			persistPageSortParamsInSession(ActConstants.SESSION_VIEW_COLLECTION_PAGE_SIZE, ActConstants.SESSION_VIEW_COLLECTION_ORDERBY,
 					ActConstants.SESSION_VIEW_COLLECTION_ORDERBY_TYPE, ActConstants.OrderByActionType.CO.actionType());
 			// list all public collections from the database
 			pagination = this.dmService.getAllCollections(pageNo, sizePerPage, populateOrderBy());
 
 			populatePaginationLinks(ActConstants.PUB_LIST_COLLECTION_ACTION, ActConstants.PAGINATION_SUFFUX);
-			viewType = ActConstants.UserViewType.ANONYMOUS.toString();
+			viewType = UserViewType.ANONYMOUS.type();
 			setViewColDetailActionName(ActConstants.PUB_VIEW_COLLECTION_DETAILS_ACTION);
 
 		} else {// for logged in user
 			persistPageSortParamsInSession(ActConstants.SESSION_VIEW_COLLECTION_PAGE_SIZE, ActConstants.SESSION_VIEW_COLLECTION_ORDERBY,
 					ActConstants.SESSION_VIEW_COLLECTION_ORDERBY_TYPE, ActConstants.OrderByActionType.CO.actionType());
-			if (userViewType.equals(ActConstants.UserViewType.USER.toString())) {
+			if (userViewType.equals(UserViewType.USER.type())) {
 				long userId = getLoginUsrIdFromSession();
 				pagination = this.dmService.getCollectionsByUserId(userId, pageNo, sizePerPage, populateOrderBy());
 				// populate the pagination links and collection details link
 				populatePaginationLinks(ActConstants.USER_LIST_COLLECTION_ACTION, ActConstants.PAGINATION_SUFFUX);
-				viewType = ActConstants.UserViewType.USER.toString();
+				viewType = UserViewType.USER.type();
 
-			} else if (userViewType.equals(ActConstants.UserViewType.ALL.toString())) {
+			} else if (userViewType.equals(UserViewType.ALL.type())) {
 				// get all collection in a pagination
 				pagination = this.dmService.getAllCollections(pageNo, sizePerPage, populateOrderBy());
 				// populate the pagination links and collection details link
 				populatePaginationLinks(ActConstants.LIST_ALL_COLLECTIONS_ACTION, ActConstants.PAGINATION_SUFFUX);
 				// set the view type for all
-				viewType = ActConstants.UserViewType.ALL.toString();
+				viewType = UserViewType.ALL.type();
 			}
 			setViewColDetailActionName(ActConstants.VIEW_COLLECTION_DETAILS_ACTION);
 		}
@@ -120,7 +119,7 @@ public class ListAllCollectionsAction extends DMCoreAction {
 	private void setNavAfterException() {
 		String startNav = null;
 		if (viewType != null) {
-			if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+			if (viewType.equals(UserViewType.USER.type())) {
 				startNav = getText("mycollection.nav.label.name");
 			} else {
 				startNav = getText("allcollection.nav.label.name");
@@ -134,15 +133,15 @@ public class ListAllCollectionsAction extends DMCoreAction {
 	private void setNavAfterSuccess() {
 		String startNav = null;
 		String startNavLink = null;
-		if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+		if (viewType.equals(UserViewType.USER.type())) {
 			startNav = getText("mycollection.nav.label.name");
 			startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
 		}
-		if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+		if (viewType.equals(UserViewType.ALL.type())) {
 			startNav = getText("allcollection.nav.label.name");
 			startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
 		}
-		if (viewType.equals(ActConstants.UserViewType.ANONYMOUS.toString())) {
+		if (viewType.equals(UserViewType.ANONYMOUS.type())) {
 			startNav = getText("pubcollection.nav.label.name");
 			startNavLink = ActConstants.PUB_LIST_COLLECTION_ACTION;
 		}

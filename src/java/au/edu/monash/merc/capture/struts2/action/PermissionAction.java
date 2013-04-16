@@ -27,7 +27,12 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
-import au.edu.monash.merc.capture.domain.*;
+import au.edu.monash.merc.capture.common.PermType;
+import au.edu.monash.merc.capture.common.UserType;
+import au.edu.monash.merc.capture.common.UserViewType;
+import au.edu.monash.merc.capture.domain.Collection;
+import au.edu.monash.merc.capture.domain.Permission;
+import au.edu.monash.merc.capture.domain.User;
 import au.edu.monash.merc.capture.dto.AssignedPermissions;
 import au.edu.monash.merc.capture.dto.PermissionBean;
 import org.apache.log4j.Logger;
@@ -104,11 +109,11 @@ public class PermissionAction extends DMCoreAction {
         String startNavLink = null;
         String secondNav = getText("change.collection.permission.error");
         if (viewType != null) {
-            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+            if (viewType.equals(UserViewType.USER.type())) {
                 startNav = getText("mycollection.nav.label.name");
                 startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
             }
-            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+            if (viewType.equals(UserViewType.ALL.type())) {
                 startNav = getText("allcollection.nav.label.name");
                 startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
             }
@@ -126,11 +131,11 @@ public class PermissionAction extends DMCoreAction {
 
         String thirdNav = getText("change.collection.permission.nav.label.name");
         if (viewType != null) {
-            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+            if (viewType.equals(UserViewType.USER.type())) {
                 startNav = getText("mycollection.nav.label.name");
                 startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
             }
-            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+            if (viewType.equals(UserViewType.ALL.type())) {
                 startNav = getText("allcollection.nav.label.name");
                 startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
             }

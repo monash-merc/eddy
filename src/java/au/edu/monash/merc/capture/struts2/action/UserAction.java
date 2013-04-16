@@ -43,7 +43,7 @@ import au.edu.monash.merc.capture.domain.Avatar;
 import au.edu.monash.merc.capture.domain.IPBlock;
 import au.edu.monash.merc.capture.domain.Profile;
 import au.edu.monash.merc.capture.domain.User;
-import au.edu.monash.merc.capture.domain.UserType;
+import au.edu.monash.merc.capture.common.UserType;
 import au.edu.monash.merc.capture.mail.MailService;
 import au.edu.monash.merc.capture.service.BlockIPService;
 import au.edu.monash.merc.capture.util.MD5;

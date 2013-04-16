@@ -30,7 +30,7 @@ package au.edu.monash.merc.capture.dao.impl;
 
 import au.edu.monash.merc.capture.dao.HibernateGenericDAO;
 import au.edu.monash.merc.capture.domain.Permission;
-import au.edu.monash.merc.capture.domain.PermType;
+import au.edu.monash.merc.capture.common.PermType;
 import au.edu.monash.merc.capture.dto.InheritPermissionBean;
 import au.edu.monash.merc.capture.repository.IPermissionRepository;
 import org.hibernate.Criteria;

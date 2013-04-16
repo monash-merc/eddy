@@ -29,11 +29,12 @@
 package au.edu.monash.merc.capture.struts2.action;
 
 import au.edu.monash.merc.capture.common.LicenceType;
+import au.edu.monash.merc.capture.common.UserType;
+import au.edu.monash.merc.capture.common.UserViewType;
 import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.AuditEvent;
 import au.edu.monash.merc.capture.domain.Licence;
 import au.edu.monash.merc.capture.domain.Party;
-import au.edu.monash.merc.capture.domain.UserType;
 import au.edu.monash.merc.capture.dto.MetadataRegistrationBean;
 import au.edu.monash.merc.capture.dto.PartyBean;
 import au.edu.monash.merc.capture.dto.RegisterActivity;
@@ -114,9 +115,8 @@ public class MetadataRegistrationAction extends DMCoreAction {
         }
 
         // check the existed parties if any
-        List<Party> ps = new ArrayList<Party>();
         try {
-            ps = this.dmService.getPartiesByCollectionId(collection.getId());
+            List<Party> ps = this.dmService.getPartiesByCollectionId(collection.getId());
             partyList = populatePartyBean(ps);
         } catch (Exception e) {
             logger.error(e);
@@ -348,13 +348,13 @@ public class MetadataRegistrationAction extends DMCoreAction {
         String secondNavLink = null;
         String thirdNav = getText("ands.md.registration.title");
         if (viewType != null) {
-            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+            if (viewType.equals(UserViewType.USER.type())) {
                 startNav = getText("mycollection.nav.label.name");
                 startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
                 secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="
                         + collection.getOwner().getId() + "&viewType=" + viewType;
             }
-            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+            if (viewType.equals(UserViewType.ALL.type())) {
                 startNav = getText("allcollection.nav.label.name");
                 startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
                 secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&amp;collection.owner.id="
@@ -376,13 +376,13 @@ public class MetadataRegistrationAction extends DMCoreAction {
         String secondNavLink = null;
         String thirdNav = getText("ands.md.registration.title");
         if (viewType != null) {
-            if (viewType.equals(ActConstants.UserViewType.USER.toString())) {
+            if (viewType.equals(UserViewType.USER.type())) {
                 startNav = getText("mycollection.nav.label.name");
                 startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
                 secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="
                         + collection.getOwner().getId() + "&viewType=" + viewType;
             }
-            if (viewType.equals(ActConstants.UserViewType.ALL.toString())) {
+            if (viewType.equals(UserViewType.ALL.type())) {
                 startNav = getText("allcollection.nav.label.name");
                 startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
                 secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="
