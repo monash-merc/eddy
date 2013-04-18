@@ -635,10 +635,11 @@ class qcgui(Tkinter.Frame):
 
 
 if __name__ == "__main__":
-    log = qcutils.startlog('qc','logfiles/qc.log')
-    qcGUI = qcgui()
-    qcGUI.master.title("QC Data Main GUI")
-    qcGUI.mainloop()
-    qcGUI.master.destroy()
+    #log = qcutils.startlog('qc','logfiles/qc.log')
+    #qcGUI = qcgui()
+    #qcGUI.master.title("QC Data Main GUI")
+    #qcGUI.mainloop()
+    #qcGUI.master.destroy()
+    print "This version, OzFluxQCv2.3, contains a known error in the WPL correction.  \nPlease upgrade to OzFluxQCv2.4"
 
-    log.info('QC: All done')
+    #log.info('QC: All done')
