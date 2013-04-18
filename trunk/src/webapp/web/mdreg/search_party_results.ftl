@@ -30,11 +30,11 @@
             <@s.iterator status="ptState" value="foundPartyBeans" id="researcherParty" >
                 <table class="display_data_tab">
                     <tr>
-                        <td align="center" rowspan="7">
+                        <td align="center" style="background: #f2f2f2;">
                             <@s.checkbox name="foundPartyBeans[${ptState.index}].selected" cssClass="check_box"/>
                         </td>
-                        <td width="100">Name:</td>
-                        <td><@s.property value="#researcherParty.personTitle" /> <@s.property value="#researcherParty.personGivenName" /> <@s.property value="#researcherParty.personFamilyName" /></td>
+                        <td width="100" style="background: #f2f2f2;">Name:</td>
+                        <td style="background: #f2f2f2;"><@s.property value="#researcherParty.personTitle" /> <@s.property value="#researcherParty.personGivenName" /> <@s.property value="#researcherParty.personFamilyName" /></td>
                         <td align="center" rowspan="7">
                             <@s.if test="%{#researcherParty.fromRm == false}">
                                 <div class="tab_link">
@@ -48,6 +48,7 @@
                     </tr>
 
                     <tr>
+                        <td rowspan="6">&nbsp;</td>
                         <td>E-mail:</td>
                         <td><@s.property value="#researcherParty.email" /></td>
                     </tr>

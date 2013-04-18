@@ -130,6 +130,7 @@ public class MetadataRegistrationAction extends DMCoreAction {
             if (collection.isFunded()) {
                 this.licence.setContents(this.configSetting.getPropValue(ConfigSettings.TERN_DATA_LICENCE));
             } else {
+                this.licence.setLicenceType(LicenceType.USERDEFINED.type());
                 Licence foundLicence = this.dmService.getLicenceByCollectionId(collection.getId());
                 if (foundLicence != null) {
                     this.licence = foundLicence;
@@ -260,6 +261,8 @@ public class MetadataRegistrationAction extends DMCoreAction {
         MetadataRegistrationBean mdRegBean = new MetadataRegistrationBean();
         mdRegBean.setCollection(this.collection);
         mdRegBean.setPartyList(this.partyList);
+        //get the licence since the licence is saved before the metadata registration
+        this.licence = this.dmService.getLicenceByCollectionId(collection.getId());
         mdRegBean.setLicence(this.licence);
         //rifcs store location
         mdRegBean.setRifcsStoreLocation(configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_STORE_LOCATION));
@@ -296,7 +299,7 @@ public class MetadataRegistrationAction extends DMCoreAction {
             hasError = true;
         }
         if (StringUtils.isBlank(licence.getContents())) {
-            addFieldError("licence", getText("ands.md.registration.license.required"));
+            addFieldError("licence", getText("ands.md.registration.licence.required"));
             hasError = true;
         }
         // set navigations

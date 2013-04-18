@@ -428,6 +428,15 @@
             <result name="error">/web/mdreg/licence_options.ftl</result>
             <result name="success">/web/mdreg/licence_content.ftl</result>
         </action>
+
+        <!-- AJAX call to save the licence -->
+        <action name="saveLicence" class="data.licenceAction" method="saveLicence">
+            <result name="success" type="json">
+                <param name="noCache">true</param>
+                <param name="root">licenceResponse</param>
+            </result>
+        </action>
+
     </package>
 
     <!-- collection permissions package -->

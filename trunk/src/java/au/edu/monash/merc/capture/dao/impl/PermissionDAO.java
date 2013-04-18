@@ -87,6 +87,7 @@ public class PermissionDAO extends HibernateGenericDAO<Permission> implements IP
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public InheritPermissionBean getUserInheritPermission(final long coId, final long permForUsrId) {
         Criteria permCriteria = this.session().createCriteria(this.persistClass);
         // create a alias for criteria
@@ -140,6 +141,7 @@ public class PermissionDAO extends HibernateGenericDAO<Permission> implements IP
         return (InheritPermissionBean) permCriteria.uniqueResult();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<Permission> getCollectionPermissions(long cid) {
         Criteria permCriteria = this.session().createCriteria(this.persistClass);

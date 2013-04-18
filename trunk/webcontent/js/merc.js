@@ -391,7 +391,6 @@ function setViewPermTrueForPermReq() {
     $("input[name='permReq.viewAllowed']").attr('checked', true);
 }
 
-;
 
 $("input[name='permReq.viewAllowed']").live('click', function () {
     if ($(this).is(":checked") == false) {
@@ -454,19 +453,54 @@ $('#saveLicence').live('click', function (e) {
     if (licence == null || licence.trim() == "") {
         alert("The Licence must be provided!");
     } else {
-        var licenceHtml = licence;
-        if (type == 'tern') {
-            licenceHtml = "<a href='" + licence + "' target='_blank'>" + licence + "</a>"
-        }
+        var values = $('#licence_form').serialize();
+        $.ajax({
+            url:'saveLicence.jspx',
+            type:'post',
+            dataType:'json',
+            data:values,
+            success:processLicenceResponse,
+            error:displayLicenceExp
+        })
+    }
+});
+
+function processLicenceResponse(responseData) {
+    var success = responseData.succeed;
+    if (success) {
+        var type = $('#plicence_type').val();
+        var licence = $('#plicence_contents').val();
         window.parent.$('#licence_type').val(type);
         window.parent.$('#licence_contents').val(licence);
-        window.parent.$('.data_licence_div').html(licenceHtml);
-        //remove the none licence div first
+        var licenceHtml = licence;
+        if (type == 'tern') {
+            window.parent.$('.user_defined_licence').html('');
+            window.parent.$('.tern_licence_hidden').show();
+            window.parent.$('.tern_licence').show();
+        } else{
+            window.parent.$('.tern_licence').hide();
+            window.parent.$('.tern_licence_hidden').hide();
+            window.parent.$('.user_defined_licence').html(licenceHtml);
+        }
         removeNoneLicenceDiv();
         //then close the popup window
         closePopupWindow();
+    } else {
+        displayErrorDiv(responseData.msg)
     }
-});
+}
+
+function displayLicenceExp(jqXHR, textStatus, errorThrown) {
+    displayErrorDiv("Failed to save the licence, Please close the popup window and try it again.");
+}
+function displayErrorDiv(errorMsg) {
+    var error_section = $('.error_msg_section');
+    var errorhtml = "<div class='fieldError'><ul class='errorMessage'><li><span>";
+    errorhtml += errorMsg;
+    errorhtml += "</span></li></ul></div>";
+    error_section.html(errorhtml);
+    error_section.show();
+}
 
 $('#save_rm_party').live('click', function (e) {
     e.preventDefault();
