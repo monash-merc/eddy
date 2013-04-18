@@ -30,7 +30,11 @@ package au.edu.monash.merc.capture.struts2.action;
 
 import au.edu.monash.merc.capture.common.LicenceType;
 import au.edu.monash.merc.capture.config.ConfigSettings;
+import au.edu.monash.merc.capture.domain.Collection;
 import au.edu.monash.merc.capture.domain.Licence;
+import au.edu.monash.merc.capture.dto.LicenceResponse;
+import au.edu.monash.merc.capture.util.CaptureUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -58,6 +62,8 @@ public class LicenceAction extends DMCoreAction {
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
+    private LicenceResponse licenceResponse;
+
     @PostConstruct
     public void initLicenceOpts() {
         licenceMap.put(LicenceType.TERN.type(), ActConstants.LICENCE_TERN_LABEL);
@@ -83,7 +89,7 @@ public class LicenceAction extends DMCoreAction {
             }
         } catch (Exception e) {
             logger.error(e);
-            addActionError(getText("license.show.options.failed"));
+            addActionError(getText("licence.show.options.failed"));
             return ERROR;
         }
         return SUCCESS;
@@ -110,8 +116,46 @@ public class LicenceAction extends DMCoreAction {
             return SUCCESS;
         } catch (Exception e) {
             logger.error(e);
-            addActionError(getText("license.show.selected.type.failed"));
+            addActionError(getText("licence.show.selected.type.failed"));
             return ERROR;
+        }
+    }
+
+    public String saveLicence() {
+        licenceResponse = new LicenceResponse();
+        try {
+            String licenceContents = licence.getContents();
+            String type = licence.getLicenceType();
+            if (type.equals(LicenceType.USERDEFINED.type())) {
+                if (StringUtils.isBlank(licenceContents)) {
+                    licenceResponse.setSucceed(false);
+                    licenceResponse.setMsg(getText("licence.must.be.provided"));
+                    return SUCCESS;
+                }
+                if (!CaptureUtil.notGTFixedLength(licenceContents, 4000)) {
+                    licenceResponse.setSucceed(false);
+                    licenceResponse.setMsg(getText("licence.characters.too.long"));
+                    return SUCCESS;
+                }
+            }
+            Licence existedLicence = this.dmService.getLicenceByCollectionId(collection.getId());
+            if (existedLicence != null) {
+                existedLicence.setContents(licence.getContents());
+                existedLicence.setLicenceType(licence.getLicenceType());
+                this.dmService.updateLicence(existedLicence);
+            } else {
+                Collection lcollection = this.dmService.getCollectionById(collection.getId());
+                licence.setCollection(lcollection);
+                this.dmService.saveLicence(licence);
+            }
+            licenceResponse.setSucceed(true);
+            licenceResponse.setMsg(getText("licence.save.licence.success"));
+            return SUCCESS;
+        } catch (Exception ex) {
+            logger.error(ex);
+            licenceResponse.setSucceed(false);
+            licenceResponse.setMsg(getText("licence.save.licence.failed"));
+            return SUCCESS;
         }
     }
 
@@ -129,5 +173,13 @@ public class LicenceAction extends DMCoreAction {
 
     public void setLicenceMap(Map<String, String> licenceMap) {
         this.licenceMap = licenceMap;
+    }
+
+    public LicenceResponse getLicenceResponse() {
+        return licenceResponse;
+    }
+
+    public void setLicenceResponse(LicenceResponse licenceResponse) {
+        this.licenceResponse = licenceResponse;
     }
 }

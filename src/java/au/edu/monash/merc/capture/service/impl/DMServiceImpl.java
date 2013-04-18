@@ -660,17 +660,6 @@ public class DMServiceImpl implements DMService {
             collection.setPublished(true);
             // update the collection first
             this.updateCollection(collection);
-            //check the licence
-            Licence dataLicence = metadataRegistrationBean.getLicence();
-            Licence foundLicence = this.getLicenceByCollectionId(collection.getId());
-            if (foundLicence == null) {
-                dataLicence.setCollection(collection);
-                this.saveLicence(dataLicence);
-            } else {
-                dataLicence.setId(foundLicence.getId());
-                dataLicence.setCollection(collection);
-                this.mergeLicence(dataLicence);
-            }
             //create collection rifcs
             String rifcsStoreLocation = metadataRegistrationBean.getRifcsStoreLocation();
             String uniqueKey = collection.getUniqueKey();

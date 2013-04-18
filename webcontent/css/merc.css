@@ -942,6 +942,18 @@ input {
     color: #858585
 }
 
+.md_publish_spec {
+    color: #858585;
+    text-align: justify;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.md_step {
+    color: #5d5a3e;
+    font-weight: bold;
+}
+
 .metadata_act_link {
     display: inline-block;
 }
@@ -1335,13 +1347,27 @@ input {
     margin-top: 5px;
     margin-bottom: 5px;
     text-align: left;
+
 }
 
 .tern_licence {
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding: 5px;
+    text-align: justify;
+}
+
+.tern_licence_hidden {
+    padding: 5px;
+    text-align: justify;
+    display: none;
+}
+
+.tern_licence a {
+    font-weight: bold;
+}
+
+.tern_licence img {
+    vertical-align: middle;
+    align: top;
 }
 
 /**   ========= End of Refactored CSS ====== **/

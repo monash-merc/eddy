@@ -78,6 +78,15 @@
         </field-validator>
     </field>
 
+    <field name="selectedPartyBean.description">
+        <field-validator type="stringlength">
+            <param name="maxLength">2000</param>
+            <param name="minLength">0</param>
+            <param name="trim">true</param>
+            <message>${getText("ands.add.party.party.desc.hint")}</message>
+        </field-validator>
+    </field>
+
     <field name="selectedPartyBean.originateSourceValue">
         <field-validator type="requiredstring" short-circuit="true">
             <param name="trim">true</param>

@@ -83,7 +83,7 @@ public class PermissionAction extends DMCoreAction {
 
                 //copy the permissions into permission beans
                 copyPermissionsToPermissionBeans(permissions);
-                printGrantedPermissions();
+                // printGrantedPermissions();
                 // set view collection details link
                 setViewColDetailsLink();
                 // set page title and action navigation label.
@@ -350,7 +350,7 @@ public class PermissionAction extends DMCoreAction {
         for (PermissionBean pm : regUserPerms) {
             getInheritedGroupPerimssions(allRegUserPerm, pm);
         }
-        printGrantedPermissions();
+        // printGrantedPermissions();
 
         return assignPermissionForCollection(col);
     }

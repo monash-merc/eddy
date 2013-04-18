@@ -41,46 +41,39 @@
                 <@s.hidden name="collection.modifiedByUser.displayName" />
                 <@s.hidden name="viewType" id="viewtype"/>
                 <@s.hidden name="collection.funded" id="funded"/>
-
+                <div class="content_none_border_div">
+                    <div class="content_title">Instructions to publish metadata on external data portals</div>
+                </div>
                 <div class="data_display_div">
-                    <div class="data_title">
-                        <@s.property value="collection.name"/>
-                    </div>
+                    <div class="md_publish_spec">
+                        <p>
+                           <span class="span_inline2">The following mandatory steps will enable you to successfully publish your collection metadata to various external data portals, such as TERN, RDA, ANDS, etc.</span>
+                        </p>
 
-                    <div class="data_desc_div">
-                        <@s.property  value="collection.description" escape=false />
+                        <p>
+                            <span class="md_step">Step 1:</span> Search for researchers associated with this collection in this step. To do this, click on the Add Researcher button. If a researcher name isn't found in the
+                            database, you will be asked to create their profile. Once created, the new researcher profile can be associated to this collection. At least one researcher must be
+                            associated to a collection.
+                        </p>
+
+                        <p>
+                            <span class="md_step">Step 2:</span> Data available for download from this portal should be covered by one of two licenses. For TERN funded sites, the TERN License must be used and is automatically
+                            assigned. This cannot be changed. Non-TERN sites have the option to select the same TERN License or define their own. To complete this step, click on the Select Licence
+                            button and follow steps. (Refer Licencing Information page for more details).
+                        </p>
+
+                        <p>
+                            <span class="md_step">Step 3:</span> Review the Terms and Conditions, to comply with the publication of your collection and its associated metadata on various external data portals. Click on I
+                            accept.Register button to complete the registration of your data.
+                        </p>
+
+                        <p>
+                            <span class="span_inline2">It may take up to a week for the metadata to be published on the portals.</span>
+                        </p>
                     </div>
-                    <div class="data_other_info">
-                        <span class="span_inline1">
-                            Created by <@s.property value="collection.owner.displayName" />,
-                        </span>
-                        <span class="span_inline1">
-                            Creation date: <@s.date name="collection.createdTime" format="yyyy-MM-dd hh:mm" />,
-                        </span>
-                       <span class="span_inline1">
-                            Modified by <@s.property value="collection.modifiedByUser.displayName" />,
-                        </span>
-                        <span class="span_inline1">
-                            Modified date: <@s.date name="collection.modifiedTime" format="yyyy-MM-dd hh:mm" />
-                        </span>
-                    </div>
-                    <div class="input_field_row">
-                        <div class="status_field_name_div">Metadata Registered:</div>
-                        <div class="status_field_value_div"><@s.property value="collection.published" /></div>
-                    </div>
-                    <@s.if test="%{collection.funded == true}">
-                        <div class="data_tern_div">
-                            [ <a href="http://www.tern.org.au" target="_blank">TERN-Funded</a> ]
-                        </div>
-                    </@s.if>
-                    <div class="data_action_link">
-                        <a href="${base}/${viewColDetailLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}">View
-                            details</a>
-                    </div>
-                    <div style="clear: both;"></div>
                 </div>
                 <div class="content_none_border_div">
-                    <div class="content_title">Associated Researcher(s)</div>
+                    <div class="content_title">Step 1: Associated Researcher(s)</div>
                 </div>
                 <div class="content_none_border_div">
                     <div class="metada_reg_display_div">
@@ -134,24 +127,31 @@
                 </div>
 
                 <div class="content_none_border_div">
-                    <div class="content_title">The Data Licence</div>
+                    <div class="content_title">Step2: Select a licence for this collection</div>
                 </div>
                 <div class="content_none_border_div">
-                    <@s.if test="%{collection.funded == false }">
-                        <div class="metada_reg_display_div">
-                            <div class="metadata_spec">
-                                Please select the data licence
-                            </div>
-                            <div class="metadata_act_link">
-                                <a href="${base}/data/licenceOptions.jspx?collection.id=<@s.property value='collection.id' />" title="Select Licence" rel="superbox[iframe.licence][600x500]">Select
-                                    Licence</a> &nbsp;
-                            </div>
-                            <div style="clear: both;"></div>
+                <@s.if test="%{collection.funded == true}">
+                    <div class="metada_reg_display_div">
+                        <div class="metadata_spec">
+                            TERN Licence
                         </div>
-                    </@s.if>
+                    </div>
+                </@s.if>
+                <@s.else>
+                    <div class="metada_reg_display_div">
+                        <div class="metadata_spec">
+                            Please select the data licence
+                        </div>
+                        <div class="metadata_act_link">
+                            <a href="${base}/data/licenceOptions.jspx?collection.id=<@s.property value='collection.id' />" title="Select Licence" rel="superbox[iframe.licence][600x500]">Select
+                                Licence</a> &nbsp;
+                        </div>
+                        <div style="clear: both;"></div>
+                    </div>
+                </@s.else>
                 </div>
                 <div class="register_md_div">
-                    <@s.if test="%{licence.contents == null}">
+                    <@s.if test="%{licence.contents == null || licence.contents == ''}">
                         <div class="none_licence_div">
                             The licence not found, please selected a licence
                         </div>
@@ -160,16 +160,39 @@
                     <@s.hidden name="licence.contents" id="licence_contents"/>
                     <div class="data_licence_div">
                         <@s.if test="%{licence.licenceType == 'tern'}">
-                            <a href="<@s.property value='licence.contents' />" target="_blank"><@s.property value="licence.contents" /></a>
+                            <div class="tern_licence">
                         </@s.if>
                         <@s.else>
-                            <@s.property value="licence.contents" />
+                            <div class="tern_licence_hidden">
                         </@s.else>
+                            <div class="licence_logo"><a href="http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0" target="_blank">TERN Attribution-Share Alike (TERN BY-SA) Data Licence v1.0</a> &nbsp;&nbsp;&nbsp;&nbsp; <img src="${base}/images/tern_by_nc_sa.png"/></div>
+                            <p>
+                                The TERN Attribution-Share Alike (TERN BY-SA) Data Licence v1.0 enables sharing of the data provided a user shares their new data/products in return, and so means that a user can:
+                            </p>
+                            <ul>
+                                <li>copy, re-use, and distribute the data under the same terms</li>
+                                <li>make derivative products by adapting and remixing the data, but only if the user makes these derived products available under the same terms</li>
+                                <li>use the data for commercial purposes</li>
+                            </ul>
+                            <p>
+                                provided that, whenever the data is copied, re-used, distributed, adapted or transformed the user ensures that:
+                            </p>
+                            <ul>
+                                <li>credit is given to the original sources/s of the data (and any other nominated parties) in the manner stipulated (Attribution);</li>
+                                <li>transformed or derived data is made available under the same licence terms as the original data (Share Alike); and</li>
+                                <li>the data licence terms (for further re-use) are indicated.</li>
+                            </ul>
+                        </div>
+                        <div class="user_defined_licence">
+                            <@s.if test="%{licence.licenceType != 'tern'}">
+                              <@s.property value="licence.contents" />
+                            </@s.if>
+                        </div>
                     </div>
                 </div>
 
                 <div class="content_none_border_div">
-                    <div class="content_title">Terms and Conditions</div>
+                    <div class="content_title">Step3: Terms and Conditions</div>
                 </div>
 
                 <div class="register_md_div">
@@ -189,7 +212,7 @@
                             By using this system to publish or register your research work you are continuing to agree to adhere to the
                             Terms and Conditions of use detailed at <a href="http://www.monash.edu/eresearch/about/ands-merc.html"
                                                                        target="_blank">http://www.monash.edu/eresearch/about/ands-merc.html</a>.
-                            Please read these Terms and Conditions carefully before registering.
+                            Please read these Terms and Conditions carefully before publishing.
                         </p>
                     </div>
                 </div>
@@ -200,11 +223,11 @@
                             &nbsp;
                         </div>
                         <div class="metadata_act_link">
-                            <@s.submit value="I accept. Register"  name="register" cssClass="input_button_simple" id="wait_modal" />
+                            <@s.submit value="I accept. Publish"  name="register" cssClass="input_button_simple" id="wait_modal" />
                         </div>
                         <div id='mask'></div>
-                        <div id='modal_window' >
-                            Calling Metadata Registration Service, please wait ... <img src="${base}/images/wait_loader.gif" class="loading_image">
+                        <div id='modal_window'>
+                            Calling Metadata Publishing Service, please wait ... <img src="${base}/images/wait_loader.gif" class="loading_image">
                         </div>
                         <div style="clear: both;"></div>
                     </div>
