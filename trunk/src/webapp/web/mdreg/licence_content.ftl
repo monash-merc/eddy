@@ -28,25 +28,23 @@
 
         <div class="popup_row">
             <div class="tern_licence">
-                <div class="licence_logo"><a href="http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0" target="_blank">TERN Attribution-Share Alike (TERN BY-SA) Data Licence v1.0</a> &nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="licence_logo"><a href="http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0" target="_blank">http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0</a> &nbsp;&nbsp;&nbsp;&nbsp;
                     <img src="${base}/images/tern_by_nc_sa.png"/></div>
                 <p>
-                    The TERN Attribution-Share Alike (TERN BY-SA) Data Licence v1.0 enables sharing of the data provided a user shares their new data/products in return, and so means that a user can:
+                    The TERN Attribution-Share Alike- Non Commercial (TERN BY-SA-NC) Data Licence v1.0 restricts the development of new data/products, so that a user can:
                 </p>
                 <ul>
-                    <li>copy, re-use, and distribute the data under the same terms</li>
-                    <li>make derivative products by adapting and remixing the data, but only if the user makes these derived products available under the same terms</li>
-                    <li>use the data for commercial purposes</li>
+                    <li>copy, re-use, share and distribute the copies of the data</li>
+                    <li>not use the data for commercial purposes</li>
                 </ul>
                 <p>
-                    provided that, whenever the data is copied, re-used, distributed, adapted or transformed the user ensures that:
+                    provided that, whenever the data is copied, re-used, or distributed the user ensures that:
                 </p>
                 <ul>
                     <li>credit is given to the original sources/s of the data (and any other nominated parties) in the manner stipulated (Attribution);</li>
-                    <li>transformed or derived data is made available under the same licence terms as the original data (Share Alike); and</li>
-                    <li>the data licence terms (for further re-use) are indicated.</li>
+                    <li>the data cannot be used for commercial purposes (No Commercial); and</li>
+                    <li>If the data is altered, transformed, the resulting datasets can only be used under the same license conditions.</li>
                 </ul>
-
             </div>
         </div>
     </@s.if>

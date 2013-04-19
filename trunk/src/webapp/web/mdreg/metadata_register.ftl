@@ -47,24 +47,23 @@
                 <div class="data_display_div">
                     <div class="md_publish_spec">
                         <p>
-                           <span class="span_inline2">The following mandatory steps will enable you to successfully publish your collection metadata to various external data portals, such as TERN, RDA, ANDS, etc.</span>
+                           <span class="span_inline2">The following mandatory steps will enable you to successfully publish your collection metadata to various external data portals, such as <a href="http://www.tern.org.au" target="_blank">TERN</a>, <a href="http://researchdata.ands.org.au/" target="_blank">RDA</a>, etc.</span>
                         </p>
 
                         <p>
-                            <span class="md_step">Step 1:</span> Search for researchers associated with this collection in this step. To do this, click on the Add Researcher button. If a researcher name isn't found in the
+                            <span class="md_step">Step 1:</span> Search for researchers associated with this collection in this step. To do this, click on the <b>Add Researcher</b> button. If a researcher name isn't found in the
                             database, you will be asked to create their profile. Once created, the new researcher profile can be associated to this collection. At least one researcher must be
                             associated to a collection.
                         </p>
 
                         <p>
                             <span class="md_step">Step 2:</span> Data available for download from this portal should be covered by one of two licenses. For TERN funded sites, the TERN License must be used and is automatically
-                            assigned. This cannot be changed. Non-TERN sites have the option to select the same TERN License or define their own. To complete this step, click on the Select Licence
-                            button and follow steps. (Refer Licencing Information page for more details).
+                            assigned. This cannot be changed. Non-TERN sites have the option to select the same TERN License or define their own. To complete this step, click on the <b>Select Licence</b>
+                            button and follow steps. (Refer <a href="${base}/site/licenceinfo.jspx" target="_blank">Licensing Information</a> page for more details).
                         </p>
 
                         <p>
-                            <span class="md_step">Step 3:</span> Review the Terms and Conditions, to comply with the publication of your collection and its associated metadata on various external data portals. Click on I
-                            accept.Register button to complete the registration of your data.
+                            <span class="md_step">Step 3:</span> Review the Terms and Conditions, to comply with the publication of your collection and its associated metadata on various external data portals. Click on <b>I accept, Publish</b> button to complete the registration of your data.
                         </p>
 
                         <p>
@@ -165,24 +164,24 @@
                         <@s.else>
                             <div class="tern_licence_hidden">
                         </@s.else>
-                            <div class="licence_logo"><a href="http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0" target="_blank">TERN Attribution-Share Alike (TERN BY-SA) Data Licence v1.0</a> &nbsp;&nbsp;&nbsp;&nbsp; <img src="${base}/images/tern_by_nc_sa.png"/></div>
-                            <p>
-                                The TERN Attribution-Share Alike (TERN BY-SA) Data Licence v1.0 enables sharing of the data provided a user shares their new data/products in return, and so means that a user can:
-                            </p>
-                            <ul>
-                                <li>copy, re-use, and distribute the data under the same terms</li>
-                                <li>make derivative products by adapting and remixing the data, but only if the user makes these derived products available under the same terms</li>
-                                <li>use the data for commercial purposes</li>
-                            </ul>
-                            <p>
-                                provided that, whenever the data is copied, re-used, distributed, adapted or transformed the user ensures that:
-                            </p>
-                            <ul>
-                                <li>credit is given to the original sources/s of the data (and any other nominated parties) in the manner stipulated (Attribution);</li>
-                                <li>transformed or derived data is made available under the same licence terms as the original data (Share Alike); and</li>
-                                <li>the data licence terms (for further re-use) are indicated.</li>
-                            </ul>
-                        </div>
+                                <div class="licence_logo"><a href="http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0" target="_blank">http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0</a> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <img src="${base}/images/tern_by_nc_sa.png"/></div>
+                                <p>
+                                    The TERN Attribution-Share Alike- Non Commercial (TERN BY-SA-NC) Data Licence v1.0 restricts the development of new data/products, so that a user can:
+                                </p>
+                                <ul>
+                                    <li>copy, re-use, share and distribute the copies of the data</li>
+                                    <li>not use the data for commercial purposes</li>
+                                </ul>
+                                <p>
+                                    provided that, whenever the data is copied, re-used, or distributed the user ensures that:
+                                </p>
+                                <ul>
+                                    <li>credit is given to the original sources/s of the data (and any other nominated parties) in the manner stipulated (Attribution);</li>
+                                    <li>the data cannot be used for commercial purposes (No Commercial); and</li>
+                                    <li>If the data is altered, transformed, the resulting datasets can only be used under the same license conditions.</li>
+                                </ul>
+                            </div>
                         <div class="user_defined_licence">
                             <@s.if test="%{licence.licenceType != 'tern'}">
                               <@s.property value="licence.contents" />
