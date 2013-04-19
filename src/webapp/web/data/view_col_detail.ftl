@@ -93,8 +93,15 @@
     </div>
 
     <div class="input_field_row">
-        <div class="status_field_name_div">Metadata Registered:</div>
-        <div class="status_field_value_div"><@s.property value="collection.published" /></div>
+        <div class="status_field_name_div">Metadata Published:</div>
+        <div class="status_field_value_div">
+            <@s.if test = "%{collection.published == true }">
+                Yes
+            </@s.if>
+            <@s.else>
+                No
+            </@s.else>
+        </div>
     </div>
     <@s.if test="%{collection.funded == true}">
         <div class="data_tern_div">
@@ -136,10 +143,10 @@
             </a>
         </@s.if>
         <@s.if test="%{permissionBean.mdRegAllowed}">
-                <a href="${base}/${andsMdRegLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}"
-                   title="Public registration of the metadata associated with this collection with the Research Data Australia website">
-                    <@s.text name="ands.md.registration.title" />
-                </a>
+            <a href="${base}/${andsMdRegLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}"
+               title="Public registration of the metadata associated with this collection with the Research Data Australia website">
+                <@s.text name="ands.md.registration.title" />
+            </a>
         </@s.if>
     </div>
     <div style="clear: both;"></div>
