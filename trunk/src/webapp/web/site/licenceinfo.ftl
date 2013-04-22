@@ -36,7 +36,7 @@
                             data users to distribute, modify or build upon the data provided that they credit the original
                             source, license any modified data or products derived from the data under the same terms as the
                             original data and do not use the data for commercial purposes. These conditions can only be waived
-                            by the relevant party. See the TERN web site (<a href="http://tern.org.au/datalicence" target="_blank">http://tern.org.au/datalicence</a>)
+                            by the relevant party. See the TERN web site (<a href="http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0" target="_blank">http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0</a>)
                             for a full description of the TERN-BY-SA-NC license.
                         </li>
                         <li>
