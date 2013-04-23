@@ -477,7 +477,7 @@ function processLicenceResponse(responseData) {
             window.parent.$('.user_defined_licence').html('');
             window.parent.$('.tern_licence_hidden').show();
             window.parent.$('.tern_licence').show();
-        } else{
+        } else {
             window.parent.$('.tern_licence').hide();
             window.parent.$('.tern_licence_hidden').hide();
             window.parent.$('.user_defined_licence').html(licenceHtml);
@@ -603,3 +603,15 @@ function removeNoneLicenceDiv() {
         window.parent.$('.none_licence_div').remove();
     }
 }
+
+
+//Restricted Access control
+$("#ra_enabled").live('click', function () {
+    var ra_setting = $(".ra_section");
+    if ($(this).is(":checked")) {
+        ra_setting.show();
+    } else {
+        ra_setting.hide();
+    }
+});
+

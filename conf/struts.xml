@@ -437,6 +437,14 @@
             </result>
         </action>
 
+        <!-- Restrict Access Date Checking -->
+        <action name="checkDate" class="data.raDateCheckAction" method="checkDate">
+            <result name="success" type="json">
+                <param name="noCache">true</param>
+                <param name="root">raResponse</param>
+            </result>
+        </action>
+
     </package>
 
     <!-- collection permissions package -->

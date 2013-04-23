@@ -60,7 +60,8 @@
 .file_error_msg_div {
     display: none;
 }
-.error_msg_item_div {
+
+.file_error_msg_item_div {
     border-collapse: collapse;
     color: #B24F3C;
     font-weight: normal;

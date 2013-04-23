@@ -1,4 +1,5 @@
 <#assign s=JspTaglibs["/WEB-INF/struts-tags.tld"] />
+<#assign sj=JspTaglibs["/WEB-INF/struts-jquery-tags.tld"] />
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -48,20 +49,7 @@
         </div>
     </div>
     </@s.if>
-<!-- File importing message block -->
-<div class="content_none_border_div">
-    <div class="file_success_msg_div">
-        <p id="success_msg">Some text</p>
-    </div>
 
-    <div class="file_error_msg_div">
-        <div class="error_msg_item_div">
-            <ul>
-                <li><p id="error_msg">&nbsp;</p></li>
-            </ul>
-        </div>
-    </div>
-</div>
 <!-- End of file importing message block -->
 
 <div class="data_display_div">
@@ -174,6 +162,19 @@
     <div class="content_none_border_div">
         <div class="content_title">File Import</div>
     </div>
+
+    <!-- File importing message block -->
+    <div class="content_none_border_div">
+        <div class="file_success_msg_div">
+            <p id="file_success_msg">Some text</p>
+        </div>
+
+        <div class="file_error_msg_div">
+            <div class="file_error_msg_item_div">
+            </div>
+        </div>
+    </div>
+
     <!-- file uploading progress messages -->
     <div class="content_none_border_div">
         <div class="file_uploading_div">
@@ -191,6 +192,7 @@
             </div>
         </div>
     </div>
+
     <!-- upload file -->
     <div class="data_display_div">
         <div id="fileuploadForm">
@@ -218,7 +220,36 @@
                     </div>
                 </div>
                 <div style="clear: both;"></div>
+                <@s.if test="%{permissionBean.racAllowed}">
+                    <div class="input_field_row">
+                        <div class="input_field_title">
+                            Restricted Access Enabled:
+                        </div>
+                        <div class="input_field_value_section">
+                            <@s.checkbox name="restrictedAccess"  id="ra_enabled" cssClass="check_box" />
+                        </div>
+                    </div>
+                    <div style="clear: both;"></div>
 
+                    <div class="ra_section">
+                        <div class="ra_info_title">Restricted Access Settings</div>
+
+                        <div class="ra_field_row">
+                            <div class="blank_separator"></div>
+                            <div class="ra_field_title">
+                                <span class="ra_span">Start Date</span>: &nbsp;&nbsp; <@s.date name="restrictAccess.startDate" format="yyyy-MM-dd" />
+                            </div>
+                            <div class="ra_field_value_section">
+                                <span class="ra_span">End Date</span>: &nbsp;&nbsp; <@sj.datepicker name="restrictAccess.endDate" id="raEndTime" displayFormat="yy-mm-dd"  buttonImageOnly="true" />
+                            </div>
+                            <div class="blank_separator"></div>
+                            <div class="ra_comments">
+                                (The start date is always today's date. The end data can be between 30 days from today and up to 18 months in the future.)
+                            </div>
+                        </div>
+                    </div>
+                </@s.if>
+                <div class="blank_separator"></div>
                 <div class="input_field_row">
                     <div class="input_field_title">
                         &nbsp;
