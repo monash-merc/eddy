@@ -30,10 +30,16 @@ package au.edu.monash.merc.capture.struts2.action;
 import au.edu.monash.merc.capture.common.UserType;
 import au.edu.monash.merc.capture.common.UserViewType;
 import au.edu.monash.merc.capture.config.ConfigSettings;
+import au.edu.monash.merc.capture.domain.RestrictAccess;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+
+import javax.annotation.PostConstruct;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 @Scope("prototype")
 @Controller("data.viewColDetailsAction")
@@ -49,6 +55,19 @@ public class ViewColDetailsAction extends DMCoreAction {
     private static String REDIRECT_ACTION_NAME = "viewColDetails";
 
     private static String REDIRECT_NAMESPACE = "/data";
+
+    private RestrictAccess restrictAccess;
+
+    @PostConstruct
+    public void initRADefaultTime() {
+        this.restrictAccess = new RestrictAccess();
+        Date today = GregorianCalendar.getInstance().getTime();
+        this.restrictAccess.setStartDate(today);
+        DateTime todayTime = new DateTime(today);
+        DateTime minEndTime = todayTime.plusDays(30);
+        Date endTime = minEndTime.toDate();
+        this.restrictAccess.setEndDate(endTime);
+    }
 
     public String viewCollectionDetail() {
 
@@ -244,5 +263,13 @@ public class ViewColDetailsAction extends DMCoreAction {
 
     public void setRedNamespace(String redNamespace) {
         this.redNamespace = redNamespace;
+    }
+
+    public RestrictAccess getRestrictAccess() {
+        return restrictAccess;
+    }
+
+    public void setRestrictAccess(RestrictAccess restrictAccess) {
+        this.restrictAccess = restrictAccess;
     }
 }

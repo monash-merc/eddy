@@ -233,4 +233,19 @@ public interface DMService {
     void saveParty(Party party);
 
     void updateParty(Party party);
+
+    //restrict access section
+    void saveRestrictAccess(RestrictAccess restrictAccess);
+
+    RestrictAccess getRestrictAccessById(long id);
+
+    void deleteRestrictAccess(RestrictAccess restrictAccess);
+
+    void updateRestrictAccess(RestrictAccess restrictAccess);
+
+    RestrictAccess getRAByDatasetId(long datasetId);
+
+    void deleteRAById(long raId);
+
+    void deleteRAByDatasetId(long datasetId);
 }

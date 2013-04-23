@@ -104,6 +104,9 @@ public class DMServiceImpl implements DMService {
     @Autowired
     private PartyActivityWSService paWsService;
 
+    @Autowired
+    private RestrictAccessService restrictAccessService;
+
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     public void setCollectionService(CollectionService collectionService) {
@@ -160,6 +163,10 @@ public class DMServiceImpl implements DMService {
 
     public void setPaWsService(PartyActivityWSService paWsService) {
         this.paWsService = paWsService;
+    }
+
+    public void setRestrictAccessService(RestrictAccessService restrictAccessService) {
+        this.restrictAccessService = restrictAccessService;
     }
 
     public boolean checkWritePermission(String path) {
@@ -939,5 +946,40 @@ public class DMServiceImpl implements DMService {
     @Override
     public void updateParty(Party party) {
         this.partyService.updateParty(party);
+    }
+
+    @Override
+    public void saveRestrictAccess(RestrictAccess restrictAccess) {
+        this.restrictAccessService.saveRestrictAccess(restrictAccess);
+    }
+
+    @Override
+    public RestrictAccess getRestrictAccessById(long id) {
+        return this.restrictAccessService.getRestrictAccessById(id);
+    }
+
+    @Override
+    public void deleteRestrictAccess(RestrictAccess restrictAccess) {
+        this.restrictAccessService.deleteRestrictAccess(restrictAccess);
+    }
+
+    @Override
+    public void updateRestrictAccess(RestrictAccess restrictAccess) {
+        this.restrictAccessService.updateRestrictAccess(restrictAccess);
+    }
+
+    @Override
+    public RestrictAccess getRAByDatasetId(long datasetId) {
+        return this.restrictAccessService.getRAByDatasetId(datasetId);
+    }
+
+    @Override
+    public void deleteRAById(long raId) {
+        this.restrictAccessService.deleteRAById(raId);
+    }
+
+    @Override
+    public void deleteRAByDatasetId(long datasetId) {
+        this.restrictAccessService.deleteRAByDatasetId(datasetId);
     }
 }

@@ -26,10 +26,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package au.edu.monash.merc.capture.domain;
+package au.edu.monash.merc.capture.service.impl;
 
-import javax.persistence.*;
-import java.util.Date;
+import au.edu.monash.merc.capture.dao.impl.RestrictAccessDAO;
+import au.edu.monash.merc.capture.domain.RestrictAccess;
+import au.edu.monash.merc.capture.service.RestrictAccessService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Simon Yu
@@ -38,82 +43,53 @@ import java.util.Date;
  * @version 1.0
  * @since 1.0
  *        <p/>
- *        Date: 6/03/13 12:00 PM
+ *        Date: 22/04/13 3:28 PM
  */
-@Entity
-@Table(name = "restrict_access")
-public class RestrictAccess extends Domain {
-    @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "pk_generator")
-    @TableGenerator(name = "pk_generator", pkColumnName = "pk_column_name", valueColumnName = "pk_column_value", pkColumnValue = "ra_pk")
-    @Column(name = "id", nullable = false)
-    private long id;
 
-    @Basic
-    @Column(name = "name")
-    private String name;
+@Scope("prototype")
+@Service
+@Transactional
+public class RestrictAccessServiceImpl implements RestrictAccessService {
 
-    @Basic
-    @Column(name = "description")
-    private String description;
+    @Autowired
+    private RestrictAccessDAO restrictAccessDao;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "start_Date")
-    private Date startDate;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "end_date")
-    private Date endDate;
-
-    @OneToOne(targetEntity = Dataset.class)
-    @JoinColumn(name = "dataset_id", referencedColumnName = "id", nullable = false)
-    private Dataset dataset;
-
-    public long getId() {
-        return id;
+    public void setRestrictAccessDao(RestrictAccessDAO restrictAccessDao) {
+        this.restrictAccessDao = restrictAccessDao;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    @Override
+    public void saveRestrictAccess(RestrictAccess restrictAccess) {
+        this.restrictAccessDao.add(restrictAccess);
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public RestrictAccess getRestrictAccessById(long id) {
+        return this.restrictAccessDao.get(id);
     }
 
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public void deleteRestrictAccess(RestrictAccess restrictAccess) {
+        this.restrictAccessDao.remove(restrictAccess);
     }
 
-    public String getDescription() {
-        return description;
+    @Override
+    public void updateRestrictAccess(RestrictAccess restrictAccess) {
+        this.restrictAccessDao.update(restrictAccess);
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    @Override
+    public RestrictAccess getRAByDatasetId(long datasetId) {
+        return this.restrictAccessDao.getRAByDatasetId(datasetId);
     }
 
-    public Date getStartDate() {
-        return startDate;
+    @Override
+    public void deleteRAById(long raId) {
+        this.restrictAccessDao.deleteRAById(raId);
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public Dataset getDataset() {
-        return dataset;
-    }
-
-    public void setDataset(Dataset dataset) {
-        this.dataset = dataset;
+    @Override
+    public void deleteRAByDatasetId(long datasetId) {
+        this.restrictAccessDao.deleteRAByDatasetId(datasetId);
     }
 }

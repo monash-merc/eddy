@@ -1154,6 +1154,54 @@ input {
     cursor: pointer;
 }
 
+/** File Uploading  And RA **/
+
+.ra_section {
+    padding: 5px;
+    display: none;
+}
+
+.ra_info_title {
+    padding: 5px;
+    background: #F9F9F9;
+    font-weight: bold;
+    color: #726E4C;
+}
+
+.ra_field_row {
+    border: solid 1px #f2f2f2;
+    padding: 5px;
+    color: #000000;
+}
+
+.ra_field_title {
+    display: block;
+    float: left;
+    width: 200px;
+    height: 22px;
+    line-height: 22px;
+    padding-left: 10px;
+}
+
+.ra_field_value_section {
+    padding-left: 10px;
+    margin-left: 210px;
+    text-align: left;
+}
+
+
+.ra_span {
+    color: #003766;
+    font-weight: bold;
+}
+
+
+.ra_comments{
+    padding: 5px;
+    font-size: 11px;
+    color: #909090;
+}
+
 /** pagination **/
 .page_style {
     margin: 5px auto;
