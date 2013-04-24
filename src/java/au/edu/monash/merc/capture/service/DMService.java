@@ -130,7 +130,7 @@ public interface DMService {
      */
     Location getLocationByCoverageType(String coverageType, String spatialCoverage);
 
-    Dataset captureData(String destFileName, File srcFile, boolean extractable, boolean globalAttOnly, Collection collection, String rootPath);
+    Dataset captureData(String destFileName, File srcFile, boolean extractable, boolean globalAttOnly, Collection collection, String rootPath, boolean raEnabled, RestrictAccess restrictAccess);
 
     List<String> discoverFiles(String stagePath, FilenameFilter filter);
 

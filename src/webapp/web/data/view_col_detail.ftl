@@ -24,6 +24,16 @@
             };
             $.superbox();
         });
+
+        $(document).ready(function () {
+            var raEnabledCheck = $('#ra_enabled');
+            var ra_setting = $(".ra_section");
+            if (raEnabledCheck.is(":checked")) {
+                ra_setting.show();
+            } else {
+                ra_setting.hide();
+            }
+        });
     </script>
 </head>
 <body>
@@ -226,7 +236,7 @@
                             Restricted Access Enabled:
                         </div>
                         <div class="input_field_value_section">
-                            <@s.checkbox name="restrictedAccess"  id="ra_enabled" cssClass="check_box" />
+                            <@s.checkbox name="raEnabled"  id="ra_enabled" cssClass="check_box" />
                         </div>
                     </div>
                     <div style="clear: both;"></div>
@@ -248,6 +258,7 @@
                             </div>
                         </div>
                     </div>
+
                 </@s.if>
                 <div class="blank_separator"></div>
                 <div class="input_field_row">
