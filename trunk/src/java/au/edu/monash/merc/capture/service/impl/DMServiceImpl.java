@@ -308,8 +308,7 @@ public class DMServiceImpl implements DMService {
     }
 
     @Override
-    public Dataset captureData(String simpleFileName, File srcFile, boolean extractRequired, boolean globalAttOnly, Collection collection,
-                               String rootPath) {
+    public Dataset captureData(String simpleFileName, File srcFile, boolean extractRequired, boolean globalAttOnly, Collection collection, String rootPath, boolean raEnabled, RestrictAccess restrictAccess) {
 
         String destDatasetFileRelPath = collection.getDirPathName() + File.separator + simpleFileName;
         String destDatasetFileFullPath = rootPath + destDatasetFileRelPath;
@@ -323,11 +322,17 @@ public class DMServiceImpl implements DMService {
             // set dataset store location
             ds.setStoreLocation(destDatasetFileRelPath);
             ds.setCollection(collection);
-            ds.setImportDateTime(GregorianCalendar.getInstance().getTime());
+            Date importedTime = GregorianCalendar.getInstance().getTime();
+            ds.setImportDateTime(importedTime);
 
+            if (raEnabled) {
+                restrictAccess.setStartDate(importedTime);
+                ds.setRaEnabled(true);
+                ds.setRestrictAccess(restrictAccess);
+                restrictAccess.setDataset(ds);
+            }
             // save the dataset in database first
             this.datasetService.saveDataset(ds);
-
             // update the collection in database
             this.collectionService.updateCollection(collection);
 

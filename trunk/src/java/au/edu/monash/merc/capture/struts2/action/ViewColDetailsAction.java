@@ -56,19 +56,6 @@ public class ViewColDetailsAction extends DMCoreAction {
 
     private static String REDIRECT_NAMESPACE = "/data";
 
-    private RestrictAccess restrictAccess;
-
-    @PostConstruct
-    public void initRADefaultTime() {
-        this.restrictAccess = new RestrictAccess();
-        Date today = GregorianCalendar.getInstance().getTime();
-        this.restrictAccess.setStartDate(today);
-        DateTime todayTime = new DateTime(today);
-        DateTime minEndTime = todayTime.plusDays(30);
-        Date endTime = minEndTime.toDate();
-        this.restrictAccess.setEndDate(endTime);
-    }
-
     public String viewCollectionDetail() {
 
         try {
@@ -119,7 +106,8 @@ public class ViewColDetailsAction extends DMCoreAction {
 //                }
 
                 // populate the list dataset in this user collection.
-                datasets = this.dmService.getDatasetByCollectionIdUsrId(collection.getId(), collection.getOwner().getId());
+                // datasets = this.dmService.getDatasetByCollectionIdUsrId(collection.getId(), collection.getOwner().getId());
+                retrieveAllDatasets();
                 // populate the collection links
                 if (viewType.equals(UserViewType.ANONYMOUS.type())) {
                     populateLinksInPubCollection();
@@ -263,13 +251,5 @@ public class ViewColDetailsAction extends DMCoreAction {
 
     public void setRedNamespace(String redNamespace) {
         this.redNamespace = redNamespace;
-    }
-
-    public RestrictAccess getRestrictAccess() {
-        return restrictAccess;
-    }
-
-    public void setRestrictAccess(RestrictAccess restrictAccess) {
-        this.restrictAccess = restrictAccess;
     }
 }

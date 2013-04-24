@@ -31,10 +31,14 @@ import au.edu.monash.merc.capture.common.UserViewType;
 import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.AuditEvent;
 import au.edu.monash.merc.capture.domain.Dataset;
+import au.edu.monash.merc.capture.domain.RestrictAccess;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import javax.annotation.PostConstruct;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 @Scope("prototype")
@@ -48,7 +52,6 @@ public class DeleteDSAction extends DMCoreAction {
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     public String deleteDataset() {
-
         try {
             Dataset ds = this.dmService.getDatasetById(dataset.getId());
             collection = ds.getCollection();
@@ -154,7 +157,6 @@ public class DeleteDSAction extends DMCoreAction {
                 setNavAfterColExc();
             }
         }
-
     }
 
     private void setNavAfterExcInDS() {

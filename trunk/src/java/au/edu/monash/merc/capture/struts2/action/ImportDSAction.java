@@ -71,7 +71,7 @@ public class ImportDSAction extends DMCoreAction {
             String dataStorePath = configSetting.getPropValue(ConfigSettings.DATA_STORE_LOCATION);
             // Dataset dataset = this.dmService.createDataset(uploadFileName, fcontent, extractable, collection,
             // dataStorePath);
-            Dataset dataset = this.dmService.captureData(uploadFileName, upload, extractable, false, collection, dataStorePath);
+            Dataset dataset = this.dmService.captureData(uploadFileName, upload, extractable, false, collection, dataStorePath, false, null);
             // re-sort datasets in order
             resortDatasetOrder(dataset);
             recordAuditEvent(dataset);

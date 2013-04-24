@@ -45,6 +45,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
+import au.edu.monash.merc.capture.struts2.action.ActConstants;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.EmailValidator;
 
@@ -61,6 +62,10 @@ public class CaptureUtil {
 
     private static final String DATE_W3CDTF = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
+    private static final String DATE_YYYYMMDD = "yyyy-MM-dd";
+
+    private static final String FIRST_TIME_OF_DAY = " 00:00:00";
+
     public static Date formatDate(final String dateStr) {
         Date date = null;
         DateFormat df = new SimpleDateFormat(DATE_FORMAT);
@@ -70,6 +75,12 @@ public class CaptureUtil {
             throw new DataCaptureException(e.getMessage());
         }
         return date;
+    }
+
+    public static Date getToday() {
+        Date date = GregorianCalendar.getInstance().getTime();
+        String endtimeStr = CaptureUtil.dateToYYYYMMDDStr(date);
+        return formatDate(endtimeStr + FIRST_TIME_OF_DAY);
     }
 
     public static String formatDateToUTC(final Date date) {
@@ -259,6 +270,9 @@ public class CaptureUtil {
 
         }
 
+
+        System.out.println("=========== get current time stamp: " + genCurrentTimestamp());
+        System.out.println("=========== get today date: " + getToday());
         System.out.println(" Format the date: 2010-04-20 12:51:22 " + CaptureUtil.formatDate("2010-04-20 12:51:22"));
 
         Date day = CaptureUtil.formatDate("2010-12-06 23:59:59");

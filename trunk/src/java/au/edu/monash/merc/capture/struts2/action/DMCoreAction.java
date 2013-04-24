@@ -38,10 +38,12 @@ import au.edu.monash.merc.capture.service.DMService;
 import au.edu.monash.merc.capture.util.CaptureUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class DMCoreAction extends BaseAction {
@@ -87,9 +89,20 @@ public class DMCoreAction extends BaseAction {
     //citation info
     protected String publisher;
 
+    //restricted access
+    protected RestrictAccess restrictAccess;
+
     @PostConstruct
     public void init() {
         this.publisher = this.configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_GROUP_NAME);
+        //initialize the restricted access object
+        this.restrictAccess = new RestrictAccess();
+        Date today = CaptureUtil.getToday();
+        this.restrictAccess.setStartDate(today);
+        DateTime todayTime = new DateTime(today);
+        DateTime minEndTime = todayTime.plusDays(30);
+        Date endTime = minEndTime.toDate();
+        this.restrictAccess.setEndDate(endTime);
     }
 
     protected void populateLinksInUsrCollection() {
@@ -307,6 +320,15 @@ public class DMCoreAction extends BaseAction {
 
     protected void retrieveAllDatasets() {
         datasets = this.dmService.getDatasetByCollectionIdUsrId(collection.getId(), collection.getOwner().getId());
+        if (datasets != null) {
+            for (Dataset ds : datasets) {
+                RestrictAccess restrictAccess = ds.getRestrictAccess();
+                if (restrictAccess != null) {
+                    System.out.println("=============== restrict access start date: " + restrictAccess.getStartDate());
+                    System.out.println("=============== restrict access end date: " + restrictAccess.getEndDate());
+                }
+            }
+        }
     }
 
     protected void recordActionAuditEvent(AuditEvent event) {
@@ -460,5 +482,13 @@ public class DMCoreAction extends BaseAction {
 
     public void setPublisher(String publisher) {
         this.publisher = publisher;
+    }
+
+    public RestrictAccess getRestrictAccess() {
+        return restrictAccess;
+    }
+
+    public void setRestrictAccess(RestrictAccess restrictAccess) {
+        this.restrictAccess = restrictAccess;
     }
 }

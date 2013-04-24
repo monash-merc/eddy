@@ -30,7 +30,9 @@ package au.edu.monash.merc.capture.struts2.action;
 import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.AuditEvent;
 import au.edu.monash.merc.capture.domain.Dataset;
+import au.edu.monash.merc.capture.domain.RestrictAccess;
 import au.edu.monash.merc.capture.util.CaptureUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -38,6 +40,7 @@ import org.springframework.stereotype.Controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,6 +59,8 @@ public class ImportFileAction extends DMCoreAction {
 
     private String uploadFileName;
 
+    private boolean raEnabled;
+
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     public String importFile() {
@@ -71,6 +76,9 @@ public class ImportFileAction extends DMCoreAction {
             responseData.put("message", getText("dataset.import.get.collection.details.failed"));
             return SUCCESS;
         }
+
+        System.out.println("===== restricted access enabled? " + raEnabled);
+        System.out.println("====== restriced access end date : " + restrictAccess.getEndDate());
 
         // check the permissions
         try {
@@ -112,7 +120,7 @@ public class ImportFileAction extends DMCoreAction {
             String dataStorePath = configSetting.getPropValue(ConfigSettings.DATA_STORE_LOCATION);
             dataStorePath = CaptureUtil.normalizePath(dataStorePath);
             // start to capture the data from the file.
-            Dataset dataset = this.dmService.captureData(uploadFileName, upload, extractable, false, collection, dataStorePath);
+            Dataset dataset = this.dmService.captureData(uploadFileName, upload, extractable, false, collection, dataStorePath, raEnabled, restrictAccess);
             // log the audit event.
             recordAuditEvent(dataset);
             responseData.put("success", String.valueOf(true));
@@ -121,7 +129,11 @@ public class ImportFileAction extends DMCoreAction {
         } catch (Exception e) {
             logger.error(e);
             responseData.put("success", String.valueOf(false));
+            String errorMsg = e.getMessage();
             responseData.put("message", getText("dataset.import.failed"));
+            if (StringUtils.containsIgnoreCase(errorMsg, "not a valid CDM file")) {
+                responseData.put("message", getText("dataset.import.failed") + ", not a valid net-cdf file");
+            }
             return SUCCESS;
         } finally {
             if (fis != null) {
@@ -141,6 +153,14 @@ public class ImportFileAction extends DMCoreAction {
         ev.setEventOwner(collection.getOwner());
         ev.setOperator(user);
         recordActionAuditEvent(ev);
+    }
+
+    public boolean isRaEnabled() {
+        return raEnabled;
+    }
+
+    public void setRaEnabled(boolean raEnabled) {
+        this.raEnabled = raEnabled;
     }
 
     public Map<String, String> getResponseData() {

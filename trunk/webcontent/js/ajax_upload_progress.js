@@ -25,6 +25,7 @@ merc.AjaxFileUpload = function (dobefore, doafter) {
     var progressBarTextDiv = jQuery("#progress-text");
     var progressAreaDiv = jQuery("#fileuploadProgress");
     var progressBarGraphic = jQuery("#progress-bgrd");
+
     var docField = jQuery("#upload");
     var theForm = jQuery("#ajaxFileUploadForm");
     var theSubmitButton = jQuery("#fileUpload input[type='submit']");
@@ -52,6 +53,10 @@ merc.AjaxFileUpload = function (dobefore, doafter) {
     progressBarGraphic.width(0);
     progressBarTextDiv.html("");
 
+    var raEnabledCheck = $('#ra_enabled');
+    if (raEnabledCheck.is(':checked')) {
+        $('.ra_section').show();
+    }
     // Start the Ajax File Upload...........
     initialise(doafter);
 
@@ -117,12 +122,33 @@ merc.AjaxFileUpload = function (dobefore, doafter) {
         errorHtml += "</ul>";
         fileErrorMsgItemsDiv.append(errorHtml);
         fileErrorMsgDiv.show();
+        // resetDatePicker();
     }
 
     function fileSuccessMessage(succeedMsg) {
         fileSuccessMsg.html(succeedMsg);
         fileSuccessMsgDiv.show();
     }
+
+//
+//   function resetDatePicker() {
+//       jQuery.struts2_jquery_ui.initDatepicker(true);
+//        var options_raEndTime = {};
+//        options_raEndTime.day = 24;
+//        options_raEndTime.month = 4;
+//        options_raEndTime.year = 2013;
+//        options_raEndTime.hour = 0;
+//        options_raEndTime.minute = 0;
+//        options_raEndTime.second = 0;
+//        options_raEndTime.buttonImageOnly = true;
+//        options_raEndTime.showOn = "both";
+//        options_raEndTime.buttonImage = "/eddy/struts/js/calendar.gif";
+//        options_raEndTime.displayformat = "yy-mm-dd";
+//        options_raEndTime.jqueryaction = "datepicker";
+//        options_raEndTime.id = "raEndTime";
+//        options_raEndTime.name = "restrictAccess.endDate";
+//        jQuery.struts2_jquery_ui.blind($('#raEndTime'),options_raEndTime);
+//    }
 
     /**
      * Gets the upload progress from the server and then recursively calls
@@ -160,7 +186,7 @@ merc.AjaxFileUpload = function (dobefore, doafter) {
             error:function (request, error, exception) {
                 // show the error
                 //var err = "Error detected: " + error + " and exception "+ exception;
-                fileErrorMessage(["Failed to get importing progress"]);
+                fileErrorMessage(["Failed to connect to the server to get importing progress"]);
             }
         });
     }
@@ -182,6 +208,8 @@ merc.AjaxFileUpload = function (dobefore, doafter) {
             coElementId:'col',
             ownerElementId:'colowner',
             viewTypeElementId:'viewtype',
+            raEnabledElementId:'ra_enabled',
+            raEndDateElementId:'raEndTime',
             dataType:'json',
             success:function (data, status) {
                 if (data.success == 'true') {
