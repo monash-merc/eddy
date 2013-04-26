@@ -19,8 +19,8 @@ jQuery.extend({
             io.name = frameId;
         }
         io.style.position = 'absolute';
-        io.style.top = '-1000px';
-        io.style.left = '-1000px';
+        io.style.top = '1000px';
+        io.style.left = '1000px';
 
         document.body.appendChild(io);
 
@@ -89,8 +89,8 @@ jQuery.extend({
 
         //set attributes
         $(form).css('position', 'absolute');
-        $(form).css('top', '-1200px');
-        $(form).css('left', '-1200px');
+        $(form).css('top', '1200px');
+        $(form).css('left', '1200px');
         $(form).appendTo('body');
         return form;
     },
@@ -98,9 +98,9 @@ jQuery.extend({
     ajaxFileUpload:function (s) {
         // TODO introduce global settings, allowing the client to modify them for all requests, not only timeout		
         s = jQuery.extend({}, jQuery.ajaxSettings, s);
-        var id = new Date().getTime()
-        var form = jQuery.createUploadForm(id, s.fileElementId, s.extElementId, s.coElementId, s.ownerElementId, s.viewTypeElementId, s.raEnabledElementId, s.raEndDateElementId);
+        var id = new Date().getTime();
         var io = jQuery.createUploadIframe(id, s.secureuri);
+        var form = jQuery.createUploadForm(id, s.fileElementId, s.extElementId, s.coElementId, s.ownerElementId, s.viewTypeElementId, s.raEnabledElementId, s.raEndDateElementId);
         var frameId = 'jUploadFrame' + id;
         var formId = 'jUploadForm' + id;
         // Watch for a new set of requests
@@ -163,7 +163,7 @@ jQuery.extend({
                 if (s.complete)
                     s.complete(xml, status);
 
-                jQuery(io).unbind()
+               jQuery(io).unbind()
 
                 setTimeout(function () {
                     try {

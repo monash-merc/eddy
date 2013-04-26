@@ -1,11 +1,6 @@
-//Create my namespace
+//merc namespace
 var merc = {};
-
-merc.AjaxFileUpload = function (dobefore, doafter) {
-
-    if (dobefore && typeof (dobefore) == 'function') {
-        dobefore();
-    }
+merc.FileUpload = function (doafter) {
 
     // Global variable needed to monitor upload progress
     var uploadStartTime = new Date().getTime() / 1000; // seconds start time
@@ -16,7 +11,7 @@ merc.AjaxFileUpload = function (dobefore, doafter) {
     var lastUploadedSize = -1; // current upload size
     var barwidth = 450; // size of the progress bar
     var fileName;
-    var initialisingTxt = "Initialising, please wait.....";
+    var initialisingTxt = "File uploading, please wait.....";
     var timeoutId;
 
     // GUI Elements
@@ -26,9 +21,8 @@ merc.AjaxFileUpload = function (dobefore, doafter) {
     var progressAreaDiv = jQuery("#fileuploadProgress");
     var progressBarGraphic = jQuery("#progress-bgrd");
 
-    var docField = jQuery("#upload");
-    var theForm = jQuery("#ajaxFileUploadForm");
     var theSubmitButton = jQuery("#fileUpload input[type='submit']");
+
 
     // file importing message div block
     var fileSuccessMsgDiv = jQuery(".file_success_msg_div");
@@ -54,103 +48,75 @@ merc.AjaxFileUpload = function (dobefore, doafter) {
     progressBarGraphic.width(0);
     progressBarTextDiv.html("");
 
-    var raEnabledCheck = $('#ra_enabled');
-    if (raEnabledCheck.is(':checked')) {
-        $('.ra_section').show();
-    }
-    // Start the Ajax File Upload...........
-    initialise(doafter);
 
-    function initialise(doafter) {
-        var action = theForm.attr("action");
-        //get the importing file
-        var f = getFileName(docField.val());
+    fileImport();
 
-        if (f == null) {
-            fileErrorMessage(["File must be provided"]);
-            return true;
-        }
-
-        //check restrict access is enabled or not
-
-        var raEnabled = $('#ra_enabled').is(':checked');
-
-        if (raEnabled) {
-
-            var ra_setting = $(".ra_section");
-            ra_setting.show();
-            //get the ra end date
-            var raEndDate = $('#raEndTime').val();
-            $.ajax({
-                type:"get",
-                url:"checkDate.jspx?raEndDate=" + raEndDate,
-                cache:false,
-                contentType:"application/json; charset=utf-8",
-                dataType:"json",
-                success:function (respData) {
-                    var succeed = respData.succeed;
-                    if (succeed) {
-                        fileName = f;
-                        // getProgress() will recurse until dowload is over
-                        timeoutId = setTimeout(getProgress, updateRate);
-                        progressAreaDiv.show();
-                        // This is blocked until above method completes
-                        ajaxFileUpload(action, doafter);
-
-                    } else {
-                        fileErrorMessage([respData.message]);
-                    }
-                },
-                error:function () {
-                    fileErrorMessage(["Failed to verify the restrict access end date"]);
-                }
-            });
-        } else {
-            fileName = f;
-            // getProgress() will recurse until dowload is over
-           timeoutId = setTimeout(getProgress, updateRate);
-            progressAreaDiv.show();
-            // This is blocked until above method completes
-            ajaxFileUpload(action, doafter);
-           //progressAreaDiv.show();
-        }
+    function fileImport() {
+        var options = {
+            // target:'#output2', // target element(s) to be updated with server response
+            beforeSubmit:prepareFileImport, // pre-submit callback
+            success:processFileImportResponse, // post-submit callback
+            type:'post', // 'get' or 'post', override for form's 'method' attribute
+            dataType:'json'      // 'xml', 'script', or 'json' (expected server response type)
+            // other available options:
+            //url:       url         // override for form's 'action' attribute
+            //clearForm: true,        // clear all form fields after successful submit
+            //resetForm: true        // reset the form after successful submit
+            // $.ajax options can be used here too, for example:
+            //timeout:   3000
+        };
+        // bind form using 'ajaxSubmit'
+        $('#ajaxFileUploadForm').ajaxSubmit(options);
         return false;
     }
 
-    function fileErrorMessage(errorMsgs) {
-        var errorHtml = "<ul>"
-        $.each(errorMsgs, function (i, msg) {
-            errorHtml += "<li>" + msg + " </li>"
-        });
-        errorHtml += "</ul>";
-        fileErrorMsgItemsDiv.append(errorHtml);
-        fileErrorMsgDiv.show();
+    function prepareFileImport(formData, jqForm, options) {
+
+        // getProgress() will recurse until dowload is over
+        timeoutId = setTimeout(getProgress, updateRate);
+        progressAreaDiv.show();
+
+        // formData is an array; here we use $.param to convert it to a string to display it
+        // but the form plugin does this for you automatically when it submits the data
+        var queryString = $.param(formData);
+
+        // jqForm is a jQuery object encapsulating the form element.  To access the
+        // DOM element for the form do this:
+        // var formElement = jqForm[0];
+
+        var fileField = jQuery("#upload");
+        fileName = getFileName(fileField.val());
+
+        alert('About to submit: \n\n' + queryString + ", file name: " + fileName);
+
+        // here we could return false to prevent the form from being submitted;
+        // returning anything other than false will allow the form submit to continue
+        return true;
     }
 
-    function fileSuccessMessage(succeedMsg) {
-        fileSuccessMsg.html(succeedMsg);
-        fileSuccessMsgDiv.show();
+    function processFileImportResponse(responseData, statusText, xhr, $form) {
+        // for normal html responses, the first argument to the success callback
+        // is the XMLHttpRequest object's responseText property
+
+        // if the ajaxSubmit method was passed an Options Object with the dataType
+        // property set to 'xml' then the first argument to the success callback
+        // is the XMLHttpRequest object's responseXML property
+
+        // if the ajaxSubmit method was passed an Options Object with the dataType
+        // property set to 'json' then the first argument to the success callback
+        // is the json data object returned by the server
+        var succeed = responseData.success;
+        if (succeed == 'true') {
+
+            fileSuccessMessage("status: " + succeed + ", " + responseData.message);
+            complete(true);
+        } else {
+            fileErrorMessage(["status: " + succeed + ", " + responseData.message]);
+            complete(false);
+        }
+
     }
 
-//
-//   function resetDatePicker() {
-//       jQuery.struts2_jquery_ui.initDatepicker(true);
-//        var options_raEndTime = {};
-//        options_raEndTime.day = 24;
-//        options_raEndTime.month = 4;
-//        options_raEndTime.year = 2013;
-//        options_raEndTime.hour = 0;
-//        options_raEndTime.minute = 0;
-//        options_raEndTime.second = 0;
-//        options_raEndTime.buttonImageOnly = true;
-//        options_raEndTime.showOn = "both";
-//        options_raEndTime.buttonImage = "/eddy/struts/js/calendar.gif";
-//        options_raEndTime.displayformat = "yy-mm-dd";
-//        options_raEndTime.jqueryaction = "datepicker";
-//        options_raEndTime.id = "raEndTime";
-//        options_raEndTime.name = "restrictAccess.endDate";
-//        jQuery.struts2_jquery_ui.blind($('#raEndTime'),options_raEndTime);
-//    }
 
     /**
      * Gets the upload progress from the server and then recursively calls
@@ -180,6 +146,7 @@ merc.AjaxFileUpload = function (dobefore, doafter) {
 
                     if (percent == "100") {
                         // The end
+                        clearTimeout(timeoutId);
                     } else {
                         setTimeout(getProgress, updateRate);
                     }
@@ -187,55 +154,28 @@ merc.AjaxFileUpload = function (dobefore, doafter) {
             },
             error:function (request, error, exception) {
                 // show the error
-                //var err = "Error detected: " + error + " and exception "+ exception;
                 fileErrorMessage(["Failed to connect to the server to get importing progress"]);
             }
         });
     }
 
-    /**
-     * This method performs the upload of the file
-     *
-     * @param action
-     *            the url to call
-     * @param callback
-     *            is the javascript method to call when the upload is complete
-     */
-    function ajaxFileUpload(actionurl, doafter) {
-        jQuery.ajaxFileUpload({
-            url:actionurl,
-            secureuri:false,
-            fileElementId:'upload',
-            extElementId:'extract',
-            coElementId:'col',
-            ownerElementId:'colowner',
-            viewTypeElementId:'viewtype',
-            raEnabledElementId:'ra_enabled',
-            raEndDateElementId:'raEndTime',
-            dataType:'json',
-            success:function (data, status) {
-                if (data.success == 'true') {
-                    // show the file importing successful message
-                    fileSuccessMessage(data.message);
-                   complete(true);
-                } else {
-                    // show the file importing failed message
-                    fileErrorMessage([data.message]);
-                    // finally set the complet div
-                    complete(false);
-                }
 
-            },
-            error:function (data, status, e) {
-                //any other message
-                fileErrorMessage(["Failed to import dataset file"]);
-                if (doafter && typeof (doafter) == 'function') {
-                    doafter(true);
-                }
-            }
-        })
-        return false;
+    function fileErrorMessage(errorMsgs) {
+        var errorHtml = "<ul>"
+        $.each(errorMsgs, function (i, msg) {
+            errorHtml += "<li>" + msg + " </li>"
+        });
+        errorHtml += "</ul>";
+        fileErrorMsgItemsDiv.empty();
+        fileErrorMsgItemsDiv.append(errorHtml);
+        fileErrorMsgDiv.show();
     }
+
+    function fileSuccessMessage(succeedMsg) {
+        fileSuccessMsg.html(succeedMsg);
+        fileSuccessMsgDiv.show();
+    }
+
 
     function abort() {
         complete(false);
@@ -291,17 +231,13 @@ merc.AjaxFileUpload = function (dobefore, doafter) {
         }
         previousPercentComplete = percentComplete;
 
-        var totalStr = Math.round(totalFileSize / 1024); // changed to
-        // kilobytes
+        var totalStr = Math.round(totalFileSize / 1024); // changed to kilobytes
         if (progress && progress > 0) {
             progressBarGraphic.width(barwidth * progress);
         }
-        var ptext = percentComplete + '% completed ('
-            + formatSize(lastUploadedSize) + ' of '
-            + formatSize(totalFileSize) + ')';
+        var ptext = percentComplete + '% completed (' + formatSize(lastUploadedSize) + ' of ' + formatSize(totalFileSize) + ')';
         ptext += '&nbsp; &nbsp; Time remaining: ' + formatTime(timeLeft);
-        ptext += '&nbsp; &nbsp; Transfer rate: '
-            + formatSize(uploadTransferRate) + " / sec";
+        ptext += '&nbsp; &nbsp; Transfer rate: ' + formatSize(uploadTransferRate) + " / sec";
         progressBarTextDiv.html(ptext);
     }
 
@@ -341,9 +277,7 @@ merc.AjaxFileUpload = function (dobefore, doafter) {
         return str;
     }
 
-    /**
-     * Gets the file name from a path
-     */
+
     function getFileName(path) {
         if (path) {
             var windows = path.indexOf("\\");
@@ -361,12 +295,12 @@ merc.AjaxFileUpload = function (dobefore, doafter) {
             return null;
         }
     }
-
 };
+
 
 /**
  * Static factory - sort of.
  */
-merc.AjaxFileUpload.initialise = function (dobefore, doafter) {
-    return new merc.AjaxFileUpload(dobefore, doafter);
+merc.FileUpload.initialize = function (doafter) {
+    return new merc.FileUpload(doafter);
 }
