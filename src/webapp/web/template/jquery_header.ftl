@@ -12,10 +12,13 @@
 <script type="text/javascript" src="${base}/js/jquery.autocomplete.js"></script>
 <script type='text/javascript' src='${base}/js/dialog_confirm.js'></script>
 <script type="text/javascript" src="${base}/js/jquery.Jcrop.js"></script>
-<script type="text/javascript" src="${base}/js/ajax_fileupload.js"></script>
-<script type="text/javascript" src="${base}/js/ajax_upload_progress.js"></script>
+<!-- script type="text/javascript" src="{base}/js/ajax_fileupload.js"></script -->
+<!-- script type="text/javascript" src="{base}/js/ajax_upload_progress.js"></script -->
 <script type="text/javascript" src="${base}/js/modal_loading.js"></script>
 <script type="text/javascript" src="${base}/js/jquery.superbox.js"></script>
+
+<script type="text/javascript" src="${base}/js/jquery.form.js"></script>
+<script type="text/javascript" src="${base}/js/merc.fileupload.js"></script>
 
 <!-- merc js and css should be loaded after all third parties libs -->
 <link type="text/css" href="${base}/css/merc.css" rel="stylesheet" media='screen'>

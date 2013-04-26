@@ -35,6 +35,28 @@
             }
         });
     </script>
+
+    <script>(function () {
+        var bar = $('.bar');
+        var percent = $('.percent');
+        var status = $('#status');
+        $('form').ajaxForm({beforeSend:function () {
+            status.empty();
+            var percentVal = '0%';
+            bar.width(percentVal)
+            percent.html(percentVal);
+        }, uploadProgress:function (event, position, total, percentComplete) {
+            var percentVal = percentComplete + '%';
+            bar.width(percentVal)
+            percent.html(percentVal);
+        }, success:function () {
+            var percentVal = '100%';
+            bar.width(percentVal)
+            percent.html(percentVal);
+        }, complete:function (xhr) {
+            status.html(xhr.responseText);
+        }});
+    })();</script>
 </head>
 <body>
 
@@ -189,7 +211,6 @@
     <div class="content_none_border_div">
         <div class="file_uploading_div">
             <div id="ajaxfileupload">
-                <#assign dobefore = 'undefined' />
                 <div id="fileuploadProgress">
                     <div id="uploadFilename">Initialising, please wait.....</div>
                     <div id="progress-bar">
@@ -202,6 +223,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- upload file -->
     <div class="data_display_div">
@@ -226,7 +248,7 @@
                         Extract the Metadata:
                     </div>
                     <div class="input_field_value_section">
-                        <@s.checkbox name="extractable"  id="extract" value="true" cssClass="check_box" />
+                        <@s.checkbox name="extractable"  id="extract" cssClass="check_box" />
                     </div>
                 </div>
                 <div style="clear: both;"></div>
@@ -266,7 +288,7 @@
                         &nbsp;
                     </div>
                     <div class="input_field_value_section">
-                        <@s.submit value="Import" id="fileUpload" name="fileUpload" onclick="merc.AjaxFileUpload.initialise(${dobefore}, doAfterImport);" cssClass="input_button_style"/>
+                        <@s.submit value="Import" id="fileUpload" name="fileUpload" onclick="merc.FileUpload.initialize(doAfterImport);" cssClass="input_button_style"/>
                     </div>
                 </div>
             </@s.form>
