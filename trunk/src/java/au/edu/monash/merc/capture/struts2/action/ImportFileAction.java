@@ -77,9 +77,6 @@ public class ImportFileAction extends DMCoreAction {
             return SUCCESS;
         }
 
-        System.out.println("===== restricted access enabled? " + raEnabled);
-        System.out.println("====== restriced access end date : " + restrictAccess.getEndDate());
-
         // check the permissions
         try {
             permissionBean = checkPermission(collection.getId(), collection.getOwner().getId());
@@ -101,8 +98,8 @@ public class ImportFileAction extends DMCoreAction {
         try {
             if (this.dmService.checkDatasetNameExisted(uploadFileName, collection.getId())) {
                 responseData.put("success", String.valueOf(false));
-                responseData.put("message", getText("dataset.import.file.already.existed"));
-                logger.error(getText("dataset.import.file.already.existed"));
+                responseData.put("message", getText("dataset.import.file.already.existed", new String[]{uploadFileName}));
+                logger.error(getText("dataset.import.file.already.existed", new String[]{uploadFileName}));
                 return SUCCESS;
             }
         } catch (Exception e) {
@@ -110,6 +107,31 @@ public class ImportFileAction extends DMCoreAction {
             responseData.put("success", String.valueOf(false));
             responseData.put("message", getText("dataset.import.check.file.name.error"));
             return SUCCESS;
+        }
+
+        //restricted access
+        if (raEnabled) {
+            Date raEndDate = restrictAccess.getEndDate();
+            if (raEndDate == null) {
+                responseData.put("success", String.valueOf(false));
+                responseData.put("message", getText("restrict.access.end.date.must.be.provided"));
+                return SUCCESS;
+            }
+            Date today = CaptureUtil.getToday();
+
+            if (isBeforeMinRaEndDate(today, raEndDate)) {
+                responseData.put("success", String.valueOf(false));
+                responseData.put("message", getText("restrict.access.end.date.is.before.min.end.date"));
+                return SUCCESS;
+            }
+
+            if (isAfterMaxRaEndDate(today, raEndDate)) {
+                responseData.put("success", String.valueOf(false));
+                responseData.put("message", getText("restrict.access.end.date.is.after.max.end.date"));
+                return SUCCESS;
+            }
+            //set the restricted access day as today
+            restrictAccess.setStartDate(today);
         }
 
         // start to upload the file
@@ -132,7 +154,7 @@ public class ImportFileAction extends DMCoreAction {
             String errorMsg = e.getMessage();
             responseData.put("message", getText("dataset.import.failed"));
             if (StringUtils.containsIgnoreCase(errorMsg, "not a valid CDM file")) {
-                responseData.put("message", getText("dataset.import.failed") + ", not a valid net-cdf file");
+                responseData.put("message", getText("dataset.import.failed") + ", not a valid Net-CDF file");
             }
             return SUCCESS;
         } finally {

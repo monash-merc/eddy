@@ -65,33 +65,54 @@ merc.FileUpload = function (doafter) {
             // $.ajax options can be used here too, for example:
             //timeout:   3000
         };
-        // bind form using 'ajaxSubmit'
-        $('#ajaxFileUploadForm').ajaxSubmit(options);
+
+        var fileField = $("#upload");
+        fileName = getFileName(fileField.val());
+
+        var collectionId = $("#col").val();
+        //ra enabled flag
+        var raEnabled = $('#ra_enabled').is(':checked');
+        //get the ra end date
+        var raEndDate = $('#raEndTime').val();
+
+        var verifyUrl = "dsverify.jspx?collection.id=" + collectionId + "&fileName=" + fileName;
+        if (raEnabled) {
+            verifyUrl += "&raEnabled=" + raEnabled + "&raEndDate=" + raEndDate;
+        }
+        //verify the dataset import first
+        $.ajax({
+            type:"get",
+            url:verifyUrl,
+            cache:false,
+            contentType:"application/json; charset=utf-8",
+            dataType:"json",
+            success:function (respData) {
+                var succeed = respData.succeed;
+                if (succeed) {
+                    // getProgress() will recurse until dowload is over
+                    timeoutId = setTimeout(getProgress, updateRate);
+                    progressAreaDiv.show();
+                    // bind form using 'ajaxSubmit'
+                    $('#ajaxFileUploadForm').ajaxSubmit(options);
+
+                } else {
+                    fileErrorMessage(respData.messages);
+                }
+            },
+            error:function () {
+                fileErrorMessage(["Failed to connect to the server to verify dataset file imporing"]);
+            }
+        });
+
         return false;
     }
 
     function prepareFileImport(formData, jqForm, options) {
 
-        // getProgress() will recurse until dowload is over
-        timeoutId = setTimeout(getProgress, updateRate);
-        progressAreaDiv.show();
-
         // formData is an array; here we use $.param to convert it to a string to display it
         // but the form plugin does this for you automatically when it submits the data
-        var queryString = $.param(formData);
-
-        // jqForm is a jQuery object encapsulating the form element.  To access the
-        // DOM element for the form do this:
-        // var formElement = jqForm[0];
-
-        var fileField = jQuery("#upload");
-        fileName = getFileName(fileField.val());
-
-        alert('About to submit: \n\n' + queryString + ", file name: " + fileName);
-
-        // here we could return false to prevent the form from being submitted;
-        // returning anything other than false will allow the form submit to continue
-        return true;
+        //  var queryString = $.param(formData);
+        //alert('About to submit: \n\n' + queryString + ", file name: " + fileName);
     }
 
     function processFileImportResponse(responseData, statusText, xhr, $form) {
@@ -107,11 +128,10 @@ merc.FileUpload = function (doafter) {
         // is the json data object returned by the server
         var succeed = responseData.success;
         if (succeed == 'true') {
-
-            fileSuccessMessage("status: " + succeed + ", " + responseData.message);
+            fileSuccessMessage(responseData.message);
             complete(true);
         } else {
-            fileErrorMessage(["status: " + succeed + ", " + responseData.message]);
+            fileErrorMessage(responseData.message);
             complete(false);
         }
 
@@ -292,7 +312,7 @@ merc.FileUpload = function (doafter) {
                 return filename;
             }
         } else {
-            return null;
+            return "";
         }
     }
 };

@@ -326,7 +326,6 @@ public class DMServiceImpl implements DMService {
             ds.setImportDateTime(importedTime);
 
             if (raEnabled) {
-                restrictAccess.setStartDate(importedTime);
                 ds.setRaEnabled(true);
                 ds.setRestrictAccess(restrictAccess);
                 restrictAccess.setDataset(ds);

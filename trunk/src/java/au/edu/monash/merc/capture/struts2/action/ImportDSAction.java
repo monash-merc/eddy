@@ -156,7 +156,7 @@ public class ImportDSAction extends DMCoreAction {
 
         try {
             if (this.dmService.checkDatasetNameExisted(uploadFileName, collection.getId())) {
-                addFieldError("uploadFileName", getText("dataset.import.file.already.existed"));
+                addFieldError("uploadFileName", getText("dataset.import.file.already.existed",  new String[]{uploadFileName}));
                 hasErrors = true;
             }
         } catch (Exception e) {

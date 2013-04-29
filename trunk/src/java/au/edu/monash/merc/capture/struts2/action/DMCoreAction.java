@@ -348,6 +348,30 @@ public class DMCoreAction extends BaseAction {
         return newEndTime;
     }
 
+    protected boolean isBeforeMinRaEndDate(Date startDate, Date endDate) {
+        DateTime startDateTime = new DateTime(startDate);
+        DateTime endDateTime = new DateTime(endDate);
+        DateTime minEndTime = startDateTime.plusDays(29);
+
+        if (endDateTime.isBefore(minEndTime)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    protected boolean isAfterMaxRaEndDate(Date startDate, Date endDate) {
+        DateTime startDateTime = new DateTime(startDate);
+        DateTime endDateTime = new DateTime(endDate);
+        DateTime maxEndTime = startDateTime.plusMonths(18);
+
+        if (endDateTime.isAfter(maxEndTime)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public boolean isCollectionError() {
         return collectionError;
     }
