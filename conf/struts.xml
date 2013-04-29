@@ -437,11 +437,11 @@
             </result>
         </action>
 
-        <!-- Restrict Access Date Checking -->
-        <action name="checkDate" class="data.raDateCheckAction" method="checkDate">
+        <!-- Dataset verify action -->
+        <action name="dsverify" class="data.dsVerifyAction" method="dsVerify">
             <result name="success" type="json">
                 <param name="noCache">true</param>
-                <param name="root">raResponse</param>
+                <param name="root">dsVerifyResponse</param>
             </result>
         </action>
 

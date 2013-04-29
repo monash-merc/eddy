@@ -29,6 +29,8 @@
 package au.edu.monash.merc.capture.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Simon Yu
@@ -37,13 +39,13 @@ import java.io.Serializable;
  * @version 1.0
  * @since 1.0
  *        <p/>
- *        Date: 23/04/13 2:36 PM
+ *        Date: 29/04/13 11:08 AM
  */
-public class RASettingResponse implements Serializable {
+public class DatasetVerifyResponse implements Serializable {
 
-    private boolean succeed;
+    private boolean succeed = true;
 
-    private String message;
+    private List<String> messages;
 
     public boolean isSucceed() {
         return succeed;
@@ -53,11 +55,18 @@ public class RASettingResponse implements Serializable {
         this.succeed = succeed;
     }
 
-    public String getMessage() {
-        return message;
+    public List<String> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<String> messages) {
+        this.messages = messages;
     }
 
     public void setMessage(String message) {
-        this.message = message;
+        if (messages == null) {
+            messages = new ArrayList<String>();
+        }
+        messages.add(message);
     }
 }
