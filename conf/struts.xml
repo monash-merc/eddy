@@ -304,13 +304,6 @@
             </result>
         </action>
 
-        <!-- This action is not used, please use the importFile action instead -->
-        <!-- capture the user dataset -->
-        <action name="importDataset" class="data.importDSAction" method="importDataset">
-            <result name="input">/web/data/view_col_detail.ftl</result>
-            <result name="success">/web/data/view_col_detail.ftl</result>
-        </action>
-
         <!-- capture the user dataset, ajax version for file import -->
         <action name="importFile" class="data.importFileAction" method="importFile">
             <result name="success" type="json">
@@ -442,6 +435,14 @@
             <result name="success" type="json">
                 <param name="noCache">true</param>
                 <param name="root">dsVerifyResponse</param>
+            </result>
+        </action>
+
+        <!-- RestrictAccess setup action -->
+        <action name="rasetup" class="data.raSetupAction" method="raSetup">
+            <result name="success" type="json">
+                <param name="noCache">true</param>
+                <param name="root">raResponse</param>
             </result>
         </action>
 

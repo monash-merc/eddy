@@ -65,8 +65,9 @@ public class DeleteDSAction extends DMCoreAction {
             // data.dataset.delete.dataset.file.success.msg
             // set action successful message
             recordAuditEvent(ds);
-            retrieveAllDatasets();
+            //retrieveAllDatasets();
 
+            retrieveAllRADatasets();
             // populate the rifcs registration if enabled
             String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
             mdRegEnabled = Boolean.valueOf(mdRegEnabledStr).booleanValue();
@@ -81,7 +82,8 @@ public class DeleteDSAction extends DMCoreAction {
             logger.error(e);
             try {
                 retrieveCollection();
-                retrieveAllDatasets();
+                //retrieveAllDatasets();
+                retrieveAllRADatasets();
                 setNavAfterExcInDS();
             } catch (Exception ex) {
                 addFieldError("getCollectionError", getText("dataset.delete.get.collection.details.failed"));
@@ -149,7 +151,8 @@ public class DeleteDSAction extends DMCoreAction {
         if (hasError) {
             try {
                 retrieveCollection();
-                retrieveAllDatasets();
+                //retrieveAllDatasets();
+                retrieveAllRADatasets();
                 setNavAfterExcInDS();
             } catch (Exception e) {
                 addFieldError("getCollectionError", getText("dataset.delete.get.collection.details.failed"));

@@ -107,7 +107,8 @@ public class ViewColDetailsAction extends DMCoreAction {
 
                 // populate the list dataset in this user collection.
                 // datasets = this.dmService.getDatasetByCollectionIdUsrId(collection.getId(), collection.getOwner().getId());
-                retrieveAllDatasets();
+                //retrieveAllDatasets();
+                retrieveAllRADatasets();
                 // populate the collection links
                 if (viewType.equals(UserViewType.ANONYMOUS.type())) {
                     populateLinksInPubCollection();

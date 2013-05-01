@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011, Monash e-Research Centre
+ * Copyright (c) 2010-2013, Monash e-Research Centre
  * (Monash University, Australia)
  * All rights reserved.
  *
@@ -25,51 +25,68 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package au.edu.monash.merc.capture.struts2.action;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
+package au.edu.monash.merc.capture.dto;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.struts2.util.StrutsTypeConverter;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ActDateConvertor extends StrutsTypeConverter {
+/**
+ * @author Simon Yu
+ *         <p/>
+ *         Email: xiaoming.yu@monash.edu
+ * @version 1.0
+ * @since 1.0
+ *        <p/>
+ *        Date: 1/05/13 5:05 PM
+ */
+public class RAResponse implements Serializable {
 
-    private static final String YYYYMMDD_DATE_FORMAT = "yyyy-MM-dd";
-    private static final String MMDDYYYY_DATE_FORMAT = "MM/dd/yy";
+    private boolean succeed = true;
 
-    @SuppressWarnings("rawtypes")
-    @Override
-    public Object convertFromString(Map context, String[] values, Class toClass) {
-        if (values == null || values.length == 0) {
-            return null;
-        }
+    private List<String> messages;
 
-        String dateFormat = YYYYMMDD_DATE_FORMAT;
-        if (StringUtils.contains(values[0], "/")) {
-            dateFormat = MMDDYYYY_DATE_FORMAT;
-        }
+    private String startDate;
 
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
-            Date adate = sdf.parse(values[0]);
-            return new Timestamp(adate.getTime());
-        } catch (Exception e) {
-            return null;
-        }
+    private String endDate;
+
+    public boolean isSucceed() {
+        return succeed;
     }
 
-    @SuppressWarnings("rawtypes")
-    @Override
-    public String convertToString(Map context, Object fromObj) {
-        String date = null;
-        if (fromObj != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat(YYYYMMDD_DATE_FORMAT);
-            date = sdf.format((Date) fromObj);
-        }
-        return date;
+    public void setSucceed(boolean succeed) {
+        this.succeed = succeed;
     }
 
+    public List<String> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<String> messages) {
+        this.messages = messages;
+    }
+
+    public void setMessage(String message) {
+        if (messages == null) {
+            messages = new ArrayList<String>();
+        }
+        messages.add(message);
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
 }

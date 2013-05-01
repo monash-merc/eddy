@@ -91,13 +91,9 @@
     color: #fff;
 }
 
-#confirm-container a.modal-close:hover {
-    background-color: #E1E8F0;
-    margin: 2px;
-}
 
 .modal-close img {
-    position: absolute;
+    margin: 2px;
     top: 1px;
     right: 5px;
     bottom: 2px;

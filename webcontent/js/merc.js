@@ -607,11 +607,105 @@ function removeNoneLicenceDiv() {
 
 //Restricted Access control
 $("#ra_enabled").live('click', function () {
-    var ra_setting = $(".ra_section");
+    var im_ra_setting = $(".im_ra_section");
     if ($(this).is(":checked")) {
-        ra_setting.show();
+        im_ra_setting.show();
     } else {
-        ra_setting.hide();
+        im_ra_setting.hide();
     }
 });
+
+
+$(".dataset_info").live('click', function () {
+    //grey the previous ra control setting
+    $('.ra_control2').attr('class', 'ra_control1');
+    //remove the previous highlight dataset info
+    $('#selected_ds').removeAttr('id');
+
+    //highlight the current dataset info
+    $(this).attr('id', 'selected_ds');
+    //highlight the current ra control setting
+    var racontrol = $(this).find('.ra_control1');
+    if (racontrol != null || racontrol != 'undefined') {
+        racontrol.attr('class', 'ra_control2');
+    }
+});
+
+//file restricted access setting
+$(".ra_control1").live('click', function () {
+    var id = $(this).attr('id');
+    displayRASettings(id);
+})
+
+
+//file restricted access setting
+$(".ra_control2").live('click', function () {
+    var id = $(this).attr('id');
+    displayRASettings(id);
+})
+
+
+//highlight the ra control settings
+$(".ra_control1").live('mouseover', function () {
+    $(this).attr('class', 'ra_control2');
+})
+
+//grey the ra control settings
+$(".ra_control2").live('mouseout', function () {
+    $(this).attr('class', 'ra_control1');
+})
+
+//popup the ra settings
+function displayRASettings(rac_id) {
+    //find any previous active ra settings window
+    var previous_rac_div = $("div[active='true']");
+    previous_rac_div.hide();
+    //find current one
+    var rac_div = $('#' + rac_id);
+    var ds_ra_control_div = $('#ds_ra_' + rac_id);
+    var rac_position = rac_div.position();
+    var p_top = rac_position.top - 60;
+    var p_left = rac_position.left - 310;
+    ds_ra_control_div.attr('style', 'dispplay:block;position:absolute;z-index:2200;top:' + p_top + 'px;left:' + p_left + 'px;');
+
+    ds_ra_control_div.show();
+    ds_ra_control_div.attr('active', 'true');
+    //highlight
+    var ds_info = $('#ds_' + rac_id);
+    ds_info.attr('id', 'selected_ds');
+}
+
+//ra settings close
+$("div.ds_ra_close").live('click', function (event) {
+    var ds_ra_control_div = $(this).closest('.dataset_ra_section');
+    ds_ra_control_div.hide();
+})
+
+//setup restricted access ajax action
+$('#setup_ra').live('click', function (e) {
+    e.preventDefault();
+
+    var setupRAForm = $(this).closest('form');
+    var values = setupRAForm.serialize();
+    $.ajax({
+        url:'rasetup.jspx',
+        type:'post',
+        dataType:'json',
+        data:values,
+        success:processRAResponse,
+        error:displayRASetupError
+    })
+})
+
+function processRAResponse() {
+
+
+}
+
+function displayRASetupError() {
+
+}
+
+
+
 

@@ -66,11 +66,24 @@ public class CaptureUtil {
 
     private static final String FIRST_TIME_OF_DAY = " 00:00:00";
 
+    private static final String MMDDYYYY_DATE_FORMAT = "MM/dd/yy";
+
     public static Date formatDate(final String dateStr) {
         Date date = null;
         DateFormat df = new SimpleDateFormat(DATE_FORMAT);
         try {
             date = df.parse(dateStr);
+        } catch (ParseException e) {
+            throw new DataCaptureException(e.getMessage());
+        }
+        return date;
+    }
+
+    public static Date formatMMDDYY(final String mmddyyStr) {
+        Date date = null;
+        DateFormat df = new SimpleDateFormat(MMDDYYYY_DATE_FORMAT);
+        try {
+            date = df.parse(mmddyyStr);
         } catch (ParseException e) {
             throw new DataCaptureException(e.getMessage());
         }
@@ -274,6 +287,8 @@ public class CaptureUtil {
         System.out.println("=========== get current time stamp: " + genCurrentTimestamp());
         System.out.println("=========== get today date: " + getToday());
         System.out.println(" Format the date: 2010-04-20 12:51:22 " + CaptureUtil.formatDate("2010-04-20 12:51:22"));
+
+        System.out.println(" Format the date: 5/1/13 ->" + CaptureUtil.formatMMDDYY("5/1/13"));
 
         Date day = CaptureUtil.formatDate("2010-12-06 23:59:59");
 

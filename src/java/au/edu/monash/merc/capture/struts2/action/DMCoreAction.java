@@ -32,6 +32,7 @@ import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.*;
 import au.edu.monash.merc.capture.dto.InheritPermissionBean;
 import au.edu.monash.merc.capture.dto.PermissionBean;
+import au.edu.monash.merc.capture.dto.RADataset;
 import au.edu.monash.merc.capture.dto.page.Pagination;
 import au.edu.monash.merc.capture.identifier.IdentifierService;
 import au.edu.monash.merc.capture.service.DMService;
@@ -42,6 +43,7 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -54,7 +56,9 @@ public class DMCoreAction extends BaseAction {
 
     protected Collection collection;
 
-    protected List<Dataset> datasets;
+    // protected List<Dataset> datasets;
+
+    protected List<RADataset> raDatasets;
 
     @Autowired
     protected DMService dmService;
@@ -318,18 +322,51 @@ public class DMCoreAction extends BaseAction {
         populateLinksInUsrCollection();
     }
 
-    protected void retrieveAllDatasets() {
-        datasets = this.dmService.getDatasetByCollectionIdUsrId(collection.getId(), collection.getOwner().getId());
-        if (datasets != null) {
-            for (Dataset ds : datasets) {
-                RestrictAccess restrictAccess = ds.getRestrictAccess();
-                if (restrictAccess != null) {
-                    System.out.println("=============== restrict access start date: " + restrictAccess.getStartDate());
-                    System.out.println("=============== restrict access end date: " + restrictAccess.getEndDate());
+//    protected void retrieveAllDatasets() {
+//        datasets = this.dmService.getDatasetByCollectionIdUsrId(collection.getId(), collection.getOwner().getId());
+//        if (datasets != null) {
+//            for (Dataset ds : datasets) {
+//                RestrictAccess restrictAccess = ds.getRestrictAccess();
+//                if (restrictAccess != null) {
+//                    System.out.println("=============== restrict access start date: " + restrictAccess.getStartDate());
+//                    System.out.println("=============== restrict access end date: " + restrictAccess.getEndDate());
+//                }
+//            }
+//        }
+//    }
+
+    protected void retrieveAllRADatasets() {
+        raDatasets = new ArrayList<RADataset>();
+
+        List<Dataset> datasetList = this.dmService.getDatasetByCollectionIdUsrId(collection.getId(), collection.getOwner().getId());
+
+        if (datasetList != null) {
+            for (Dataset ds : datasetList) {
+                RADataset raDataset = new RADataset();
+                //set the dataset
+                raDataset.setDataset(ds);
+
+                //get the restricted access object
+                RestrictAccess ra = ds.getRestrictAccess();
+                if (ra != null) {
+                    //set ra enabled to true.
+                    raDataset.setRaEnabled(true);
+                    //set restricted access
+                    raDataset.setRa(ra);
+                    boolean raExpired = raExpired(ra);
+                    if (raExpired) {
+                        raDataset.setRaActive(false);
+                    } else {
+                        raDataset.setRaActive(true);
+                    }
+                } else {
+                    raDataset.setRa(this.restrictAccess);
                 }
+                raDatasets.add(raDataset);
             }
         }
     }
+
 
     protected void recordActionAuditEvent(AuditEvent event) {
         try {
@@ -346,6 +383,18 @@ public class DMCoreAction extends BaseAction {
         String endtimeStr = CaptureUtil.dateToYYYYMMDDStr(date);
         Date newEndTime = CaptureUtil.formatDate(endtimeStr + ActConstants.LAST_TIME_OF_DAY);
         return newEndTime;
+    }
+
+    protected boolean raExpired(RestrictAccess ra) {
+        Date today = CaptureUtil.getToday();
+        DateTime todayDateTime = new DateTime(today);
+        Date raEndTime = ra.getEndDate();
+        DateTime raEndDateTime = new DateTime(raEndTime);
+        if (todayDateTime.isAfter(raEndDateTime)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     protected boolean isBeforeMinRaEndDate(Date startDate, Date endDate) {
@@ -396,12 +445,12 @@ public class DMCoreAction extends BaseAction {
         this.collection = collection;
     }
 
-    public List<Dataset> getDatasets() {
-        return datasets;
+    public List<RADataset> getRaDatasets() {
+        return raDatasets;
     }
 
-    public void setDatasets(List<Dataset> datasets) {
-        this.datasets = datasets;
+    public void setRaDatasets(List<RADataset> raDatasets) {
+        this.raDatasets = raDatasets;
     }
 
     public void setDmService(DMService dmService) {

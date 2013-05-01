@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011, Monash e-Research Centre
+ * Copyright (c) 2010-2013, Monash e-Research Centre
  * (Monash University, Australia)
  * All rights reserved.
  *
@@ -25,51 +25,68 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package au.edu.monash.merc.capture.struts2.action;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
+import au.edu.monash.merc.capture.domain.Dataset;
+import au.edu.monash.merc.capture.dto.RAResponse;
+import org.apache.log4j.Logger;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.struts2.util.StrutsTypeConverter;
+/**
+ * @author Simon Yu
+ *         <p/>
+ *         Email: xiaoming.yu@monash.edu
+ * @version 1.0
+ * @since 1.0
+ *        <p/>
+ *        Date: 1/05/13 5:00 PM
+ */
+@Scope("prototype")
+@Controller("data.raSetupAction")
+public class RestrictAccessAction extends DMCoreAction {
 
-public class ActDateConvertor extends StrutsTypeConverter {
+    private Dataset dataset;
 
-    private static final String YYYYMMDD_DATE_FORMAT = "yyyy-MM-dd";
-    private static final String MMDDYYYY_DATE_FORMAT = "MM/dd/yy";
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
-    @SuppressWarnings("rawtypes")
-    @Override
-    public Object convertFromString(Map context, String[] values, Class toClass) {
-        if (values == null || values.length == 0) {
-            return null;
-        }
+    private RAResponse raResponse;
 
-        String dateFormat = YYYYMMDD_DATE_FORMAT;
-        if (StringUtils.contains(values[0], "/")) {
-            dateFormat = MMDDYYYY_DATE_FORMAT;
-        }
+    public String raSetup() {
 
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
-            Date adate = sdf.parse(values[0]);
-            return new Timestamp(adate.getTime());
-        } catch (Exception e) {
-            return null;
-        }
+        raResponse = new RAResponse();
+        System.out.println("collection id:  " + collection.getId());
+
+        System.out.println("collection owner id:  " + collection.getOwner().getId());
+
+        System.out.println("view type:   " + viewType);
+
+        System.out.println("dataset id:  " + dataset.getId());
+
+
+        System.out.println("Start date: " + restrictAccess.getStartDate());
+
+        System.out.println("End date: " + restrictAccess.getEndDate());
+
+        raResponse.setSucceed(true);
+
+        return SUCCESS;
     }
 
-    @SuppressWarnings("rawtypes")
-    @Override
-    public String convertToString(Map context, Object fromObj) {
-        String date = null;
-        if (fromObj != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat(YYYYMMDD_DATE_FORMAT);
-            date = sdf.format((Date) fromObj);
-        }
-        return date;
+    public Dataset getDataset() {
+        return dataset;
     }
 
+    public void setDataset(Dataset dataset) {
+        this.dataset = dataset;
+    }
+
+    public RAResponse getRaResponse() {
+        return raResponse;
+    }
+
+    public void setRaResponse(RAResponse raResponse) {
+        this.raResponse = raResponse;
+    }
 }
