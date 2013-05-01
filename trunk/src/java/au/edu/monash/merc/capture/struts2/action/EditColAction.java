@@ -148,7 +148,8 @@ public class EditColAction extends DMCoreAction {
 
                 // populate the list dataset in this user collection.
                 //datasets = this.dmService.getDatasetByCollectionIdUsrId(collection.getId(), collection.getOwner().getId());
-                retrieveAllDatasets();
+                //retrieveAllDatasets();
+                retrieveAllRADatasets();
                 // populate the rifcs registration if enabled
                 String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
                 mdRegEnabled = Boolean.valueOf(mdRegEnabledStr).booleanValue();

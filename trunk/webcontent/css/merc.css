@@ -1156,22 +1156,15 @@ input {
 
 /** File Uploading  And RA **/
 
-.ra_section {
+.im_ra_section {
     padding: 5px;
     display: none;
 }
 
-.ra_info_title {
+.im_ra_label {
     padding: 5px;
-    background: #F9F9F9;
     font-weight: bold;
     color: #726E4C;
-}
-
-.ra_field_row {
-    border: solid 1px #f2f2f2;
-    padding: 5px;
-    color: #000000;
 }
 
 .ra_field_title {
@@ -1187,20 +1180,203 @@ input {
     padding-left: 10px;
     margin-left: 210px;
     text-align: left;
+    display: block;
 }
 
+.im_ra_input_panel {
+    border: solid 1px #F2F2F2;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 5px;
+    color: #000000;
+}
 
 .ra_span {
     color: #003766;
     font-weight: bold;
 }
 
-
-.ra_comments{
+.ra_comments {
     padding: 5px;
     font-size: 11px;
     color: #909090;
 }
+
+.dataset_info {
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 10px;
+    border: solid 1px #F2F2F2;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#selected_ds {
+    background-color: #faf9ea;
+}
+
+/** dataset file info level**/
+.ds_file_level {
+}
+
+.ds_field_row {
+    color: #000000;
+    padding: 5px;
+}
+
+.ds_field_title {
+    float: left;
+    width: 170px;
+    padding-left: 5px;
+    color: #003766;
+    font-weight: bold;
+    text-align: justify;
+}
+
+.ds_field_value_section {
+    padding-left: 5px;
+    margin-left: 180px;
+}
+
+/** dataset ra and action button level*/
+.ds_ra_act_level {
+    padding: 5px;
+}
+
+.ds_ra_info {
+    padding: 5px;
+    width: 60%;
+    min-width: 400px;
+    display: inline-block;
+}
+
+.ds_act_info {
+    width: 35%;
+    display: inline-block;
+    float: right;
+}
+
+.ra_info_spec {
+    padding-left: 5px;
+    color: #5D5A3E;
+    text-align: justify;
+    display: inline-block;
+}
+
+.ra_control1 {
+    float: right;
+    display: inline-block;
+    background: url("../images/gear_grey.png");
+    display: block;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.ra_control2 {
+    float: right;
+    display: inline-block;
+    background: url("../images/gear.png");
+    display: block;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.ds_act_link {
+    float: right;
+}
+
+.ds_act_link a {
+    min-width: 85px;
+    height: 22px;
+    line-height: 22px;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    border: solid 1px #E1E8F0;
+}
+
+.ds_act_link a:hover {
+    text-decoration: none;
+    background-color: #006377;
+    color: #fff;
+    height: 22px;
+    line-height: 22px;
+}
+
+.dataset_ra_section {
+    display: none;
+    background: #FFFFFF;
+    border: solid 1px #003766;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -moz-box-shadow: 0 0 5px #E1E8F0;
+    -webkit-box-shadow: 0 0 5px #E1E8F0;
+    box-shadow: 0 0 5px #E1E8F0;
+}
+
+.ds_ra_lable {
+    padding-left: 10px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background: #003766;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+.ds_ra_input_panel {
+    padding: 10px;
+    color: #000000;
+}
+
+.ds_ra_close {
+    background: url('../images/close.png');
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    margin-top: 2px;
+    margin-right: 3px;
+    float: right;
+}
+
+.rac_success_msg_div {
+    display: none;
+    background: #EFF2F7;
+    border: solid 1px #F2F2F2;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    color: #726E4C;
+    text-align: center;
+}
+
+.rac_error_msg_div {
+    display: none;
+    border: solid 1px #F2F2F2;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.rac_error_msg_item_div {
+    border-collapse: collapse;
+    color: #B24F3C;
+    font-weight: normal;
+    margin: 2px auto;
+    text-align: left;
+}
+
+
+.ra_action_div {
+    text-align: center;
+}
+
+/** End of Restricted Access **/
 
 /** pagination **/
 .page_style {

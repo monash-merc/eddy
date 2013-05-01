@@ -18,7 +18,7 @@ jQuery(function ($) {
 
 function confirm(dialog_div, message, callback) {
 	dialog_div.modal({
-		closeHTML: "<a href='#' title='Close' class='modal-close'><img src='../images/fff_close16.png' alt='Close window'/></a>",
+		closeHTML: "<a href='#' title='Close' class='modal-close'><img src='../images/close.png' alt='Close window'/></a>",
 		position: ["20%",],
 		overlayId: 'confirm-overlay',
 		containerId: 'confirm-container', 

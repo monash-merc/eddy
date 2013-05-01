@@ -66,7 +66,8 @@ public class ExportDSAction extends DMCoreAction {
             logger.error(e);
             try {
                 retrieveCollection();
-                retrieveAllDatasets();
+                //retrieveAllDatasets();
+                retrieveAllRADatasets();
                 setNavAfterExcInDS();
             } catch (Exception ex) {
                 addFieldError("getCollectionError", getText("dataset.export.get.collection.details.failed"));
@@ -126,7 +127,8 @@ public class ExportDSAction extends DMCoreAction {
         if (hasError) {
             try {
                 retrieveCollection();
-                retrieveAllDatasets();
+                //retrieveAllDatasets();
+                retrieveAllRADatasets();
                 setNavAfterExcInDS();
             } catch (Exception e) {
                 addFieldError("getCollectionError", getText("dataset.export.get.collection.details.failed"));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011, Monash e-Research Centre
+ * Copyright (c) 2010-2013, Monash e-Research Centre
  * (Monash University, Australia)
  * All rights reserved.
  *
@@ -25,51 +25,62 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package au.edu.monash.merc.capture.struts2.action;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
+package au.edu.monash.merc.capture.dto;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.struts2.util.StrutsTypeConverter;
+import au.edu.monash.merc.capture.domain.Dataset;
+import au.edu.monash.merc.capture.domain.RestrictAccess;
 
-public class ActDateConvertor extends StrutsTypeConverter {
+import java.io.Serializable;
 
-    private static final String YYYYMMDD_DATE_FORMAT = "yyyy-MM-dd";
-    private static final String MMDDYYYY_DATE_FORMAT = "MM/dd/yy";
+/**
+ * @author Simon Yu
+ *         <p/>
+ *         Email: xiaoming.yu@monash.edu
+ * @version 1.0
+ * @since 1.0
+ *        <p/>
+ *        Date: 1/05/13 10:15 AM
+ */
+public class RADataset implements Serializable {
 
-    @SuppressWarnings("rawtypes")
-    @Override
-    public Object convertFromString(Map context, String[] values, Class toClass) {
-        if (values == null || values.length == 0) {
-            return null;
-        }
+    private boolean raEnabled;
 
-        String dateFormat = YYYYMMDD_DATE_FORMAT;
-        if (StringUtils.contains(values[0], "/")) {
-            dateFormat = MMDDYYYY_DATE_FORMAT;
-        }
+    private boolean raActive;
 
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
-            Date adate = sdf.parse(values[0]);
-            return new Timestamp(adate.getTime());
-        } catch (Exception e) {
-            return null;
-        }
+    private RestrictAccess ra;
+
+    private Dataset dataset;
+
+    public boolean isRaEnabled() {
+        return raEnabled;
     }
 
-    @SuppressWarnings("rawtypes")
-    @Override
-    public String convertToString(Map context, Object fromObj) {
-        String date = null;
-        if (fromObj != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat(YYYYMMDD_DATE_FORMAT);
-            date = sdf.format((Date) fromObj);
-        }
-        return date;
+    public void setRaEnabled(boolean raEnabled) {
+        this.raEnabled = raEnabled;
     }
 
+    public boolean isRaActive() {
+        return raActive;
+    }
+
+    public void setRaActive(boolean raActive) {
+        this.raActive = raActive;
+    }
+
+    public RestrictAccess getRa() {
+        return ra;
+    }
+
+    public void setRa(RestrictAccess ra) {
+        this.ra = ra;
+    }
+
+    public Dataset getDataset() {
+        return dataset;
+    }
+
+    public void setDataset(Dataset dataset) {
+        this.dataset = dataset;
+    }
 }

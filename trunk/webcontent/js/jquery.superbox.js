@@ -515,7 +515,8 @@
             $nextBtn = $('<a class="next"><strong><span>' + settings.nextTxt + '</span></strong></a>').appendTo($nextprev);
 
             // Add close button
-            $closeBtn = $('<div class="close"><a><strong><span>' + settings.closeTxt + '</span></strong></a></div>').prependTo($superbox).find("a");
+           // $closeBtn = $('<div class="close"><a><strong><span>' + settings.closeTxt + '</span></strong></a></div>').prependTo($superbox).find("a");
+            $closeBtn = $('<div class="close"><a><img src="../images/close.png" title="Close"/></a></div>').prependTo($superbox).find("a");
 
             // "Loading..."
             $loading = $('<p class="loading">' + settings.loadTxt + '</p>').appendTo($container).hide();
