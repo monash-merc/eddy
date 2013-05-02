@@ -227,7 +227,7 @@
                         Extract the Metadata:
                     </div>
                     <div class="input_field_value_section">
-                        <@s.checkbox name="extractable"  id="extract" cssClass="check_box" />
+                        <@s.checkbox name="extractable"  id="extract" value="true" cssClass="check_box" />
                     </div>
                 </div>
                 <div style="clear: both;"></div>
@@ -306,14 +306,20 @@
                 <div class="ds_ra_info">
                     <div class="ra_info_spec">
                         <@s.if test="%{#raDs.raEnabled == false}">
-                            Access to this file is not restricted
+                            <a href="${base}/site/licenceinfo.jspx" target="_blank">
+                                <div class="info_hint">&nbsp;</div>
+                            </a><span id="ra_info_spec_${dsState.index}">Access to this file is not restricted.</span>
                         </@s.if>
                         <@s.else>
                             <@s.if test="%{#raDs.raActive}">
-                                Access to this file is restricted from <@s.date name="#raDs.ra.startDate" format="yyyy-MM-dd" /> until  <@s.date name="#raDs.ra.endDate" format="yyyy-MM-dd" />
+                                <a href="${base}/site/licenceinfo.jspx" target="_blank">
+                                    <div class="info_hint">&nbsp;</div>
+                                </a><span id="ra_info_spec_${dsState.index}">Access to this file is restricted until <@s.date name="#raDs.ra.endDate" format="yyyy-MM-dd" />.</span>
                             </@s.if>
                             <@s.else>
-                                Access to this file is not restricted, the restricted access period has expired.
+                                <a href="${base}/site/licenceinfo.jspx" target="_blank">
+                                    <div class="info_hint">&nbsp;</div>
+                                </a><span id="ra_info_spec_${dsState.index}">Access to this file is no longer restricted, as the restriction period has expired.</span>
                             </@s.else>
                         </@s.else>
                     </div>
@@ -382,11 +388,11 @@
                             <div class="ds_ra_close" title="Close"></div>
                         </div>
                         <div class="ds_ra_input_panel">
-                            <div class="rac_success_msg_div">
+                            <div class="rac_success_msg_div" id="rac_success_${dsState.index?c}">
                                 <p class="rac_success_msg">Some text</p>
                             </div>
 
-                            <div class="rac_error_msg_div">
+                            <div class="rac_error_msg_div" id="rac_error_${dsState.index?c}">
                                 <div class="rac_error_msg_item_div">
                                     <ul>
                                         <li>Some error message</li>
@@ -394,9 +400,10 @@
                                 </div>
                             </div>
                             <div class="blank_separator"></div>
+                            <div class="blank_separator"></div>
 
                             <div class="ra_field_title">
-                                <@s.hidden name="restrictAccess.startDate" value="%{#raDs.ra.startDate}" />
+                                <@s.hidden name="restrictAccess.startDate" value="%{#raDs.ra.startDate}" id="start_date_${dsState.index?c}"/>
                                 <span class="ra_span">Start Date</span>: &nbsp;&nbsp; <@s.date name="#raDs.ra.startDate" format="yyyy-MM-dd" />
                             </div>
 

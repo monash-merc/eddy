@@ -717,8 +717,8 @@ public class DMServiceImpl implements DMService {
         String collectionName = collection.getName();
         String collectionDesc = collection.getDescription();
         String collectionUrl = mdRegBean.getCollectionUrl();
-        String dateFrom = CaptureUtil.formateDateToW3CDTF(collection.getDateFrom());
-        String dateTo = CaptureUtil.formateDateToW3CDTF(collection.getDateTo());
+        String dateFrom = CaptureUtil.formatDateToW3CDTF(collection.getDateFrom());
+        String dateTo = CaptureUtil.formatDateToW3CDTF(collection.getDateTo());
         Location location = null;
         Location spatialLocation = collection.getLocation();
 

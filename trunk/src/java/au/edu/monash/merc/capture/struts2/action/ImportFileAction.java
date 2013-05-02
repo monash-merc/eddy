@@ -144,7 +144,7 @@ public class ImportFileAction extends DMCoreAction {
             // start to capture the data from the file.
             Dataset dataset = this.dmService.captureData(uploadFileName, upload, extractable, false, collection, dataStorePath, raEnabled, restrictAccess);
             // log the audit event.
-            recordAuditEvent(dataset);
+            recordAuditEvent(dataset, raEnabled);
             responseData.put("success", String.valueOf(true));
             responseData.put("message", getText("dataset.import.success", new String[]{dataset.getName()}));
             return SUCCESS;
@@ -168,10 +168,14 @@ public class ImportFileAction extends DMCoreAction {
         }
     }
 
-    private void recordAuditEvent(Dataset dataset) {
+    private void recordAuditEvent(Dataset dataset, boolean raEnabled) {
         AuditEvent ev = new AuditEvent();
         ev.setCreatedTime(GregorianCalendar.getInstance().getTime());
-        ev.setEvent(dataset.getName() + " has been imported into the " + collection.getName());
+        if (raEnabled) {
+            ev.setEvent(dataset.getName() + " has been imported into the " + collection.getName() + " associated with a restricted access");
+        } else {
+            ev.setEvent(dataset.getName() + " has been imported into the " + collection.getName());
+        }
         ev.setEventOwner(collection.getOwner());
         ev.setOperator(user);
         recordActionAuditEvent(ev);

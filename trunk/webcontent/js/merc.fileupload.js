@@ -131,7 +131,7 @@ merc.FileUpload = function (doafter) {
             fileSuccessMessage(responseData.message);
             complete(true);
         } else {
-            fileErrorMessage(responseData.message);
+            fileErrorMessage([responseData.message]);
             complete(false);
         }
 
