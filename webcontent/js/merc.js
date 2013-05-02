@@ -673,6 +673,9 @@ function displayRASettings(rac_id) {
     //highlight
     var ds_info = $('#ds_' + rac_id);
     ds_info.attr('id', 'selected_ds');
+
+    //clean any previous message
+    cleanPreviousRAMsg(rac_id);
 }
 
 //ra settings close
@@ -681,11 +684,18 @@ $("div.ds_ra_close").live('click', function (event) {
     ds_ra_control_div.hide();
 })
 
+var formIdIndex;
 //setup restricted access ajax action
 $('#setup_ra').live('click', function (e) {
     e.preventDefault();
 
     var setupRAForm = $(this).closest('form');
+    var name = setupRAForm.attr('name');
+    formIdIndex = name.substr(14, name.length);
+
+    //clean previous msg
+    cleanPreviousRAMsg(formIdIndex);
+
     var values = setupRAForm.serialize();
     $.ajax({
         url:'rasetup.jspx',
@@ -697,13 +707,55 @@ $('#setup_ra').live('click', function (e) {
     })
 })
 
-function processRAResponse() {
-
-
+function cleanPreviousRAMsg(idIndex) {
+    var racSuccessMsgDiv = $('#rac_success_' + idIndex);
+    var racErrorMsgDiv = $('#rac_error_' + idIndex);
+    racSuccessMsgDiv.hide();
+    racErrorMsgDiv.hide();
 }
 
-function displayRASetupError() {
+function processRAResponse(raResponse) {
+    var succeed = raResponse.succeed;
+    if (succeed) {
+        raSuccessUpdate(raResponse.startDate, raResponse.endDate, raResponse.messages[0]);
+    } else {
+        raErrorMessage(raResponse.messages);
+    }
+}
 
+//update the ra info after success
+function raSuccessUpdate(startDate, endDate, message) {
+    var racSuccessMsgDiv = $('#rac_success_' + formIdIndex);
+    var racSuccessMsg = racSuccessMsgDiv.find('.rac_success_msg');
+    racSuccessMsg.html(message);
+    racSuccessMsgDiv.show();
+
+    //update the starting date and ra info
+    var hiddenStartDate = $('#start_date_' + formIdIndex);
+    hiddenStartDate.attr('value', startDate);
+    var raInfoSpec = $('#ra_info_spec_' + formIdIndex);
+    var htmlRaInfo = "Access to this file is restricted until " + endDate + ".";
+    raInfoSpec.html(htmlRaInfo);
+    var dataset_ra_section_div = $('#ds_ra_' + formIdIndex);
+    //hidden the ra setting form
+    dataset_ra_section_div.delay(1500).fadeOut(500);
+}
+
+function raErrorMessage(errorMsgs) {
+    var errorHtml = "<ul>"
+    $.each(errorMsgs, function (i, msg) {
+        errorHtml += "<li>" + msg + " </li>"
+    });
+    errorHtml += "</ul>";
+    var racErrorMsgDiv = $('#rac_error_' + formIdIndex);
+    var racErrorItermDiv = racErrorMsgDiv.find('.rac_error_msg_item_div');
+    racErrorItermDiv.empty();
+    racErrorItermDiv.append(errorHtml);
+    racErrorMsgDiv.show();
+}
+
+function displayRASetupError(jqXHR, textStatus, errorThrown) {
+    raErrorMessage(["Failed to connect to the server, please refresh the page."]);
 }
 
 

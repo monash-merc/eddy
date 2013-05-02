@@ -1266,6 +1266,10 @@ input {
     display: inline-block;
 }
 
+.ra_info_spec a:hover {
+    text-decoration: none;
+}
+
 .ra_control1 {
     float: right;
     display: inline-block;
@@ -1348,12 +1352,13 @@ input {
 
 .rac_success_msg_div {
     display: none;
-    background: #EFF2F7;
     border: solid 1px #F2F2F2;
     -moz-border-radius: 5px;
     border-radius: 5px;
     color: #726E4C;
+    background: #faf9ea;
     text-align: center;
+    margin-bottom: 5px;
 }
 
 .rac_error_msg_div {
@@ -1364,16 +1369,22 @@ input {
 }
 
 .rac_error_msg_item_div {
-    border-collapse: collapse;
     color: #B24F3C;
     font-weight: normal;
-    margin: 2px auto;
     text-align: left;
+    padding-right: 10px;
 }
-
 
 .ra_action_div {
     text-align: center;
+}
+
+.info_hint {
+    width: 25px;
+    display: inline-block;
+    background: url('../images/hint.png');
+    background-repeat: no-repeat;
+    margin-top: 2px;
 }
 
 /** End of Restricted Access **/

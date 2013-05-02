@@ -45,7 +45,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
-import au.edu.monash.merc.capture.struts2.action.ActConstants;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.validator.EmailValidator;
 
@@ -101,11 +100,16 @@ public class CaptureUtil {
         return simpleDateFormat.format(date);
     }
 
-    public static String formateDateToW3CDTF(final Date date) {
+    public static String formatDateToW3CDTF(final Date date) {
         SimpleDateFormat w3cdtf = new SimpleDateFormat(DATE_W3CDTF);
         return w3cdtf.format(date);
         //int index = s.length() - 2;
         //return s.substring(0, index) + ":" + s.substring(index);
+    }
+
+    public  static String formatDateToYYYYMMDD(final Date date){
+        SimpleDateFormat yyyymmdd = new SimpleDateFormat(DATE_YYYYMMDD);
+        return yyyymmdd.format(date);
     }
 
     public static String genCurrentTimestamp() {
@@ -295,10 +299,10 @@ public class CaptureUtil {
         System.out.println(" Format the date: 2010-12-06 23:59:59 " + day);
         Date anotherDay = CaptureUtil.formatDate("1901-01-01 12:51:22:35");
         System.out.println(" UTC another date format: " + CaptureUtil.formatDateToUTC(anotherDay));
-        System.out.println(" W3CDTF another date format: " + CaptureUtil.formateDateToW3CDTF(anotherDay));
+        System.out.println(" W3CDTF another date format: " + CaptureUtil.formatDateToW3CDTF(anotherDay));
 
         Date date = GregorianCalendar.getInstance().getTime();
-        System.out.println(" W3CDTF current date format: " + CaptureUtil.formateDateToW3CDTF(date));
+        System.out.println(" W3CDTF current date format: " + CaptureUtil.formatDateToW3CDTF(date));
 
         System.out.println("is today? " + CaptureUtil.isToday(day));
 
