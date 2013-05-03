@@ -324,8 +324,15 @@
         </action>
 
         <!-- export the dataset -->
-        <action name="exportDataset" class="data.exportDSAction" method="exportDataset">
-            <result name="input">/web/data/view_col_detail.ftl</result>
+        <action name="preExportDs" class="data.exportDatasetAction" method="preDsExport">
+            <result name="input">/web/data/export_ds_error.ftl</result>
+            <result name="error">/web/data/export_ds_error.ftl</result>
+            <result name="success">/web/data/export_ds_condition.ftl</result>
+        </action>
+
+        <action name="exportDataset" class="data.exportDatasetAction" method="exportDataset">
+            <result name="input">/web/data/export_ds_condition.ftl</result>
+            <result name="error">/web/data/export_ds_error.ftl</result>
             <result name="success" type="stream">
                 <param name="contentType">${contentType}</param>
                 <param name="inputName">dsInputStream</param>
@@ -505,8 +512,15 @@
             <result name="success">/web/data/view_col_detail.ftl</result>
         </action>
 
-        <action name="exportDataset" class="data.exportDSAction" method="exportDataset">
-            <result name="input">/web/data/view_col_detail.ftl</result>
+        <!-- export the dataset -->
+        <action name="preExportDs" class="data.exportDatasetAction" method="preDsExport">
+            <result name="error">/web/data/export_ds_error.ftl</result>
+            <result name="success">/web/data/export_ds_condition.ftl</result>
+        </action>
+
+        <action name="exportDataset" class="data.exportDatasetAction" method="exportDataset">
+            <result name="input">/web/data/export_ds_condition.ftl</result>
+            <result name="error">/web/data/export_ds_error.ftl</result>
             <result name="success" type="stream">
                 <param name="contentType">${contentType}</param>
                 <param name="inputName">dsInputStream</param>

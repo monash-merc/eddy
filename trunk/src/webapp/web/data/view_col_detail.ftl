@@ -342,13 +342,15 @@
                         </@s.if>
                         <@s.if test="%{#raDs.raActive}">
                             <@s.if test="%{permissionBean.exportAllowed}">
-                                <a href="${base}/${downloadDatasetLink}?dataset.id=<@s.property value='#raDs.dataset.id' />&collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}">
+                                <a href="${base}/${downloadDatasetLink}?dataset.id=<@s.property value='#raDs.dataset.id' />&collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}"
+                                   title="Exporting Dataset - ${raDs.dataset.name}" rel="superbox[iframe.viewmetadata][600x640]">
                                     Export
                                 </a>
                             </@s.if>
                         </@s.if>
                         <@s.else>
-                            <a href="${base}/${downloadDatasetLink}?dataset.id=<@s.property value='#raDs.dataset.id' />&collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}">
+                            <a href="${base}/${downloadDatasetLink}?dataset.id=<@s.property value='#raDs.dataset.id' />&collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}"
+                               title="Exporting Dataset - ${raDs.dataset.name}" rel="superbox[iframe.viewmetadata][600x640]">
                                 Export
                             </a>
                         </@s.else>
