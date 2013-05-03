@@ -33,15 +33,17 @@
                 <li>If the data is altered, transformed, the resulting datasets can only be used under the same license conditions.</li>
             </ul>
         </div>
-        <div class="fair_use_policy">
-            <b>The Fair use policy</b> is available <a href="#" target="_blank">here</a>
-        </div>
+
     </@s.if>
     <@s.else>
         <div class="user_defined_licence">
             <@s.property value="licence.contents" />
         </div>
     </@s.else>
+
+        <div class="fair_use_policy">
+            <b>The Fair use policy</b> is available <a href="#" target="_blank">here</a>
+        </div>
     </div>
 
     <div class="export_row_div">
