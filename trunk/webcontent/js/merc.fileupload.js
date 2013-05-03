@@ -126,8 +126,8 @@ merc.FileUpload = function (doafter) {
         // if the ajaxSubmit method was passed an Options Object with the dataType
         // property set to 'json' then the first argument to the success callback
         // is the json data object returned by the server
-        var succeed = responseData.success;
-        if (succeed == 'true') {
+        var succeed = responseData.succeed;
+        if (succeed) {
             fileSuccessMessage(responseData.message);
             complete(true);
         } else {
