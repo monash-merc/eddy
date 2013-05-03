@@ -31,6 +31,7 @@ import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.AuditEvent;
 import au.edu.monash.merc.capture.domain.Dataset;
 import au.edu.monash.merc.capture.domain.RestrictAccess;
+import au.edu.monash.merc.capture.dto.FileImportResponse;
 import au.edu.monash.merc.capture.util.CaptureUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -49,7 +50,7 @@ import java.util.Map;
 @Controller("data.importFileAction")
 public class ImportFileAction extends DMCoreAction {
 
-    private Map<String, String> responseData = new HashMap<String, String>();
+    private FileImportResponse importResponse;
 
     private boolean extractable;
 
@@ -64,6 +65,7 @@ public class ImportFileAction extends DMCoreAction {
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     public String importFile() {
+        importResponse = new FileImportResponse();
         // check the collection and user
         try {
             user = retrieveLoggedInUser();
@@ -72,8 +74,8 @@ public class ImportFileAction extends DMCoreAction {
             collection.setModifiedByUser(user);
         } catch (Exception e) {
             logger.error(e);
-            responseData.put("success", String.valueOf(false));
-            responseData.put("message", getText("dataset.import.get.collection.details.failed"));
+            importResponse.setSucceed(false);
+            importResponse.setMessage(getText("dataset.import.get.collection.details.failed"));
             return SUCCESS;
         }
 
@@ -82,30 +84,30 @@ public class ImportFileAction extends DMCoreAction {
             permissionBean = checkPermission(collection.getId(), collection.getOwner().getId());
         } catch (Exception e) {
             logger.error(e);
-            responseData.put("success", String.valueOf(false));
-            responseData.put("message", getText("check.permissions.error"));
+            importResponse.setSucceed(false);
+            importResponse.setMessage(getText("check.permissions.error"));
             return SUCCESS;
         }
 
         if (!permissionBean.isImportAllowed()) {
             logger.error(getText("dataset.import.permission.denied"));
-            responseData.put("success", String.valueOf(false));
-            responseData.put("message", getText("dataset.import.permission.denied"));
+            importResponse.setSucceed(false);
+            importResponse.setMessage(getText("dataset.import.permission.denied"));
             return SUCCESS;
         }
 
         // check the file exists or not
         try {
             if (this.dmService.checkDatasetNameExisted(uploadFileName, collection.getId())) {
-                responseData.put("success", String.valueOf(false));
-                responseData.put("message", getText("dataset.import.file.already.existed", new String[]{uploadFileName}));
+                importResponse.setSucceed(false);
+                importResponse.setMessage(getText("dataset.import.file.already.existed", new String[]{uploadFileName}));
                 logger.error(getText("dataset.import.file.already.existed", new String[]{uploadFileName}));
                 return SUCCESS;
             }
         } catch (Exception e) {
             logger.error(e);
-            responseData.put("success", String.valueOf(false));
-            responseData.put("message", getText("dataset.import.check.file.name.error"));
+            importResponse.setSucceed(false);
+            importResponse.setMessage(getText("dataset.import.check.file.name.error"));
             return SUCCESS;
         }
 
@@ -113,21 +115,21 @@ public class ImportFileAction extends DMCoreAction {
         if (raEnabled) {
             Date raEndDate = restrictAccess.getEndDate();
             if (raEndDate == null) {
-                responseData.put("success", String.valueOf(false));
-                responseData.put("message", getText("restrict.access.end.date.must.be.provided"));
+                importResponse.setSucceed(false);
+                importResponse.setMessage(getText("restrict.access.end.date.must.be.provided"));
                 return SUCCESS;
             }
             Date today = CaptureUtil.getToday();
 
             if (isBeforeMinRaEndDate(today, raEndDate)) {
-                responseData.put("success", String.valueOf(false));
-                responseData.put("message", getText("restrict.access.end.date.is.before.min.end.date"));
+                importResponse.setSucceed(false);
+                importResponse.setMessage(getText("restrict.access.end.date.is.before.min.end.date"));
                 return SUCCESS;
             }
 
             if (isAfterMaxRaEndDate(today, raEndDate)) {
-                responseData.put("success", String.valueOf(false));
-                responseData.put("message", getText("restrict.access.end.date.is.after.max.end.date"));
+                importResponse.setSucceed(false);
+                importResponse.setMessage(getText("restrict.access.end.date.is.after.max.end.date"));
                 return SUCCESS;
             }
             //set the restricted access day as today
@@ -145,16 +147,17 @@ public class ImportFileAction extends DMCoreAction {
             Dataset dataset = this.dmService.captureData(uploadFileName, upload, extractable, false, collection, dataStorePath, raEnabled, restrictAccess);
             // log the audit event.
             recordAuditEvent(dataset, raEnabled);
-            responseData.put("success", String.valueOf(true));
-            responseData.put("message", getText("dataset.import.success", new String[]{dataset.getName()}));
+            importResponse.setSucceed(true);
+            importResponse.setMessage(getText("dataset.import.success", new String[]{dataset.getName()}));
             return SUCCESS;
         } catch (Exception e) {
             logger.error(e);
-            responseData.put("success", String.valueOf(false));
+
+            importResponse.setSucceed(false);
+            importResponse.setMessage(getText("dataset.import.failed"));
             String errorMsg = e.getMessage();
-            responseData.put("message", getText("dataset.import.failed"));
             if (StringUtils.containsIgnoreCase(errorMsg, "not a valid CDM file")) {
-                responseData.put("message", getText("dataset.import.failed") + ", not a valid Net-CDF file");
+                importResponse.setMessage(getText("dataset.import.failed") + ", not a valid Net-CDF file");
             }
             return SUCCESS;
         } finally {
@@ -189,12 +192,12 @@ public class ImportFileAction extends DMCoreAction {
         this.raEnabled = raEnabled;
     }
 
-    public Map<String, String> getResponseData() {
-        return responseData;
+    public FileImportResponse getImportResponse() {
+        return importResponse;
     }
 
-    public void setResponseData(Map<String, String> responseData) {
-        this.responseData = responseData;
+    public void setImportResponse(FileImportResponse importResponse) {
+        this.importResponse = importResponse;
     }
 
     public boolean isExtractable() {

@@ -308,7 +308,7 @@
         <action name="importFile" class="data.importFileAction" method="importFile">
             <result name="success" type="json">
                 <param name="noCache">true</param>
-                <param name="root">responseData</param>
+                <param name="root">importResponse</param>
                 <param name="contentType">text/html</param>
             </result>
         </action>
