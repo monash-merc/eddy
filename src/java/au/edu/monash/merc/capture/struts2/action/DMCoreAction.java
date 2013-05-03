@@ -45,7 +45,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class DMCoreAction extends BaseAction {
@@ -112,7 +111,7 @@ public class DMCoreAction extends BaseAction {
     protected void populateLinksInUsrCollection() {
         showColEditLink = ActConstants.SHOW_COLLECTION_EDIT_ACTION;
         deleteColLink = ActConstants.COLLECTION_DELETE_ACTION;
-        downloadDatasetLink = ActConstants.DATASET_EXPORT_ACTION;
+        downloadDatasetLink = ActConstants.DATASET_PRE_EXPORT_ACTION;
         deleteDatasetLink = ActConstants.DATASET_DELETE_ACTION;
         viewDatasetLink = ActConstants.DATASET_VIEWDATA_ACTION;
         permissionLink = ActConstants.SET_COLLECTION_PERMISSION_ACTION;
@@ -120,7 +119,7 @@ public class DMCoreAction extends BaseAction {
     }
 
     protected void populateLinksInPubCollection() {
-        downloadDatasetLink = ActConstants.PUB_DATASET_EXPORT_ACTION;
+        downloadDatasetLink = ActConstants.PUB_DATASET_PRE_EXPORT_ACTION;
         viewDatasetLink = ActConstants.PUB_DATASET_VIEWDATA_ACTION;
     }
 

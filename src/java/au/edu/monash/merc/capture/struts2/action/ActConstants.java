@@ -71,8 +71,6 @@ public interface ActConstants {
 
     static String SESSION_USER_ORDERBY_TYPE = "user_page_orderby_type";
 
-    static String MANAGE_USER_ACTION_NAME = "admin/manageUser.jspx";
-
     static String HTTP_SCHEME = "http";
 
     static String HTTPS_SCHEME = "https";
@@ -104,8 +102,6 @@ public interface ActConstants {
     // permission
     static String SET_COLLECTION_PERMISSION_ACTION = "perm/showSetColPermissions.jspx";
 
-    static String VIEW_PERM_REQUESTS_ACTION = "perm/listPermRequests.jspx";
-
     static String SHOW_SEARCH_ACTION = "search/showSearch.jspx";
 
     static String SEARCH_ACTION = "search/search.jspx";
@@ -116,7 +112,7 @@ public interface ActConstants {
 
     static String COLLECTION_DELETE_ACTION = "data/deleteCollection.jspx";
 
-    static String DATASET_EXPORT_ACTION = "data/exportDataset.jspx";
+    static String DATASET_PRE_EXPORT_ACTION = "data/preExportDs.jspx";
 
     static String DATASET_VIEWDATA_ACTION = "data/viewDatasetData.jspx";
 
@@ -136,7 +132,7 @@ public interface ActConstants {
 
     static String PUB_VIEW_COLLECTION_DETAILS_ACTION = "pub/viewColDetails.jspx";
 
-    static String PUB_DATASET_EXPORT_ACTION = "pub/exportDataset.jspx";
+    static String PUB_DATASET_PRE_EXPORT_ACTION = "pub/preExportDs.jspx";
 
     static String PUB_DATASET_VIEWDATA_ACTION = "pub/viewDatasetData.jspx";
 

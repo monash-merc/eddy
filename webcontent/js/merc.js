@@ -172,6 +172,7 @@ $("#user_permissions input[type=checkbox]").live('click', function () {
             var allRegExportAllowed = $("input[name='allRegUserPerm.exportAllowed']").is(":checked");
             //if anonymous viewAllowed unckecked,
             if (act == 'anonymousePerm.viewAllowed') {
+                $(this).attr('checked', true);
                 if (anonyExportAllowed) {
                     $(this).attr('checked', true);
                 }
@@ -757,6 +758,14 @@ function raErrorMessage(errorMsgs) {
 function displayRASetupError(jqXHR, textStatus, errorThrown) {
     raErrorMessage(["Failed to connect to the server, please refresh the page."]);
 }
+
+//Export dataset error message
+$('#accept_licence').live('click', function () {
+    if ($(this).is(":checked")) {
+        $('.error_msg_section').hide();
+    }
+})
+
 
 
 

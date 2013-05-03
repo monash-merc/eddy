@@ -1353,6 +1353,7 @@ input {
 .rac_success_msg_div {
     display: none;
     border: solid 1px #F2F2F2;
+    -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
     color: #726E4C;
@@ -1583,6 +1584,52 @@ input {
     margin-bottom: 5px;
     text-align: left;
 
+}
+
+.export_row_div {
+    padding: 5px;
+    border: solid 1px #F2F2F2;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.fair_use_policy {
+    text-align: left;
+    padding: 5px;
+    text-align: justify;
+}
+
+.exp_citation_title {
+    margin-top: 5px;
+    text-align: left;
+    padding-left: 10px;
+    font-weight: bold;
+    color: #7a7a7a;
+}
+
+.exp_citation_hints {
+    text-align: left;
+    margin: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    color: #0E774A;
+    font-size: 11px;
+}
+
+.citation_contents_div {
+    margin: 5px;
+    padding: 5px;
+    text-align: justify;
+    /**background: #fafafa; */
+    border: dotted 1px #f0e0ba;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    font-style: italic;
+    font-size: 11px;
+    color: #5c5c5c;
 }
 
 .tern_licence {

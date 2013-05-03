@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011, Monash e-Research Centre
+ * Copyright (c) 2010-2013, Monash e-Research Centre
  * (Monash University, Australia)
  * All rights reserved.
  *
@@ -25,22 +25,38 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package au.edu.monash.merc.capture.struts2.action;
 
-import au.edu.monash.merc.capture.common.UserViewType;
+import au.edu.monash.merc.capture.common.LicenceType;
 import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.Dataset;
+import au.edu.monash.merc.capture.domain.Licence;
+import au.edu.monash.merc.capture.domain.RestrictAccess;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import java.io.InputStream;
 
+/**
+ * @author Simon Yu
+ *         <p/>
+ *         Email: xiaoming.yu@monash.edu
+ * @version 1.0
+ * @since 1.0
+ *        <p/>
+ *        Date: 3/05/13 10:43 AM
+ */
 @Scope("prototype")
-@Controller("data.exportDSAction")
-public class ExportDSAction extends DMCoreAction {
+@Controller("data.exportDatasetAction")
+public class ExportDatasetAction extends DMCoreAction {
 
     private Dataset dataset;
+
+    private Licence licence;
+
+    private boolean acceptedLicence;
 
     // For file downloading
     private String contentType;
@@ -51,11 +67,50 @@ public class ExportDSAction extends DMCoreAction {
 
     private int bufferSize;
 
+    //logger
     private Logger logger = Logger.getLogger(this.getClass().getName());
+
+    public String preDsExport() {
+        try {
+            if (exportErrors()) {
+                return ERROR;
+            }
+            //get the licence
+            licence = this.dmService.getLicenceByCollectionId(collection.getId());
+
+            if (this.licence == null) {
+                this.licence = new Licence();
+                this.licence.setLicenceType(LicenceType.TERN.type());
+                this.licence.setContents(this.configSetting.getPropValue(ConfigSettings.TERN_DATA_LICENCE));
+            }
+            acceptedLicence = true;
+            return SUCCESS;
+        } catch (Exception ex) {
+            logger.error(ex);
+            addActionError(getText("dataset.export.show.dataset.export.page.failed"));
+            return ERROR;
+        }
+    }
 
     public String exportDataset() {
 
         try {
+            //get the collection error or dataset error, then just return a error page
+            if (exportErrors()) {
+                return ERROR;
+            }
+            //get the licence
+            licence = this.dmService.getLicenceByCollectionId(collection.getId());
+            if (this.licence == null) {
+                this.licence = new Licence();
+                this.licence.setLicenceType(LicenceType.TERN.type());
+                this.licence.setContents(this.configSetting.getPropValue(ConfigSettings.TERN_DATA_LICENCE));
+            }
+            //if not accept the data licence, just return the pre export page.
+            if (!acceptedLicence) {
+                addFieldError("acceptedLicence", getText("dataset.export.must.accept.data.licence"));
+                return INPUT;
+            }
             String dataStorePath = configSetting.getPropValue(ConfigSettings.DATA_STORE_LOCATION);
             this.dsInputStream = this.dmService.downloadFile(dataset, dataStorePath);
             this.contentDisposition = "attachment;filename=\"" + dataset.getName() + "\"";
@@ -64,122 +119,50 @@ public class ExportDSAction extends DMCoreAction {
         } catch (Exception e) {
             addFieldError("export", getText("dataset.export.failed"));
             logger.error(e);
-            try {
-                retrieveCollection();
-                //retrieveAllDatasets();
-                retrieveAllRADatasets();
-                setNavAfterExcInDS();
-            } catch (Exception ex) {
-                addFieldError("getCollectionError", getText("dataset.export.get.collection.details.failed"));
-                collectionError = true;
-                setNavAfterColExc();
-                return INPUT;
-            }
-            return INPUT;
+            return ERROR;
         }
         return SUCCESS;
     }
 
-    /**
-     * validate
-     */
-    public void validateExportDataset() {
-        boolean hasError = false;
+    public boolean exportErrors() {
         try {
             collection = this.dmService.getCollection(collection.getId(), collection.getOwner().getId());
         } catch (Exception e) {
             addFieldError("collectionerror", getText("dataset.export.get.collection.details.failed"));
-            collectionError = true;
-            setNavAfterColExc();
-            return;
+            return true;
         }
 
         if (collection == null) {
             addFieldError("collectionerror", getText("dataset.export.collection.not.exist"));
-            collectionError = true;
-            setNavAfterColExc();
-            return;
+            return true;
         }
 
         try {
             permissionBean = checkPermission(collection.getId(), collection.getOwner().getId());
         } catch (Exception e) {
             addFieldError("checkPermission", getText("check.permissions.error"));
-            collectionError = true;
-            setNavAfterColExc();
-            return;
+            return true;
         }
 
-        if (!permissionBean.isExportAllowed()) {
-            addFieldError("exportPermission", getText("dataset.export.permission.denied"));
-            hasError = true;
-        }
         try {
             dataset = this.dmService.getDatasetById(dataset.getId());
             if (dataset == null) {
                 addFieldError("dataset", getText("dataset.export.failed.nonexisted.dataset.file"));
-                hasError = true;
+                return true;
             }
         } catch (Exception e) {
             addFieldError("dataset", getText("dataset.export.failed.check.dataset.error"));
-            hasError = true;
+            return true;
         }
-        if (hasError) {
-            try {
-                retrieveCollection();
-                //retrieveAllDatasets();
-                retrieveAllRADatasets();
-                setNavAfterExcInDS();
-            } catch (Exception e) {
-                addFieldError("getCollectionError", getText("dataset.export.get.collection.details.failed"));
-                collectionError = true;
-                setNavAfterColExc();
+        RestrictAccess ra = this.dmService.getRAByDatasetId(dataset.getId());
+        //only check the export permission if restricted access is not expired
+        if (ra != null && !raExpired(ra)) {
+            if (!permissionBean.isExportAllowed()) {
+                addFieldError("exportPermission", getText("dataset.export.permission.denied"));
+                return true;
             }
         }
-
-    }
-
-    private void setNavAfterExcInDS() {
-        String startNav = null;
-        String startNavLink = null;
-        String secondNav = collection.getName();
-        String thirdNav = getText("export.dataset.error");
-
-        if (viewType != null) {
-            if (viewType.equals(UserViewType.USER.type())) {
-                startNav = getText("mycollection.nav.label.name");
-                startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
-            }
-
-            if (viewType.equals(UserViewType.ALL.type())) {
-                startNav = getText("allcollection.nav.label.name");
-                startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
-            }
-            setPageTitle(startNav, (secondNav + " - " + thirdNav));
-            String secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="
-                    + collection.getOwner().getId() + "&viewType=" + viewType;
-            navigationBar = generateNavLabel(startNav, startNavLink, secondNav, secondNavLink, thirdNav, null);
-        }
-    }
-
-    private void setNavAfterColExc() {
-        String startNav = null;
-        String startNavLink = null;
-        String secondNav = getText("export.dataset.error");
-
-        if (viewType != null) {
-            if (viewType.equals(UserViewType.USER.type())) {
-                startNav = getText("mycollection.nav.label.name");
-                startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
-            }
-
-            if (viewType.equals(UserViewType.ALL.type())) {
-                startNav = getText("allcollection.nav.label.name");
-                startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
-            }
-            setPageTitle(startNav, secondNav);
-            navigationBar = generateNavLabel(startNav, startNavLink, secondNav, null, null, null);
-        }
+        return false;
     }
 
     public Dataset getDataset() {
@@ -188,6 +171,22 @@ public class ExportDSAction extends DMCoreAction {
 
     public void setDataset(Dataset dataset) {
         this.dataset = dataset;
+    }
+
+    public Licence getLicence() {
+        return licence;
+    }
+
+    public void setLicence(Licence licence) {
+        this.licence = licence;
+    }
+
+    public boolean isAcceptedLicence() {
+        return acceptedLicence;
+    }
+
+    public void setAcceptedLicence(boolean acceptedLicence) {
+        this.acceptedLicence = acceptedLicence;
     }
 
     public String getContentType() {
@@ -221,5 +220,4 @@ public class ExportDSAction extends DMCoreAction {
     public void setBufferSize(int bufferSize) {
         this.bufferSize = bufferSize;
     }
-
 }
