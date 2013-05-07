@@ -49,298 +49,299 @@ import au.edu.monash.merc.capture.util.CaptureUtil;
 /**
  * NetCDFDataCaptureAdapter class which implements the DataCaptureAdapter interface provides the metadata extraction
  * function
- * 
+ *
  * @author Simon Yu - Xiaoming.Yu@monash.edu
  * @version v2.0
  * @since v1.0
- * 
  */
 public class NetCDFDataCaptureAdapter implements DataCaptureAdapter {
 
-	private static String SITE_NAME = "SiteName";
+    private static String SITENAME = "SiteName";
 
-	private static String RUN_DATETIME_TAG = "RunDateTime";
+    private static String SITE_NAME = "site_name";
 
-	private static String XLMOD_DATETIME_TAG = "xlModDateTime";
+    private static String RUN_DATETIME_TAG = "RunDateTime";
 
-	private static String TITLE = "title";
+    private static String XLMOD_DATETIME_TAG = "xlModDateTime";
 
-	private static String SPEC = "specification";
+    private static String TITLE = "title";
 
-	private static String NET_CDF_FILE_LEVEL = "Level";
+    private static String SPEC = "specification";
 
-	private static int BUFFER_SIZE = 10240;
+    private static String NET_CDF_FILE_LEVEL = "Level";
 
-	@Override
-	public Dataset caputreData(String name, String fileFullPathName, boolean extractRequired, boolean globalAttrbuteOnly) throws DataCaptureException {
-		Dataset ds = new Dataset();
-		ds.setName(name);
-		ds.setExtracted(extractRequired);
-		// if extracting the metadata is not required, just return the dataset object.
-		if (!extractRequired) {
-			return ds;
-		}
-		// start to extract the metadata
-		NetcdfFile ncfile = null;
-		// the NetcdfFileWriteable only works for net-cdf file
-		// NetcdfFileWriteable ncfile = null;
-		try {
-			// ncfile = NetcdfFileWriteable.openExisting(fileFullPathName, false);
-			ncfile = NetcdfFile.open(fileFullPathName, BUFFER_SIZE, null);
-			// fetch global attributes
-			List<Attribute> globalAttrs = ncfile.getGlobalAttributes();
-			copyGlobalMetaData(globalAttrs, ds);
-			// if not the global attribute only, then extract other variables and attributes
-			if (!globalAttrbuteOnly) {
-				// fetch variables
-				List<Variable> vars = ncfile.getVariables();
-				copyVariables(vars, ds);
-			}
-		} catch (IOException e) {
-			throw new DataCaptureException(e);
-		} finally {
-			if (ncfile != null) {
-				try {
-					ncfile.close();
-					// remove any grib2 index file if any
-					File gbx8file = new File(fileFullPathName + ".gbx8");
-					if (gbx8file.exists()) {
-						gbx8file.delete();
-					}
-				} catch (IOException e) {
-					// ignore whatever caught
-				}
-			}
-		}
+    private static int BUFFER_SIZE = 10240;
 
-		return ds;
-	}
+    @Override
+    public Dataset caputreData(String name, String fileFullPathName, boolean extractRequired, boolean globalAttrbuteOnly) throws DataCaptureException {
+        Dataset ds = new Dataset();
+        ds.setName(name);
+        ds.setExtracted(extractRequired);
+        // if extracting the metadata is not required, just return the dataset object.
+        if (!extractRequired) {
+            return ds;
+        }
+        // start to extract the metadata
+        NetcdfFile ncfile = null;
+        // the NetcdfFileWriteable only works for net-cdf file
+        // NetcdfFileWriteable ncfile = null;
+        try {
+            // ncfile = NetcdfFileWriteable.openExisting(fileFullPathName, false);
+            ncfile = NetcdfFile.open(fileFullPathName, BUFFER_SIZE, null);
+            // fetch global attributes
+            List<Attribute> globalAttrs = ncfile.getGlobalAttributes();
+            copyGlobalMetaData(globalAttrs, ds);
+            // if not the global attribute only, then extract other variables and attributes
+            if (!globalAttrbuteOnly) {
+                // fetch variables
+                List<Variable> vars = ncfile.getVariables();
+                copyVariables(vars, ds);
+            }
+        } catch (IOException e) {
+            throw new DataCaptureException(e);
+        } finally {
+            if (ncfile != null) {
+                try {
+                    ncfile.close();
+                    // remove any grib2 index file if any
+                    File gbx8file = new File(fileFullPathName + ".gbx8");
+                    if (gbx8file.exists()) {
+                        gbx8file.delete();
+                    }
+                } catch (IOException e) {
+                    // ignore whatever caught
+                }
+            }
+        }
 
-	protected void copyGlobalMetaData(List<Attribute> globalAtts, Dataset ds) {
-		List<GlobalMetadata> persist_globalAttrs = new ArrayList<GlobalMetadata>();
-		for (Attribute att : globalAtts) {
-			GlobalMetadata persist_gatt = new GlobalMetadata();
-			String name = att.getName();
-			String value = att.getStringValue();
+        return ds;
+    }
 
-			persist_gatt.setName(name);
-			persist_gatt.setValue(value);
-			if (name.equalsIgnoreCase(SITE_NAME)) {
-				setSiteInfo(value, ds);
-			}
-			if (name.equalsIgnoreCase(RUN_DATETIME_TAG)) {
-				setRunDateTimeStamp(value, ds);
-			}
+    protected void copyGlobalMetaData(List<Attribute> globalAtts, Dataset ds) {
+        List<GlobalMetadata> persist_globalAttrs = new ArrayList<GlobalMetadata>();
+        for (Attribute att : globalAtts) {
+            GlobalMetadata persist_gatt = new GlobalMetadata();
+            String name = att.getName();
+            String value = att.getStringValue();
 
-			if (name.equalsIgnoreCase(XLMOD_DATETIME_TAG)) {
-				setXlModDateTimeStamp(value, ds);
-			}
+            persist_gatt.setName(name);
+            persist_gatt.setValue(value);
+            if (name.equalsIgnoreCase(SITE_NAME) || name.equalsIgnoreCase(SITENAME)) {
+                setSiteInfo(value, ds);
+            }
+            if (name.equalsIgnoreCase(RUN_DATETIME_TAG)) {
+                setRunDateTimeStamp(value, ds);
+            }
 
-			if (name.equalsIgnoreCase(TITLE)) {
-				setTitle(value, ds);
-			}
-			if (name.equalsIgnoreCase(SPEC)) {
-				setSpec(value, ds);
-			}
-			if (name.equalsIgnoreCase(NET_CDF_FILE_LEVEL)) {
-				setNetCDFLevel(value, ds);
-			}
+            if (name.equalsIgnoreCase(XLMOD_DATETIME_TAG)) {
+                setXlModDateTimeStamp(value, ds);
+            }
 
-			persist_gatt.setDataset(ds);
-			persist_globalAttrs.add(persist_gatt);
-		}
-		ds.setGlobalMetadata(persist_globalAttrs);
-	}
+            if (name.equalsIgnoreCase(TITLE)) {
+                setTitle(value, ds);
+            }
+            if (name.equalsIgnoreCase(SPEC)) {
+                setSpec(value, ds);
+            }
+            if (name.equalsIgnoreCase(NET_CDF_FILE_LEVEL)) {
+                setNetCDFLevel(value, ds);
+            }
 
-	protected void copyVariables(List<Variable> vars, Dataset ds) {
+            persist_gatt.setDataset(ds);
+            persist_globalAttrs.add(persist_gatt);
+        }
+        ds.setGlobalMetadata(persist_globalAttrs);
+    }
 
-		List<MetaVariable> metaVarList = new ArrayList<MetaVariable>();
+    protected void copyVariables(List<Variable> vars, Dataset ds) {
 
-		boolean strict = false;
-		boolean useFullName = true;
-		// Formatter buf = new Formatter();
+        List<MetaVariable> metaVarList = new ArrayList<MetaVariable>();
 
-		for (Variable v : vars) {
-			MetaVariable metavar = new MetaVariable();
+        boolean strict = false;
+        boolean useFullName = true;
+        // Formatter buf = new Formatter();
 
-			useFullName = useFullName && !strict;
-			String name = useFullName ? v.getName() : v.getShortName();
-			if (strict) {
-				name = NetcdfFile.escapeName(name);
-			}
-			metavar.setName(name);
-			metavar.setDataType(v.getDataType().getClassType().getSimpleName());
+        for (Variable v : vars) {
+            MetaVariable metavar = new MetaVariable();
 
-			metavar.setNameDimensions(formatNameDimensionsa(v.getNameAndDimensions()));
-			// copy the attributes
-			copyAttributes(v, metavar);
-			metavar.setDataset(ds);
-			metaVarList.add(metavar);
-		}
-		ds.setMetaVariables(metaVarList);
-	}
+            useFullName = useFullName && !strict;
+            String name = useFullName ? v.getName() : v.getShortName();
+            if (strict) {
+                name = NetcdfFile.escapeName(name);
+            }
+            metavar.setName(name);
+            metavar.setDataType(v.getDataType().getClassType().getSimpleName());
 
-	private String formatNameDimensionsa(String nameDimensions) {
-		String tmp = StringUtils.replace(nameDimensions, "(", " [");
-		return StringUtils.replace(tmp, ")", "]");
-	}
+            metavar.setNameDimensions(formatNameDimensionsa(v.getNameAndDimensions()));
+            // copy the attributes
+            copyAttributes(v, metavar);
+            metavar.setDataset(ds);
+            metaVarList.add(metavar);
+        }
+        ds.setMetaVariables(metaVarList);
+    }
 
-	// not use it, replaced by name and dimensions string value.
-	// protected void copyDimensions(Variable v, MetaVariable metavar, boolean strict) {
-	// List<Dimension> dimensions = v.getDimensions();
-	// List<MetaDimension> metaDimList = new ArrayList<MetaDimension>();
-	//
-	// for (Dimension myd : dimensions) {
-	// MetaDimension mdim = new MetaDimension();
-	//
-	// String dimName = myd.getName();
-	// if ((dimName != null) && strict) {
-	// dimName = NetcdfFile.escapeName(dimName);
-	// }
-	// mdim.setName(dimName);
-	//
-	// if (myd.isShared()) {
-	// mdim.setValue(String.valueOf(myd.getLength()));
-	// }
-	// mdim.setMetaVariable(metavar);
-	// metaDimList.add(mdim);
-	// }
-	// metavar.setMetaDimensions(metaDimList);
-	// }
+    private String formatNameDimensionsa(String nameDimensions) {
+        String tmp = StringUtils.replace(nameDimensions, "(", " [");
+        return StringUtils.replace(tmp, ")", "]");
+    }
 
-	protected void copyAttributes(Variable v, MetaVariable metavar) {
-		List<MetaAttribute> metaAttsList = new ArrayList<MetaAttribute>();
-		List<Attribute> attribs = v.getAttributes();
-		for (Attribute at : attribs) {
-			MetaAttribute metaAtt = new MetaAttribute();
-			metaAtt.setName(at.getName());
+    // not use it, replaced by name and dimensions string value.
+    // protected void copyDimensions(Variable v, MetaVariable metavar, boolean strict) {
+    // List<Dimension> dimensions = v.getDimensions();
+    // List<MetaDimension> metaDimList = new ArrayList<MetaDimension>();
+    //
+    // for (Dimension myd : dimensions) {
+    // MetaDimension mdim = new MetaDimension();
+    //
+    // String dimName = myd.getName();
+    // if ((dimName != null) && strict) {
+    // dimName = NetcdfFile.escapeName(dimName);
+    // }
+    // mdim.setName(dimName);
+    //
+    // if (myd.isShared()) {
+    // mdim.setValue(String.valueOf(myd.getLength()));
+    // }
+    // mdim.setMetaVariable(metavar);
+    // metaDimList.add(mdim);
+    // }
+    // metavar.setMetaDimensions(metaDimList);
+    // }
 
-			// set the data type
-			metaAtt.setDataType(at.getDataType().getClassType().getSimpleName());
+    protected void copyAttributes(Variable v, MetaVariable metavar) {
+        List<MetaAttribute> metaAttsList = new ArrayList<MetaAttribute>();
+        List<Attribute> attribs = v.getAttributes();
+        for (Attribute at : attribs) {
+            MetaAttribute metaAtt = new MetaAttribute();
+            metaAtt.setName(at.getName());
 
-			String atStr = at.toString();
-			if (atStr != null) {
-				metaAtt.setValue(StringUtils.substringAfter(atStr, "="));
-			} else {
-				metaAtt.setValue("na");
-			}
-			// metaAtt.setValue(at.getStringValue());
-			metaAtt.setMetaVariable(metavar);
-			metaAttsList.add(metaAtt);
-		}
-		metavar.setMetaAttributes(metaAttsList);
-	}
+            // set the data type
+            metaAtt.setDataType(at.getDataType().getClassType().getSimpleName());
 
-	/**
-	 * Set Site Name
-	 * 
-	 * @param siteName
-	 * @param ds
-	 */
-	private void setSiteInfo(String siteName, Dataset ds) {
-		ds.setSiteName(siteName);
-	}
+            String atStr = at.toString();
+            if (atStr != null) {
+                metaAtt.setValue(StringUtils.substringAfter(atStr, "="));
+            } else {
+                metaAtt.setValue("na");
+            }
+            // metaAtt.setValue(at.getStringValue());
+            metaAtt.setMetaVariable(metavar);
+            metaAttsList.add(metaAtt);
+        }
+        metavar.setMetaAttributes(metaAttsList);
+    }
 
-	/**
-	 * Set the timestamp
-	 * 
-	 * @param timestamp
-	 * @param ds
-	 */
-	private void setRunDateTimeStamp(String timestamp, Dataset ds) {
-		String tmTag = StringUtils.substring(timestamp, 0, 10);
-		ds.setRunDateTimeTag(tmTag);
-		Date createdTime = CaptureUtil.formatDate(timestamp);
-		ds.setRunDateTime(createdTime);
-	}
+    /**
+     * Set Site Name
+     *
+     * @param siteName
+     * @param ds
+     */
+    private void setSiteInfo(String siteName, Dataset ds) {
+        ds.setSiteName(siteName);
+    }
 
-	/**
-	 * Set the timestamp
-	 * 
-	 * @param timestamp
-	 * @param ds
-	 */
-	private void setXlModDateTimeStamp(String timestamp, Dataset ds) {
-		String tmTag = StringUtils.substring(timestamp, 0, 10);
-		ds.setXlModDateTimeTag(tmTag);
-		Date createdTime = CaptureUtil.formatDate(timestamp);
-		ds.setXlModDateTime(createdTime);
-	}
+    /**
+     * Set the timestamp
+     *
+     * @param timestamp
+     * @param ds
+     */
+    private void setRunDateTimeStamp(String timestamp, Dataset ds) {
+        String tmTag = StringUtils.substring(timestamp, 0, 10);
+        ds.setRunDateTimeTag(tmTag);
+        Date createdTime = CaptureUtil.formatDate(timestamp);
+        ds.setRunDateTime(createdTime);
+    }
 
-	/**
-	 * Set Title of dataset
-	 * 
-	 * @param title
-	 * @param ds
-	 */
-	private void setTitle(String title, Dataset ds) {
-		ds.setTitle(title);
-	}
+    /**
+     * Set the timestamp
+     *
+     * @param timestamp
+     * @param ds
+     */
+    private void setXlModDateTimeStamp(String timestamp, Dataset ds) {
+        String tmTag = StringUtils.substring(timestamp, 0, 10);
+        ds.setXlModDateTimeTag(tmTag);
+        Date createdTime = CaptureUtil.formatDate(timestamp);
+        ds.setXlModDateTime(createdTime);
+    }
 
-	/**
-	 * Set specification of dataset
-	 * 
-	 * @param spec
-	 * @param ds
-	 */
-	private void setSpec(String spec, Dataset ds) {
-		ds.setSpecification(spec);
-	}
+    /**
+     * Set Title of dataset
+     *
+     * @param title
+     * @param ds
+     */
+    private void setTitle(String title, Dataset ds) {
+        ds.setTitle(title);
+    }
 
-	private void setNetCDFLevel(String level, Dataset ds) {
-		ds.setNetCDFLevel(level);
-	}
+    /**
+     * Set specification of dataset
+     *
+     * @param spec
+     * @param ds
+     */
+    private void setSpec(String spec, Dataset ds) {
+        ds.setSpecification(spec);
+    }
 
-	public static void main(String[] args) throws Exception {
+    private void setNetCDFLevel(String level, Dataset ds) {
+        ds.setNetCDFLevel(level);
+    }
 
-		String filename = "./testData/AdelaideRiver_2008_L3.nc";
-		// String filename = "./testData/ei_oper_an_pl_15x15_802";
-		// String filename = "./testData/ei_mnth_fc_sfc_15x15_90N0E90S3585E_19890101_20051201";
+    public static void main(String[] args) throws Exception {
 
-		// ByteArrayOutputStream bos = new ByteArrayOutputStream((int) file.length());
-		// InputStream in = new BufferedInputStream(new FileInputStream(filename));
-		// IO.copy(in, bos);
+        String filename = "./testData/AdelaideRiver_2008_L3.nc";
+        // String filename = "./testData/ei_oper_an_pl_15x15_802";
+        // String filename = "./testData/ei_mnth_fc_sfc_15x15_90N0E90S3585E_19890101_20051201";
 
-		NetCDFDataCaptureAdapter adapter = new NetCDFDataCaptureAdapter();
-		System.out.println("============ start to read file: " + filename);
-		Dataset ds = adapter.caputreData("ei_oper_an_pl_15x15_802", filename, true, false);
-		// Dataset ds = adapter.caputreData("ei_mnth_fc_sfc_15x15_90N0E90S3585E_19890101_20051201", bos.toByteArray());
-		Collection col = new Collection();
-		col.setName(ds.getSiteName());
-		// col.setTimestampTag(ds.getTimestampTag());
+        // ByteArrayOutputStream bos = new ByteArrayOutputStream((int) file.length());
+        // InputStream in = new BufferedInputStream(new FileInputStream(filename));
+        // IO.copy(in, bos);
 
-		System.out.println("---------------- Collection ---------------------------");
-		System.out.println("collection name: " + col.getName());
-		// System.out.println("collection timestamp: " + col.getTimestampTag());
+        NetCDFDataCaptureAdapter adapter = new NetCDFDataCaptureAdapter();
+        System.out.println("============ start to read file: " + filename);
+        Dataset ds = adapter.caputreData("ei_oper_an_pl_15x15_802", filename, true, false);
+        // Dataset ds = adapter.caputreData("ei_mnth_fc_sfc_15x15_90N0E90S3585E_19890101_20051201", bos.toByteArray());
+        Collection col = new Collection();
+        col.setName(ds.getSiteName());
+        // col.setTimestampTag(ds.getTimestampTag());
 
-		System.out.println("\n------------  Dataset -------------------------------");
-		System.out.println("Dataset name: " + ds.getName());
+        System.out.println("---------------- Collection ---------------------------");
+        System.out.println("collection name: " + col.getName());
+        // System.out.println("collection timestamp: " + col.getTimestampTag());
 
-		System.out.println("Dataset Level: " + ds.getNetCDFLevel());
+        System.out.println("\n------------  Dataset -------------------------------");
+        System.out.println("Dataset name: " + ds.getName());
 
-		System.out.println("\n------------  Global Attributes -------------------------------");
+        System.out.println("Dataset Level: " + ds.getNetCDFLevel());
 
-		List<GlobalMetadata> persist_globalAttrs = ds.getGlobalMetadata();
-		for (GlobalMetadata gatt : persist_globalAttrs) {
-			System.out.println("global attribute: " + gatt.getName() + "=" + gatt.getValue());
-		}
-		List<MetaVariable> persist_metaVariables = ds.getMetaVariables();
+        System.out.println("\n------------  Global Attributes -------------------------------");
 
-		System.out.println("\n--------------------------------------------\n");
-		for (MetaVariable mv : persist_metaVariables) {
-			System.out.println("\n --------------- Variable -------------------------------------");
-			System.out.println("Variable name : " + mv.getName());
-			System.out.println("Variable name dimensions : " + mv.getNameDimensions());
-			System.out.println("Variable data type : " + mv.getDataType());
+        List<GlobalMetadata> persist_globalAttrs = ds.getGlobalMetadata();
+        for (GlobalMetadata gatt : persist_globalAttrs) {
+            System.out.println("global attribute: " + gatt.getName() + "=" + gatt.getValue());
+        }
+        List<MetaVariable> persist_metaVariables = ds.getMetaVariables();
 
-			List<MetaAttribute> metaAttrList = mv.getMetaAttributes();
-			System.out.println("\n     ------------------ Attributes ------------------------");
-			for (MetaAttribute matt : metaAttrList) {
-				System.out.println("      Attribute data type: " + matt.getDataType() + ", Attribute name : " + matt.getName() + "="
-						+ matt.getValue());
-			}
-		}
+        System.out.println("\n--------------------------------------------\n");
+        for (MetaVariable mv : persist_metaVariables) {
+            System.out.println("\n --------------- Variable -------------------------------------");
+            System.out.println("Variable name : " + mv.getName());
+            System.out.println("Variable name dimensions : " + mv.getNameDimensions());
+            System.out.println("Variable data type : " + mv.getDataType());
 
-	}
+            List<MetaAttribute> metaAttrList = mv.getMetaAttributes();
+            System.out.println("\n     ------------------ Attributes ------------------------");
+            for (MetaAttribute matt : metaAttrList) {
+                System.out.println("      Attribute data type: " + matt.getDataType() + ", Attribute name : " + matt.getName() + "="
+                        + matt.getValue());
+            }
+        }
+
+    }
 
 }

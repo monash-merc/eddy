@@ -42,7 +42,7 @@
     </@s.else>
 
         <div class="fair_use_policy">
-            <b>The Fair use policy</b> is available <a href="#" target="_blank">here</a>
+            Please read <a href="http://code.google.com/p/eddy/downloads/detail?name=TheFairUsePolicy.pdf&can=2&q=" target="_blank"><b>The Fair Use Policy</b></a>
         </div>
     </div>
 

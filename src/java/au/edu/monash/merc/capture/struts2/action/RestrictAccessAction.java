@@ -105,6 +105,11 @@ public class RestrictAccessAction extends DMCoreAction {
             //start to work with user input ra values
             Date startDate = restrictAccess.getStartDate();
             Date raEndDate = restrictAccess.getEndDate();
+
+            System.out.println("================= submited start date: " + startDate);
+
+            System.out.println("================= submited end date: " + raEndDate);
+
             if (raEndDate == null) {
                 raResponse.setSucceed(false);
                 raResponse.setMessage(getText("restrict.access.end.date.must.be.provided"));
@@ -128,6 +133,12 @@ public class RestrictAccessAction extends DMCoreAction {
                         startDate = ra.getStartDate();
                     }
                 }
+                //if the end date is before today
+                if (isEndDateExpired(raEndDate)) {
+                    raResponse.setSucceed(false);
+                    raResponse.setMessage(getText("restrict.access.end.input.end.date.expired"));
+                    return SUCCESS;
+                }
 
                 //if the end date is less than 30 days from the start date
                 if (isBeforeMinRaEndDate(startDate, raEndDate)) {
@@ -135,6 +146,7 @@ public class RestrictAccessAction extends DMCoreAction {
                     raResponse.setMessage(getText("restrict.access.end.date.is.before.min.end.date"));
                     return SUCCESS;
                 }
+
                 //if the end date is more than 18 months from the start date
                 if (isAfterMaxRaEndDate(startDate, raEndDate)) {
                     raResponse.setSucceed(false);

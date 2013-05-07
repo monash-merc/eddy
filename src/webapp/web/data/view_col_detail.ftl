@@ -325,7 +325,7 @@
                     </div>
                     <@s.if test="%{permissionBean.racAllowed}">
                         <@s.if test="%{#raDs.raActive || #raDs.raEnabled == false}">
-                            <div class="ra_control1" id="${dsState.index?c}" title="manage restricted access"></div>
+                            <div class="ra_control1" id="${dsState.index?c}" title="Manage restricted access"></div>
                         </@s.if>
                     </@s.if>
                 </div>
@@ -378,7 +378,7 @@
         </div>
             <@s.if test="%{permissionBean.racAllowed}">
                 <@s.if test="%{#raDs.raActive || #raDs.raEnabled == false}">
-                    <@s.form namespace="/data" method="post" name="form_setup_ra_${dsState.index?c}">
+                    <@s.form namespace="/data" action="rasetup.jspx" method="post" name="form_setup_ra_${dsState.index?c}">
                         <@s.hidden name="collection.id" />
                         <@s.hidden name="collection.owner.id" />
                         <@s.hidden name="viewType" />
@@ -411,7 +411,7 @@
 
                             <div class="ra_field_value_section">
                                 <span class="ra_span">End Date</span>:
-                                &nbsp;&nbsp; <@sj.datepicker name="restrictAccess.endDate" value="%{#raDs.ra.endDate}" displayFormat="yy-mm-dd"  buttonImageOnly="true" />
+                                &nbsp;&nbsp; <@sj.datepicker name="restrictAccess.endDate" value="%{#raDs.ra.endDate}" displayFormat="yy-mm-dd" id= "end_date_${dsState.index?c}" buttonImageOnly="true" />
                             </div>
 
                             <div class="ra_comments">
