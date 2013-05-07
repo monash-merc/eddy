@@ -150,6 +150,47 @@ public class JodaTesting {
         Days days = Days.daysBetween(today, dateTime2);
         System.out.println(days.get(DurationFieldType.days()));
 
+        Date startDate = CaptureUtil.formatDate("2013-02-8 00:00:00");
+
+        Date finalEndDate = CaptureUtil.formatDate("2013-07-10 00:00:00");
+
+        Date currentDate = CaptureUtil.getToday();
+
+        DateTime startDateTime = new DateTime(startDate);
+
+        DateTime finalEndDateTime = new DateTime(finalEndDate);
+
+        DateTime currentDateTime = new DateTime(currentDate);
+
+        int numDaysFromTodayToMaxEndDate = Days.daysBetween(currentDateTime, finalEndDateTime).get(DurationFieldType.days());
+
+        int gapDaysForDayOfMonth = currentDateTime.getDayOfMonth() - startDateTime.getDayOfMonth();
+
+
+        System.out.println("=============== numDaysFromTodayToMaxEndDate: " + numDaysFromTodayToMaxEndDate);
+
+
+        System.out.println("=============== today: " + currentDateTime);
+
+        if (gapDaysForDayOfMonth >= 0) {
+            int abGapDays = Math.abs(gapDaysForDayOfMonth) - 1;
+            System.out.println("=============== gap days: " + gapDaysForDayOfMonth);
+            if (numDaysFromTodayToMaxEndDate > (30 - abGapDays)) {
+                System.out.println("1. default selected from today: " + (30 - abGapDays) + " , " + currentDateTime.plusDays(30 - abGapDays));
+            } else {
+                System.out.println("1. default selected is max end date");
+            }
+        } else {
+            int abGapDays = Math.abs(gapDaysForDayOfMonth) + 1;
+            System.out.println("=============== gap days: " + gapDaysForDayOfMonth);
+            if (numDaysFromTodayToMaxEndDate > (30 + abGapDays)) {
+                System.out.println("2. default selected from today: " + (30 + abGapDays) + " , " + currentDateTime.plusDays(30 + abGapDays));
+            } else {
+                System.out.println("2. default selected is max end date");
+            }
+        }
+
+
     }
 
 }

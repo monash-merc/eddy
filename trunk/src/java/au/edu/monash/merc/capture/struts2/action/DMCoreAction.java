@@ -40,6 +40,8 @@ import au.edu.monash.merc.capture.util.CaptureUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.DurationFieldType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -321,19 +323,6 @@ public class DMCoreAction extends BaseAction {
         populateLinksInUsrCollection();
     }
 
-//    protected void retrieveAllDatasets() {
-//        datasets = this.dmService.getDatasetByCollectionIdUsrId(collection.getId(), collection.getOwner().getId());
-//        if (datasets != null) {
-//            for (Dataset ds : datasets) {
-//                RestrictAccess restrictAccess = ds.getRestrictAccess();
-//                if (restrictAccess != null) {
-//                    System.out.println("=============== restrict access start date: " + restrictAccess.getStartDate());
-//                    System.out.println("=============== restrict access end date: " + restrictAccess.getEndDate());
-//                }
-//            }
-//        }
-//    }
-
     protected void retrieveAllRADatasets() {
         raDatasets = new ArrayList<RADataset>();
 
@@ -350,8 +339,6 @@ public class DMCoreAction extends BaseAction {
                 if (ra != null) {
                     //set ra enabled to true.
                     raDataset.setRaEnabled(true);
-                    //set restricted access
-                    raDataset.setRa(ra);
                     boolean raExpired = raExpired(ra);
                     if (raExpired) {
                         raDataset.setRaActive(false);
@@ -359,8 +346,59 @@ public class DMCoreAction extends BaseAction {
                         raDataset.setRaActive(true);
                     }
                 } else {
-                    raDataset.setRa(this.restrictAccess);
+
+                    ra = new RestrictAccess();
+
+                    Date importedDate = ds.getImportDateTime();
+                    //set the ra start date to the same as the imported date.
+                    ra.setStartDate(importedDate);
+
+                    Date today = CaptureUtil.getToday();
+                    DateTime todayTime = new DateTime(today);
+                    DateTime importedDateTime = new DateTime(importedDate);
+                    DateTime maxRAEndDateTime = importedDateTime.plusMonths(18);
+                    //
+                    if (todayTime.isAfter(maxRAEndDateTime)) {
+                        //we assume the restrict access already setup, but it's expired
+                        raDataset.setRaEnabled(true);
+                        raDataset.setRaActive(false);
+                        ra.setEndDate(maxRAEndDateTime.toDate());
+                    } else {
+                        //we say the restrict access is not setup, but we put the default value. for start date and end date
+                        raDataset.setRaEnabled(false);
+                        raDataset.setRaActive(false);
+
+                        int importDayOfMonth = importedDateTime.getDayOfMonth();
+                        int todayDayOfMonth = todayTime.getDayOfMonth();
+                        //day of month between today and imported date
+                        int gapDayOfMonthTodayAndImport = todayDayOfMonth - importDayOfMonth;
+
+                        //total days between today and max end date
+                        int numDaysTodayToMaxEndDate = Days.daysBetween(todayTime, maxRAEndDateTime).get(DurationFieldType.days());
+
+                        if (gapDayOfMonthTodayAndImport >= 0) {
+                            //if today's day of month is later than start date's day of month
+                            int absGapDays = Math.abs(gapDayOfMonthTodayAndImport) - 1;
+                            if (numDaysTodayToMaxEndDate > (30 - absGapDays)) {
+                                //set the same day of the month as the start date's day of month
+                                ra.setEndDate(todayTime.plusDays(30 - absGapDays).toDate());
+                            } else {
+                                //set the max end date as the default selected end date
+                                ra.setEndDate(maxRAEndDateTime.toDate());
+                            }
+
+                        } else {
+                            //if today's day of month is before than start date's day of month
+                            int absGapDays = Math.abs(gapDayOfMonthTodayAndImport) + 1;
+                            if (numDaysTodayToMaxEndDate > (30 + absGapDays)) {
+                                ra.setEndDate(todayTime.plusDays(30 + absGapDays).toDate());
+                            } else {
+                                ra.setEndDate(maxRAEndDateTime.toDate());
+                            }
+                        }
+                    }
                 }
+                raDataset.setRa(ra);
                 raDatasets.add(raDataset);
             }
         }
@@ -419,6 +457,17 @@ public class DMCoreAction extends BaseAction {
             return false;
         }
     }
+
+    protected boolean isEndDateExpired(Date endDate) {
+        DateTime todayDateTime = new DateTime(CaptureUtil.getToday());
+        DateTime endDateTime = new DateTime(endDate);
+        if (todayDateTime.isAfter(endDateTime)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     public boolean isCollectionError() {
         return collectionError;

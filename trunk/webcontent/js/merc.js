@@ -734,6 +734,8 @@ function raSuccessUpdate(startDate, endDate, message) {
     //update the starting date and ra info
     var hiddenStartDate = $('#start_date_' + formIdIndex);
     hiddenStartDate.attr('value', startDate);
+    var endDateInput = $('#end_date_' + formIdIndex);
+    endDateInput.attr('value', endDate);
     var raInfoSpec = $('#ra_info_spec_' + formIdIndex);
     var htmlRaInfo = "Access to this file is restricted until " + endDate + ".";
     raInfoSpec.html(htmlRaInfo);

@@ -121,19 +121,29 @@ public class ImportFileAction extends DMCoreAction {
             }
             Date today = CaptureUtil.getToday();
 
+            //set the restricted access day as today
+            restrictAccess.setStartDate(today);
+
+            //if the end date is before today
+            if (isEndDateExpired(raEndDate)) {
+                importResponse.setSucceed(false);
+                importResponse.setMessage(getText("restrict.access.end.input.end.date.expired"));
+                return SUCCESS;
+            }
+
+            //if the end date is less min 30 days from today
             if (isBeforeMinRaEndDate(today, raEndDate)) {
                 importResponse.setSucceed(false);
                 importResponse.setMessage(getText("restrict.access.end.date.is.before.min.end.date"));
                 return SUCCESS;
             }
 
+            //if the end date is more than 18 months away from today
             if (isAfterMaxRaEndDate(today, raEndDate)) {
                 importResponse.setSucceed(false);
                 importResponse.setMessage(getText("restrict.access.end.date.is.after.max.end.date"));
                 return SUCCESS;
             }
-            //set the restricted access day as today
-            restrictAccess.setStartDate(today);
         }
 
         // start to upload the file
