@@ -28,22 +28,31 @@
 package au.edu.monash.merc.capture.struts2.action;
 
 import au.edu.monash.merc.capture.common.CoverageType;
+import au.edu.monash.merc.capture.common.LicenceType;
 import au.edu.monash.merc.capture.common.SpatialValue;
 import au.edu.monash.merc.capture.common.UserViewType;
+import au.edu.monash.merc.capture.config.ConfigSettings;
+import au.edu.monash.merc.capture.domain.Licence;
 import au.edu.monash.merc.capture.domain.Location;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import javax.annotation.PostConstruct;
+import java.util.HashMap;
+import java.util.Map;
+
 @Scope("prototype")
 @Controller("data.showColEditAction")
 public class ShowEditColAction extends DMCoreAction {
 
-    private Logger logger = Logger.getLogger(this.getClass().getName());
-
     private String colNameBeforeUpdate;
 
     private boolean globalCoverage;
+
+    private Licence licence;
+
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
     public String showEditCollection() {
         try {
@@ -64,6 +73,16 @@ public class ShowEditColAction extends DMCoreAction {
             if (collection != null) {
                 // populate the user object
                 colNameBeforeUpdate = collection.getName();
+                //date licence
+
+                licence = collection.getLicence();
+                //if licence is available, we just create a default.
+                if (licence == null) {
+                    licence = new Licence();
+                    licence.setLicenceType(LicenceType.TERN.type());
+                    licence.setContents(this.configSetting.getPropValue(ConfigSettings.TERN_DATA_LICENCE));
+                }
+
                 Location location = collection.getLocation();
                 //if no location, we just create a new location with unknown value
                 if (location == null) {
@@ -162,5 +181,13 @@ public class ShowEditColAction extends DMCoreAction {
 
     public void setGlobalCoverage(boolean globalCoverage) {
         this.globalCoverage = globalCoverage;
+    }
+
+    public Licence getLicence() {
+        return licence;
+    }
+
+    public void setLicence(Licence licence) {
+        this.licence = licence;
     }
 }

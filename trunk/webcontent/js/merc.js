@@ -769,6 +769,79 @@ $('#accept_licence').live('click', function () {
 })
 
 
+$(document).ready(function () {
+    var tern_funded = $('#tern_funded');
+    if (tern_funded.is(":checked")) {
+        //make sure the tern licence option is selected
+        $("input[name='licence.licenceType'][value='tern']").attr('checked', 'checked');
+        //show the tern licence
+        showTernLicence();
+        //hide the user defined licence option
+        $('#user_defined_option').hide();
+    }
+});
+
+
+$('#tern_funded').live('click', function () {
+    if ($(this).is(":checked")) {
+        //make sure the tern licence option is selected
+        $("input[name='licence.licenceType'][value='tern']").attr('checked', 'checked');
+        //show the tern licence
+        showTernLicence();
+        //hide the user defined licence option
+        $('#user_defined_option').hide();
+    } else {
+        //hide the user define licence option
+        $('#user_defined_option').show();
+    }
+})
+
+
+$(document).ready(function () {
+    var userdefinedoption = $("input[name='licence.licenceType'][value='tern']")
+    if (userdefinedoption.is(":checked")) {
+        //show the tern licence
+        showTernLicence();
+    }
+});
+
+
+$(document).ready(function () {
+    var userdefinedoption = $("input[name='licence.licenceType'][value='userdefined']")
+    if (userdefinedoption.is(":checked")) {
+        //show user licence
+        showUserLicence();
+    }
+});
+
+
+$("input[name='licence.licenceType'][value='tern']").live('click', function () {
+    if ($(this).is(":checked")) {
+        //show the tern licence
+        showTernLicence();
+    }
+})
+
+$("input[name='licence.licenceType'][value='userdefined']").live('click', function () {
+    if ($(this).is(":checked")) {
+        //show user licence
+        showUserLicence();
+    }
+})
+
+function showTernLicence() {
+    $('.tern_licence_div').show();
+    //hide the licence contents textarea
+    $('.licence_contents_div').hide();
+}
+function showUserLicence() {
+    $('.tern_licence_div').hide();
+    //hide the licence contents textarea
+    $('.licence_contents_div').show();
+}
+
+
+
 
 
 

@@ -136,7 +136,7 @@ public class Collection extends Domain {
     private List<Party> parties = new ArrayList<Party>();
 
     @OneToOne(mappedBy = "collection", targetEntity = Licence.class, fetch = FetchType.LAZY)
-    @Cascade({CascadeType.DELETE})
+    @Cascade({CascadeType.ALL})
     private Licence licence;
 
     public long getId() {
