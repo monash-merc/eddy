@@ -27,14 +27,12 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
-import au.edu.monash.merc.capture.common.CoverageType;
-import au.edu.monash.merc.capture.common.SpatialValue;
-import au.edu.monash.merc.capture.common.UserViewType;
+import au.edu.monash.merc.capture.common.*;
 import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.AuditEvent;
 import au.edu.monash.merc.capture.domain.Collection;
+import au.edu.monash.merc.capture.domain.Licence;
 import au.edu.monash.merc.capture.domain.Location;
-import au.edu.monash.merc.capture.common.UserType;
 import au.edu.monash.merc.capture.util.CaptureUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -43,6 +41,8 @@ import org.springframework.stereotype.Controller;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author simonyu
@@ -58,6 +58,8 @@ public class EditColAction extends DMCoreAction {
     private boolean mdRegEnabled;
 
     private boolean globalCoverage;
+
+    private Licence licence;
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
@@ -122,6 +124,18 @@ public class EditColAction extends DMCoreAction {
                 existedCollection.setLocation(location);
 
                 existedCollection.setModifiedByUser(user);
+
+                //find the previous licence
+                Licence existedLicence = existedCollection.getLicence();
+                //if the previous licence existed, then we have to take its id
+                if (existedLicence != null) {
+                    long licenceId = existedLicence.getId();
+                    this.licence.setId(licenceId);
+                }
+                //set the collection for licence
+                this.licence.setCollection(existedCollection);
+                //set the licence for collection
+                existedCollection.setLicence(this.licence);
 
                 this.dmService.updateCollection(existedCollection);
 
@@ -245,6 +259,23 @@ public class EditColAction extends DMCoreAction {
                 hasErrors = true;
             }
         }
+
+
+        String licenceType = licence.getLicenceType();
+        if (licenceType.equals(LicenceType.USERDEFINED.type())) {
+            String licenceContent = licence.getContents();
+            if (StringUtils.isBlank(licenceContent)) {
+                addFieldError("licence.contents", getText("licence.must.be.provided"));
+            } else {
+                if (!CaptureUtil.notGTFixedLength(licenceContent, 4000)) {
+                    addFieldError("licence.contents.length", getText("licence.characters.too.long"));
+                }
+            }
+        } else {
+            //set the tern licence content
+            this.licence.setContents(this.configSetting.getPropValue(ConfigSettings.TERN_DATA_LICENCE));
+        }
+
         if (StringUtils.isNotBlank(collection.getSpatialCoverage())) {
             if (!CaptureUtil.notGTFixedLength(collection.getSpatialCoverage(), 255)) {
                 addFieldError("collection.coverage.length", getText("collection.coverage.max.length"));
@@ -353,5 +384,13 @@ public class EditColAction extends DMCoreAction {
 
     public void setGlobalCoverage(boolean globalCoverage) {
         this.globalCoverage = globalCoverage;
+    }
+
+    public Licence getLicence() {
+        return licence;
+    }
+
+    public void setLicence(Licence licence) {
+        this.licence = licence;
     }
 }

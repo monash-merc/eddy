@@ -29,6 +29,9 @@
         <#include "../template/action_errors.ftl" />
             <div style="clear:both"></div>
             <div class="left_display_inner">
+                <div class="hints_panel">
+                    <img src="${base}/images/warn.png"/> &nbsp; All fields marked with * are mandatory
+                </div>
             <@s.form action="editCollection.jspx" namespace="/data" method="post">
                 <@s.hidden name="collection.id" />
                 <@s.hidden name="collection.owner.id" />
@@ -38,7 +41,7 @@
                     <div class="blank_separator"></div>
                     <div class="input_field_row">
                         <div class="input_field_title">
-                            <@s.text name="collection.name" />:
+                           * <@s.text name="collection.name" />:
                         </div>
                         <div class="input_field_value_section">
                             <@s.textfield name="collection.name" />
@@ -86,7 +89,7 @@
                     <div style="clear: both;"></div>
                     <div class="input_field_row">
                         <div class="input_field_title">
-                            <@s.text name="collection.desc" />:
+                           * <@s.text name="collection.desc" />:
                         </div>
                         <div class="input_field_value_section">
                             <@s.textarea  name="collection.description" cssStyle="width: 560px; height: 190px;" cssClass="input_textarea" />
@@ -95,27 +98,86 @@
                             </div>
                         </div>
                     </div>
-                    <div style="clear: both;"></div>
+                </div>
+
+                <div class="content_div">
                     <div class="input_field_row">
                         <div class="input_field_title">
-                            Global Coverage:
+                           * Data Licence:
                         </div>
                         <div class="input_field_value_section">
-                            <@s.checkbox name="globalCoverage" id="global_coverage" cssClass="check_box" />
-                            <div class="comments">
-                                If it's a global coverage, please select the tick box
+                            <div class="licence_options">
+                                <div class="licence_option_row" id="tern_option">
+                                    <@s.if test="%{licence.licenceType == 'tern'}">
+                                        <input type="radio" name="licence.licenceType" value="tern" checked="checked" class="radio_box">TERN Licence (Recommended)
+                                    </@s.if>
+                                    <@s.else>
+                                        <input type="radio" name="licence.licenceType" value="tern" class="radio_box">TERN Licence (Recommended)
+                                    </@s.else>
+                                </div>
+                                <div class="licence_option_row" id="user_defined_option">
+                                    <@s.if test="%{licence.licenceType == 'userdefined'}">
+                                        <input type="radio" name="licence.licenceType" value="userdefined" checked="checked" class="radio_box">Define Your Own Licence
+                                    </@s.if>
+                                    <@s.else>
+                                        <input type="radio" name="licence.licenceType" value="userdefined" class="radio_box">Define Your Own Licence
+                                    </@s.else>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div style="clear: both;"></div>
                     <div class="input_field_row">
                         <div class="input_field_title">
+                            &nbsp;
+                        </div>
+                        <div class="input_field_value_section">
+                            <div class="tern_licence_div">
+                                <div class="tern_licence">
+                                    <div class="licence_logo"><a href="http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0" target="_blank">http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0</a>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <img src="${base}/images/tern_by_nc_sa.png"/></div>
+                                    <p>
+                                        The TERN Attribution-Share Alike- Non Commercial (TERN BY-SA-NC) Data Licence v1.0 restricts the development of new data/products, so that a user can:
+                                    </p>
+                                    <ul>
+                                        <li>copy, re-use, share and distribute the copies of the data</li>
+                                        <li>not use the data for commercial purposes</li>
+                                    </ul>
+                                    <p>
+                                        provided that, whenever the data is copied, re-used, or distributed the user ensures that:
+                                    </p>
+                                    <ul>
+                                        <li>credit is given to the original sources/s of the data (and any other nominated parties) in the manner stipulated (Attribution);</li>
+                                        <li>the data cannot be used for commercial purposes (No Commercial); and</li>
+                                        <li>If the data is altered, transformed, the resulting datasets can only be used under the same license conditions.</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="licence_contents_div">
+                                <@s.textarea name="licence.contents" cssClass="input_textarea" cssStyle="width: 560px; height: 190px;"  id="licence_contents" />
+                                <div class="comments">
+                                    User defined data licence, <@s.text name="licence.add.user.defined.licence.hint" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content_div">
+                    <div style="clear: both;"></div>
+                    <div class="input_field_row">
+                        <div class="input_field_title">
                             <@s.text name="collection.spatial.coverage"/>:
                         </div>
                         <div class="input_field_value_section">
-                            <@s.textarea  id="spatialcvg" name="collection.location.spatialCoverage" cssStyle="width: 200px; height: 80px;" cssClass="input_textarea" readonly ="true" />
+                            <@s.checkbox name="globalCoverage" id="global_coverage" cssClass="check_box" /> Global Coverage
                             <div class="comments">
-                                <@s.text name="collection.spatial.coverage.hint" />
+                                If it's a global coverage, please select the tick box
+                            </div>
+                            <div style="display: none;">
+                                <@s.textarea  id="spatialcvg" name="collection.location.spatialCoverage" cssStyle="width: 200px; height: 80px;" cssClass="input_textarea" readonly ="true" />
                             </div>
                         </div>
                     </div>

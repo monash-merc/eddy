@@ -30,17 +30,16 @@ package au.edu.monash.merc.capture.struts2.action;
 import au.edu.monash.merc.capture.common.*;
 import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.*;
+import au.edu.monash.merc.capture.domain.Collection;
 import au.edu.monash.merc.capture.util.CaptureUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author simonyu
@@ -55,7 +54,17 @@ public class CreateColAction extends DMCoreAction {
 
     private boolean globalCoverage;
 
+    private Licence licence;
+
     private Logger logger = Logger.getLogger(this.getClass().getName());
+
+    @PostConstruct
+    public void initLicenceOpts() {
+        //create a default TERN licence
+        licence = new Licence();
+        licence.setLicenceType(LicenceType.TERN.type());
+        licence.setContents(this.configSetting.getPropValue(ConfigSettings.TERN_DATA_LICENCE));
+    }
 
     /**
      * Show create collection action
@@ -65,6 +74,7 @@ public class CreateColAction extends DMCoreAction {
     public String showCreateCollection() {
         try {
             user = retrieveLoggedInUser();
+
         } catch (Exception e) {
             logger.error(e.getMessage());
             addActionError(getText("failed.to.show.create.collection.page"));
@@ -151,6 +161,7 @@ public class CreateColAction extends DMCoreAction {
                     spatialValue = spValue;
                 }
             }
+            //location
             Location location = this.dmService.getLocationByCoverageType(spatialType, spatialValue);
             if (location == null) {
                 location = new Location();
@@ -164,7 +175,12 @@ public class CreateColAction extends DMCoreAction {
             List<Permission> coDefaultPerms = setCollectionDefaultPermissions(collection);
             collection.setPermissions(coDefaultPerms);
 
+            //set the collection for licence
+            licence.setCollection(collection);
+            //set the Date Licence for collection
+            collection.setLicence(licence);
 
+            //save the collection
             this.dmService.createCollection(collection, dataStorePath);
             // set view type is user
             viewType = UserViewType.USER.type();
@@ -236,6 +252,21 @@ public class CreateColAction extends DMCoreAction {
             if (!CaptureUtil.notGTFixedLength(collection.getDescription(), 4000)) {
                 addFieldError("collection.desc.length", getText("collection.desc.max.length"));
             }
+        }
+
+        String licenceType = licence.getLicenceType();
+        if (licenceType.equals(LicenceType.USERDEFINED.type())) {
+            String licenceContent = licence.getContents();
+            if (StringUtils.isBlank(licenceContent)) {
+                addFieldError("licence.contents", getText("licence.must.be.provided"));
+            } else {
+                if (!CaptureUtil.notGTFixedLength(licenceContent, 4000)) {
+                    addFieldError("licence.contents.length", getText("licence.characters.too.long"));
+                }
+            }
+        } else {
+            //set the tern licence content
+            this.licence.setContents(this.configSetting.getPropValue(ConfigSettings.TERN_DATA_LICENCE));
         }
 
         if (StringUtils.isNotBlank(collection.getSpatialCoverage())) {
@@ -322,5 +353,13 @@ public class CreateColAction extends DMCoreAction {
 
     public void setGlobalCoverage(boolean globalCoverage) {
         this.globalCoverage = globalCoverage;
+    }
+
+    public Licence getLicence() {
+        return licence;
+    }
+
+    public void setLicence(Licence licence) {
+        this.licence = licence;
     }
 }

@@ -149,9 +149,50 @@
     </div>
     <div style="clear: both;"></div>
 </div>
+
+<div class="data_display_div">
+    <div class="data_display_title">Data Licence</div>
+    <@s.if test="%{licence == null }">
+        <div class="none_licence_div">
+            The licence not found, please update the collection with a licence
+        </div>
+    </@s.if>
+    <@s.else>
+        <@s.if test="%{licence.licenceType == 'tern'}">
+            <div class="tern_licence_div">
+                <div class="tern_licence">
+                    <div class="licence_logo"><a href="http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0" target="_blank">http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0</a>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <img src="${base}/images/tern_by_nc_sa.png"/></div>
+                    <p>
+                        The TERN Attribution-Share Alike- Non Commercial (TERN BY-SA-NC) Data Licence v1.0 restricts the development of new data/products, so that a user can:
+                    </p>
+                    <ul>
+                        <li>copy, re-use, share and distribute the copies of the data</li>
+                        <li>not use the data for commercial purposes</li>
+                    </ul>
+                    <p>
+                        provided that, whenever the data is copied, re-used, or distributed the user ensures that:
+                    </p>
+                    <ul>
+                        <li>credit is given to the original sources/s of the data (and any other nominated parties) in the manner stipulated (Attribution);</li>
+                        <li>the data cannot be used for commercial purposes (No Commercial); and</li>
+                        <li>If the data is altered, transformed, the resulting datasets can only be used under the same license conditions.</li>
+                    </ul>
+                </div>
+            </div>
+        </@s.if>
+        <@s.else>
+            <div class="licence_display_div">
+                <@s.property value="licence.contents"/>
+            </div>
+        </@s.else>
+    </@s.else>
+</div>
+
     <@s.if test="%{collection.published == true}">
     <div class="data_display_div">
-        <div class="citation_title">Citation Information</div>
+        <div class="data_display_title">Citation Information</div>
         <div class="citation_hints">If you make use of this collection in your research, please cite:</div>
         <div class="citation_contents_div">
             <@s.property value='collection.owner.firstName' />  <@s.property value='collection.owner.lastName' /> (<@s.date name="collection.createdTime" format="yyyy" />

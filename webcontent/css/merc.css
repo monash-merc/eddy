@@ -545,8 +545,14 @@ input {
 .content_div {
     margin: 5px;
     border: solid 1px #f2f2f2;
+    -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
+}
+.content_label{
+    margin: 5px;
+    padding: 5px;
+
 }
 
 .content_none_border_div {
@@ -769,8 +775,9 @@ input {
 .data_display_div {
     border: solid 1px #f2f2f2;
     padding: 5px;
-    border-radius: 5px 5px;
-    -moz-border-radius: 5px 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
     margin: 5px;
 }
 
@@ -876,10 +883,10 @@ input {
     font-size: 11px;
 }
 
-.citation_title {
+.data_display_title {
     padding-left: 10px;
     font-weight: bold;
-    color: #7a7a7a;
+    color: #726E4C;
 }
 
 .citation_hints {
@@ -891,11 +898,14 @@ input {
 }
 
 .citation_contents_div {
-    margin: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
     padding: 5px;
     text-align: justify;
     /**background: #fafafa; */
-    border: dotted 1px #f0e0ba;
+    border: solid 1px #F2F2F2;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -903,6 +913,9 @@ input {
     font-size: 11px;
     color: #5c5c5c;
 }
+
+
+
 
 .dataset_md_tab {
     text-align: left;
@@ -1001,6 +1014,12 @@ input {
     color: #b24f3c;
 }
 
+.publish_term_conditions {
+    text-align: justify;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
 .none_licence_div {
     margin: 10px;
     padding-top: 5px;
@@ -1015,10 +1034,42 @@ input {
     text-align: justify;
 }
 
-.publish_term_conditions {
-    text-align: justify;
-    padding-left: 10px;
-    padding-right: 10px;
+/** Data Licence **/
+.data_licence_section {
+    padding: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    border: solid 1px #f2f2f2;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.tern_licence_div{
+    padding: 5px;
+    margin-top:5px;
+    margin-bottom:5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border: solid 1px #f2f2f2;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+.licence_contents_div{
+
+}
+
+.licence_display_div{
+    padding: 5px;
+    margin-top:5px;
+    margin-bottom:5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border: solid 1px #f2f2f2;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 /** ==== End of collection ====**/
@@ -1618,19 +1669,19 @@ input {
     font-size: 11px;
 }
 
-.citation_contents_div {
-    margin: 5px;
-    padding: 5px;
-    text-align: justify;
+/*.citation_contents_div {*/
+    /*margin: 5px;*/
+    /*padding: 5px;*/
+    /*text-align: justify;*/
     /**background: #fafafa; */
-    border: dotted 1px #f0e0ba;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    font-style: italic;
-    font-size: 11px;
-    color: #5c5c5c;
-}
+    /*border: dotted 1px #f0e0ba;*/
+    /*-webkit-border-radius: 5px;*/
+    /*-moz-border-radius: 5px;*/
+    /*border-radius: 5px;*/
+    /*font-style: italic;*/
+    /*font-size: 11px;*/
+    /*color: #5c5c5c;*/
+/*}*/
 
 .tern_licence {
     padding: 5px;
