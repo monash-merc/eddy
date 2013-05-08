@@ -34,6 +34,7 @@ import au.edu.monash.merc.capture.dto.InheritPermissionBean;
 import au.edu.monash.merc.capture.dto.PermissionBean;
 import au.edu.monash.merc.capture.dto.RADataset;
 import au.edu.monash.merc.capture.dto.page.Pagination;
+import au.edu.monash.merc.capture.exception.DataCaptureException;
 import au.edu.monash.merc.capture.identifier.IdentifierService;
 import au.edu.monash.merc.capture.service.DMService;
 import au.edu.monash.merc.capture.util.CaptureUtil;
@@ -322,6 +323,23 @@ public class DMCoreAction extends BaseAction {
         // populate the collectionlinks
         populateLinksInUsrCollection();
     }
+
+
+    protected String createHandle(Collection co) {
+        String serverQName = getServerQName();
+        String appContext = getAppContextPath();
+        StringBuffer collectionUrl = new StringBuffer();
+        collectionUrl.append(serverQName).append(appContext).append(ActConstants.URL_PATH_DEIM);
+        collectionUrl.append("pub/viewColDetails.jspx?collection.id=" + co.getId() + "&collection.owner.id=" + co.getOwner().getId() + "&viewType=anonymous");
+        // create handle if handle service is enabled
+        try {
+            String handle = pidService.genHandleIdentifier(collectionUrl.toString());
+            return handle;
+        } catch (Exception e) {
+            throw new DataCaptureException(e);
+        }
+    }
+
 
     protected void retrieveAllRADatasets() {
         raDatasets = new ArrayList<RADataset>();

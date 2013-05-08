@@ -380,10 +380,7 @@ input {
 
 /** ==== Error Section  ==== **/
 .error_msg_section {
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 5px;
-    margin-bottom: 10px;
+    margin: 5px;
     text-align: center;
 }
 
@@ -549,7 +546,8 @@ input {
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
-.content_label{
+
+.content_label {
     margin: 5px;
     padding: 5px;
 
@@ -890,6 +888,7 @@ input {
 }
 
 .citation_hints {
+    text-align: left;
     margin: 5px;
     padding-left: 5px;
     padding-right: 5px;
@@ -905,7 +904,7 @@ input {
     padding: 5px;
     text-align: justify;
     /**background: #fafafa; */
-    border: solid 1px #F2F2F2;
+    border: solid 1px #F8F8F8;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -913,9 +912,6 @@ input {
     font-size: 11px;
     color: #5c5c5c;
 }
-
-
-
 
 .dataset_md_tab {
     text-align: left;
@@ -1020,20 +1016,6 @@ input {
     padding-right: 10px;
 }
 
-.none_licence_div {
-    margin: 10px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    color: #b24f3c;
-}
-
-.data_licence_div {
-    padding: 5px;
-    margin-left: 5px;
-    margin-right: 5px;
-    text-align: justify;
-}
-
 /** Data Licence **/
 .data_licence_section {
     padding: 5px;
@@ -1045,31 +1027,60 @@ input {
     border-radius: 5px;
 }
 
-.tern_licence_div{
+.tern_licence_div {
     padding: 5px;
-    margin-top:5px;
-    margin-bottom:5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
     margin-left: 10px;
     margin-right: 10px;
-    border: solid 1px #f2f2f2;
+    border: solid 1px #F8F8F8;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
-.licence_contents_div{
+
+.licence_contents_div {
 
 }
 
-.licence_display_div{
+.licence_display_div {
+    text-align: justify;
     padding: 5px;
-    margin-top:5px;
-    margin-bottom:5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
     margin-left: 10px;
     margin-right: 10px;
-    border: solid 1px #f2f2f2;
+    border: solid 1px #F8F8F8;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
+}
+
+.licence_display2_div{
+    text-align: justify;
+    padding: 5px;
+    margin: 5px;
+}
+
+.tern_licence {
+    padding: 5px;
+    text-align: justify;
+}
+
+.tern_licence a {
+    font-weight: bold;
+}
+
+.tern_licence img {
+    vertical-align: middle;
+    align: top;
+}
+
+.none_licence_div {
+    margin: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: #b24f3c;
 }
 
 /** ==== End of collection ====**/
@@ -1193,6 +1204,7 @@ input {
     position: relative;
     margin: 5px auto;
     border: solid 1px #F2F2F2;
+    -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
     color: #726E4C;
@@ -1302,6 +1314,13 @@ input {
     width: 60%;
     min-width: 400px;
     display: inline-block;
+    /*background: #F8F8F8;*/
+    /*-webkit-border-radius: 5px;*/
+    /*-moz-border-radius: 5px;*/
+    /*border-radius: 5px;*/
+    /*-moz-box-shadow: 0 0 5px #E1E8F0;*/
+    /*-webkit-box-shadow: 0 0 5px #E1E8F0;*/
+    /*box-shadow: 0 0 5px #E1E8F0;*/
 }
 
 .ds_act_info {
@@ -1326,6 +1345,7 @@ input {
     display: inline-block;
     background: url("../images/gear_grey.png");
     display: block;
+    margin: 5px;
     width: 16px;
     height: 16px;
     cursor: pointer;
@@ -1336,10 +1356,35 @@ input {
     display: inline-block;
     background: url("../images/gear.png");
     display: block;
+    margin: 5px;
     width: 16px;
     height: 16px;
     cursor: pointer;
 }
+
+
+.ra_delete {
+    float: right;
+    display: inline-block;
+    background: url("../images/remove_grey_icon.png");
+    display: block;
+    margin: 5px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.ra_delete:hover {
+    float: right;
+    display: inline-block;
+    background: url("../images/remove_icon.png");
+    display: block;
+    margin: 5px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
 
 .ds_act_link {
     float: right;
@@ -1566,10 +1611,6 @@ input {
     text-align: justify;
 }
 
-.tr_highlight {
-    background-color: #f3f3f3;
-}
-
 .popup_main_div {
     width: 540px;
     margin-left: 10px;
@@ -1630,13 +1671,6 @@ input {
     padding: 10px;
 }
 
-.licence_contents {
-    margin-top: 5px;
-    margin-bottom: 5px;
-    text-align: left;
-
-}
-
 .export_row_div {
     padding: 5px;
     border: solid 1px #F2F2F2;
@@ -1650,57 +1684,6 @@ input {
     text-align: left;
     padding: 5px;
     text-align: justify;
-}
-
-.exp_citation_title {
-    margin-top: 5px;
-    text-align: left;
-    padding-left: 10px;
-    font-weight: bold;
-    color: #7a7a7a;
-}
-
-.exp_citation_hints {
-    text-align: left;
-    margin: 5px;
-    padding-left: 5px;
-    padding-right: 5px;
-    color: #0E774A;
-    font-size: 11px;
-}
-
-/*.citation_contents_div {*/
-    /*margin: 5px;*/
-    /*padding: 5px;*/
-    /*text-align: justify;*/
-    /**background: #fafafa; */
-    /*border: dotted 1px #f0e0ba;*/
-    /*-webkit-border-radius: 5px;*/
-    /*-moz-border-radius: 5px;*/
-    /*border-radius: 5px;*/
-    /*font-style: italic;*/
-    /*font-size: 11px;*/
-    /*color: #5c5c5c;*/
-/*}*/
-
-.tern_licence {
-    padding: 5px;
-    text-align: justify;
-}
-
-.tern_licence_hidden {
-    padding: 5px;
-    text-align: justify;
-    display: none;
-}
-
-.tern_licence a {
-    font-weight: bold;
-}
-
-.tern_licence img {
-    vertical-align: middle;
-    align: top;
 }
 
 /**   ========= End of Refactored CSS ====== **/

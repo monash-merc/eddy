@@ -69,12 +69,12 @@
                 <td>The permissions for all registered users who are logged in the system</td>
             </tr>
             <tr>
-                <td><span class="span_spec_title">A Registered User Permissions</span></td>
-                <td>The permissions for a registered user who is logged in the system</td>
+                <td><span class="span_spec_title">Individual User Permissions</span></td>
+                <td>The permissions for an individual registered user who is logged in the system</td>
             </tr>
         </table>
 
-        <p>Permissions can be granted to <span class="span_spec_title">Anonymous Users Group</span> or <span class="span_spec_title">All Registered Users Group</span> or <span class="span_spec_title">A Registered User</span>.
+        <p>Permissions can be granted to <span class="span_spec_title">Anonymous Users Group</span> or <span class="span_spec_title">All Registered Users Group</span> or <span class="span_spec_title">An Individual User</span>.
 
         <div>
             <table class="display_data_tab">
@@ -220,7 +220,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="9" style="background:#F2F2F2;"><span class="span_spec_title">Registered User Permissions</span></td>
+            <td colspan="9" style="background:#F2F2F2;"><span class="span_spec_title">Individual User Permissions</span></td>
         </tr>
         </thead>
         <tbody>

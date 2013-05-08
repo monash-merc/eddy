@@ -28,7 +28,6 @@
 
 package au.edu.monash.merc.capture.struts2.action;
 
-import au.edu.monash.merc.capture.common.LicenceType;
 import au.edu.monash.merc.capture.common.UserType;
 import au.edu.monash.merc.capture.common.UserViewType;
 import au.edu.monash.merc.capture.config.ConfigSettings;
@@ -72,8 +71,6 @@ public class MetadataRegistrationAction extends DMCoreAction {
 
     @PostConstruct
     public void initReg() {
-        licence = new Licence();
-        licence.setLicenceType(LicenceType.TERN.type());
         activity = new RegisterActivity();
         activity.setKey(this.configSetting.getPropValue(ConfigSettings.OZFLUX_ACTIVITY_KEY));
     }
@@ -81,36 +78,7 @@ public class MetadataRegistrationAction extends DMCoreAction {
     public String showMdRegister() {
 
         setViewColDetailLink(ActConstants.VIEW_COLLECTION_DETAILS_ACTION);
-        //check the user is logged in or not
-        try {
-            user = retrieveLoggedInUser();
-            //if user is not logged in
-            if (user == null) {
-                addActionError(getText("ands.md.registration.none.owner.or.admin.permission.denied"));
-                setNavAfterExc();
-                return ERROR;
-            }
-        } catch (Exception e) {
-            logger.error(e);
-            addActionError(getText("ands.md.registration.get.user.failed"));
-            setNavAfterExc();
-            return ERROR;
-        }
-        //check the collection
-        try {
-            collection = this.dmService.getCollection(collection.getId(), collection.getOwner().getId());
-        } catch (Exception e) {
-            logger.error(e);
-            addActionError(getText("ands.md.registration.get.collection.failed"));
-            setNavAfterExc();
-            return ERROR;
-        }
-
-        //only the owner and system admin can publish this collection
-        if ((user.getId() != collection.getOwner().getId()) && (user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
-            logger.error(getText("ands.md.registration.none.owner.or.admin.permission.denied"));
-            addActionError(getText("ands.md.registration.none.owner.or.admin.permission.denied"));
-            setNavAfterExc();
+        if (checkMDRegError()) {
             return ERROR;
         }
 
@@ -124,24 +92,7 @@ public class MetadataRegistrationAction extends DMCoreAction {
             setNavAfterExc();
             return ERROR;
         }
-        //Get Licence
 
-        try {
-            if (collection.isFunded()) {
-                this.licence.setContents(this.configSetting.getPropValue(ConfigSettings.TERN_DATA_LICENCE));
-            } else {
-                this.licence.setLicenceType(LicenceType.USERDEFINED.type());
-                Licence foundLicence = this.dmService.getLicenceByCollectionId(collection.getId());
-                if (foundLicence != null) {
-                    this.licence = foundLicence;
-                }
-            }
-        } catch (Exception e) {
-            logger.error(e);
-            addActionError(getText("ands.md.registration.check.license.failed"));
-            setNavAfterExc();
-            return ERROR;
-        }
         setNavAfterSuccess();
         return SUCCESS;
     }
@@ -149,29 +100,7 @@ public class MetadataRegistrationAction extends DMCoreAction {
     public String mdRegister() {
 
         setViewColDetailLink(ActConstants.VIEW_COLLECTION_DETAILS_ACTION);
-        try {
-            user = retrieveLoggedInUser();
-        } catch (Exception e) {
-            logger.error(e);
-            addActionError(getText("ands.md.registration.get.user.failed"));
-            setNavAfterExc();
-            return ERROR;
-        }
-
-        //user not logged in
-        if (user == null) {
-            logger.error(getText("ands.md.registration.permission.denied"));
-            addActionError(getText("ands.md.registration.permission.denied"));
-            setNavAfterExc();
-            return ERROR;
-        }
-
-        try {
-            collection = this.dmService.getCollection(collection.getId(), collection.getOwner().getId());
-        } catch (Exception e) {
-            logger.error(e);
-            addActionError(getText("ands.md.registration.get.collection.failed"));
-            setNavAfterExc();
+        if (checkMDRegError()) {
             return ERROR;
         }
         //check the unique key for this collection
@@ -183,18 +112,11 @@ public class MetadataRegistrationAction extends DMCoreAction {
             } catch (Exception e) {
                 logger.error(e);
                 addActionError(getText("ands.md.registration.create.unique.key.failed"));
-                setNavAfterExc();
+                setNavAfterExcWithoutCoError();
                 return INPUT;
             }
         }
 
-        //only the owner and system admin can publish this collection
-        if ((user.getId() != collection.getOwner().getId()) && (user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
-            logger.error(getText("ands.md.registration.none.owner.or.admin.permission.denied"));
-            addActionError(getText("ands.md.registration.none.owner.or.admin.permission.denied"));
-            setNavAfterExc();
-            return ERROR;
-        }
         //if any error, just return
         if (validateMetadataReg()) {
             return INPUT;
@@ -206,28 +128,6 @@ public class MetadataRegistrationAction extends DMCoreAction {
         StringBuffer collectionUrl = new StringBuffer();
         collectionUrl.append(serverQName).append(appContext).append(ActConstants.URL_PATH_DEIM);
         collectionUrl.append("pub/viewColDetails.jspx?collection.id=" + collection.getId() + "&collection.owner.id=" + collection.getOwner().getId() + "&viewType=anonymous");
-        // create handle if handle service is enabled
-        String hdlEnabledStr = configSetting.getPropValue(ConfigSettings.HANDLE_SERVICE_ENABLED);
-        String existedHandle = collection.getPersistIdentifier();
-
-        // if no existed hanlde. it will be created if handle ws is enabaled
-        if (existedHandle == null) {
-            if (Boolean.valueOf(hdlEnabledStr)) {
-                try {
-                    String handle = pidService.genHandleIdentifier(collectionUrl.toString());
-                    // String hdlResolver = configSetting.getPropValue(ConfigSettings.HANDLE_RESOLVER_SERVER);
-                    // collection.setPersistIdentifier(hdlResolver + "/" + handle);
-                    collection.setPersistIdentifier(handle);
-                } catch (Exception e) {
-                    logger.error(e);
-                    addActionError(getText("ands.md.registration.create.handle.failed"));
-                    setNavAfterExc();
-                    return INPUT;
-                }
-            } else {
-                collection.setPersistIdentifier(collection.getUniqueKey());
-            }
-        }
 
         try {
             MetadataRegistrationBean mdRegBean = createMdRegistrationBean(serverQName, collectionUrl.toString());
@@ -237,13 +137,85 @@ public class MetadataRegistrationAction extends DMCoreAction {
         } catch (Exception e) {
             logger.error(e);
             addActionError(getText("ands.md.registration.register.failed"));
-            setNavAfterExc();
+            setNavAfterExcWithoutCoError();
             return INPUT;
         }
         addActionMessage(getText("ands.md.registration.register.success"));
         setActionSuccessMsg(getText("ands.md.registration.register.success"));
         setNavAfterSuccess();
         return SUCCESS;
+    }
+
+    public boolean checkMDRegError() {
+        try {
+            String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
+            boolean mdRegEnabled = Boolean.valueOf(mdRegEnabledStr);
+            if (!mdRegEnabled) {
+                logger.error(getText("ands.md.registration.disabled"));
+                addActionError(getText("ands.md.registration.disabled"));
+                setNavAfterExc();
+                return true;
+            }
+        } catch (Exception ex) {
+            logger.error(ex);
+            addActionError(getText("ands.md.registration.show.mdreg.failed"));
+            setNavAfterExc();
+            return true;
+        }
+
+        //check the user is logged in or not
+        try {
+            user = retrieveLoggedInUser();
+            //if user is not logged in
+            if (user == null) {
+                addActionError(getText("ands.md.registration.none.owner.or.admin.permission.denied"));
+                setNavAfterExc();
+                return true;
+            }
+        } catch (Exception e) {
+            logger.error(e);
+            addActionError(getText("ands.md.registration.get.user.failed"));
+            setNavAfterExc();
+            return true;
+        }
+        //check the collection
+        try {
+            collection = this.dmService.getCollection(collection.getId(), collection.getOwner().getId());
+        } catch (Exception e) {
+            logger.error(e);
+            addActionError(getText("ands.md.registration.get.collection.failed"));
+            setNavAfterExc();
+            return true;
+        }
+
+        if (collection == null) {
+            addActionError(getText("ands.md.registration.collection.not.exist"));
+            setNavAfterExc();
+            return true;
+        }
+
+        //only the owner and system admin can publish this collection
+        if ((user.getId() != collection.getOwner().getId()) && (user.getUserType() != UserType.ADMIN.code() && (user.getUserType() != UserType.SUPERADMIN.code()))) {
+            logger.error(getText("ands.md.registration.none.owner.or.admin.permission.denied"));
+            addActionError(getText("ands.md.registration.none.owner.or.admin.permission.denied"));
+            setNavAfterExc();
+            return true;
+        }
+        //Get Licence
+        try {
+            licence = this.dmService.getLicenceByCollectionId(collection.getId());
+        } catch (Exception e) {
+            logger.error(e);
+            addActionError(getText("ands.md.registration.check.licence.failed"));
+            setNavAfterExc();
+            return true;
+        }
+        if (licence == null) {
+            addActionError(getText("ands.md.registration.licence.not.existed"));
+            setNavAfterExc();
+            return true;
+        }
+        return false;
     }
 
     // save the auditing information for metadata registration
@@ -298,14 +270,10 @@ public class MetadataRegistrationAction extends DMCoreAction {
             addFieldError("partyRequired", getText("ands.md.registration.party.required"));
             hasError = true;
         }
-        if (StringUtils.isBlank(licence.getContents())) {
-            addFieldError("licence", getText("ands.md.registration.licence.required"));
-            hasError = true;
-        }
+
         // set navigations
         if (hasError) {
-            setNavAfterExc();
-            setViewColDetailLink(ActConstants.VIEW_COLLECTION_DETAILS_ACTION);
+            setNavAfterExcWithoutCoError();
         }
         return hasError;
     }
@@ -344,6 +312,32 @@ public class MetadataRegistrationAction extends DMCoreAction {
         return pb;
     }
 
+    private void setNavAfterExcWithoutCoError() {
+
+        String startNav = null;
+        String startNavLink = null;
+        String secondNav = collection.getName();
+        String secondNavLink = null;
+        String thirdNav = getText("ands.md.registration.title");
+        if (viewType != null) {
+            if (viewType.equals(UserViewType.USER.type())) {
+                startNav = getText("mycollection.nav.label.name");
+                startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
+                secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="
+                        + collection.getOwner().getId() + "&viewType=" + viewType;
+            }
+            if (viewType.equals(UserViewType.ALL.type())) {
+                startNav = getText("allcollection.nav.label.name");
+                startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
+                secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="
+                        + collection.getOwner().getId() + "&viewType=" + viewType;
+            }
+            // set the new page title after successful creating a new collection.
+            setPageTitle(startNav, secondNav + " - " + thirdNav + " Error");
+            navigationBar = generateNavLabel(startNav, startNavLink, secondNav, secondNavLink, thirdNav, null);
+        }
+    }
+
     private void setNavAfterSuccess() {
         String startNav = null;
         String startNavLink = null;
@@ -373,27 +367,21 @@ public class MetadataRegistrationAction extends DMCoreAction {
 
         String startNav = null;
         String startNavLink = null;
-
-        //TODO: if collection is null?
-        String secondNav = collection.getName();
+        String secondNav = getText("ands.md.registration.title") + " Error";
         String secondNavLink = null;
-        String thirdNav = getText("ands.md.registration.title");
         if (viewType != null) {
             if (viewType.equals(UserViewType.USER.type())) {
                 startNav = getText("mycollection.nav.label.name");
                 startNavLink = ActConstants.USER_LIST_COLLECTION_ACTION;
-                secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="
-                        + collection.getOwner().getId() + "&viewType=" + viewType;
             }
             if (viewType.equals(UserViewType.ALL.type())) {
                 startNav = getText("allcollection.nav.label.name");
                 startNavLink = ActConstants.LIST_ALL_COLLECTIONS_ACTION;
-                secondNavLink = ActConstants.VIEW_COLLECTION_DETAILS_ACTION + "?collection.id=" + collection.getId() + "&collection.owner.id="
-                        + collection.getOwner().getId() + "&viewType=" + viewType;
+
             }
-            // set the new page title after successful creating a new collection.
-            setPageTitle(startNav, secondNav + " - " + thirdNav + " Error");
-            navigationBar = generateNavLabel(startNav, startNavLink, secondNav, secondNavLink, thirdNav, null);
+            //set the page title
+            setPageTitle(startNav, secondNav);
+            navigationBar = generateNavLabel(startNav, startNavLink, secondNav, secondNavLink, null, null);
         }
     }
 

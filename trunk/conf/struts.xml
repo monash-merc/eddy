@@ -548,6 +548,13 @@
             <result name="success">/web/site/datainfo.ftl</result>
         </action>
 
+        <!-- Restrict Access info action -->
+        <action name="rainfo" class="site.resourceAction" method="rainfo">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/site/rainfo.ftl</result>
+        </action>
+
         <!-- Licensing Information action -->
         <action name="licenceinfo" class="site.resourceAction" method="licenceinfo">
             <result name="input">/web/common/action_error.ftl</result>

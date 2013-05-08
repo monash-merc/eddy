@@ -8,59 +8,21 @@
 <body>
 <!-- Navigation Section including sub nav menu -->
 <#include "../template/nav_section.ftl" />
-<!-- Navigation Title -->
 <#include "../template/action_title.ftl" />
-<!-- End of Navigation Title -->
 <div class="main_body_container">
     <div class="display_middel_div">
         <div class="left_display_div">
         <#include "../template/action_errors.ftl" />
             <div style="clear:both"></div>
             <div class="left_display_inner">
-                <div class="data_display_div">
-                    <div class="data_title">
-                    <@s.property value="collection.name"/>
-                    </div>
-
-                    <div class="data_desc_div">
-                    <@s.property  value="collection.description" escape=false />
-                    </div>
-                    <div class="data_other_info">
-                        <span class="span_inline1">
-                            Created by <@s.property value="collection.owner.displayName" />,
-                        </span>
-                        <span class="span_inline1">
-                            Creation date: <@s.date name="collection.createdTime" format="yyyy-MM-dd hh:mm" />,
-                        </span>
-                       <span class="span_inline1">
-                            Modified by <@s.property value="collection.modifiedByUser.displayName" />,
-                        </span>
-                        <span class="span_inline1">
-                            Modified date: <@s.date name="collection.modifiedTime" format="yyyy-MM-dd hh:mm" />
-                        </span>
-                    </div>
-                    <div class="input_field_row">
-                        <div class="status_field_name_div">Metadata Registered:</div>
-                        <div class="status_field_value_div"><@s.property value="collection.published" /></div>
-                    </div>
-                <@s.if test="%{collection.funded == true}">
-                    <div class="data_tern_div">
-                        [ <a href="http://www.tern.org.au" target="_blank">TERN-Funded</a> ]
-                    </div>
-                </@s.if>
-                    <div class="data_action_link">
-                        <a href="${base}/${viewColDetailLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}">View
-                            details</a>
-                    </div>
-                    <div style="clear: both;"></div>
-                </div>
+                &nbsp;
             </div>
         </div>
         <!-- right panel -->
         <div class="right_display_div">
         <@s.if test="%{#session.authentication_flag =='authenticated'}">
-                <#include "../template/sub_nav.ftl" />
-            </@s.if>
+        <#include "../template/sub_nav.ftl" />
+        </@s.if>
         </div>
     </div>
     <div style="clear:both"></div>

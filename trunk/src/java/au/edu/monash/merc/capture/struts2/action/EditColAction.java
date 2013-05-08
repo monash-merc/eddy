@@ -65,7 +65,6 @@ public class EditColAction extends DMCoreAction {
 
     public String editCollection() {
         try {
-
             // fetch the old collection from the database first.
             Collection existedCollection = this.dmService.getCollection(collection.getId(), collection.getOwner().getId());
             if (existedCollection != null) {
@@ -137,8 +136,36 @@ public class EditColAction extends DMCoreAction {
                 //set the licence for collection
                 existedCollection.setLicence(this.licence);
 
-                this.dmService.updateCollection(existedCollection);
+                String uniqueKey = existedCollection.getUniqueKey();
+                // create handle if handle service is enabled
+                String handleIdentifier = existedCollection.getPersistIdentifier();
+                if (StringUtils.isBlank(uniqueKey)) {
+                    // generate the uuid for this collection
+                    uniqueKey = pidService.genUUIDWithPrefix();
+                    existedCollection.setUniqueKey(uniqueKey);
+                    //no handle identifier. set the unique key first
+                    if (StringUtils.isBlank(handleIdentifier)) {
+                        existedCollection.setPersistIdentifier(uniqueKey);
+                    }
+                }
 
+                //check the handle was created or not
+                // if handle service is enabled
+                String hdlEnabledStr = configSetting.getPropValue(ConfigSettings.HANDLE_SERVICE_ENABLED);
+                if (Boolean.valueOf(hdlEnabledStr)) {
+                    if (!StringUtils.contains(existedCollection.getPersistIdentifier(), "/")) {
+                        try {
+                            handleIdentifier = createHandle(existedCollection);
+                            existedCollection.setPersistIdentifier(handleIdentifier);
+                        } catch (Exception e) {
+                            logger.error(e);
+                            addActionError(getText("create.collection.handle.persistent.identifier.failed"));
+                            return ERROR;
+                        }
+                    }
+                }
+                //update the collection
+                this.dmService.updateCollection(existedCollection);
                 //try delete this location if can
                 try {
                     boolean collectionReferenced = this.dmService.findAnyReferencedCollectionsByLocationId(locationId);
@@ -160,9 +187,14 @@ public class EditColAction extends DMCoreAction {
                 String htmlDesc = nlToBr(textAreaDesc);
                 collection.setDescription(htmlDesc);
 
-                // populate the list dataset in this user collection.
-                //datasets = this.dmService.getDatasetByCollectionIdUsrId(collection.getId(), collection.getOwner().getId());
-                //retrieveAllDatasets();
+                //convert any newline in the user defined licecne into a br html tag
+                if (licence.getLicenceType().equalsIgnoreCase(LicenceType.USERDEFINED.type())) {
+                    String licenceContent = licence.getContents();
+                    String htmlLicence = nlToBr(licenceContent);
+                    licence.setContents(htmlLicence);
+                }
+
+                //retrieve all restrict acess datasets
                 retrieveAllRADatasets();
                 // populate the rifcs registration if enabled
                 String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);

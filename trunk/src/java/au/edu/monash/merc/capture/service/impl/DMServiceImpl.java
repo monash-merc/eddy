@@ -669,11 +669,12 @@ public class DMServiceImpl implements DMService {
 
             // set the collection true
             collection.setPublished(true);
+
             // update the collection first
             this.updateCollection(collection);
+            String uniqueKey = collection.getUniqueKey();
             //create collection rifcs
             String rifcsStoreLocation = metadataRegistrationBean.getRifcsStoreLocation();
-            String uniqueKey = collection.getUniqueKey();
             String collectionRifTemp = metadataRegistrationBean.getRifcsCollectionTemplate();
             Map<String, Object> collectionTempValues = populateCollectionRifcsMap(metadataRegistrationBean, parties);
             this.rifcsService.createRifcs(uniqueKey, collectionTempValues, collectionRifTemp);

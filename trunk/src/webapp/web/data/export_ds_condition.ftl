@@ -36,7 +36,7 @@
 
     </@s.if>
     <@s.else>
-        <div class="user_defined_licence">
+        <div class="licence_display2_div">
             <@s.property value="licence.contents" />
         </div>
     </@s.else>
@@ -48,7 +48,7 @@
 
     <div class="export_row_div">
         <div class="citation_info_div">
-            <div class="exp_citation_hints">If you make use of this collection in your research, please cite:</div>
+            <div class="citation_hints">If you make use of this collection in your research, please cite:</div>
             <div class="citation_contents_div">
             <@s.property value='collection.owner.firstName' />  <@s.property value='collection.owner.lastName' /> (<@s.date name="collection.createdTime" format="yyyy" />
                 ) <@s.property value="collection.name"/>

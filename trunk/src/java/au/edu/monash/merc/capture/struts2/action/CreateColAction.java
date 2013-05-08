@@ -122,6 +122,7 @@ public class CreateColAction extends DMCoreAction {
             // generate the uuid for this collection
             String uuidKey = pidService.genUUIDWithPrefix();
             collection.setUniqueKey(uuidKey);
+            collection.setPersistIdentifier(uuidKey);
 
             // construct the file store location
             String colRelPath = File.separator + userPath + File.separator + coFileId;
@@ -182,6 +183,41 @@ public class CreateColAction extends DMCoreAction {
 
             //save the collection
             this.dmService.createCollection(collection, dataStorePath);
+
+            // create handle if handle service is enabled
+            String hdlEnabledStr = configSetting.getPropValue(ConfigSettings.HANDLE_SERVICE_ENABLED);
+            if (Boolean.valueOf(hdlEnabledStr)) {
+                String handle = null;
+                try {
+                    handle = createHandle(collection);
+                    collection.setPersistIdentifier(handle);
+                    this.dmService.updateCollection(collection);
+                } catch (Exception e) {
+                    logger.error(e);
+                    addActionError(getText("create.collection.handle.persistent.identifier.failed"));
+                    try {
+                        //keep the current location first, then we can check the reference later.
+                        // if no references, then we have to delete this location.
+                        //as the collection will be deleted
+                        Location currentLocation = collection.getLocation();
+                        long locationId = 0;
+                        if (currentLocation != null) {
+                            locationId = currentLocation.getId();
+                        }
+
+                        //check the reference
+                        boolean collectionReferenced = this.dmService.findAnyReferencedCollectionsByLocationId(locationId);
+                        if (!collectionReferenced) {
+                            this.dmService.deleteLocationById(locationId);
+                        }
+                        //then delete the collection
+                        this.dmService.deleteCollection(collection, dataStorePath);
+                    } catch (Exception ex) {
+                        logger.error(ex.getMessage() + ". Failed to roll back the collection");
+                    }
+                    return ERROR;
+                }
+            }
             // set view type is user
             viewType = UserViewType.USER.type();
 
@@ -192,6 +228,13 @@ public class CreateColAction extends DMCoreAction {
             String textAreaDesc = collection.getDescription();
             String htmlDesc = nlToBr(textAreaDesc);
             collection.setDescription(htmlDesc);
+
+            //convert any newline in the user defined licecne into a br html tag
+            if (licence.getLicenceType().equalsIgnoreCase(LicenceType.USERDEFINED.type())) {
+                String licenceContent = licence.getContents();
+                String htmlLicence = nlToBr(licenceContent);
+                licence.setContents(htmlLicence);
+            }
 
             // populate the rifcs registration if enabled
             String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
