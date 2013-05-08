@@ -83,6 +83,11 @@ public class ExportDatasetAction extends DMCoreAction {
                 this.licence.setLicenceType(LicenceType.TERN.type());
                 this.licence.setContents(this.configSetting.getPropValue(ConfigSettings.TERN_DATA_LICENCE));
             }
+            if (licence.getLicenceType().equalsIgnoreCase(LicenceType.USERDEFINED.type())) {
+                String licenceContent = licence.getContents();
+                String htmlLicence = nlToBr(licenceContent);
+                licence.setContents(htmlLicence);
+            }
             return SUCCESS;
         } catch (Exception ex) {
             logger.error(ex);

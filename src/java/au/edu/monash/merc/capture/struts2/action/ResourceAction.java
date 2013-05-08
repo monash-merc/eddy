@@ -86,6 +86,10 @@ public class ResourceAction extends DMCoreAction {
         return SUCCESS;
     }
 
+    public String rainfo() {
+        return SUCCESS;
+    }
+
 
     public String ddoc() {
         String dwFile = "docs" + File.separator + fname;

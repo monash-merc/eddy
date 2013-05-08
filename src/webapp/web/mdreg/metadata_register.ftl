@@ -57,9 +57,7 @@
                         </p>
 
                         <p>
-                            <span class="md_step">Step 2:</span> Data available for download from this portal should be covered by one of two licenses. For TERN funded sites, the TERN License must be used and is automatically
-                            assigned. This cannot be changed. Non-TERN sites have the option to select the same TERN License or define their own. To complete this step, click on the <b>Select Licence</b>
-                            button and follow steps. (Refer <a href="${base}/site/licenceinfo.jspx" target="_blank">Licensing Information</a> page for more details).
+                            <span class="md_step">Step 2:</span> Review Fair Use Policy.
                         </p>
 
                         <p>
@@ -126,72 +124,11 @@
                 </div>
 
                 <div class="content_none_border_div">
-                    <div class="content_title">Step2: Select a licence for this collection</div>
+                    <div class="content_title">Step 2: Review <a href="#" target="_blank">Fair Use Policy </a></div>
                 </div>
+                <div class="blank_separator"></div>
                 <div class="content_none_border_div">
-                <@s.if test="%{collection.funded == true}">
-                    <div class="metada_reg_display_div">
-                        <div class="metadata_spec">
-                            TERN Licence
-                        </div>
-                    </div>
-                </@s.if>
-                <@s.else>
-                    <div class="metada_reg_display_div">
-                        <div class="metadata_spec">
-                            Please select the data licence
-                        </div>
-                        <div class="metadata_act_link">
-                            <a href="${base}/data/licenceOptions.jspx?collection.id=<@s.property value='collection.id' />" title="Select Licence" rel="superbox[iframe.licence][600x500]">Select
-                                Licence</a> &nbsp;
-                        </div>
-                        <div style="clear: both;"></div>
-                    </div>
-                </@s.else>
-                </div>
-                <div class="register_md_div">
-                    <@s.if test="%{licence.contents == null || licence.contents == ''}">
-                        <div class="none_licence_div">
-                            The licence not found, please selected a licence
-                        </div>
-                    </@s.if>
-                    <@s.hidden name="licence.licenceType" id="licence_type"/>
-                    <@s.hidden name="licence.contents" id="licence_contents"/>
-                    <div class="data_licence_div">
-                        <@s.if test="%{licence.licenceType == 'tern'}">
-                            <div class="tern_licence">
-                        </@s.if>
-                        <@s.else>
-                            <div class="tern_licence_hidden">
-                        </@s.else>
-                                <div class="licence_logo"><a href="http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0" target="_blank">http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0</a> &nbsp;&nbsp;&nbsp;&nbsp;
-                                    <img src="${base}/images/tern_by_nc_sa.png"/></div>
-                                <p>
-                                    The TERN Attribution-Share Alike- Non Commercial (TERN BY-SA-NC) Data Licence v1.0 restricts the development of new data/products, so that a user can:
-                                </p>
-                                <ul>
-                                    <li>copy, re-use, share and distribute the copies of the data</li>
-                                    <li>not use the data for commercial purposes</li>
-                                </ul>
-                                <p>
-                                    provided that, whenever the data is copied, re-used, or distributed the user ensures that:
-                                </p>
-                                <ul>
-                                    <li>credit is given to the original sources/s of the data (and any other nominated parties) in the manner stipulated (Attribution);</li>
-                                    <li>the data cannot be used for commercial purposes (No Commercial); and</li>
-                                    <li>If the data is altered, transformed, the resulting datasets can only be used under the same license conditions.</li>
-                                </ul>
-                            </div>
-                        <div class="user_defined_licence">
-                            <@s.if test="%{licence.licenceType != 'tern'}">
-                              <@s.property value="licence.contents" />
-                            </@s.if>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="content_none_border_div">
-                    <div class="content_title">Step3: Terms and Conditions</div>
+                    <div class="content_title">Step 3: Terms and Conditions</div>
                 </div>
 
                 <div class="register_md_div">

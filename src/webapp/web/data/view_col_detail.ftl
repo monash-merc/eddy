@@ -184,15 +184,20 @@
         </@s.if>
         <@s.else>
             <div class="licence_display_div">
-                <@s.property value="licence.contents"/>
+                <@s.property value="licence.contents" escape=false/>
             </div>
         </@s.else>
     </@s.else>
 </div>
 
-    <@s.if test="%{collection.published == true}">
-    <div class="data_display_div">
-        <div class="data_display_title">Citation Information</div>
+<div class="data_display_div">
+    <div class="data_display_title">Citation Information</div>
+    <@s.if test="%{collection.persistIdentifier == null && collection.uniqueKey == null}">
+        <div class="none_licence_div">
+            No citation information
+        </div>
+    </@s.if>
+    <@s.else>
         <div class="citation_hints">If you make use of this collection in your research, please cite:</div>
         <div class="citation_contents_div">
             <@s.property value='collection.owner.firstName' />  <@s.property value='collection.owner.lastName' /> (<@s.date name="collection.createdTime" format="yyyy" />
@@ -205,8 +210,8 @@
                 local: <@s.property value="collection.persistIdentifier"/>
             </@s.else>
         </div>
-    </div>
-    </@s.if>
+    </@s.else>
+</div>
 
 <!-- import the file -->
     <@s.if test="%{permissionBean.importAllowed}">
@@ -366,6 +371,7 @@
                     </div>
                     <@s.if test="%{permissionBean.racAllowed}">
                         <@s.if test="%{#raDs.raActive || #raDs.raEnabled == false}">
+                            <div class="ra_delete" id="${dsState.index?c}" title="Delete restricted access"></div> &nbsp; &nbsp;
                             <div class="ra_control1" id="${dsState.index?c}" title="Manage restricted access"></div>
                         </@s.if>
                     </@s.if>

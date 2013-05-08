@@ -51,6 +51,7 @@
                 <ul>
                     <li><a href="${base}/site/datainfo.jspx">Data Information</a></li>
                     <li><a href="${base}/site/licenceinfo.jspx">Licensing Information</a></li>
+                    <li><a href="${base}/site/rainfo.jspx">Restricted Access</a></li>
                     <li><a href="${base}/site/netcdf.jspx">NetCDF Files</a></li>
                     <li><a href="${base}/site/utilities.jspx">Utilities</a></li>
                 </ul>
