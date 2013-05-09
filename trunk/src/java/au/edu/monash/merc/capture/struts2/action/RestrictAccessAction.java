@@ -106,10 +106,6 @@ public class RestrictAccessAction extends DMCoreAction {
             Date startDate = restrictAccess.getStartDate();
             Date raEndDate = restrictAccess.getEndDate();
 
-            System.out.println("================= submited start date: " + startDate);
-
-            System.out.println("================= submited end date: " + raEndDate);
-
             if (raEndDate == null) {
                 raResponse.setSucceed(false);
                 raResponse.setMessage(getText("restrict.access.end.date.must.be.provided"));
@@ -125,7 +121,7 @@ public class RestrictAccessAction extends DMCoreAction {
                 RestrictAccess ra = dataset.getRestrictAccess();
                 //if previous restricted access already existed
                 if (ra != null) {
-                    if (raExpired(ra)) {
+                    if (isRaExpired(ra)) {
                         raResponse.setSucceed(false);
                         raResponse.setMessage(getText("restrict.access.period.expired"));
                         return SUCCESS;
@@ -137,13 +133,6 @@ public class RestrictAccessAction extends DMCoreAction {
                 if (isEndDateExpired(raEndDate)) {
                     raResponse.setSucceed(false);
                     raResponse.setMessage(getText("restrict.access.end.input.end.date.expired"));
-                    return SUCCESS;
-                }
-
-                //if the end date is less than 30 days from the start date
-                if (isBeforeMinRaEndDate(startDate, raEndDate)) {
-                    raResponse.setSucceed(false);
-                    raResponse.setMessage(getText("restrict.access.end.date.is.before.min.end.date"));
                     return SUCCESS;
                 }
 
@@ -182,7 +171,7 @@ public class RestrictAccessAction extends DMCoreAction {
 
             } else {
                 raResponse.setSucceed(false);
-                raResponse.setMessage(getText("restrict.access.dataset.not.existed"));
+                raResponse.setMessage(getText("restrict.access.dataset.not.exist"));
                 return SUCCESS;
             }
         } catch (Exception ex) {

@@ -190,6 +190,8 @@ public class JodaTesting {
             }
         }
 
+        System.out.println("===============> today is before today: " + currentDateTime.isBefore(currentDateTime));
+
 
     }
 

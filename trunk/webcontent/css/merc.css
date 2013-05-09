@@ -1056,7 +1056,7 @@ input {
     border-radius: 5px;
 }
 
-.licence_display2_div{
+.licence_display2_div {
     text-align: justify;
     padding: 5px;
     margin: 5px;
@@ -1361,30 +1361,6 @@ input {
     height: 16px;
     cursor: pointer;
 }
-
-
-.ra_delete {
-    float: right;
-    display: inline-block;
-    background: url("../images/remove_grey_icon.png");
-    display: block;
-    margin: 5px;
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-}
-
-.ra_delete:hover {
-    float: right;
-    display: inline-block;
-    background: url("../images/remove_icon.png");
-    display: block;
-    margin: 5px;
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-}
-
 
 .ds_act_link {
     float: right;

@@ -27,6 +27,7 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
+import au.edu.monash.merc.capture.common.LicenceType;
 import au.edu.monash.merc.capture.common.UserType;
 import au.edu.monash.merc.capture.common.UserViewType;
 import au.edu.monash.merc.capture.config.ConfigSettings;
@@ -132,7 +133,14 @@ public class ViewColDetailsAction extends DMCoreAction {
 
                 //get the licence
                 this.licence = collection.getLicence();
-
+                if (licence != null) {
+                    //convert any newline in the user defined licecne into a br html tag
+                    if (licence.getLicenceType().equalsIgnoreCase(LicenceType.USERDEFINED.type())) {
+                        String licenceContent = licence.getContents();
+                        String htmlLicence = nlToBr(licenceContent);
+                        licence.setContents(htmlLicence);
+                    }
+                }
                 // set page title and nav label
                 setNavAfterSuccess();
 

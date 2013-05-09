@@ -85,9 +85,11 @@ public class DatasetVerifyAction extends DMCoreAction {
                 } else {
                     Date today = CaptureUtil.getToday();
 
-                    if (isBeforeMinRaEndDate(today, raEndDate)) {
+                    //if the end date is before today
+                    if (isEndDateExpired(raEndDate)) {
                         dsVerifyResponse.setSucceed(false);
-                        dsVerifyResponse.setMessage(getText("restrict.access.end.date.is.before.min.end.date"));
+                        dsVerifyResponse.setMessage(getText("restrict.access.end.input.end.date.expired"));
+                        return SUCCESS;
                     }
 
                     if (isAfterMaxRaEndDate(today, raEndDate)) {
