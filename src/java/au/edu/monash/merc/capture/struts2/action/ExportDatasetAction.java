@@ -160,7 +160,7 @@ public class ExportDatasetAction extends DMCoreAction {
         }
         RestrictAccess ra = this.dmService.getRAByDatasetId(dataset.getId());
         //only check the export permission if restricted access is not expired
-        if (ra != null && !raExpired(ra)) {
+        if (ra != null && !isRaExpired(ra)) {
             if (!permissionBean.isExportAllowed()) {
                 addFieldError("exportPermission", getText("dataset.export.permission.denied"));
                 return true;

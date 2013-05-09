@@ -41,8 +41,6 @@ import au.edu.monash.merc.capture.util.CaptureUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.DurationFieldType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -106,9 +104,9 @@ public class DMCoreAction extends BaseAction {
         Date today = CaptureUtil.getToday();
         this.restrictAccess.setStartDate(today);
         DateTime todayTime = new DateTime(today);
-        DateTime minEndTime = todayTime.plusDays(30);
-        Date endTime = minEndTime.toDate();
-        this.restrictAccess.setEndDate(endTime);
+        DateTime maxEndDateTime = todayTime.plusMonths(18);
+        //set the default end date is 18 months away
+        this.restrictAccess.setEndDate(maxEndDateTime.toDate());
     }
 
     protected void populateLinksInUsrCollection() {
@@ -357,63 +355,34 @@ public class DMCoreAction extends BaseAction {
                 if (ra != null) {
                     //set ra enabled to true.
                     raDataset.setRaEnabled(true);
-                    boolean raExpired = raExpired(ra);
-                    if (raExpired) {
-                        raDataset.setRaActive(false);
+
+                    if (isRaExpired(ra)) {
+                        raDataset.setRaExpired(true);
                     } else {
-                        raDataset.setRaActive(true);
+                        raDataset.setRaExpired(false);
                     }
                 } else {
-
+                    //set the ra not enabled
+                    raDataset.setRaEnabled(false);
                     ra = new RestrictAccess();
 
                     Date importedDate = ds.getImportDateTime();
                     //set the ra start date to the same as the imported date.
                     ra.setStartDate(importedDate);
-
+                    //calculate the maximum end date
                     Date today = CaptureUtil.getToday();
                     DateTime todayTime = new DateTime(today);
                     DateTime importedDateTime = new DateTime(importedDate);
                     DateTime maxRAEndDateTime = importedDateTime.plusMonths(18);
-                    //
+                    //set up a maximum end date
+                    ra.setEndDate(maxRAEndDateTime.toDate());
+
+                    // if today is already after the max ra end date, we say it's not eligible to setup a restricted access
                     if (todayTime.isAfter(maxRAEndDateTime)) {
-                        //we assume the restrict access already setup, but it's expired
-                        raDataset.setRaEnabled(true);
-                        raDataset.setRaActive(false);
-                        ra.setEndDate(maxRAEndDateTime.toDate());
+                        //not eligible to set up ra
+                        raDataset.setRaQualified(false);
                     } else {
-                        //we say the restrict access is not setup, but we put the default value. for start date and end date
-                        raDataset.setRaEnabled(false);
-                        raDataset.setRaActive(false);
-
-                        int importDayOfMonth = importedDateTime.getDayOfMonth();
-                        int todayDayOfMonth = todayTime.getDayOfMonth();
-                        //day of month between today and imported date
-                        int gapDayOfMonthTodayAndImport = todayDayOfMonth - importDayOfMonth;
-
-                        //total days between today and max end date
-                        int numDaysTodayToMaxEndDate = Days.daysBetween(todayTime, maxRAEndDateTime).get(DurationFieldType.days());
-
-                        if (gapDayOfMonthTodayAndImport >= 0) {
-                            //if today's day of month is later than start date's day of month
-                            int absGapDays = Math.abs(gapDayOfMonthTodayAndImport) - 1;
-                            if (numDaysTodayToMaxEndDate > (30 - absGapDays)) {
-                                //set the same day of the month as the start date's day of month
-                                ra.setEndDate(todayTime.plusDays(30 - absGapDays).toDate());
-                            } else {
-                                //set the max end date as the default selected end date
-                                ra.setEndDate(maxRAEndDateTime.toDate());
-                            }
-
-                        } else {
-                            //if today's day of month is before than start date's day of month
-                            int absGapDays = Math.abs(gapDayOfMonthTodayAndImport) + 1;
-                            if (numDaysTodayToMaxEndDate > (30 + absGapDays)) {
-                                ra.setEndDate(todayTime.plusDays(30 + absGapDays).toDate());
-                            } else {
-                                ra.setEndDate(maxRAEndDateTime.toDate());
-                            }
-                        }
+                        raDataset.setRaQualified(true);
                     }
                 }
                 raDataset.setRa(ra);
@@ -440,7 +409,7 @@ public class DMCoreAction extends BaseAction {
         return newEndTime;
     }
 
-    protected boolean raExpired(RestrictAccess ra) {
+    protected boolean isRaExpired(RestrictAccess ra) {
         Date today = CaptureUtil.getToday();
         DateTime todayDateTime = new DateTime(today);
         Date raEndTime = ra.getEndDate();
@@ -452,17 +421,6 @@ public class DMCoreAction extends BaseAction {
         }
     }
 
-    protected boolean isBeforeMinRaEndDate(Date startDate, Date endDate) {
-        DateTime startDateTime = new DateTime(startDate);
-        DateTime endDateTime = new DateTime(endDate);
-        DateTime minEndTime = startDateTime.plusDays(29);
-
-        if (endDateTime.isBefore(minEndTime)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     protected boolean isAfterMaxRaEndDate(Date startDate, Date endDate) {
         DateTime startDateTime = new DateTime(startDate);

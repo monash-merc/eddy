@@ -300,7 +300,7 @@
                             </div>
                             <div class="blank_separator"></div>
                             <div class="ra_comments">
-                                (The start date is always today's date. The end data can be between 30 days from today and up to 18 months in the future.)
+                                (The start date is always today's date. The end date must not be more than 18 months away from the start date)
                             </div>
                         </div>
                     </div>
@@ -351,27 +351,26 @@
             <div class="ds_ra_act_level">
                 <div class="ds_ra_info">
                     <div class="ra_info_spec">
-                        <@s.if test="%{#raDs.raEnabled == false}">
-                            <a href="${base}/site/licenceinfo.jspx" target="_blank">
-                                <div class="info_hint">&nbsp;</div>
-                            </a><span id="ra_info_spec_${dsState.index}">Access to this file is not restricted.</span>
-                        </@s.if>
-                        <@s.else>
-                            <@s.if test="%{#raDs.raActive}">
-                                <a href="${base}/site/licenceinfo.jspx" target="_blank">
-                                    <div class="info_hint">&nbsp;</div>
-                                </a><span id="ra_info_spec_${dsState.index}">Access to this file is restricted until <@s.date name="#raDs.ra.endDate" format="yyyy-MM-dd" />.</span>
+                        <a href="${base}/site/rainfo.jspx" target="_blank"><div class="info_hint">&nbsp;</div></a>
+                        <@s.if test="%{#raDs.raEnabled}">
+                            <@s.if test="%{#raDs.raExpired}">
+                                <span>Access to this file is no longer restricted, as the restriction period has expired.</span>
                             </@s.if>
                             <@s.else>
-                                <a href="${base}/site/licenceinfo.jspx" target="_blank">
-                                    <div class="info_hint">&nbsp;</div>
-                                </a><span id="ra_info_spec_${dsState.index}">Access to this file is no longer restricted, as the restriction period has expired.</span>
+                                <span id="ra_info_spec_${dsState.index}">Access to this file is restricted until <@s.date name="#raDs.ra.endDate" format="yyyy-MM-dd" />.</span>
+                            </@s.else>
+                        </@s.if>
+                        <@s.else>
+                            <@s.if test="%{#raDs.raQualified}">
+                                <span id="ra_info_spec_${dsState.index}">Access to this file is not restricted.</span>
+                            </@s.if>
+                            <@s.else>
+                                <span>Access to this file is not restricted, as the maximum 18 months period has expired</span>
                             </@s.else>
                         </@s.else>
                     </div>
                     <@s.if test="%{permissionBean.racAllowed}">
-                        <@s.if test="%{#raDs.raActive || #raDs.raEnabled == false}">
-                            <div class="ra_delete" id="${dsState.index?c}" title="Delete restricted access"></div> &nbsp; &nbsp;
+                        <@s.if test="%{(#raDs.raEnabled == true && #raDs.raExpired == false) || (#raDs.raEnabled == false && #raDs.raQualified == true)}">
                             <div class="ra_control1" id="${dsState.index?c}" title="Manage restricted access"></div>
                         </@s.if>
                     </@s.if>
@@ -387,7 +386,7 @@
                                 </a>
                             </@s.if>
                         </@s.if>
-                        <@s.if test="%{#raDs.raActive}">
+                        <@s.if test="%{(#raDs.raEnabled == true && #raDs.raExpired == false)}">
                             <@s.if test="%{permissionBean.exportAllowed}">
                                 <a href="${base}/${downloadDatasetLink}?dataset.id=<@s.property value='#raDs.dataset.id' />&collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}"
                                    title="Exporting Dataset - ${raDs.dataset.name}" rel="superbox[iframe.viewmetadata][600x640]">
@@ -424,7 +423,7 @@
             </div>
         </div>
             <@s.if test="%{permissionBean.racAllowed}">
-                <@s.if test="%{#raDs.raActive || #raDs.raEnabled == false}">
+                <@s.if test="%{(#raDs.raEnabled == true && #raDs.raExpired == false) || (#raDs.raEnabled == false && #raDs.raQualified == true)}">
                     <@s.form namespace="/data" action="rasetup.jspx" method="post" name="form_setup_ra_${dsState.index?c}">
                         <@s.hidden name="collection.id" />
                         <@s.hidden name="collection.owner.id" />
@@ -462,7 +461,7 @@
                             </div>
 
                             <div class="ra_comments">
-                                (The end data can be between 30 days from start date and up to 18 months in the future.)
+                                (The end date must not be more than 18 months away from the start date)
                             </div>
 
                             <div class="ra_action_div">

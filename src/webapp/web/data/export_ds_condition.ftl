@@ -37,7 +37,7 @@
     </@s.if>
     <@s.else>
         <div class="licence_display2_div">
-            <@s.property value="licence.contents" />
+            <@s.property value="licence.contents" escape=false />
         </div>
     </@s.else>
 

@@ -46,7 +46,9 @@ public class RADataset implements Serializable {
 
     private boolean raEnabled;
 
-    private boolean raActive;
+    private boolean raExpired;
+
+    private boolean raQualified;
 
     private RestrictAccess ra;
 
@@ -60,12 +62,20 @@ public class RADataset implements Serializable {
         this.raEnabled = raEnabled;
     }
 
-    public boolean isRaActive() {
-        return raActive;
+    public boolean isRaExpired() {
+        return raExpired;
     }
 
-    public void setRaActive(boolean raActive) {
-        this.raActive = raActive;
+    public void setRaExpired(boolean raExpired) {
+        this.raExpired = raExpired;
+    }
+
+    public boolean isRaQualified() {
+        return raQualified;
+    }
+
+    public void setRaQualified(boolean raQualified) {
+        this.raQualified = raQualified;
     }
 
     public RestrictAccess getRa() {
@@ -83,4 +93,5 @@ public class RADataset implements Serializable {
     public void setDataset(Dataset dataset) {
         this.dataset = dataset;
     }
+
 }

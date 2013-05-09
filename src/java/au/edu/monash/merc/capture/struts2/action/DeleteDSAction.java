@@ -27,10 +27,12 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
+import au.edu.monash.merc.capture.common.LicenceType;
 import au.edu.monash.merc.capture.common.UserViewType;
 import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.AuditEvent;
 import au.edu.monash.merc.capture.domain.Dataset;
+import au.edu.monash.merc.capture.domain.Licence;
 import au.edu.monash.merc.capture.domain.RestrictAccess;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
@@ -49,6 +51,8 @@ public class DeleteDSAction extends DMCoreAction {
 
     private boolean mdRegEnabled;
 
+    private Licence licence;
+
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     public String deleteDataset() {
@@ -66,6 +70,17 @@ public class DeleteDSAction extends DMCoreAction {
             // set action successful message
             recordAuditEvent(ds);
             //retrieveAllDatasets();
+
+            //get the licence
+            this.licence = collection.getLicence();
+            if (licence != null) {
+                //convert any newline in the user defined licecne into a br html tag
+                if (licence.getLicenceType().equalsIgnoreCase(LicenceType.USERDEFINED.type())) {
+                    String licenceContent = licence.getContents();
+                    String htmlLicence = nlToBr(licenceContent);
+                    licence.setContents(htmlLicence);
+                }
+            }
 
             retrieveAllRADatasets();
             // populate the rifcs registration if enabled
@@ -246,5 +261,13 @@ public class DeleteDSAction extends DMCoreAction {
 
     public void setMdRegEnabled(boolean mdRegEnabled) {
         this.mdRegEnabled = mdRegEnabled;
+    }
+
+    public Licence getLicence() {
+        return licence;
+    }
+
+    public void setLicence(Licence licence) {
+        this.licence = licence;
     }
 }

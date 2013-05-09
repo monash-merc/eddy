@@ -121,7 +121,7 @@ public class ImportFileAction extends DMCoreAction {
             }
             Date today = CaptureUtil.getToday();
 
-            //set the restricted access day as today
+            //set the restricted access day as imported date - today
             restrictAccess.setStartDate(today);
 
             //if the end date is before today
@@ -131,14 +131,7 @@ public class ImportFileAction extends DMCoreAction {
                 return SUCCESS;
             }
 
-            //if the end date is less min 30 days from today
-            if (isBeforeMinRaEndDate(today, raEndDate)) {
-                importResponse.setSucceed(false);
-                importResponse.setMessage(getText("restrict.access.end.date.is.before.min.end.date"));
-                return SUCCESS;
-            }
-
-            //if the end date is more than 18 months away from today
+            //if the end date is more than 18 months away from imported date
             if (isAfterMaxRaEndDate(today, raEndDate)) {
                 importResponse.setSucceed(false);
                 importResponse.setMessage(getText("restrict.access.end.date.is.after.max.end.date"));
