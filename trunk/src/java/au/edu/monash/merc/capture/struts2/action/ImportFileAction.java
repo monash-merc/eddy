@@ -155,12 +155,11 @@ public class ImportFileAction extends DMCoreAction {
             return SUCCESS;
         } catch (Exception e) {
             logger.error(e);
-
             importResponse.setSucceed(false);
             importResponse.setMessage(getText("dataset.import.failed"));
             String errorMsg = e.getMessage();
             if (StringUtils.containsIgnoreCase(errorMsg, "not a valid CDM file")) {
-                importResponse.setMessage(getText("dataset.import.failed") + ", not a valid Net-CDF file");
+                importResponse.setMessage(getText("net.cdf.file.format.error"));
             }
             return SUCCESS;
         } finally {
@@ -178,9 +177,9 @@ public class ImportFileAction extends DMCoreAction {
         AuditEvent ev = new AuditEvent();
         ev.setCreatedTime(GregorianCalendar.getInstance().getTime());
         if (raEnabled) {
-            ev.setEvent(dataset.getName() + " has been imported into the " + collection.getName() + " associated with a restricted access");
+            ev.setEvent(dataset.getName() + " has been imported into the collection - " + collection.getName() + " associated with a restricted access");
         } else {
-            ev.setEvent(dataset.getName() + " has been imported into the " + collection.getName());
+            ev.setEvent(dataset.getName() + " has been imported into the collection - " + collection.getName());
         }
         ev.setEventOwner(collection.getOwner());
         ev.setOperator(user);

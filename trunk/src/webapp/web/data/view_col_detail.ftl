@@ -154,7 +154,12 @@
     <div class="data_display_title">Data Licence</div>
     <@s.if test="%{licence == null }">
         <div class="none_licence_div">
-            The licence not found, please update the collection with a licence
+            <@s.if test="%{permissionBean.updateAllowed == true}">
+                The licence not found. Please update the collection with a licence.
+            </@s.if>
+            <@s.else>
+                The licence not found
+            </@s.else>
         </div>
     </@s.if>
     <@s.else>
@@ -194,7 +199,12 @@
     <div class="data_display_title">Citation Information</div>
     <@s.if test="%{collection.persistIdentifier == null && collection.uniqueKey == null}">
         <div class="none_licence_div">
-            No citation information
+            <@s.if test="%{permissionBean.updateAllowed == true}">
+                No citation information. Please update the collection, the citation will be created automatically.
+            </@s.if>
+            <@s.else>
+                No citation information
+            </@s.else>
         </div>
     </@s.if>
     <@s.else>
@@ -300,7 +310,7 @@
                             </div>
                             <div class="blank_separator"></div>
                             <div class="ra_comments">
-                                (The start date is always today's date. The end date must not be more than 18 months away from the start date)
+                                (The start date is always the upload date. The end date must not be more than 18 months away from the start date)
                             </div>
                         </div>
                     </div>
@@ -351,7 +361,9 @@
             <div class="ds_ra_act_level">
                 <div class="ds_ra_info">
                     <div class="ra_info_spec">
-                        <a href="${base}/site/rainfo.jspx" target="_blank"><div class="info_hint">&nbsp;</div></a>
+                        <a href="${base}/site/rainfo.jspx" target="_blank">
+                            <div class="info_hint">&nbsp;</div>
+                        </a>
                         <@s.if test="%{#raDs.raEnabled}">
                             <@s.if test="%{#raDs.raExpired}">
                                 <span>Access to this file is no longer restricted, as the restriction period has expired.</span>
@@ -365,7 +377,7 @@
                                 <span id="ra_info_spec_${dsState.index}">Access to this file is not restricted.</span>
                             </@s.if>
                             <@s.else>
-                                <span>Access to this file is not restricted, as the maximum 18 months period has expired</span>
+                                <span>Access to this file is not restricted, and it is no longer eligible for restriction.</span>
                             </@s.else>
                         </@s.else>
                     </div>

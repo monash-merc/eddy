@@ -186,9 +186,9 @@ public class RestrictAccessAction extends DMCoreAction {
         AuditEvent ev = new AuditEvent();
         ev.setCreatedTime(GregorianCalendar.getInstance().getTime());
         if (created) {
-            ev.setEvent("The restricted access for " + dataset.getName() + " has been created under the " + collection.getName());
+            ev.setEvent("The restricted access for " + dataset.getName() + " has been created under the collection - " + collection.getName());
         } else {
-            ev.setEvent("The restricted access for " + dataset.getName() + " has been updated under the " + collection.getName());
+            ev.setEvent("The restricted access for " + dataset.getName() + " has been updated under the collection - " + collection.getName());
         }
         ev.setEventOwner(collection.getOwner());
         ev.setOperator(user);
