@@ -838,6 +838,14 @@ function showUserLicence() {
     $('.tern_licence_div').hide();
     //hide the licence contents textarea
     $('.licence_contents_div').show();
+    var defaultLicence = "Example:\n\n";
+    defaultLicence += "1. copy, re-use, share and distribute the copies of the data\n";
+    defaultLicence += "2. not use the data for commercial purposes\n\n";
+    defaultLicence += "provided that, whenever the data is copied, re-used, or distributed the user ensures that:\n\n";
+    defaultLicence += "3. credit is given to the original sources/s of the data (and any other nominated parties) in the manner stipulated (Attribution);\n";
+    defaultLicence += "4. the data cannot be used for commercial purposes (No Commercial); and\n";
+    defaultLicence += "5. If the data is altered, transformed, the resulting datasets can only be used under the same licence conditions.\n";
+    $('#licence_contents').html(defaultLicence);
 }
 
 

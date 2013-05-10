@@ -69,7 +69,7 @@ public class EditColAction extends DMCoreAction {
             Collection existedCollection = this.dmService.getCollection(collection.getId(), collection.getOwner().getId());
             if (existedCollection != null) {
                 // update the new values for collection
-                existedCollection.setName(collection.getName());
+                existedCollection.setName(StringUtils.trim(collection.getName()));
                 //set it's funded if it's funded
                 existedCollection.setFunded(collection.isFunded());
                 // set modified date time
@@ -158,9 +158,9 @@ public class EditColAction extends DMCoreAction {
                             handleIdentifier = createHandle(existedCollection);
                             existedCollection.setPersistIdentifier(handleIdentifier);
                         } catch (Exception e) {
-                            logger.error(e);
+                            logger.error(getText("create.collection.handle.persistent.identifier.failed") + ", " + e.getMessage());
                             addActionError(getText("create.collection.handle.persistent.identifier.failed"));
-                            return ERROR;
+                            return INPUT;
                         }
                     }
                 }

@@ -1043,6 +1043,10 @@ input {
 
 }
 
+#licence_contents{
+    text-align: justify;
+}
+
 .licence_display_div {
     text-align: justify;
     padding: 5px;
@@ -1576,6 +1580,9 @@ input {
     padding-left: 5px;
     padding-right: 5px;
     text-align: justify;
+}
+.paragraph_div a{
+    text-decoration: underline;
 }
 
 .paragraph_italic_div {

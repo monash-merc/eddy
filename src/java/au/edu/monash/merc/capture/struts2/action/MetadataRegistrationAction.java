@@ -69,6 +69,8 @@ public class MetadataRegistrationAction extends DMCoreAction {
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
+    private boolean noLicenceError;
+
     @PostConstruct
     public void initReg() {
         activity = new RegisterActivity();
@@ -212,7 +214,8 @@ public class MetadataRegistrationAction extends DMCoreAction {
         }
         if (licence == null) {
             addActionError(getText("ands.md.registration.licence.not.existed"));
-            setNavAfterExc();
+            setNavAfterExcWithoutCoError();
+            noLicenceError = true;
             return true;
         }
         return false;
@@ -407,5 +410,13 @@ public class MetadataRegistrationAction extends DMCoreAction {
 
     public void setPartyList(List<PartyBean> partyList) {
         this.partyList = partyList;
+    }
+
+    public boolean isNoLicenceError() {
+        return noLicenceError;
+    }
+
+    public void setNoLicenceError(boolean noLicenceError) {
+        this.noLicenceError = noLicenceError;
     }
 }

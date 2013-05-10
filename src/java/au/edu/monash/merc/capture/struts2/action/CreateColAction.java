@@ -110,7 +110,8 @@ public class CreateColAction extends DMCoreAction {
             user = retrieveLoggedInUser();
             // check the collection name
             String colName = collection.getName();
-            if (this.dmService.checkCollectionNameExisted(colName)) {
+
+            if (this.dmService.checkCollectionNameExisted(StringUtils.trim(colName))) {
                 addActionError(getText("collection.name.already.existed"));
                 return INPUT;
             }
@@ -193,7 +194,7 @@ public class CreateColAction extends DMCoreAction {
                     collection.setPersistIdentifier(handle);
                     this.dmService.updateCollection(collection);
                 } catch (Exception e) {
-                    logger.error(e);
+                    logger.error(getText("create.collection.handle.persistent.identifier.failed") + ", " + e.getMessage());
                     addActionError(getText("create.collection.handle.persistent.identifier.failed"));
                     try {
                         //keep the current location first, then we can check the reference later.
@@ -215,7 +216,7 @@ public class CreateColAction extends DMCoreAction {
                     } catch (Exception ex) {
                         logger.error(ex.getMessage() + ". Failed to roll back the collection");
                     }
-                    return ERROR;
+                    return INPUT;
                 }
             }
             // set view type is user
