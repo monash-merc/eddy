@@ -25,17 +25,16 @@
                         Data information
                     </div>
                     <div class="paragraph_div">
-                        The data on this portal are measurements of ecosystem exchange of heat, water vapour
-                        and carbon dioxide and supporting meteorological data for sites in Australian and New
+                        The data on this portal are measurements of ecosystem exchange of heat, water vapour and carbon dioxide and supporting meteorological data for sites in Australia and New
                         Zealand. The data are stored in NetCDF (<a href="http://www.unidata.ucar.edu/software/netcdf" target="_blank">http://www.unidata.ucar.edu/software/netcdf</a>) files that
-                        conform to the CF Metadata Convention (<a href="http://cf-pcmdi.llnl.gov" target="_blank">http://cf-pcmdi.llnl.gov</a>).
-                        Information on the NetCDF files and utilities for accessing NetCDF files are available <a href="${base}/site/netcdf.jspx">here</a>.
-                        A list of variable names used in the NetCDF files and their definitions is available here (internal link to PDF file containing variable name
-                        definitions).
+                        conform to the CF Metadata Convention (<a href="http://cf-pcmdi.llnl.gov" target="_blank">http://cf-pcmdi.llnl.gov</a>). Information
+                        on the NetCDF files and utilities for accessing NetCDF files are available <a href="${base}/site/netcdf.jspx">here</a>. A list of variable names used in the NetCDF
+                        files and their definitions is available here (internal link to PDF file “VariableNamesandDefinitions.pdf” containing variable name definitions).
                     </div>
                     <div class="paragraph_div">
-                        The data license terms and conditions are explained <a href="${base}/site/licenceinfo.jspx">here</a>.
+                        The data licence terms and conditions are explained <a href="${base}/site/licenceinfo.jspx">here</a>.
                     </div>
+
                     <div class="paragraph_div">
                         The data in the NetCDF files is as follows:
                     </div>
@@ -44,16 +43,14 @@
                             Meteorological data such as air temperature, humidity, wind speed and direction and precipitation.
                         </li>
                         <li>
-                            Radiation data such as incoming and outgoing shortwave and longwave, net
-                            radiation, photosynthetically active radiation (PAR, optional) and direct and diffuse
-                            shortwave (optional).
+                            Radiation data such as incoming and outgoing shortwave and longwave, net radiation, photosynthetically active radiation (PAR, optional) and direct and diffuse shortwave
+                            (optional).
                         </li>
                         <li>
                             Soil data such as soil heat flux, soil temperature and soil moisture.
                         </li>
                         <li>
-                            Flux data such as friction velocity and the fluxes of momentum, sensible heat, latent
-                            heat and carbon dioxide.
+                            Flux data such as friction velocity and the fluxes of momentum, sensible heat, latent heat and carbon dioxide.
                         </li>
                     </ul>
 
@@ -62,19 +59,19 @@
                     </div>
                     <ul id="toc_num">
                         <li>
-                            Level 1 – these files contain the characters "L1" in the name of the file. The data has not been subjected to any quality control or post-processing.
+                            <b>Level 1</b> – these files contain the characters <b>L1</b> in the name of the file. The data has not been subjected to any quality control or post-processing.
                         </li>
                         <li>
-                            Level 2 – these files contain the characters "L2" in the name of the file. Data at this level have been subject to basic quality control checks but not to any post-
-                            processing.
+                            <b>Level 2</b> – these files contain the characters <b>L2</b> in the name of the file. Data at this level have been subject to basic quality control checks but not to any
+                            post-processing.
                         </li>
                         <li>
-                            Level 3 – these files contain the characters "L3" in the name of the file. Data at this level has been subject to quality control and post-processing, however the data will
-                            contain gaps due to the quality control process.
+                            <b>Level 3</b> – these files contain the characters <b>L3</b> in the name of the file. Data at this level has been subject to quality control and post-processing, however
+                            the data will contain gaps due to the quality control process.
                         </li>
                         <li>
-                            Level 4 – these files contain the characters "L4" in the name of the file. Data at this level has been subject to quality control, post-processing and gap-filling. The
-                            gap-filling techniques used by OzFlux are still being developed and the current L4 data should be viewed as experimental only.
+                            <b>Level 4</b> – these files contain the characters <b>L4</b> in the name of the file. Data at this level has been subject to quality control, post-processing and
+                            gap-filling. The gap-filling techniques used by OzFlux are still being developed and the current L4 data should be viewed as experimental only.
                         </li>
                     </ul>
                 </div>

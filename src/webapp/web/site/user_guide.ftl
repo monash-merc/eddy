@@ -29,7 +29,7 @@
                     </div>
                     <div class="paragraph_div">
                         A description of the data portal layout and how to navigate around this site is available
-                        <a href="${base}/site/ddoc.jspx?fname=userguide.pdf">here</a> (PDF).
+                        <a href="http://eddy.googlecode.com/files/OzFlux%20User%20Guide.pdf">here</a> (PDF).
                     </div>
                     <div class="paragraph_div">
                         A manual for the Python scripts used by the OzFlux community to quality control and post-

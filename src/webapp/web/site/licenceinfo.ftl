@@ -26,67 +26,38 @@
                         Licensing information
                     </div>
                     <div class="paragraph_div">
-                        The data available for download from this portal is covered by one of the following
-                        licenses:
+                        The data available for download from this portal is covered by one of the following licences:
                     </div>
                     <ul id="toc_num">
                         <li>
-                            TERN-funded sites (indicated by the text “TERN funded” appearing alongside the collection name)
-                            use the TERN Attribution-Share Alike-Non Commercial (TERN-BY-SA-NC) license. This license allows
-                            data users to distribute, modify or build upon the data provided that they credit the original
-                            source, license any modified data or products derived from the data under the same terms as the
-                            original data and do not use the data for commercial purposes. These conditions can only be waived
-                            by the relevant party. See the TERN web site (<a href="http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0" target="_blank">http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0</a>)
-                            for a full description of the TERN-BY-SA-NC license.
-                        </li>
-                        <li>
-                            Non-TERN funded sites may use the TERN-BY-SA-NC license or they may choose
-                            to release their data under their own license.
-                        </li>
-                    </ul>
-                    <div class="paragraph_div">
-                        The type of license covering the data will be displayed when you download the data and
-                        you will be asked to agree to the terms and conditions of the license before proceeding
-                        with the download. OzFlux strongly recommends that you become familiar with the license
-                        terms and conditions before you download the data.
-                    </div>
-                    <div class="paragraph_div">
-                        In addition to the data license, OzFlux uses a Fair Use data policy based on the FluxNet
-                        Fair Use policy. The Fair Use policy states OzFlux's intentions in making the data publicly
-                        available and OzFlux's expectations of the data users responsibilities. As with the license,
-                        you will be asked to confirm that you have read and understood the OzFlux Fair Use policy
-                        before downloading the data.
-                    </div>
-                    <div class="paragraph_div">
-                        In addition to the data license and Fair Use policy, OzFlux sites may choose to place
-                        embargo on their data. The 2 types of embargo possible are:
-                    </div>
-                    <ul id="toc_num">
-                        <li>
-                            An embargo of no more than 3 months after submission of data to the OzFlux Data
-                            Portal to allow the data provider to check the quality of the data.
-                        </li>
-                        <li>
-                            An embargo of no more than 18 months after submission of the data to the OzFlux
-                            Data Portal to allow post-graduate researchers working with the data provider to
-                            undertake their studies. Use of this embargo excludes the use of an embargo for
-                            quality control purposes. If the data has been under embargo for quality control
-                            purposes, the embargo may be continued for post-graduate research purposes but
-                            the total period must not extend beyond 18 months.
-                        </li>
-                    </ul>
-                    <div class="paragraph_div">
-                        Data which has been placed under an embargo will not have an “Export” button alongside
-                        the data file name in the collection.
-                    </div>
+                            TERN-funded sites (indicated by the text ‘TERN funded’ appearing below the collection name) use the <a href="http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0" target="_blank">TERN Attribution-Share Alike-Non Commercial (TERN-BY-SA-NC)</a> licence.
 
+                            <p>
+                                This licence allows data users to distribute, modify or build upon the data provided that they credit the original source, licence any modified data or products derived
+                                from the data under the same terms as the original data and do not use the data for commercial purposes. These conditions can be waived but only by the data owner. See
+                                the
+                                TERN web site (<a href="http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0" target="_blank">http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0</a>) for a full
+                                description of the TERN-BY-SA-NC licence.
+                            </p>
+
+                        </li>
+                        <li>
+                            Non-TERN funded sites may use the TERN-BY-SA-NC licence or they may choose to release their data under their own licence.
+                        </li>
+                    </ul>
                     <div class="paragraph_div">
-                        During either embargo period, anyone who wishes to use the embargoed data may
-                        contact the collection owner and ask for permission to access the data, stating their
-                        intended use and offering collaboration on the intended analysis. If the data owner does
-                        not wish to allow access to the data, they must notify the person requesting access and
-                        the OzFlux Director in writing, providing an explanation as to why access can not be
-                        granted at this time.
+                        The type of licence covering the data will be displayed when users download the data. Users will be asked to agree to the terms and conditions of the licence before proceeding
+                        with the download. OzFlux strongly recommends that all users become familiar with the licence terms and conditions before downloading data.
+                    </div>
+                    <div class="paragraph_div">
+                        In addition to the data licence, OzFlux uses a <a href="http://eddy.googlecode.com/files/OzFluxFairUseAndAcknowledgement.pdf" target="_blank">Fair Use data policy</a>
+                        based on the FluxNet Fair Use policy. The Fair Use policy states OzFlux's
+                        intentions in making the data publicly available and OzFlux's expectations of the data users responsibilities. As with the licence, users will be asked to confirm that they
+                        have read and understood the OzFlux Fair Use policy before downloading the data.
+                    </div>
+                    <div class="paragraph_div">
+                        In addition to the data licence and Fair Use policy, OzFlux sites may choose to restrict access to their data sets for a limited period.
+                        The restricted access provisions are described in the <a href="${base}/site/rainfo.jspx">Restricted Access</a> page.
                     </div>
 
                 </div>
