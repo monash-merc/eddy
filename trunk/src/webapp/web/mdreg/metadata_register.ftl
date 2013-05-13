@@ -146,8 +146,8 @@
 
                         <p>
                             By using this system to publish or register your research work you are continuing to agree to adhere to the
-                            Terms and Conditions of use detailed at <a href="http://www.monash.edu/eresearch/about/ands-merc.html"
-                                                                       target="_blank">http://www.monash.edu/eresearch/about/ands-merc.html</a>.
+                            Terms and Conditions of use detailed at <a href="http://eddy.googlecode.com/files/OzFluxTermsAndConditions.pdf"
+                                                                       target="_blank">http://eddy.googlecode.com/files/OzFluxTermsAndConditions.pdf</a>.
                             Please read these Terms and Conditions carefully before publishing.
                         </p>
                     </div>

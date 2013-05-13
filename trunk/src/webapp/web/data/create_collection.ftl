@@ -110,6 +110,7 @@
                         <div class="input_field_value_section">
                             <div class="licence_options">
                                 <div class="licence_option_row" id="tern_option">
+                                    <@s.hidden name="existed_licenct_type" value="${licence.licenceType}" id="existed_licenct_type"/>
                                     <@s.if test="%{licence.licenceType == 'tern'}">
                                         <input type="radio" name="licence.licenceType" value="tern" checked="checked" class="radio_box">TERN Licence (Recommended)
                                     </@s.if>
@@ -170,7 +171,7 @@
 
                 <div class="content_div">
                     <div style="clear: both;"></div>
-                    <div class="input_field_row">
+                    <div class="input_field_row" style="display: none;">
                         <div class="input_field_title">
                             <@s.text name="collection.spatial.coverage"/>:
                         </div>
@@ -187,7 +188,7 @@
                     <div style="clear: both;"></div>
                     <div class="input_field_row">
                         <div class="input_field_title">
-                            &nbsp;
+                            <@s.text name="collection.spatial.coverage"/>:
                         </div>
                         <div class="input_field_value_section">
                             <div class="comments">

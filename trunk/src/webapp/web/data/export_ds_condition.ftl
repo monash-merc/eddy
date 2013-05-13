@@ -42,7 +42,7 @@
     </@s.else>
 
         <div class="fair_use_policy">
-            Please read <a href="http://code.google.com/p/eddy/downloads/detail?name=TheFairUsePolicy.pdf&can=2&q=" target="_blank"><b>The Fair Use Policy</b></a>
+            Please read <a href="http://eddy.googlecode.com/files/OzFluxFairUseAndAcknowledgement.pdf" target="_blank"><b>The Fair Use Policy</b></a>
         </div>
     </div>
 
@@ -73,6 +73,7 @@
     <div class="blank_separator"></div>
     <div class="export_action">
         <@s.submit value="Export" name="Export" cssClass="input_button_style"/>
+        <div class="comments"><b>You can close the window after the download has started</b></div>
     </div>
 </@s.form>
 </div>

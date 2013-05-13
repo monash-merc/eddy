@@ -27,37 +27,22 @@
                     </div>
 
                     <div class="paragraph_div">
-                        OzFlux sites may choose to place
-                        embargo on their data. The 2 types of embargo possible are:
+                        A restricted access period of no more than 18 months after submission of the data to the OzFlux Data Portal can be used by collection owners to allow post-graduate researchers
+                        working with the data provider to undertake their studies.
                     </div>
-                    <ul id="toc_num">
-                        <li>
-                            An embargo of no more than 3 months after submission of data to the OzFlux Data
-                            Portal to allow the data provider to check the quality of the data.
-                        </li>
-                        <li>
-                            An embargo of no more than 18 months after submission of the data to the OzFlux
-                            Data Portal to allow post-graduate researchers working with the data provider to
-                            undertake their studies. Use of this embargo excludes the use of an embargo for
-                            quality control purposes. If the data has been under embargo for quality control
-                            purposes, the embargo may be continued for post-graduate research purposes but
-                            the total period must not extend beyond 18 months.
-                        </li>
-                    </ul>
                     <div class="paragraph_div">
-                        Data which has been placed under an embargo will not have an “Export” button alongside
-                        the data file name in the collection.
+                        Data which has been placed under restricted access will not have an <b>Export</b> button alongside the data file name in the collection.
                     </div>
-
                     <div class="paragraph_div">
-                        During either embargo period, anyone who wishes to use the embargoed data may
-                        contact the collection owner and ask for permission to access the data, stating their
-                        intended use and offering collaboration on the intended analysis. If the data owner does
-                        not wish to allow access to the data, they must notify the person requesting access and
-                        the OzFlux Director in writing, providing an explanation as to why access can not be
-                        granted at this time.
+                        During the restricted access period, anyone who wishes to use the data may contact the collection owner and ask for permission to access the data, stating their intended use
+                        and offering collaboration on the intended analysis. If the data owner does not wish to allow access to the data, the data owner must notify the person requesting access and
+                        the OzFlux Director in writing, providing an explanation as to why access can not be granted at this time.
                     </div>
-
+                    <div class="paragraph_div">
+                        In the event of a dispute between the data owner and a person wishing to use restricted access data, either party can contact the OzFlux Steering Committee to ask for the
+                        matter to be resolved. If either party are unwilling to accept the decision of the OzFlux Steering Committee the final appeal will be to the Director of the Terrestrial
+                        Ecosystem Research Network.
+                    </div>
                 </div>
             </div>
         </div>

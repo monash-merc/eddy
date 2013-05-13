@@ -134,13 +134,15 @@
         <div class="home_right_panel">
             <div class="paragraph_title">Welcome to the OzFlux Data Portal</div>
             <p>
-                <b>OzFlux</b> is part of the Australian Terrestrial Ecosystem Research Network (<a href="http://www.tern.org.au"><b>TERN</b></a>). The OzFlux
-                network consists of nearly 30 flux towers in Australia and New Zealand. OzFlux is also a
-                member of the global FluxNet community.
+                <a href="http://www.ozflux.org.au" target="_blank"><b>OzFlux</b></a> is part of the Australian Terrestrial Ecosystem Research Network (<a href="http://www.tern.org.au" target="_blank"><b>TERN</b></a>).
+                The OzFlux
+                network consists of nearly 30 flux towers in Australia and New Zealand, many of which are also members of the Australian Supersite Network (<a href="http://www.tern-supersites.net.au"
+                                                                                                                                                               target="_blank"><b>ASN</b></a>). OzFlux
+                is also a member of the global FluxNet community.
             </p>
 
             <p>
-                Data from the OzFlux network of flux towers is available from this portal. The data are
+                Data from the <a href="http://www.ozflux.org.au" target="_blank"><b>OzFlux</b></a> network of flux towers is available from this portal. The data are
                 organised into collections with each collection representing at least one site.
             </p>
 
@@ -157,17 +159,17 @@
             </p>
 
             <p>
-                The "<a href="${base}/search/showSearch.jspx"><b>Search</b></a>" entry allows users to search for data based on attributes such as site name,
-                location, period and researcher. The <b>"Resources"</b> entry contains information on the data
-                available, the data format, license information and information on utilities for accessing the
-                data files stored on this portal.
+                The "<a href="${base}/search/showSearch.jspx"><b>Search</b></a>" menu allows users to search for data based on attributes such as site name, location, period and researcher.
             </p>
 
             <p>
-                Users wishing to download data will need to log in to the portal. If you already have an
-                account, click the "<b>Login</b>" button above. If you would like to ask for an account, click on
-                "<b>Register</b>". Registration is free and your account will normally be activated within two
-                business days.
+                The <b>"Resources"</b> menu provides direct link to information on the data available, the data format, licence information and information on utilities for accessing the data files
+                stored on this portal.
+            </p>
+
+            <p>
+                Users wishing to download data will need to log in to the portal. If you already have an account, click the "<b>Login</b>" button above.
+                If you would like to ask for an account, click on <b>Register</b>. Registration is free and your account will normally be activated within two to three business days.
             </p>
         </div>
         <div style="clear:both"></div>
