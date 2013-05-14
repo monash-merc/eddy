@@ -23,21 +23,19 @@
             <div class="left_display_inner">
                 <div class="content_none_border_div">
                     <div class="sub_b_title">
-                        Licensing information
+                        Licencing information
                     </div>
                     <div class="paragraph_div">
                         The data available for download from this portal is covered by one of the following licences:
                     </div>
                     <ul id="toc_num">
                         <li>
-                            TERN-funded sites (indicated by the text ‘TERN funded’ appearing below the collection name) use the <a href="http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0" target="_blank">TERN Attribution-Share Alike-Non Commercial (TERN-BY-SA-NC)</a> licence.
-
+                            TERN-funded sites (indicated by the text ‘TERN funded’ appearing below the collection name) use
+                            the <a href="http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0" target="_blank">TERN Attribution-Share Alike-Non Commercial (TERN-BY-SA-NC)</a> licence.
                             <p>
                                 This licence allows data users to distribute, modify or build upon the data provided that they credit the original source, licence any modified data or products derived
                                 from the data under the same terms as the original data and do not use the data for commercial purposes. These conditions can be waived but only by the data owner. See
-                                the
-                                TERN web site (<a href="http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0" target="_blank">http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0</a>) for a full
-                                description of the TERN-BY-SA-NC licence.
+                                the TERN web site for a full description of the <a href="http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0" target="_blank">TERN-BY-SA-NC</a> licence.
                             </p>
 
                         </li>
@@ -50,7 +48,7 @@
                         with the download. OzFlux strongly recommends that all users become familiar with the licence terms and conditions before downloading data.
                     </div>
                     <div class="paragraph_div">
-                        In addition to the data licence, OzFlux uses a <a href="http://eddy.googlecode.com/files/OzFluxFairUseAndAcknowledgement.pdf" target="_blank">Fair Use data policy</a>
+                        In addition to the data licence, OzFlux uses a <a href="http://eddy.googlecode.com/files/OzFluxFairUseAndAcknowledgement.pdf" target="_blank">Fair Use Policy</a>
                         based on the FluxNet Fair Use policy. The Fair Use policy states OzFlux's
                         intentions in making the data publicly available and OzFlux's expectations of the data users responsibilities. As with the licence, users will be asked to confirm that they
                         have read and understood the OzFlux Fair Use policy before downloading the data.
