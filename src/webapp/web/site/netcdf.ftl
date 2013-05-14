@@ -26,10 +26,10 @@
                     </div>
                     <div class="paragraph_div">
                         The data on this portal are available as NetCDF files that conform to the CF Metadata Conventions. NetCDF (Network Common Data Form) files are a self-describing,
-                        machine-independent format for storing numerical data. Details on the NetCDF file format can be found on the Unidata site (<a
-                            href="http://www.unidata.ucar.edu/software/netcdf/" target="_blank">http://www.unidata.ucar.edu/software/netcdf</a>). NetCDF files are binary files which means they can not be viewed in
-                        the standard applications that come with most operating
-                        systems (text editors, word processors or spreadsheet programs).
+                        machine-independent format for storing numerical data.
+                        Details on the NetCDF file format can be found on the <a href="http://www.unidata.ucar.edu/software/netcdf/" target="_blank">Unidata</a> site.
+                        NetCDF files are binary files which means they can not be viewed in the standard applications that come with most operating systems (text editors, word processors or
+                        spreadsheet programs).
                     </div>
                     <div class="paragraph_div">
                         The NetCDF format was chosen because it allows data and metadata to be packaged into a single file. The OzFlux NetCDF files contain metadata about the site, the data owner and

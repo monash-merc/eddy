@@ -122,9 +122,8 @@
                         <tbody>
                     </table>
                 </div>
-
                 <div class="content_none_border_div">
-                    <div class="content_title">Step 2: Review <a href="#" target="_blank">Fair Use Policy </a></div>
+                    <div class="content_title">Step 2: Review <a href="http://eddy.googlecode.com/files/OzFluxFairUseAndAcknowledgement.pdf" target="_blank">Fair Use Policy </a></div>
                 </div>
                 <div class="blank_separator"></div>
                 <div class="content_none_border_div">
@@ -146,8 +145,7 @@
 
                         <p>
                             By using this system to publish or register your research work you are continuing to agree to adhere to the
-                            Terms and Conditions of use detailed at <a href="http://eddy.googlecode.com/files/OzFluxTermsAndConditions.pdf"
-                                                                       target="_blank">http://eddy.googlecode.com/files/OzFluxTermsAndConditions.pdf</a>.
+                            <a href="http://eddy.googlecode.com/files/OzFluxTermsAndConditions.pdf" target="_blank">Terms and Conditions</a>.
                             Please read these Terms and Conditions carefully before publishing.
                         </p>
                     </div>

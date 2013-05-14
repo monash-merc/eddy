@@ -21,11 +21,25 @@
 <div style="clear:both"></div>
 <div class="left_display_inner">
 <div class="content_none_border_div">
-<div class="sub_b_title">
-    FAQs
-</div>
 
-<div class="sub_norm_title">
+<div class="sub_b_title">
+    Table of contents
+</div>
+<ul id="toc_num">
+    <li><a href="#section1">How do I use this portal? </a></li>
+    <li><a href="#section2">What data is available from this portal?</a></li>
+    <li><a href="#section3">What do I have to do before I can download the data?</a></li>
+    <li><a href="#section4">How do I register for an account? </a></li>
+    <li><a href="#section5">How do I download the data? </a></li>
+    <li><a href="#section6">What does ‘Restricted Access’ mean? </a></li>
+    <li><a href="#section7">How do I apply a restricted access period to my data file?</a></li>
+    <li><a href="#section8">I am trying to upload a file with an identical name to an existing file in the OzFlux Data Portal. It doesnt allow me to do so. Howcome?</a></li>
+    <li><a href="#section9">What kind of files can I upload to a collection? And will they capture my metadata?</a></li>
+    <li><a href="#section10">How do I read the files I have downloaded? </a></li>
+    <li><a href="#section11">What do all the variable names in the files mean? </a></li>
+</ul>
+
+<div class="sub_norm_title" id="section1">
     1. How do I use this portal?
 </div>
 <div class="paragraph_div">
@@ -73,7 +87,7 @@
     </p>
 </div>
 
-<div class="sub_norm_title">
+<div class="sub_norm_title" id="section2">
     2. What data is available from this portal?
 </div>
 <div class="paragraph_div">
@@ -82,7 +96,7 @@
     humidity, wind speed and direction, soil temperature, soil moisture and precipitation. Further information can be found under
     the <a href="${base}/site/datainfo.jspx">Data information</a> menu.
 </div>
-<div class="sub_norm_title">
+<div class="sub_norm_title" id="section3">
     3. What do I have to do before I can download the data?
 </div>
 <div class="paragraph_div">
@@ -102,7 +116,7 @@
     </p>
 </div>
 
-<div class="sub_norm_title">
+<div class="sub_norm_title" id="section4">
     4. How do I register for an account?
 </div>
 <div class="paragraph_div">
@@ -118,7 +132,7 @@
         email to the portal administrator who will then activate your account. Activation normally takes two to three days.
     </p>
 </div>
-<div class="sub_norm_title">
+<div class="sub_norm_title" id="section5">
     5. How do I download the data?
 </div>
 <div class="paragraph_div">
@@ -127,7 +141,7 @@
     the right of the collection description text.
 </div>
 
-<div class="sub_norm_title">
+<div class="sub_norm_title" id="section6">
     6. What does ‘Restricted Access’ mean?
 </div>
 <div class="paragraph_div">
@@ -154,7 +168,7 @@
     </p>
 </div>
 
-<div class="sub_norm_title">
+<div class="sub_norm_title" id="section7">
     7. How do I apply a restricted access period to my data file?
 </div>
 <div class="paragraph_div">
@@ -203,7 +217,7 @@
     </p>
 </div>
 
-<div class="sub_norm_title">
+<div class="sub_norm_title" id="section8">
     8. I am trying to upload a file with an identical name to an existing file in the OzFlux Data Portal. It doesnt allow me to do so. Howcome?
 </div>
 <div class="paragraph_div">
@@ -211,7 +225,7 @@
     distinguish between the two. Refer file <a href="${base}/site/netcdf.jspx">naming convention</a>.
 </div>
 
-<div class="sub_norm_title">
+<div class="sub_norm_title" id="section9">
     9. What kind of files can I upload to a collection? And will they capture my metadata?
 </div>
 <div class="paragraph_div">
@@ -219,7 +233,7 @@
     with these formats.
 </div>
 
-<div class="sub_norm_title">
+<div class="sub_norm_title" id="section10">
     10. How do I read the files I have downloaded?
 </div>
 <div class="paragraph_div">
@@ -236,7 +250,7 @@
     </p>
 </div>
 
-<div class="sub_norm_title">
+<div class="sub_norm_title" id="section11">
     11. What do all the variable names in the files mean?
 </div>
 <div class="paragraph_div">
