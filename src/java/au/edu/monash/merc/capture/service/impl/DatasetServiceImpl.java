@@ -50,119 +50,122 @@ import au.edu.monash.merc.capture.service.DatasetService;
 @Transactional
 public class DatasetServiceImpl implements DatasetService {
 
-	@Autowired
-	private DatasetDAO datasetDAO;
+    @Autowired
+    private DatasetDAO datasetDAO;
 
-	@Autowired
-	private GlobalMetadataDAO globalMetadataDAO;
+    @Autowired
+    private GlobalMetadataDAO globalMetadataDAO;
 
-	@Autowired
-	private MetaVariableDAO metaVariableDAO;
+    @Autowired
+    private MetaVariableDAO metaVariableDAO;
 
-	@Autowired
-	private MetaAttributeDAO metaAttributeDAO;
+    @Autowired
+    private MetaAttributeDAO metaAttributeDAO;
 
-	public DatasetDAO getDatasetDAO() {
-		return datasetDAO;
-	}
+    public DatasetDAO getDatasetDAO() {
+        return datasetDAO;
+    }
 
-	public void setDatasetDAO(DatasetDAO datasetDAO) {
-		this.datasetDAO = datasetDAO;
-	}
+    public void setDatasetDAO(DatasetDAO datasetDAO) {
+        this.datasetDAO = datasetDAO;
+    }
 
-	public GlobalMetadataDAO getGlobalMetadataDAO() {
-		return globalMetadataDAO;
-	}
+    public GlobalMetadataDAO getGlobalMetadataDAO() {
+        return globalMetadataDAO;
+    }
 
-	public void setGlobalMetadataDAO(GlobalMetadataDAO globalMetadataDAO) {
-		this.globalMetadataDAO = globalMetadataDAO;
-	}
+    public void setGlobalMetadataDAO(GlobalMetadataDAO globalMetadataDAO) {
+        this.globalMetadataDAO = globalMetadataDAO;
+    }
 
-	public MetaVariableDAO getMetaVariableDAO() {
-		return metaVariableDAO;
-	}
+    public MetaVariableDAO getMetaVariableDAO() {
+        return metaVariableDAO;
+    }
 
-	public void setMetaVariableDAO(MetaVariableDAO metaVariableDAO) {
-		this.metaVariableDAO = metaVariableDAO;
-	}
+    public void setMetaVariableDAO(MetaVariableDAO metaVariableDAO) {
+        this.metaVariableDAO = metaVariableDAO;
+    }
 
-	public MetaAttributeDAO getMetaAttributeDAO() {
-		return metaAttributeDAO;
-	}
+    public MetaAttributeDAO getMetaAttributeDAO() {
+        return metaAttributeDAO;
+    }
 
-	public void setMetaAttributeDAO(MetaAttributeDAO metaAttributeDAO) {
-		this.metaAttributeDAO = metaAttributeDAO;
-	}
+    public void setMetaAttributeDAO(MetaAttributeDAO metaAttributeDAO) {
+        this.metaAttributeDAO = metaAttributeDAO;
+    }
 
-	@Override
-	public void deleteDataset(Dataset entity) {
-		this.datasetDAO.remove(entity);
-	}
+    @Override
+    public void deleteDataset(Dataset entity) {
+        this.datasetDAO.remove(entity);
+    }
 
-	@Override
-	public void deleteDatasetById(long id) {
-		this.datasetDAO.deleteDatasetById(id);
-	}
+    @Override
+    public void deleteDatasetById(long id) {
+        this.datasetDAO.deleteDatasetById(id);
+    }
 
-	@Override
-	public void deleteDatasetsByCollectionId(long cid) {
-		this.datasetDAO.deleteDatasetByCollectionId(cid);
-	}
+    @Override
+    public void deleteDatasetsByCollectionId(long cid) {
+        this.datasetDAO.deleteDatasetByCollectionId(cid);
+    }
 
-	@Override
-	public boolean checkDatasetNameExisted(String dsName, long cid) {
-		return this.datasetDAO.checkDatasetNameExisted(dsName, cid);
-	}
+    @Override
+    public boolean checkDatasetNameExisted(String dsName, long cid) {
+        return this.datasetDAO.checkDatasetNameExisted(dsName, cid);
+    }
 
-	@Override
-	public Pagination<Dataset> getDatasetByCollectionId(long cid, int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
-		return this.datasetDAO.getDatasetByCollectionId(cid, startPageNo, recordsPerPage, orderBys);
-	}
+    @Override
+    public Pagination<Dataset> getDatasetByCollectionId(long cid, int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
+        return this.datasetDAO.getDatasetByCollectionId(cid, startPageNo, recordsPerPage, orderBys);
+    }
 
-	@Override
-	public List<Dataset> getDatasetByCollectionId(long cid) {
-		return this.datasetDAO.getDatasetByCollectionId(cid);
-	}
+    @Override
+    public List<Dataset> getDatasetByCollectionId(long cid) {
+        return this.datasetDAO.getDatasetByCollectionId(cid);
+    }
 
-	@Override
-	public List<Dataset> getDatasetByCollectionIdUsrId(long cid, long uid) {
-		return this.datasetDAO.getDatasetByCollectionIdUsrId(cid, uid);
-	}
+    @Override
+    public List<Dataset> getDatasetByCollectionIdUsrId(long cid, long uid) {
+        return this.datasetDAO.getDatasetByCollectionIdUsrId(cid, uid);
+    }
 
-	@Override
-	public Dataset getDatasetByHandlId(String handleId) {
-		return this.datasetDAO.getDatasetByHandlId(handleId);
-	}
+    @Override
+    public Dataset getDatasetByHandlId(String handleId) {
+        return this.datasetDAO.getDatasetByHandlId(handleId);
+    }
 
-	@Override
-	public Dataset getDatasetById(long id) {
-		return this.datasetDAO.get(id);
-	}
+    @Override
+    public Dataset getDatasetById(long id) {
+        return this.datasetDAO.get(id);
+    }
 
-	@Override
-	public void saveDataset(Dataset entity) {
-		this.datasetDAO.add(entity);
-	}
+    @Override
+    public void saveDataset(Dataset entity) {
+        this.datasetDAO.add(entity);
+    }
 
-	@Override
-	public void updateDataset(Dataset entity) {
-		this.datasetDAO.update(entity);
-	}
+    @Override
+    public void updateDataset(Dataset entity) {
+        this.datasetDAO.update(entity);
+    }
 
-	public Dataset getAllDatasetData(long dsId) {
-		Dataset ds = this.getDatasetById(dsId);
-		if (ds != null) {
-			List<GlobalMetadata> gMetadata = this.globalMetadataDAO.getAllGlobalMetadataByDatasetId(dsId);
-			List<MetaVariable> metaVariables = this.metaVariableDAO.getAllMetaVariableByDatasetId(dsId);
-			// for (MetaVariable mvar : metaVariables) {
-			// List<MetaAttribute> metaAttrs = this.metaAttributeDAO.getAllAttributeByVarId(mvar.getId());
-			// mvar.setMetaAttributes(metaAttrs);
-			// }
-			ds.setGlobalMetadata(gMetadata);
-			ds.setMetaVariables(metaVariables);
-		}
-		return ds;
+    public Dataset getAllDatasetData(long dsId) {
+        Dataset ds = this.getDatasetById(dsId);
+        if (ds != null) {
+            List<GlobalMetadata> gMetadata = this.globalMetadataDAO.getAllGlobalMetadataByDatasetId(dsId);
+            List<MetaVariable> metaVariables = this.metaVariableDAO.getAllMetaVariableByDatasetId(dsId);
+            // for (MetaVariable mvar : metaVariables) {
+            // List<MetaAttribute> metaAttrs = this.metaAttributeDAO.getAllAttributeByVarId(mvar.getId());
+            // mvar.setMetaAttributes(metaAttrs);
+            // }
+            ds.setGlobalMetadata(gMetadata);
+            ds.setMetaVariables(metaVariables);
+        }
+        return ds;
+    }
 
-	}
-
+    @Override
+    public List<Dataset> getAllDatasets() {
+        return this.datasetDAO.getAllDatasets();
+    }
 }

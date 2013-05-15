@@ -53,8 +53,6 @@ public class ApplicationProperty implements Serializable {
 
     private String securityHashSeq;
 
-    private String googleApiKey;
-
     private boolean stageEnabled;
 
     private String stageLocation;
@@ -189,14 +187,6 @@ public class ApplicationProperty implements Serializable {
 
     public void setSecurityHashSeq(String securityHashSeq) {
         this.securityHashSeq = securityHashSeq;
-    }
-
-    public String getGoogleApiKey() {
-        return googleApiKey;
-    }
-
-    public void setGoogleApiKey(String googleApiKey) {
-        this.googleApiKey = googleApiKey;
     }
 
     public boolean isMdRegEnabled() {
