@@ -29,7 +29,7 @@
                         Zealand. The data are stored in <a href="http://www.unidata.ucar.edu/software/netcdf" target="_blank">NetCDF</a> files that
                         conform to the <a href="http://cf-pcmdi.llnl.gov" target="_blank">CF Metadata Convention</a>. Information
                         on the NetCDF files and utilities for accessing NetCDF files are available <a href="${base}/site/netcdf.jspx">here</a>. A list of variable names used in the NetCDF
-                        files and their definitions is available here (internal link to PDF file “VariableNamesandDefinitions.pdf” containing variable name definitions).
+                        files and their definitions is available <a href="http://eddy.googlecode.com/files/VariableNamesandDefinitions.pdf" target="_blank">here</a>.
                     </div>
                     <div class="paragraph_div">
                         The data licence terms and conditions are explained <a href="${base}/site/licenceinfo.jspx">here</a>.
