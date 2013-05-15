@@ -33,10 +33,10 @@
                     </div>
                     <div class="paragraph_div">
                         A manual for the Python scripts used by the OzFlux community to quality control and post-
-                        process the flux tower data is available <a href="${base}/site/ddoc.jspx?fname=ozfluxqc.pdf">here</a> (PDF).
+                        process the flux tower data is available <a href="http://eddy.googlecode.com/files/OzFluxQC_Manual.pdf" target="_blank">here</a> (PDF).
                     </div>
                     <div class="paragraph_div">
-                        A document that describes the variable names used for the OzFlux data is available <a href="${base}/site/ddoc.jspx?fname=placeholder.txt">here</a> (PDF).
+                        A document that describes the variable names used for the OzFlux data is available <a href="http://eddy.googlecode.com/files/VariableNamesandDefinitions.pdf" target="_blank">here</a> (PDF).
                         This document lists the variable names, gives
                         the CF Metadata standard name and provides a description of the data associated with the
                         variable name.

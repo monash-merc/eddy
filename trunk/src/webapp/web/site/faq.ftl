@@ -254,8 +254,7 @@
     11. What do all the variable names in the files mean?
 </div>
 <div class="paragraph_div">
-    A PDF document that explains the variable OzFlux naming convention and defines the variable names used in the NetCDF files can be found here (internal link to PDF file
-    “VariableNamesandDefinitions.pdf” containing variable name definitions)
+    A PDF document that explains the variable OzFlux naming convention and defines the variable names used in the NetCDF files can be found <a href="http://eddy.googlecode.com/files/VariableNamesandDefinitions.pdf" target="_blank">here</a>.
 </div>
 
 </div>
