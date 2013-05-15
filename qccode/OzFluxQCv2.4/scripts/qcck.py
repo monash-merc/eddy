@@ -18,12 +18,11 @@ def do_7500check(cf,ds):
        Ah_7500_Sd (standard deviation of absolute humidity) and Cc_7500_Sd (standard
        deviation of CO2 concentration).'''
     log.info(' Doing the 7500 check')
-    LI75List = ['Ah_7500_Av','Cc_7500_Av','AhAh','CcCc',
-                'UzA','UxA','UyA','UzC','UxC','UyC']
+    LI75List = ['Ah_7500_Av','Cc_7500_Av','AhAh','CcCc','UzA','UxA','UyA','UzC','UxC','UyC']
     if 'Diag_7500' not in cf['Variables'].keys():
         ds.series[unicode('Diag_7500')] = {}
         nRecs = numpy.size(ds.series['xlDateTime']['Data'])
-        ds.series['Diag_7500']['Flag'] = numpy.zeros(nRecs,dtype=int)
+        ds.series['Diag_7500']['Flag'] = numpy.zeros(nRecs,dtype=numpy.int32)
         for ThisOne in ['Ah_7500_Av','Cc_7500_Av']:
             if ThisOne in ds.series.keys():
                 index = numpy.where(ds.series[ThisOne]['Flag']!=0)[0]
@@ -41,7 +40,7 @@ def do_7500check(cf,ds):
     for ThisOne in LI75List:
         if ThisOne in ds.series.keys():
             ds.series[ThisOne]['Data'][index] = numpy.float64(-9999)
-            ds.series[ThisOne]['Flag'][index] = 4
+            ds.series[ThisOne]['Flag'][index] = numpy.int32(4)
         else:
             log.error('  qcck.do_7500check: series '+str(ThisOne)+' in LI75List not found in ds.series')
 
@@ -77,7 +76,7 @@ def do_CSATcheck(cf,ds):
     if 'Diag_CSAT' not in cf['Variables'].keys():
         ds.series['Diag_CSAT']= {}
         nRecs = numpy.size(ds.series['xlDateTime']['Data'])
-        ds.series['Diag_CSAT']['Flag'] = numpy.zeros(nRecs,dtype=int)
+        ds.series['Diag_CSAT']['Flag'] = numpy.zeros(nRecs,dtype=numpy.int32)
         for ThisOne in ['Ux','Uy','Uz','Tv_CSAT']:
             if ThisOne in ds.series.keys():
                 index = numpy.where(ds.series[ThisOne]['Flag']!=0)[0]
@@ -88,7 +87,7 @@ def do_CSATcheck(cf,ds):
     for ThisOne in CSATList:
         if ThisOne in ds.series.keys():
             ds.series[ThisOne]['Data'][index] = numpy.float64(-9999)
-            ds.series[ThisOne]['Flag'][index] = 3
+            ds.series[ThisOne]['Flag'][index] = numpy.int32(3)
         else:
             log.error('  qcck.do_CSATcheck: series '+str(ThisOne)+' in CSATList not found in ds.series')
 
@@ -119,8 +118,8 @@ def do_diurnalcheck(cf,ds,ThisOne,code=5):
                     hindex = numpy.array(n*lHdh,int)
                     index = numpy.where(((l2ds!=float(-9999))&(l2ds<Lwr[hindex]))|
                                         ((l2ds!=float(-9999))&(l2ds>Upr[hindex])))[0] + mindex[0]
-                    ds.series[ThisOne]['Data'][index] = float(-9999)
-                    ds.series[ThisOne]['Flag'][index] = code
+                    ds.series[ThisOne]['Data'][index] = numpy.float64(-9999)
+                    ds.series[ThisOne]['Flag'][index] = numpy.int32(code)
             ds.series[ThisOne]['Attr']['DiurnalCheck_NumSd'] = cf['Variables'][ThisOne]['DiurnalCheck']['NumSd']
 
 def do_excludedates(cf,ds,ThisOne):
@@ -139,8 +138,8 @@ def do_excludedates(cf,ds,ThisOne):
                     ei = ldt.index(datetime.datetime.strptime(ExcludeDateList[1],'%Y-%m-%d %H:%M')) + 1
                 except ValueError:
                     ei = -1
-                ds.series[ThisOne]['Data'][si:ei] = float(-9999)
-                ds.series[ThisOne]['Flag'][si:ei] = 6
+                ds.series[ThisOne]['Data'][si:ei] = numpy.float64(-9999)
+                ds.series[ThisOne]['Flag'][si:ei] = numpy.int32(6)
                 ds.series[ThisOne]['Attr']['ExcludeDates_'+str(i)] = cf['Variables'][ThisOne]['ExcludeDates'][str(i)]
 
 def do_excludehours(cf,ds,ThisOne):
@@ -164,8 +163,8 @@ def do_excludehours(cf,ds,ThisOne):
                     ExMn = datetime.datetime.strptime(ExcludeHourList[2][j],'%H:%M').minute
                     index = numpy.where((ds.series['Hour']['Data'][si:ei]==ExHr)&
                                         (ds.series['Minute']['Data'][si:ei]==ExMn))[0] + si
-                    ds.series[ThisOne]['Data'][index] = float(-9999)
-                    ds.series[ThisOne]['Flag'][index] = 7
+                    ds.series[ThisOne]['Data'][index] = numpy.float64(-9999)
+                    ds.series[ThisOne]['Flag'][index] = numpy.int32(7)
                     ds.series[ThisOne]['Attr']['ExcludeHours_'+str(i)] = cf['Variables'][ThisOne]['ExcludeHours'][str(i)]
 
 def do_linear(cf,ds):
@@ -190,7 +189,7 @@ def do_rangecheck(cf,ds,ThisOne,code=2):
                 index = numpy.where((abs(ds.series[ThisOne]['Data']-numpy.float64(-9999))>c.eps)&
                                         (ds.series[ThisOne]['Data']<lwr))
                 ds.series[ThisOne]['Data'][index] = numpy.float64(-9999)
-                ds.series[ThisOne]['Flag'][index] = code
+                ds.series[ThisOne]['Flag'][index] = numpy.int32(code)
                 ds.series[ThisOne]['Attr']['RangeCheck_Lower'] = cf['Variables'][ThisOne]['RangeCheck']['Lower']
             if 'Upper' in cf['Variables'][ThisOne]['RangeCheck'].keys():
                 upr = numpy.array(eval(cf['Variables'][ThisOne]['RangeCheck']['Upper']))
@@ -198,7 +197,7 @@ def do_rangecheck(cf,ds,ThisOne,code=2):
                 index = numpy.where((abs(ds.series[ThisOne]['Data']-numpy.float64(-9999))>c.eps)&
                                         (ds.series[ThisOne]['Data']>upr))
                 ds.series[ThisOne]['Data'][index] = numpy.float64(-9999)
-                ds.series[ThisOne]['Flag'][index] = code
+                ds.series[ThisOne]['Flag'][index] = numpy.int32(code)
                 ds.series[ThisOne]['Attr']['RangeCheck_Upper'] = cf['Variables'][ThisOne]['RangeCheck']['Upper']
 
 def do_qcchecks(cf,ds,series=''):

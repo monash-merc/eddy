@@ -247,7 +247,7 @@ class qcgui(Tkinter.Frame):
         self.ds3 = qcls.l3qc(self.cf,self.ds2)
         self.do_progress(text='Finished L3')
         txtstr = ' Finished L3: Standard processing for site: '
-        txtstr = txtstr+self.ds3.globalattributes['site_name']
+        txtstr = txtstr+self.ds3.globalattributes['site_name'].replace(' ','')
         log.info(txtstr)
         self.do_progress(text='Saving L3 QC & Corrected NetCDF data ...')                     # put up the progress message
         qcio.nc_write_series(self.cf,self.ds3,'L3')                   # save the L3 data
@@ -457,7 +457,7 @@ class qcgui(Tkinter.Frame):
         else:
             InLevel = 'L2'
             OutLevel = 'L2'
-        qcio.autonc2xl(self.cf,InLevel)
+        qcio.autonc2xl(self.cf,InLevel,OutLevel)
         self.do_progress(text='Finished L2 Data Export')              # tell the user we are done
         log.info(' Finished saving L2 data')
 
@@ -558,7 +558,7 @@ class qcgui(Tkinter.Frame):
                     [Variables]:
                         Variable name (in netCDF and excel files)
                         Excel spreadsheet name
-                        Description
+                        long_name
                         Units
             
             Level 3:
@@ -580,7 +580,7 @@ class qcgui(Tkinter.Frame):
                     [Variables]:
                         Variable name (in netCDF and excel files)
                         Excel spreadsheet name
-                        Description
+                        long_name
                         Units
             
             Level 4:
@@ -602,7 +602,7 @@ class qcgui(Tkinter.Frame):
                     [Variables]:
                         Variable name (in netCDF and excel files)
                         Excel spreadsheet name
-                        Description
+                        long_name
                         Units
             """
         self.do_progress(text='Load xl2nc Control File ...')

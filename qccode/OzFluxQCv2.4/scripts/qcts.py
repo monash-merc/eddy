@@ -235,11 +235,19 @@ def AverageSeriesByElements(ds,Av_out,Series_in):
     qcutils.CreateSeries(ds,Av_out,Av_data,FList=Series_in,Descr=DStr,Units=UStr,Standard=SStr)
 
 def BypassTcorr(cf,ds):
-    for ThisOne in ds.series.keys():
-        if 'Sws' in ThisOne:
-            Sws,f = qcutils.GetSeriesasMA(ds,ThisOne)
-            Sws_bypass = -0.0663 + -0.0063 * Sws + 0.0007 * Sws ** 2
-            qcutils.CreateSeries(ds,ThisOne,Sws_bypass,FList=[ThisOne],Descr=ds.series[ThisOne]['Attr']['long_name'],Units='frac',Standard='soil_moisture_content')
+    if qcutils.cfkeycheck(cf,Base='Soil',ThisOne='BypassTcorrList'):
+        subkeys = ast.literal_eval(cf['Soil']['BypassTcorrList'])
+        for i in range(len(subkeys)):
+            if subkeys[i] in ds.series.keys():
+                Sws,f = qcutils.GetSeriesasMA(ds,subkeys[i])
+                Sws_bypass = -0.0663 + -0.0063 * Sws + 0.0007 * Sws ** 2
+                qcutils.CreateSeries(ds,subkeys[i],Sws_bypass,FList=[subkeys[i]],Descr=ds.series[subkeys[i]]['Attr']['long_name'],Units='frac',Standard='soil_moisture_content')
+    else:
+        for ThisOne in ds.series.keys():
+            if 'Sws' in ThisOne:
+                Sws,f = qcutils.GetSeriesasMA(ds,ThisOne)
+                Sws_bypass = -0.0663 + -0.0063 * Sws + 0.0007 * Sws ** 2
+                qcutils.CreateSeries(ds,ThisOne,Sws_bypass,FList=[ThisOne],Descr=ds.series[ThisOne]['Attr']['long_name'],Units='frac',Standard='soil_moisture_content')
 
 def CalculateAhHMP(cf,ds,e_name='e',Ta_name='Ta_HMP',Ah_name='Ah_HMP'):
     """
@@ -451,6 +459,7 @@ def CalculateMeteorologicalVariables(cf,ds,Ta_name='Ta',ps_name='ps',Ah_name='Ah
     qcutils.CreateSeries(ds,'q',q,FList=[Ta_name,ps_name,Ah_name],Descr='Specific humidity',Units='kg/kg',Standard='specific_humidity')
     qcutils.CreateSeries(ds,'VPD',VPD,FList=[Ta_name,Ah_name],Descr='Vapour pressure deficit',Units='kPa',Standard='water_vapor_saturation_deficit_in_air')
     qcutils.CreateSeries(ds,'SHD',SHD,FList=[Ta_name,Ah_name],Descr='Specific humidity deficit',Units='kg/kg')
+    qcutils.CreateSeries(ds,'mr',mr,FList=[Ta_name,ps_name,Ah_name],Descr='Mixing ratio',Units='kg/kg',Standard='humidity_mixing_ratio')
 
 def CalculateNetRadiation(ds,Fn_out,Fsd_in,Fsu_in,Fld_in,Flu_in):
     """
@@ -481,7 +490,7 @@ def CalculateNetRadiation(ds,Fn_out,Fsd_in,Fsu_in,Fld_in,Flu_in):
         ds.series[Fn_out]['Data'] = numpy.zeros(nRecs) + float(-9999)
         ds.series[Fn_out]['Flag'] = numpy.zeros(nRecs) + float(1)
         ds.series[Fn_out]['Attr'] = {}
-        ds.series[Fn_out]['Attr']['Description'] = 'Calculated net radiation (one or more components missing)'
+        ds.series[Fn_out]['Attr']['long_name'] = 'Calculated net radiation (one or more components missing)'
         ds.series[Fn_out]['Attr']['units'] = 'W/m2'
 
 def CalculateSpecificHumidityProfile(cf,ds):
@@ -489,6 +498,12 @@ def CalculateSpecificHumidityProfile(cf,ds):
         ps_in = cf['qprofile']['p_in']
     else:
         ps_in = 'ps'
+    
+    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='Ta_in'):
+        Ta_in = ast.literal_eval(cf['qprofile']['Ta_in'])
+    else:
+        log.error('  No input air temperature variables identified')
+        return
     
     if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='e_in'):
         e_vars = ast.literal_eval(cf['qprofile']['e_in'])
@@ -520,6 +535,24 @@ def CalculateSpecificHumidityProfile(cf,ds):
         log.error('  No output vapour pressure deficit variables identified')
         return
     
+    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='mr_out'):
+        mr_vars = ast.literal_eval(cf['qprofile']['mr_out'])
+    else:
+        log.error('  No output mixing ratio variables identified')
+        return
+    
+    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='Tv_out'):
+        Tv_vars = ast.literal_eval(cf['qprofile']['Tv_out'])
+    else:
+        log.error('  No output virtual temperature variables identified')
+        return
+    
+    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='Tvp_out'):
+        Tvp_vars = ast.literal_eval(cf['qprofile']['Tvp_out'])
+    else:
+        log.error('  No output virtual potential temperature variables identified')
+        return
+    
     if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='q_attr'):
         q_attrs = ast.literal_eval(cf['qprofile']['q_attr'])
     else:
@@ -538,12 +571,31 @@ def CalculateSpecificHumidityProfile(cf,ds):
         log.error('  Vapour pressure deficit attributes not identified')
         return
     
-    if (len(e_vars) != len(q_vars) != len(q_attrs) != len(VPD_vars) != len(esat_vars) != len(qsat_vars) != len(qsat_attrs) != len(VPD_attrs)):
+    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='mr_attr'):
+        mr_attrs = ast.literal_eval(cf['qprofile']['mr_attr'])
+    else:
+        log.error('  Mixing ratio attributes not identified')
+        return
+    
+    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='Tv_attr'):
+        Tv_attrs = ast.literal_eval(cf['qprofile']['Tv_attr'])
+    else:
+        log.error('  Virtual temperature attributes not identified')
+        return
+    
+    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='Tvp_attr'):
+        Tvp_attrs = ast.literal_eval(cf['qprofile']['Tvp_attr'])
+    else:
+        log.error('  Virtual potential temperature attributes not identified')
+        return
+    
+    if (len(e_vars) != len(q_vars) != len(q_attrs) != len(VPD_vars) != len(mr_vars) != len(Tv_vars) != len(Tvp_vars) != len(esat_vars) != len(qsat_vars) != len(qsat_attrs) != len(VPD_attrs) != len(mr_attrs) != len(Tv_attrs) != len(Tvp_attrs)):
         log.error('  Input and output vectors not of equal length')
         return
     
     ps,f = qcutils.GetSeriesasMA(ds,ps_in)
     for i in range(len(e_vars)):
+        Ta,f = qcutils.GetSeriesasMA(ds,Ta_in[i])
         e,f = qcutils.GetSeriesasMA(ds,e_vars[i])
         esat,f = qcutils.GetSeriesasMA(ds,esat_vars[i])
         mr = mf.mixingratio(ps,e)
@@ -551,10 +603,16 @@ def CalculateSpecificHumidityProfile(cf,ds):
         mrsat = mf.mixingratio(ps,esat)
         qsat = mf.specifichumidity(mrsat)
         VPD = esat - e
+        Tv = mf.theta(Ta,ps)
+        Tvp = mf.virtualtheta(Tv,mr)
         qcutils.CreateSeries(ds,q_vars[i],q,FList=[ps_in,e_vars[i]],Descr=q_attrs[i],Units='kg/kg',Standard='specific_humidity')
         qcutils.CreateSeries(ds,qsat_vars[i],qsat,FList=[ps_in,esat_vars[i]],Descr=qsat_attrs[i],Units='kg/kg',Standard='not_defined')
         qcutils.CreateSeries(ds,VPD_vars[i],VPD,FList=[ps_in,e_vars[i],esat_vars[i]],Descr=VPD_attrs[i],Units='kPa',Standard='water_vapor_saturation_deficit_in_air')
+        qcutils.CreateSeries(ds,mr_vars[i],mr,FList=[ps_in,e_vars[i]],Descr=mr_attrs[i],Units='kg/kg',Standard='humidity_mixing_ratio')
+        qcutils.CreateSeries(ds,Tv_vars[i],Tv,FList=[ps_in,Ta_in[i]],Descr=Tv_attrs[i],Units='C',Standard='virtual_temperature')
+        qcutils.CreateSeries(ds,Tvp_vars[i],Tvp,FList=[ps_in,e_vars[i],Ta_in[i]],Descr=Tvp_attrs[i],Units='C')
     
+    log.info(' q and T profile computed')
     return
 
 def ComputeClimatology(cf,ds,OList):
@@ -1564,7 +1622,7 @@ def do_attributes(cf,ds):
         ds.globalattributes['Flag90'] = 'Partitioning Night: Re computed from exponential temperature response curves'
         ds.globalattributes['Flag100'] = 'Partitioning Day: GPP/Re computed from light-response curves, GPP = Re - Fc'
         ds.globalattributes['Flag110'] = 'Partitioning Day: GPP night mask'
-        ds.globalattributes['Flag111'] = 'Partitioning Day: Fc > Re, GPP = 0, Re = Fc'
+        ds.globalattributes['Flag120'] = 'Partitioning Day: Fc > Re, GPP = 0, Re = Fc'
         ds.globalattributes['Flag121'] = 'Footprint: Date filter'
         ds.globalattributes['Flag122'] = 'Footprint: no solution'
         ds.globalattributes['Flag131'] = 'Penman-Monteith: bad rav or rC only if bad Uavg, bad Fe and bad Fsd flags not set'
@@ -1582,6 +1640,34 @@ def do_attributes(cf,ds):
                 ds.series[ThisOne]['Attr'] = {}
                 for attr in cf['Variables'][ThisOne]['Attr'].keys():
                     ds.series[ThisOne]['Attr'][attr] = cf['Variables'][ThisOne]['Attr'][attr]
+
+def do_bulkRichardson(cf,ds):
+    IncludeList = cf['Rb']['series'].keys()
+    NumHeights = len(IncludeList)
+    # calculate layer values
+    for i in range(NumHeights-1):
+        IncludeHeightList = ast.literal_eval(cf['Rb']['series'][str(i)])
+        NextHeightList = ast.literal_eval(cf['Rb']['series'][str(i+1)])
+        U_top,f = qcutils.GetSeriesasMA(ds,NextHeightList[1])
+        U_bottom,f = qcutils.GetSeriesasMA(ds,IncludeHeightList[1])
+        Tvp_top,f = qcutils.GetSeriesasMA(ds,NextHeightList[2])
+        Tvp_bottom,f = qcutils.GetSeriesasMA(ds,IncludeHeightList[2])
+        delta_z = float(NextHeightList[0]) - float(IncludeHeightList[0])
+        delta_Tvp = Tvp_top - Tvp_bottom
+        delta_U = U_top - U_bottom
+        srclist = qcutils.GetAverageList(cf,IncludeHeightList[3])
+        if len(srclist) > 0:
+            AverageSeriesByElements(ds,IncludeHeightList[3],srclist)
+        
+        Tvp_bar,f = qcutils.GetSeriesasMA(ds,IncludeHeightList[3])
+        Rb = (9.8 * delta_Tvp * delta_z) / (Tvp_bar * (delta_U ** 2))
+        qcutils.CreateSeries(ds,IncludeHeightList[4],delta_U,FList=[IncludeHeightList[1],IncludeHeightList[2],IncludeHeightList[3],'Fc'],Descr='U_upper less U_lower',Units='m/s')
+        qcutils.CreateSeries(ds,IncludeHeightList[5],delta_Tvp,FList=[IncludeHeightList[1],IncludeHeightList[2],IncludeHeightList[3],'Fc'],Descr='Tvp_upper less Tvp_lower',Units='m/s')
+        qcutils.CreateSeries(ds,IncludeHeightList[6],Rb,FList=[IncludeHeightList[1],IncludeHeightList[2],IncludeHeightList[3],'Fc'],Descr='Bulk Richardson number',Units='none')
+        flaglist = [IncludeHeightList[4],IncludeHeightList[5],IncludeHeightList[6]]
+        for ThisOne in flaglist:
+            flag = numpy.where(numpy.mod(ds.series[ThisOne]['Flag'],10)!=0)[0]
+            ds.series[ThisOne]['Data'][flag] = -9999
 
 def do_climatology(cf,ds):
     if qcutils.cfkeycheck(cf,Base='Climatology',ThisOne='met'):
@@ -1607,7 +1693,7 @@ def do_climatology(cf,ds):
     OList = MList+RList+SList+FList                                   # output series
     qcts.ComputeClimatology(cf,ds,OList)
 
-def do_footprint_2d(cf,ds):
+def do_footprint_2d(cf,ds,level='L3'):
     log.info(' Calculating 2D footprint')
     if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='zm'):
         zm = float(cf['Footprint']['zm'])
@@ -1643,27 +1729,29 @@ def do_footprint_2d(cf,ds):
         ldt = ds.series['DateTime']['Data']
         IncludeList = cf['Footprint']['AnalysisDates'].keys()
         NumDates = len(IncludeList)
+        analysisflag = numpy.zeros(n,int)
         for i in range(NumDates):
             IncludeDateList = ast.literal_eval(cf['Footprint']['AnalysisDates'][str(i)])
             try:
                 si = ldt.index(datetime.datetime.strptime(IncludeDateList[0],'%Y-%m-%d %H:%M'))
-                if si > 0:
-                    Lf[0:si] = numpy.float(9999)
             except ValueError:
                 si = -1
+            
             try:
                 ei = ldt.index(datetime.datetime.strptime(IncludeDateList[1],'%Y-%m-%d %H:%M')) + 1
-                if ei < n:
-                    Lf[ei:n] = numpy.float(9999)
             except ValueError:
                 ei = -1
+            
+            analysisflag[si:ei] = 1
+        
+        index = numpy.where(analysisflag == 0)[0]
+        Lf[index] = 9999
     
     zeta = numpy.ma.zeros(n,dtype=float)
-    for i in range(n):
-        if Lf[i] > 0:
-            zeta[i] = 9999999
-        else:
-            zeta[i] = (zm - d) / L[i]
+    Lfindex = numpy.where(numpy.mod(Lf,10)!=0)[0]
+    zetaindex = numpy.where(numpy.mod(Lf,10)==0)[0]
+    zeta[Lfindex] = 9999999
+    zeta[zetaindex] = (zm - d) / L[zetaindex]
     
     index_zero_L = numpy.ma.where(zeta > 9999998)[0]
     index_neutral = numpy.ma.where((zeta > -0.1) & (zeta < 0.1))[0]
@@ -1698,11 +1786,18 @@ def do_footprint_2d(cf,ds):
     
     if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='Fluxes'):
         Fluxesin = ast.literal_eval(cf['Footprint']['Fluxes'])
-        Fc,f = qcutils.GetSeriesasMA(ds,Fluxesin[0])
-        Fe,f = qcutils.GetSeriesasMA(ds,Fluxesin[1])
+        Fc,fFc = qcutils.GetSeriesasMA(ds,Fluxesin[0])
+        Fe,fFe = qcutils.GetSeriesasMA(ds,Fluxesin[1])
     else:
-        Fc,f = qcutils.GetSeriesasMA(ds,'Fc')
-        Fe,f = qcutils.GetSeriesasMA(ds,'Fe')
+        if level == 'L3':
+            Fc,fFc = qcutils.GetSeriesasMA(ds,'Fc')
+            Fe,fFe = qcutils.GetSeriesasMA(ds,'Fe')
+        elif level == 'L4':
+            Fc,fFc = qcutils.GetSeriesasMA(ds,'GPP')
+            Fe,fFe = qcutils.GetSeriesasMA(ds,'Re')
+        else:
+            log.error('  Footprint:  invalid input fluxes or analysis level')
+            return
     
     wd,f = qcutils.GetSeriesasMA(ds,wdin)
     eta,f = qcutils.GetSeriesasMA(ds,'eta')
@@ -1711,7 +1806,12 @@ def do_footprint_2d(cf,ds):
     for i in range(len(do_index)):
         if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='loglist') and cf['Footprint']['loglist'] == 'True':
             log.info('    Footprint: '+str(ds.series['DateTime']['Data'][do_index[i]]))
-        xr[do_index[i]] = footprint_2d(cf,sigmaw[do_index[i]],sigmav[do_index[i]],ustar[do_index[i]],zm,h[do_index[i]],znot,r,wd[do_index[i]],zeta[do_index[i]],L[do_index[i]],zc,ds.series['DateTime']['Data'][do_index[i]],eta[do_index[i]],Fc[do_index[i]],Fe[do_index[i]])
+        
+        if numpy.mod(fFc[do_index[i]],10)!=0 or numpy.mod(fFe[do_index[i]],10)!=0:
+            Fc[do_index[i]] = numpy.float(-9999)
+            Fe[do_index[i]] = numpy.float(-9999)
+        
+        xr[do_index[i]] = footprint_2d(cf,sigmaw[do_index[i]],sigmav[do_index[i]],ustar[do_index[i]],zm,h[do_index[i]],znot,r,wd[do_index[i]],zeta[do_index[i]],L[do_index[i]],zc,ds.series['DateTime']['Data'][do_index[i]],eta[do_index[i]],Fc[do_index[i]],Fe[do_index[i]],level)
     
     qcutils.CreateSeries(ds,'xr',xr,FList=['L','ww','vv','ustar'],Descr='integrated footprint in the direction of the wind',Units='m')
     flag_index = numpy.ma.where((xr == 0) & (numpy.mod(ds.series['xr']['Flag'],10)==0))[0]
@@ -2239,7 +2339,7 @@ def FilterFcByUstar(cf, ds, Fc_out='Fc', Fc_in='Fc', ustar_in='ustar'):
     units = qcutils.GetUnitsFromds(ds, Fc_in)
     qcutils.CreateSeries(ds,Fc_out,Fc,Flag=Fc_flag,Descr=descr,Units=units)
 
-def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp,eta,Fc,Fe):
+def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp,eta,Fc,Fe,level):
     """
         footprint_2d.py
         
@@ -2365,21 +2465,33 @@ def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp,eta,F
         for i in range(0, n):
             for j in range(0, m):
                 x_2d[i,j] = (x[i] * numpy.cos(numpy.deg2rad(-eta))) + (y[j] * numpy.sin(numpy.deg2rad(-eta)))   # longitudal rotation of the x,y plane
-                y_2d[i,j] = (y[j] * numpy.cos(numpy.deg2rad(-eta))) - (x[i] * numpy.sin(numpy.deg2rad(-eta)))   # lateral rotation of the x,y plane
+                y_2d[i,j] = -(y[j] * numpy.cos(numpy.deg2rad(-eta))) - (x[i] * numpy.sin(numpy.deg2rad(-eta)))   # lateral rotation of the x,y plane
                 f_2d[i,j] = f_ci[i] * 1/(sqrt2pi*sigmay[i]) *  math.exp(-y[j]**2 / (2*sigmay[i]**2))
         
         fw_c_2d = f_2d * Fc
         fw_e_2d = f_2d * Fe
         STList = []
+        if level == 'L3':
+            filetext0 = 'Fc'
+            filetext1 = 'Fe'
+            excltext0 = 'fw_Fc'
+            excltext1 = 'fw_Fe'
+        
+        if level == 'L4':
+            filetext0 = 'GPP'
+            filetext1 = 'Re'
+            excltext0 = 'fw_GPP'
+            excltext1 = 'fw_Re'
+        
         for fmt in ['%Y','%m','%d','%H','%M']:
             STList.append(timestamp.strftime(fmt))
             summaryFileName = cf['Files']['Footprint']['FootprintFilePath']+'footprint_2d_summary_'+''.join(STList)+'.xls'
             vectorFileName = cf['Files']['Footprint']['FootprintFilePath']+'footprint_2d_vectors_'+''.join(STList)+'.xls'
             matrixFileName = cf['Files']['Footprint']['FootprintFilePath']+'footprint_2d_matrix_'+''.join(STList)+'.xls'
-            vectorFcFileName = cf['Files']['Footprint']['FootprintFilePath']+'Fc_w_footprint_2d_vectors_'+''.join(STList)+'.xls'
-            matrixFcFileName = cf['Files']['Footprint']['FootprintFilePath']+'Fc_w_footprint_2d_matrix_'+''.join(STList)+'.xls'
-            vectorFeFileName = cf['Files']['Footprint']['FootprintFilePath']+'Fe_w_footprint_2d_vectors_'+''.join(STList)+'.xls'
-            matrixFeFileName = cf['Files']['Footprint']['FootprintFilePath']+'Fe_w_footprint_2d_matrix_'+''.join(STList)+'.xls'
+            vectorFcFileName = cf['Files']['Footprint']['FootprintFilePath']+filetext0+'_w_footprint_2d_vectors_'+''.join(STList)+'.xls'
+            matrixFcFileName = cf['Files']['Footprint']['FootprintFilePath']+filetext0+'_w_footprint_2d_matrix_'+''.join(STList)+'.xls'
+            vectorFeFileName = cf['Files']['Footprint']['FootprintFilePath']+filetext1+'_w_footprint_2d_vectors_'+''.join(STList)+'.xls'
+            matrixFeFileName = cf['Files']['Footprint']['FootprintFilePath']+filetext1+'_w_footprint_2d_matrix_'+''.join(STList)+'.xls'
         
         xlFile = xlwt.Workbook()
         xlSheet = xlFile.add_sheet('summary')
@@ -2430,14 +2542,25 @@ def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp,eta,F
         xlSheet.write(xlRow,xlCol,sigmav)
         xlRow = xlRow + 1
         xlCol = 1
-        xlSheet.write(xlRow,xlCol,'Fc')
-        xlCol = xlCol - 1
-        xlSheet.write(xlRow,xlCol,Fc)
-        xlRow = xlRow + 1
-        xlCol = 1
-        xlSheet.write(xlRow,xlCol,'Fe')
-        xlCol = xlCol - 1
-        xlSheet.write(xlRow,xlCol,Fe)
+        if level == 'L3':
+            xlSheet.write(xlRow,xlCol,'Fc')
+            xlCol = xlCol - 1
+            xlSheet.write(xlRow,xlCol,Fc)
+            xlRow = xlRow + 1
+            xlCol = 1
+            xlSheet.write(xlRow,xlCol,'Fe')
+            xlCol = xlCol - 1
+            xlSheet.write(xlRow,xlCol,Fe)
+        elif level == 'L4':
+            xlSheet.write(xlRow,xlCol,'GPP')
+            xlCol = xlCol - 1
+            xlSheet.write(xlRow,xlCol,Fc)
+            xlRow = xlRow + 1
+            xlCol = 1
+            xlSheet.write(xlRow,xlCol,'Re')
+            xlCol = xlCol - 1
+            xlSheet.write(xlRow,xlCol,Fe)
+        
         xlRow = xlRow + 1
         xlCol = 1
         
@@ -2477,29 +2600,29 @@ def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp,eta,F
                 csvSheet.writerow([xout,yout,fout])
         
         vectorout.close()
-        matrixout = open(matrixFileName, 'w')
-        csvSheet = csv.writer(matrixout, dialect='excel-tab')
-        xout = numpy.zeros(n+1,dtype=float)
-        xout[0] = -9999
-        for i in range(0,n):
-            xout[i+1] = x_2d[i,0]
-        
-        csvSheet.writerow(xout)
-        for j in range(0,m):
-            yout = y_2d[0,j]
-            dataout = f_2d[j]
-            ydataout = numpy.zeros(n+1,dtype=float)
-            ydataout[0] = yout
-            for i in range(0,n):
-                ydataout[i+1] = f_2d[i,j]
-            
-            csvSheet.writerow(ydataout)
-        
-        matrixout.close()
+        #matrixout = open(matrixFileName, 'w')
+        #csvSheet = csv.writer(matrixout, dialect='excel-tab')
+        #xout = numpy.zeros(n+1,dtype=float)
+        #xout[0] = -9999
+        #for i in range(0,n):
+        #    xout[i+1] = x_2d[i,0]
+        #
+        #csvSheet.writerow(xout)
+        #for j in range(0,m):
+        #    yout = y_2d[0,j]
+        #    dataout = f_2d[j]
+        #    ydataout = numpy.zeros(n+1,dtype=float)
+        #    ydataout[0] = yout
+        #    for i in range(0,n):
+        #        ydataout[i+1] = f_2d[i,j]
+        #    
+        #    csvSheet.writerow(ydataout)
+        #
+        #matrixout.close()
         if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='weights') and cf['Footprint']['weights'] == 'True':
             vectorout = open(vectorFcFileName, 'w')
             csvSheet = csv.writer(vectorout, dialect='excel-tab')
-            csvSheet.writerow(['x','y','fw_Fc'])
+            csvSheet.writerow(['x','y',excltext0])
             for i in range(0,n):
                 for j in range(0,m):
                     xout = x_2d[i,j]
@@ -2508,28 +2631,28 @@ def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp,eta,F
                     csvSheet.writerow([xout,yout,fwFcout])
             
             vectorout.close()
-            matrixout = open(matrixFcFileName, 'w')
-            csvSheet = csv.writer(matrixout, dialect='excel-tab')
-            xout = numpy.zeros(n+1,dtype=float)
-            xout[0] = -9999
-            for i in range(0,n):
-                xout[i+1] = x_2d[i,0]
-            
-            csvSheet.writerow(xout)
-            for j in range(0,m):
-                yout = y_2d[0,j]
-                dataout = fw_c_2d[j]
-                ydataout = numpy.zeros(n+1,dtype=float)
-                ydataout[0] = yout
-                for i in range(0,n):
-                    ydataout[i+1] = fw_c_2d[i,j]
-                
-                csvSheet.writerow(ydataout)
-            
-            matrixout.close()
+            #matrixout = open(matrixFcFileName, 'w')
+            #csvSheet = csv.writer(matrixout, dialect='excel-tab')
+            #xout = numpy.zeros(n+1,dtype=float)
+            #xout[0] = -9999
+            #for i in range(0,n):
+            #    xout[i+1] = x_2d[i,0]
+            #
+            #csvSheet.writerow(xout)
+            #for j in range(0,m):
+            #    yout = y_2d[0,j]
+            #    dataout = fw_c_2d[j]
+            #    ydataout = numpy.zeros(n+1,dtype=float)
+            #    ydataout[0] = yout
+            #    for i in range(0,n):
+            #        ydataout[i+1] = fw_c_2d[i,j]
+            #    
+            #    csvSheet.writerow(ydataout)
+            #
+            #matrixout.close()
             vectorout = open(vectorFeFileName, 'w')
             csvSheet = csv.writer(vectorout, dialect='excel-tab')
-            csvSheet.writerow(['x','y','fw_Fe'])
+            csvSheet.writerow(['x','y',excltext1])
             for i in range(0,n):
                 for j in range(0,m):
                     xout = x_2d[i,j]
@@ -2538,25 +2661,25 @@ def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp,eta,F
                     csvSheet.writerow([xout,yout,fwFeout])
             
             vectorout.close()
-            matrixout = open(matrixFeFileName, 'w')
-            csvSheet = csv.writer(matrixout, dialect='excel-tab')
-            xout = numpy.zeros(n+1,dtype=float)
-            xout[0] = -9999
-            for i in range(0,n):
-                xout[i+1] = x_2d[i,0]
-            
-            csvSheet.writerow(xout)
-            for j in range(0,m):
-                yout = y_2d[0,j]
-                dataout = fw_e_2d[j]
-                ydataout = numpy.zeros(n+1,dtype=float)
-                ydataout[0] = yout
-                for i in range(0,n):
-                    ydataout[i+1] = fw_e_2d[i,j]
-                
-                csvSheet.writerow(ydataout)
-            
-            matrixout.close()
+            #matrixout = open(matrixFeFileName, 'w')
+            #csvSheet = csv.writer(matrixout, dialect='excel-tab')
+            #xout = numpy.zeros(n+1,dtype=float)
+            #xout[0] = -9999
+            #for i in range(0,n):
+            #    xout[i+1] = x_2d[i,0]
+            #
+            #csvSheet.writerow(xout)
+            #for j in range(0,m):
+            #    yout = y_2d[0,j]
+            #    dataout = fw_e_2d[j]
+            #    ydataout = numpy.zeros(n+1,dtype=float)
+            #    ydataout[0] = yout
+            #    for i in range(0,n):
+            #        ydataout[i+1] = fw_e_2d[i,j]
+            #    
+            #    csvSheet.writerow(ydataout)
+            #
+            #matrixout.close()
     
     return xr
 
@@ -3314,18 +3437,6 @@ def MassmanStandard(cf,ds,Ta_in='Ta',Ah_in='Ah',ps_in='ps',ustar_in='ustar',usta
     ustarM = numpy.ma.sqrt(numpy.ma.sqrt(uwM ** 2 + vwM ** 2))
     LM = mf.molen(Ta, Ah, ps, ustarM, wTM)
     # write the 2nd pass Massman corrected covariances to the data structure
-    
-    Ta,f = qcutils.GetSeriesasMA(ds,Ta_in)
-    Ah,f = qcutils.GetSeriesasMA(ds,Ah_in)
-    ps,f = qcutils.GetSeriesasMA(ds,ps_in)
-    nRecs = numpy.size(Ta)
-    u,f = qcutils.GetSeriesasMA(ds,u_in)
-    uw,f = qcutils.GetSeriesasMA(ds,uw_in)
-    vw,f = qcutils.GetSeriesasMA(ds,vw_in)
-    wT,f = qcutils.GetSeriesasMA(ds,wT_in)
-    wC,f = qcutils.GetSeriesasMA(ds,wC_in)
-    wA,f = qcutils.GetSeriesasMA(ds,wA_in)
-    
     qcutils.CreateSeries(ds,ustar_out,ustarM,FList=[Ta_in,Ah_in,ps_in,u_in,uw_in,vw_in,wT_in,wC_in,wA_in],Descr='Massman true ustar',Units='m/s')
     qcutils.CreateSeries(ds,L_out,LM,FList=[Ta_in,Ah_in,ps_in,u_in,uw_in,vw_in,wT_in,wC_in,wA_in],Descr='Massman true Obukhov Length',Units='m')
     qcutils.CreateSeries(ds,uw_out,uwM,FList=[Ta_in,Ah_in,ps_in,u_in,uw_in,vw_in,wT_in,wC_in,wA_in],Descr='Massman true Cov(uw)',Units='m2/s2')
@@ -3717,7 +3828,7 @@ def ReplaceWhereMissing(Destination,Primary,Secondary,FlagOffset=0):
     Destination['Flag'] = Primary['Flag'].copy()
     Destination['Data'][0:len(p_data)] = p_data
     Destination['Flag'][0:len(p_flag)] = p_flag
-    Destination['Attr']['Description'] = 'Merged from original and alternate'
+    Destination['Attr']['long_name'] = 'Merged from original and alternate'
     Destination['Attr']['units'] = Primary['Attr']['units']
 
 def ReplaceWhenDiffExceedsRange(DateTime,Destination,Primary,Secondary,RList):
@@ -3752,7 +3863,7 @@ def ReplaceWhenDiffExceedsRange(DateTime,Destination,Primary,Secondary,RList):
     p_flag[index] = 70
     Destination['Data'] = numpy.ma.filled(p_data,float(-9999))
     Destination['Flag'] = p_flag.copy()
-    Destination['Attr']['Description'] = 'Replaced original with alternate when difference exceeded threshold'
+    Destination['Attr']['long_name'] = 'Replaced original with alternate when difference exceeded threshold'
     Destination['Attr']['units'] = Primary['Attr']['units']
 
 def savitzky_golay(y, window_size, order, deriv=0):

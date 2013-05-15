@@ -262,6 +262,11 @@ def l3qc(cf,ds2):
         ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', PenmanMonteith'
         qcts.do_PenmanMonteith(cf,ds3)
     
+    # calculate bulk Richardson numbers
+    if qcutils.cfkeycheck(cf,Base='Functions',ThisOne='bulkRichardson') and cf['Functions']['bulkRichardson'] == 'True':
+        ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', bulkRichardson'
+        qcts.do_bulkRichardson(cf,ds3)
+    
     # re-apply the quality control checks (range, diurnal and rules)
     ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', do_qcchecks'
     qcck.do_qcchecks(cf,ds3)
@@ -448,6 +453,11 @@ def l4qc(cf,ds3):
         qcts.do_sums(cf,ds4)
     
     qcutils.GetSeriesStats(cf,ds4)
+    
+    # run MOST (Buckingham Pi) 2d footprint model (Kljun et al. 2004)
+    if qcutils.cfkeycheck(cf,Base='Functions',ThisOne='footprint') and cf['Functions']['footprint'] == 'True':
+        ds4.globalattributes['L4Functions'] = ds4.globalattributes['L4Functions']+', footprint'
+        qcts.do_footprint_2d(cf,ds4,level='L4')
     
     # compute climatology for L3 data
     if qcutils.cfkeycheck(cf,Base='Functions',ThisOne='climatology') and cf['Functions']['climatology'] == 'True':

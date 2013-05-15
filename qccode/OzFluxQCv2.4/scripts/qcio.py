@@ -5,6 +5,7 @@ import numpy
 import os
 import sys
 import time
+import constants as c
 import Tkinter, tkFileDialog
 import xlrd
 import xlwt
@@ -29,6 +30,7 @@ def autonc2xl(cf,InLevel,OutLevel):
 def autoxl2nc(cf,InLevel,OutLevel):
     # get the data series from the Excel file
     ds = xl_read_series(cf,InLevel)
+    ds.globalattributes['Level'] = str(InLevel)
     # get the year, month, day, hour, minute and second from the xl date/time
     qcts.get_yearmonthdayhourminutesecond(cf,ds)
     # get the quality control flags
@@ -44,7 +46,7 @@ def autoxl2nc(cf,InLevel,OutLevel):
         if InLevel == 'L4':
             for ThisOne in ['Fc_gapfilled','Fe_gapfilled','Fh_gapfilled','Fc','Fe','Fh']:
                 if ThisOne in ds.series.keys():
-                    ds1.series[ThisOne]['Flag'] = ds.series['Gap']['Data']
+                    ds1.series[ThisOne]['Flag'] = numpy.int32(ds.series['Gap']['Data'])
         ds = ds1
     # do any functions to create new series
     qcts.do_functions(cf,ds)
@@ -85,6 +87,10 @@ def get_datetime(ds):
                                                        int(ds.series['Hour']['Data'][i]),
                                                        int(ds.series['Minute']['Data'][i]),
                                                        int(ds.series['Second']['Data'][i])))
+    ds.series['DateTime']['Flag'] = numpy.zeros(nRecs)
+    ds.series['DateTime']['Attr'] = {}
+    ds.series['DateTime']['Attr']['long_name'] = 'Date-time object'
+    ds.series['DateTime']['Attr']['units'] = 'None'
 
 def get_ncdtype(Series):
     sd = Series.dtype.name
@@ -135,37 +141,7 @@ def nc_read_series(cf,level):
     if len(gattrlist)!=0:
         for gattr in gattrlist:
             ds.globalattributes[gattr] = getattr(ncFile,gattr)
-    for ThisOne in ncFile.variables.keys():
-        if '_QCFlag' not in ThisOne:
-            # create the series in the data structure
-            ds.series[unicode(ThisOne)] = {}
-            # get the data variable object
-            ds.series[ThisOne]['Data'] = ncFile.variables[ThisOne][:]
-            # check for a QC flag and if it exists, load it
-            if ThisOne+'_QCFlag' in ncFile.variables.keys():
-                #ncVar = ncFile.variables[ThisOne+'_QCFlag']
-                ds.series[ThisOne]['Flag'] = ncFile.variables[ThisOne+'_QCFlag'][:]
-            # get the variable attributes
-            vattrlist = ncFile.variables[ThisOne].ncattrs()
-            if len(vattrlist)!=0:
-                ds.series[ThisOne]['Attr'] = {}
-                for vattr in vattrlist:
-                    ds.series[ThisOne]['Attr'][vattr] = getattr(ncFile.variables[ThisOne],vattr)
-    ncFile.close()
-    # get a series of Python datetime objects
-    get_datetime(ds)
-    return ds
-
-def nc_read_series_file(ncFullName):
-    ''' Read a netCDF file and put the data and meta-data into a DataStructure'''
-    log.info(' Reading netCDF file '+ncFullName)
-    netCDF4.default_encoding = 'latin-1'
-    ncFile = netCDF4.Dataset(ncFullName,'r')
-    ds = DataStructure()
-    gattrlist = ncFile.ncattrs()
-    if len(gattrlist)!=0:
-        for gattr in gattrlist:
-            ds.globalattributes[gattr] = getattr(ncFile,gattr)
+            if 'time_step' in ds.globalattributes: c.ts = ds.globalattributes['time_step']
     for ThisOne in ncFile.variables.keys():
         if '_QCFlag' not in ThisOne:
             # create the series in the data structure
@@ -210,7 +186,7 @@ def nc_write_OzFlux_series(cf,ds,level):
             dt = get_ncdtype(ds.series[ThisOne]['Data'])
             ncVar = ncFile.createVariable(ThisOne,dt,('Time',))
             ncVar[:] = ds.series[ThisOne]['Data'].tolist()
-            setattr(ncVar,'Description',ThisOne)
+            setattr(ncVar,'long_name',ThisOne)
             setattr(ncVar,'units','none')
             SeriesList.remove(ThisOne)
     if 'DateTime' in SeriesList:
@@ -227,7 +203,7 @@ def nc_write_OzFlux_series(cf,ds,level):
             dt = get_ncdtype(ds.series[ThisOne]['Flag'])
             ncVar = ncFile.createVariable(ThisOne+'_QCFlag',dt,('Time',))
             ncVar[:] = ds.series[ThisOne]['Flag'].tolist()
-            setattr(ncVar,'Description','QC flag')
+            setattr(ncVar,'long_name','QC flag')
             setattr(ncVar,'units','none')
     ncFile.close()
 
@@ -253,7 +229,7 @@ def nc_write_series(cf,ds,level):
             dt = get_ncdtype(ds.series[ThisOne]['Data'])
             ncVar = ncFile.createVariable(ThisOne,dt,('Time',))
             ncVar[:] = ds.series[ThisOne]['Data'].tolist()
-            setattr(ncVar,'Description',ThisOne)
+            setattr(ncVar,'long_name',ThisOne)
             setattr(ncVar,'units','none')
             SeriesList.remove(ThisOne)
     if 'DateTime' in SeriesList:
@@ -270,7 +246,7 @@ def nc_write_series(cf,ds,level):
             dt = get_ncdtype(ds.series[ThisOne]['Flag'])
             ncVar = ncFile.createVariable(ThisOne+'_QCFlag',dt,('Time',))
             ncVar[:] = ds.series[ThisOne]['Flag'].tolist()
-            setattr(ncVar,'Description','QC flag')
+            setattr(ncVar,'long_name','QC flag')
             setattr(ncVar,'units','none')
     ncFile.close()
 
@@ -300,10 +276,10 @@ def xl_read_flags(cf,ds,level,VariablesInFile):
                 xlCol = HeaderRow.index(cf['Variables'][ThisOne]['xl']['name'])
                 Values = ActiveSheet.col_values(xlCol)[FirstDataRow:LastDataRow]
                 Types = ActiveSheet.col_types(xlCol)[FirstDataRow:LastDataRow]
-                ds.series[ThisOne]['Flag'] = numpy.array([-9999]*len(Values),numpy.float64)
+                ds.series[ThisOne]['Flag'] = numpy.array([-9999]*len(Values),numpy.int32)
                 for i in range(len(Values)):
                     if Types[i]==2: #xlType=3 means a date/time value, xlType=2 means a number
-                        ds.series[ThisOne]['Flag'][i] = numpy.float64(Values[i])
+                        ds.series[ThisOne]['Flag'][i] = numpy.int32(Values[i])
                     else:
                         log.error('  xl_read_flags: flags for '+ThisOne+' not found in xl file')
     return ds
@@ -450,8 +426,8 @@ def xl_write_series(cf,ds,level):
     xlFlagSheet.write(3,xlCol+3,ds.globalattributes['Flag100'])
     xlFlagSheet.write(3,xlCol+4,'110:')
     xlFlagSheet.write(3,xlCol+5,ds.globalattributes['Flag110'])
-    xlFlagSheet.write(3,xlCol+6,'111:')
-    xlFlagSheet.write(3,xlCol+7,ds.globalattributes['Flag111'])
+    xlFlagSheet.write(3,xlCol+6,'120:')
+    xlFlagSheet.write(3,xlCol+7,ds.globalattributes['Flag120'])
     xlFlagSheet.write(4,xlCol,'121:')
     xlFlagSheet.write(4,xlCol+1,ds.globalattributes['Flag121'])
     xlFlagSheet.write(4,xlCol+2,'122:')
@@ -497,12 +473,12 @@ def xl_write_series(cf,ds,level):
             #d_xf = xlwt.easyxf('font: height 160')
             d_xf = xlwt.easyxf()
             # write the units and the variable name to the header rows in the xl file
-            Description = ds.series[ThisOne]['Attr']['long_name']
-            Units = ds.series[ThisOne]['Attr']['units']
+            longname = ds.series[ThisOne]['Attr']['long_name']
+            units = ds.series[ThisOne]['Attr']['units']
             #xlDataSheet.write(8,xlCol,Units,d_xf)
             #xlDataSheet.write(9,xlCol,ThisOne,d_xf)
-            xlDataSheet.write(7,xlCol,Description)
-            xlDataSheet.write(8,xlCol,Units)
+            xlDataSheet.write(7,xlCol,longname)
+            xlDataSheet.write(8,xlCol,units)
             xlDataSheet.write(9,xlCol,ThisOne)
             # loop over the values in the variable series (array writes don't seem to work)
             for j in range(nRecs):

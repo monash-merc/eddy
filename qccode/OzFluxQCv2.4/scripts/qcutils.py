@@ -133,13 +133,14 @@ def get_diurnalstats(DecHour,Data,dt):
 
 def GetAverageList(cf,ThisOne,default=['']):
     if cfkeycheck(cf,ThisOne=ThisOne):
-        if default == ['']:
-            log.error(' GetAverageList: no "Source" series provided for '+ThisOne)
-            return []
         if cfkeycheck(cf,ThisOne=ThisOne,key='AverageSeries'):
             alist = ast.literal_eval(cf['Variables'][ThisOne]['AverageSeries']['Source'])
-            if alist == ['']:
-                return []
+            if alist == [''] and default == ['']:
+                log.error(' GetAverageList: no "Source" series provided for '+ThisOne)
+                return
+        elif default == ['']:
+            log.error(' GetAverageList: no "Source" series provided for '+ThisOne)
+            return
         else:
             alist = default
     else:
@@ -384,7 +385,7 @@ def GetSeriesStats(cf,ds):
     xlFlagSheet.write(xlRow,xlCol+30,ds.globalattributes['Flag90'])
     xlFlagSheet.write(xlRow,xlCol+31,ds.globalattributes['Flag100'])
     xlFlagSheet.write(xlRow,xlCol+32,ds.globalattributes['Flag110'])
-    xlFlagSheet.write(xlRow,xlCol+33,ds.globalattributes['Flag111'])
+    xlFlagSheet.write(xlRow,xlCol+33,ds.globalattributes['Flag120'])
     xlFlagSheet.write(xlRow,xlCol+34,ds.globalattributes['Flag121'])
     xlFlagSheet.write(xlRow,xlCol+35,ds.globalattributes['Flag122'])
     xlFlagSheet.write(xlRow,xlCol+36,ds.globalattributes['Flag131'])
@@ -396,7 +397,7 @@ def GetSeriesStats(cf,ds):
     xlFlagSheet.write(xlRow,xlCol+42,ds.globalattributes['Flag151'])
     xlFlagSheet.write(xlRow,xlCol+43,ds.globalattributes['Flag160'])
     xlFlagSheet.write(xlRow,xlCol+44,ds.globalattributes['Flag161'])
-    bins0 = numpy.array([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,30,31,40,50,60,70,80,81,82,83,90,100,110,111,121,122,131,132,133,134,140,150,151,160,161,162])
+    bins0 = numpy.array([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,30,31,40,50,60,70,80,81,82,83,90,100,110,120,121,122,131,132,133,134,140,150,151,160,161,162])
     bins = bins0 - 0.5
     xlRow = xlRow + 1
     xlCol = 1
