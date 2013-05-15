@@ -185,7 +185,7 @@ public class InstallAction extends InstallBaseAction {
         appProp.setAdminPassword("pass2word!");
         appProp.setSystemServiceEmail("service@servicemail.com");
         appProp.setStoreLocation("/opt/datastore/ands");
-        appProp.setDataLicence("http://www.tern.org.au/licence.html");
+        appProp.setDataLicence("http://tern.org.au/datalicence/TERN-BY-SA/1.0");
         appProp.setCollectionPhysicalLocation("Monash University Clayton Campus Building 26 Clayton 3800 Victoria");
 
         appProp.setLoginTryTimes(3);
@@ -212,7 +212,7 @@ public class InstallAction extends InstallBaseAction {
         appProp.setHdlWsPath("pids");
         appProp.setHdlWsMethod("mint");
         appProp.setHdlWsAppId("c4b16dc56797f1dfbf545e2397ac7b6bcc54b8ec");
-        appProp.setHdlResolverAddress("http://hdl.handle.net/");
+        appProp.setHdlResolverAddress("http://hdl.handle.net");
 
         // jdbc
         jdbcProp = new JdbcProperty();

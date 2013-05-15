@@ -58,4 +58,6 @@ public interface DatasetService {
     Pagination<Dataset> getDatasetByCollectionId(long cid, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
     Dataset getAllDatasetData(long dsId);
+
+    List<Dataset> getAllDatasets();
 }

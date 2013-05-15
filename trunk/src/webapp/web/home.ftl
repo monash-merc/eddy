@@ -148,18 +148,18 @@
 
             <p>
                 Users can browse the contents of this portal by clicking on the <b>"Collections"</b> entry above
-                and using the "<a href="${base}/mapview/showMapView.jspx"><b>Map View</b></a>" or the
+                and using the <a href="${base}/mapview/showMapView.jspx"><b>Map View</b></a> or the
             <@s.if test="%{#session.authentication_flag =='authenticated'}">
-                "<a href="${base}/data/listAllCollections.jspx"><b>List View</b></a>"
+                <a href="${base}/data/listAllCollections.jspx"><b>List View</b></a>
             </@s.if>
             <@s.else>
-                "<a href="${base}/pub/listPubCollections.jspx"><b>List View</b></a>"
+                <a href="${base}/pub/listPubCollections.jspx"><b>List View</b></a>
             </@s.else>
                 to view the data collections.
             </p>
 
             <p>
-                The "<a href="${base}/search/showSearch.jspx"><b>Search</b></a>" menu allows users to search for data based on attributes such as site name, location, period and researcher.
+                The <a href="${base}/search/showSearch.jspx"><b>Search</b></a> menu allows users to search for data based on attributes such as site name, location, period and researcher.
             </p>
 
             <p>

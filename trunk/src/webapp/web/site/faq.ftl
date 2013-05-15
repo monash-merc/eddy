@@ -61,7 +61,7 @@
     </p>
 
     <p>
-        In <b>List View</b>, clicking on the collection <b>title</b> or on the <b>View Details</b> button will open the collection and display a description of the collection and a
+        In <b>List View</b>, clicking on the collection title or on the <b>View Details</b> button will open the collection and display a description of the collection and a
         list of data files available for the collection.
         All files in the collection will have this button that allows the user to see the global attributes, variables and variable attributes of the data file.
         Files that are not restricted access will have an <b>Export</b> button that allows you to download data. Files that are restricted access will not have an <b>Export</b>

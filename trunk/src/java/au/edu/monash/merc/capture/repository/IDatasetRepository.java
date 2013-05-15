@@ -48,4 +48,6 @@ public interface IDatasetRepository {
     List<Dataset> getDatasetByCollectionIdUsrId(long cid, long uid);
 
     Pagination<Dataset> getDatasetByCollectionId(long cid, int startPageNo, int recordsPerPage, OrderBy[] orderBys);
+
+    List<Dataset> getAllDatasets();
 }
