@@ -41,8 +41,6 @@ import org.springframework.stereotype.Controller;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author simonyu
@@ -308,8 +306,8 @@ public class EditColAction extends DMCoreAction {
             this.licence.setContents(this.configSetting.getPropValue(ConfigSettings.TERN_DATA_LICENCE));
         }
 
-        if (StringUtils.isNotBlank(collection.getSpatialCoverage())) {
-            if (!CaptureUtil.notGTFixedLength(collection.getSpatialCoverage(), 255)) {
+        if (StringUtils.isNotBlank(collection.getLocation().getSpatialCoverage())) {
+            if (!CaptureUtil.notGTFixedLength(collection.getLocation().getSpatialCoverage(), 255)) {
                 addFieldError("collection.coverage.length", getText("collection.coverage.max.length"));
                 hasErrors = true;
             }

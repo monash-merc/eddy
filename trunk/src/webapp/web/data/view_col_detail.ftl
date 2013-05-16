@@ -120,7 +120,7 @@
             </a>
         </@s.if>
         <@s.if test="%{permissionBean.deleteAllowed}">
-            <div class="msg_content">All data will be removed from the repository permanently!<p>Are you sure to delet
+            <div class="msg_content">All data will be removed from the repository permanently!<p>Are you sure to delete
                 this collection?</p></div>
             <div id='confirm_dialog'>
                 <div class='header'><span>Deleting Collection Confirm</span></div>
@@ -142,7 +142,7 @@
         </@s.if>
         <@s.if test="%{permissionBean.mdRegAllowed}">
             <a href="${base}/${andsMdRegLink}?collection.id=<@s.property value='collection.id' />&collection.owner.id=<@s.property value='collection.owner.id' />&viewType=${viewType}"
-               title="Public registration of the metadata associated with this collection with the Research Data Australia website">
+               title="Publish the metadata of this collection on various online data portals, such as TERN, RDA, etc.">
                 <@s.text name="ands.md.registration.title" />
             </a>
         </@s.if>
@@ -274,6 +274,10 @@
                     </div>
                     <div class="input_field_value_section">
                         <@s.file name="upload" id="upload" cssClass="input_file" />
+                        <div class="blank_separator"></div>
+                        <div class="comments">
+                            <a href="${base}/site/netcdf.jspx">Please follow the NetCDF file naming convention</a></li>
+                        </div>
                     </div>
                 </div>
                 <div style="clear: both;"></div>
@@ -416,7 +420,7 @@
                         <@s.if test="%{permissionBean.deleteAllowed}">
                             <div id='confirm_dialog'>
                                 <div class="msg_content">The data will be removed from the repository permanently!
-                                    <p>Are you sure to delet this dataset?</p></div>
+                                    <p>Are you sure to delete this dataset?</p></div>
                                 <div id='confirm'>
                                     <div class='header'><span>Deleting Dataset Confirm</span></div>
                                     <div class='message'></div>

@@ -293,45 +293,45 @@ public class PermissionAction extends DMCoreAction {
         return permission;
     }
 
-    private void printGrantedPermissions() {
-        System.out.println("===== anonymous permission id: " + anonymousePerm.getId());
-        System.out.println("===== anonymous uid: " + anonymousePerm.getUid());
-        System.out.println("===== anonymous view allowed: " + anonymousePerm.isViewAllowed());
-        System.out.println("===== anonymous import  allowed: " + anonymousePerm.isImportAllowed());
-        System.out.println("===== anonymous export allowed: " + anonymousePerm.isExportAllowed());
-        System.out.println("===== anonymous update allowed: " + anonymousePerm.isUpdateAllowed());
-        System.out.println("===== anonymous delete allowed: " + anonymousePerm.isDeleteAllowed());
-        System.out.println("===== anonymous ra control allowed: " + anonymousePerm.isRacAllowed());
-        System.out.println("===== anonymous access control allowed: " + anonymousePerm.isAcAllowed());
-        System.out.println("===== anonymous mdreg allowed: " + anonymousePerm.isMdRegAllowed());
-        System.out.println("");
-
-        System.out.println("===== allRegisteredUser permission id: " + allRegUserPerm.getId());
-        System.out.println("===== allRegisteredUser uid: " + allRegUserPerm.getUid());
-        System.out.println("===== allRegisteredUser view allowed: " + allRegUserPerm.isViewAllowed());
-        System.out.println("===== allRegisteredUser import  allowed: " + allRegUserPerm.isImportAllowed());
-        System.out.println("===== allRegisteredUser export allowed: " + allRegUserPerm.isExportAllowed());
-        System.out.println("===== allRegisteredUser update allowed: " + allRegUserPerm.isUpdateAllowed());
-        System.out.println("===== allRegisteredUser delete allowed: " + allRegUserPerm.isDeleteAllowed());
-        System.out.println("===== allRegisteredUser ra control allowed: " + allRegUserPerm.isRacAllowed());
-        System.out.println("===== allRegisteredUser access control allowed: " + allRegUserPerm.isAcAllowed());
-        System.out.println("===== allRegisteredUser mdreg allowed: " + allRegUserPerm.isMdRegAllowed());
-        System.out.println("");
-
-        for (PermissionBean pm : regUserPerms) {
-            System.out.println("===== a registered user permission id: " + pm.getId());
-            System.out.println("===== a registered user uid: " + pm.getUid());
-            System.out.println("===== a registered user view allowed: " + pm.isViewAllowed());
-            System.out.println("===== a registered user import  allowed: " + pm.isImportAllowed());
-            System.out.println("===== a registered user export allowed: " + pm.isExportAllowed());
-            System.out.println("===== a registered user update allowed: " + pm.isUpdateAllowed());
-            System.out.println("===== a registered user delete allowed: " + pm.isDeleteAllowed());
-            System.out.println("===== a registered user ra control allowed: " + pm.isRacAllowed());
-            System.out.println("===== a registered user access control allowed: " + pm.isAcAllowed());
-            System.out.println("===== a registered user mdreg allowed: " + pm.isMdRegAllowed());
-            System.out.println("");
-        }
-    }
+//    private void printGrantedPermissions() {
+//        System.out.println("===== anonymous permission id: " + anonymousePerm.getId());
+//        System.out.println("===== anonymous uid: " + anonymousePerm.getUid());
+//        System.out.println("===== anonymous view allowed: " + anonymousePerm.isViewAllowed());
+//        System.out.println("===== anonymous import  allowed: " + anonymousePerm.isImportAllowed());
+//        System.out.println("===== anonymous export allowed: " + anonymousePerm.isExportAllowed());
+//        System.out.println("===== anonymous update allowed: " + anonymousePerm.isUpdateAllowed());
+//        System.out.println("===== anonymous delete allowed: " + anonymousePerm.isDeleteAllowed());
+//        System.out.println("===== anonymous ra control allowed: " + anonymousePerm.isRacAllowed());
+//        System.out.println("===== anonymous access control allowed: " + anonymousePerm.isAcAllowed());
+//        System.out.println("===== anonymous mdreg allowed: " + anonymousePerm.isMdRegAllowed());
+//        System.out.println("");
+//
+//        System.out.println("===== allRegisteredUser permission id: " + allRegUserPerm.getId());
+//        System.out.println("===== allRegisteredUser uid: " + allRegUserPerm.getUid());
+//        System.out.println("===== allRegisteredUser view allowed: " + allRegUserPerm.isViewAllowed());
+//        System.out.println("===== allRegisteredUser import  allowed: " + allRegUserPerm.isImportAllowed());
+//        System.out.println("===== allRegisteredUser export allowed: " + allRegUserPerm.isExportAllowed());
+//        System.out.println("===== allRegisteredUser update allowed: " + allRegUserPerm.isUpdateAllowed());
+//        System.out.println("===== allRegisteredUser delete allowed: " + allRegUserPerm.isDeleteAllowed());
+//        System.out.println("===== allRegisteredUser ra control allowed: " + allRegUserPerm.isRacAllowed());
+//        System.out.println("===== allRegisteredUser access control allowed: " + allRegUserPerm.isAcAllowed());
+//        System.out.println("===== allRegisteredUser mdreg allowed: " + allRegUserPerm.isMdRegAllowed());
+//        System.out.println("");
+//
+//        for (PermissionBean pm : regUserPerms) {
+//            System.out.println("===== a registered user permission id: " + pm.getId());
+//            System.out.println("===== a registered user uid: " + pm.getUid());
+//            System.out.println("===== a registered user view allowed: " + pm.isViewAllowed());
+//            System.out.println("===== a registered user import  allowed: " + pm.isImportAllowed());
+//            System.out.println("===== a registered user export allowed: " + pm.isExportAllowed());
+//            System.out.println("===== a registered user update allowed: " + pm.isUpdateAllowed());
+//            System.out.println("===== a registered user delete allowed: " + pm.isDeleteAllowed());
+//            System.out.println("===== a registered user ra control allowed: " + pm.isRacAllowed());
+//            System.out.println("===== a registered user access control allowed: " + pm.isAcAllowed());
+//            System.out.println("===== a registered user mdreg allowed: " + pm.isMdRegAllowed());
+//            System.out.println("");
+//        }
+//    }
 
     //grant the collection permissions
     private AssignedPermissions grantCollectionPermissions(Collection col) {

@@ -110,9 +110,16 @@ public class ExportDatasetAction extends DMCoreAction {
                 this.licence.setLicenceType(LicenceType.TERN.type());
                 this.licence.setContents(this.configSetting.getPropValue(ConfigSettings.TERN_DATA_LICENCE));
             }
+
+            if (licence.getLicenceType().equalsIgnoreCase(LicenceType.USERDEFINED.type())) {
+                String licenceContent = licence.getContents();
+                String htmlLicence = nlToBr(licenceContent);
+                licence.setContents(htmlLicence);
+            }
             //if not accept the data licence, just return the pre export page.
             if (!acceptedLicence) {
                 addFieldError("acceptedLicence", getText("dataset.export.must.accept.data.licence"));
+
                 return INPUT;
             }
             String dataStorePath = configSetting.getPropValue(ConfigSettings.DATA_STORE_LOCATION);
