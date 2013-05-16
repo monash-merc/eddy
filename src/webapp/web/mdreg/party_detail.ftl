@@ -20,7 +20,7 @@
 
     <div class="popup_row">
         <div class="popup_spec">
-            The researcher information details:
+            Selected researcher details:
         </div>
 
         <div class="content_none_border_div">

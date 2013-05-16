@@ -147,7 +147,7 @@
             </p>
 
             <p>
-                Users can browse the contents of this portal by clicking on the <b>"Collections"</b> entry above
+                Users can browse the contents of this portal by clicking on the <b>Collections</b> entry above
                 and using the <a href="${base}/mapview/showMapView.jspx"><b>Map View</b></a> or the
             <@s.if test="%{#session.authentication_flag =='authenticated'}">
                 <a href="${base}/data/listAllCollections.jspx"><b>List View</b></a>
@@ -163,12 +163,12 @@
             </p>
 
             <p>
-                The <b>"Resources"</b> menu provides direct link to information on the data available, the data format, licence information and information on utilities for accessing the data files
+                The <b>Resources</b> menu provides direct link to information on the data available, the data format, licence information and information on utilities for accessing the data files
                 stored on this portal.
             </p>
 
             <p>
-                Users wishing to download data will need to log in to the portal. If you already have an account, click the "<b>Login</b>" button above.
+                Users wishing to download data will need to log in to the portal. If you already have an account, click the <b>Login</b> button above.
                 If you would like to ask for an account, click on <b>Register</b>. Registration is free and your account will normally be activated within two to three business days.
             </p>
         </div>

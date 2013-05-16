@@ -61,7 +61,7 @@
                         An example of a complete file name would be “HowardSprings_2011_L3.nc” for the full year of 2011 or “HowardSprings_2011Q1_L3.nc” for the first quarter of 2011.
                     </div>
                     <div class="paragraph_div">
-                        Only NetCDF files will have the <b>View Metadata</b> button visible, from which users will be able to view the global and variable attributes pertaining to the file.
+                        Only NetCDF files, that have had metadata extracted, will have the <b>View Metadata</b> button visible. Users will be able to view the global and variable attributes pertaining to the file.
                     </div>
                 </div>
             </div>

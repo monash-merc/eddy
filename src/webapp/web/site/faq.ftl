@@ -151,10 +151,10 @@
         the collection page.
         This page can be accessed by clicking on the collection title in the collection
     <@s.if test="%{#session.authentication_flag =='authenticated'}">
-        "<a href="${base}/data/listAllCollections.jspx"><b>List View</b></a>"
+        <a href="${base}/data/listAllCollections.jspx"><b>List View</b></a>
     </@s.if>
     <@s.else>
-        "<a href="${base}/pub/listPubCollections.jspx"><b>List View</b></a>"
+        <a href="${base}/pub/listPubCollections.jspx"><b>List View</b></a>
     </@s.else>.
     </p>
 

@@ -70,7 +70,7 @@
                         <div class="input_field_value_section">
                             <@sj.datepicker name="collection.dateFrom" id="startdate" displayFormat="yy-mm-dd"  buttonImageOnly="true" />
                             <div class="comments">
-                                <@s.text name="collection.start.date.hint" />
+                                <@s.text name="collection.start.date.hint" />, Format: yyyy-mm-dd
                             </div>
                         </div>
                     </div>
@@ -82,7 +82,7 @@
                         <div class="input_field_value_section">
                             <@sj.datepicker name="collection.dateTo" id="enddate" displayFormat="yy-mm-dd"  buttonImageOnly="true" />
                             <div class="comments">
-                                <@s.text name="collection.end.date.hint" />
+                                <@s.text name="collection.end.date.hint" />, Format: yyyy-mm-dd
                             </div>
                         </div>
                     </div>
@@ -159,7 +159,7 @@
                             <div class="licence_contents_div">
                                 <@s.textarea name="licence.contents" cssClass="input_textarea" cssStyle="width: 560px; height: 190px;"  id="licence_contents" />
                                 <div class="comments">
-                                    User defined data licence, <@s.text name="licence.add.user.defined.licence.hint" />
+                                    User-defined data licence, <@s.text name="licence.add.user.defined.licence.hint" />
                                 </div>
                             </div>
                         </div>
@@ -168,7 +168,7 @@
 
                 <div class="content_div">
                     <div style="clear: both;"></div>
-                    <div class="input_field_row">
+                    <div class="input_field_row" style="display: none;">
                         <div class="input_field_title">
                             <@s.text name="collection.spatial.coverage"/>:
                         </div>
@@ -185,7 +185,7 @@
                     <div style="clear: both;"></div>
                     <div class="input_field_row">
                         <div class="input_field_title">
-                            &nbsp;
+                            <@s.text name="collection.spatial.coverage"/>:
                         </div>
                         <div class="input_field_value_section">
                             <div class="comments">

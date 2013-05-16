@@ -95,14 +95,6 @@ public class Collection extends Domain {
     @Column(name = "funded")
     private boolean funded;
 
-    @Basic
-    @Column(name = "spatial_type", length = 100)
-    private String spatialType;
-
-    @Basic
-    @Column(name = "spatial_coverage", length = 255)
-    private String spatialCoverage;
-
     @ManyToOne(targetEntity = Location.class)
     @JoinColumn(name = "location_id", referencedColumnName = "id", nullable = true)
     private Location location;
@@ -241,22 +233,6 @@ public class Collection extends Domain {
 
     public void setFunded(boolean funded) {
         this.funded = funded;
-    }
-
-    public String getSpatialType() {
-        return spatialType;
-    }
-
-    public void setSpatialType(String spatialType) {
-        this.spatialType = spatialType;
-    }
-
-    public String getSpatialCoverage() {
-        return spatialCoverage;
-    }
-
-    public void setSpatialCoverage(String spatialCoverage) {
-        this.spatialCoverage = spatialCoverage;
     }
 
     public Location getLocation() {

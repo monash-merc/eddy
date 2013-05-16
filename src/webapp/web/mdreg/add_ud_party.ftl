@@ -28,7 +28,7 @@
     <@s.hidden name="searchCnOrEmail" />
     <div class="popup_row">
         <div class="popup_spec">
-            Please enter a researcher information bellow:
+            Please enter a researcher information below:
             <div class="comments">
                 (All fields marked with * are mandatory)
             </div>
