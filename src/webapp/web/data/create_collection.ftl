@@ -192,9 +192,27 @@
                         </div>
                         <div class="input_field_value_section">
                             <div class="comments">
-                                Choose a method for marking spatial coverage from the options in the grey bar above the map.
-                                <br/>
-                                * (A region is not supported on the collection map view)
+                                <b>Spatial coverage can be chosen in two ways</b>:
+                                <ul id="comment_num_ul">
+                                    <li>
+                                        Using the <b>point</b> button
+                                        <ul>
+                                            <li>Use the map zoom and pan controls to zoom in to the area of the site.</li>
+                                            <li>Click on the <b>point</b> button.</li>
+                                            <li>Position the cross-hair cursor over the site location and click the left mouse button.</li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        Using the <b>coordinates</b> button
+                                        <ul>
+                                            <li>Click on the <b>coordinates</b> button.</li>
+                                            <li>Enter the coordinates of the site into the pop-up box as longitude and latitude separated by a comma
+                                                eg  148.15202,-35.65644 (Note: the coordinates must be in decimal degrees)</li>
+                                            <li>Click on the <b>set</b> button.</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <b>* (A region is not supported on the collection map view)</b>
                             </div>
                             <script type="text/javascript">mctSetMapControl("spatialcvg");</script>
                         </div>

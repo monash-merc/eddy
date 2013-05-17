@@ -170,7 +170,7 @@ function createInfoBox() {
         zIndex:null,
         boxStyle:{
             opacity:0.75,
-            width:"145px"
+            width:"150px"
         },
         closeBoxMargin:"12px 4px 2px 2px",
         closeBoxURL:"../images/close.gif",
@@ -228,7 +228,7 @@ function createCollectionListDetails(sitesResponse) {
         if (infoBox == null) {
             infoBox = createInfoBox();
         }
-        infoBox.setContent("<div id='infobox'><span class='site_number'>" + totalSize + "</span> collection(s) </div>");
+        infoBox.setContent("<div id='infobox'><span class='site_number'>" + totalSize + "</span> collection(s). <div>Scroll down to view</div> </div>");
         if (sites != null) {
             if (totalSize > 0) {
                 var html = "<div class='site_co_info'>";

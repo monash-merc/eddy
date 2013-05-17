@@ -71,9 +71,9 @@
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    -moz-box-shadow: 0 0 8px #858585;
-    -webkit-box-shadow: 0 0 8px #858585;
-    box-shadow: 0 0 8px #858585;
+    -moz-box-shadow: 0 0 5px #858585;
+    -webkit-box-shadow: 0 0 5px #858585;
+    box-shadow: 0 0 5px #858585;
 }
 
 .site_number {
