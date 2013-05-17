@@ -185,7 +185,7 @@ public class InstallAction extends InstallBaseAction {
         appProp.setAdminPassword("pass2word!");
         appProp.setSystemServiceEmail("service@servicemail.com");
         appProp.setStoreLocation("/opt/datastore/ands");
-        appProp.setDataLicence("http://tern.org.au/datalicence/TERN-BY-SA/1.0");
+        appProp.setDataLicence("http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0");
         appProp.setCollectionPhysicalLocation("Monash University Clayton Campus Building 26 Clayton 3800 Victoria");
 
         appProp.setLoginTryTimes(3);
