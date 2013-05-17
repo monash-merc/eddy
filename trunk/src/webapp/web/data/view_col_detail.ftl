@@ -276,7 +276,7 @@
                         <@s.file name="upload" id="upload" cssClass="input_file" />
                         <div class="blank_separator"></div>
                         <div class="comments">
-                            <a href="${base}/site/netcdf.jspx">Please follow the NetCDF file naming convention</a></li>
+                            <a href="${base}/site/netcdf.jspx" target="_blank">Please follow the NetCDF file naming convention</a></li>
                         </div>
                     </div>
                 </div>
