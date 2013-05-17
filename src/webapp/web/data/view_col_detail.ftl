@@ -120,7 +120,7 @@
             </a>
         </@s.if>
         <@s.if test="%{permissionBean.deleteAllowed}">
-            <div class="msg_content">All data will be removed from the repository permanently!<p>Are you sure to delete
+            <div class="msg_content">All data will be removed from the repository permanently!<p>Are you sure you want to delete
                 this collection?</p></div>
             <div id='confirm_dialog'>
                 <div class='header'><span>Deleting Collection Confirm</span></div>
@@ -420,7 +420,7 @@
                         <@s.if test="%{permissionBean.deleteAllowed}">
                             <div id='confirm_dialog'>
                                 <div class="msg_content">The data will be removed from the repository permanently!
-                                    <p>Are you sure to delete this dataset?</p></div>
+                                    <p>Are you sure you want to delete this dataset?</p></div>
                                 <div id='confirm'>
                                     <div class='header'><span>Deleting Dataset Confirm</span></div>
                                     <div class='message'></div>

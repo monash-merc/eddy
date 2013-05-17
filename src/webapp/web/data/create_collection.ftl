@@ -161,7 +161,7 @@
                             <div class="licence_contents_div">
                                 <@s.textarea name="licence.contents" cssClass="input_textarea" cssStyle="width: 560px; height: 190px;"  id="licence_contents" />
                                 <div class="comments">
-                                   User-defined data licence, <@s.text name="licence.add.user.defined.licence.hint" />
+                                   User-defined data licence. <@s.text name="licence.add.user.defined.licence.hint" />
                                 </div>
                             </div>
                         </div>
