@@ -56,6 +56,11 @@
                         Modified date: <@s.date name="#colResult.modifiedTime" format="yyyy-MM-dd hh:mm" />
                     </span>
             </div>
+            <@s.if test="%{#colResult.funded == true}">
+                <div class="data_tern_div">
+                    [ <a href="http://www.tern.org.au" target="_blank">TERN-Funded</a> ]
+                </div>
+            </@s.if>
             <div class="data_action_link">
                 <a href="${base}/${viewColDetailLink}?collection.id=<@s.property value='#colResult.id' />&collection.owner.id=<@s.property value='#colResult.owner.id' />&viewType=${viewType}">View
                     details</a>
