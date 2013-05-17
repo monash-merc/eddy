@@ -26,7 +26,7 @@
 <@s.form action="searchParty.jspx" namespace="/data" method="post">
     <div class="popup_row">
         <div class="popup_spec">
-            Enter a researcher name or E-mail bellow:
+            Enter a researcher name or E-mail below:
         </div>
         <div class="popup_input_div">
             <@s.textfield name="searchCnOrEmail" />
