@@ -1554,6 +1554,12 @@ input {
     text-decoration: underline;
 }
 
+#comment_num_ul {
+    list-style-type: decimal;
+    font-size: 11px;
+}
+
+
 .span_spec_title {
     color: #000000;
     font-weight: bold;
