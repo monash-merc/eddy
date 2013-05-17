@@ -20,7 +20,7 @@
 <@s.form action="selectParty.jspx" namespace="/data" method="post">
     <div class="popup_row">
         <div class="popup_spec">
-            Found the researcher(s) information as below:
+            Found researcher(s) information as below:
         </div>
         <div class="popup_input_div">
             <div class="comments">* Please select one of the following researcher(s)</div>

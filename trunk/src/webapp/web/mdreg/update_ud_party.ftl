@@ -28,7 +28,7 @@
     <@s.hidden name="selectedPartyBean.fromRm"/>
     <div class="popup_row">
         <div class="popup_spec">
-            Please update a researcher information:
+            Please update researcher information:
             <div class="comments">
                 (All fields marked with * are mandatory)
             </div>
