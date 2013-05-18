@@ -5,36 +5,37 @@
     netCDFv3 = False
     Platform = Mac    # Mac or PC
     InputLevel = L3
-    OutputLevel = L3_Corrected
+    OutputLevel = Footprint
 
 [Functions]
+    # un-comment following line to skip mandatory (*) corrections (input already corrected)
+    # BypassCorrections = True
     # Mandatory functions:
-    # do_linear
-    # TaFromTv
+    # do_linear*
     # CalculateMetVars
-    # CoordRotation2D
-    # CalculateFluxes
-    # FhvtoFh
-    # CorrectFgForStorage
-    # do_qcchecks
-    # do_Ah7500check
-    # WPL if WPLcov not True
+    # CoordRotation2D*
+    # CalculateFluxes*
+    # FhvtoFh*
+    # CorrectFgForStorage*
+    # do_qcchecks*
+    # do_Ah7500check*
+    # WPL if WPLcov not True*
     WPLcov = True
-    # PreCorrectSoilAverage if PostCorrectSoilAverage not True
+    # PreCorrectSoilAverage if PostCorrectSoilAverage not True*
     PostCorrectSoilAverage = True
     
-    # Default functions (standard set)
-    MergeSeriesAhTa = True
+    # Default functions (standard set True)
+    MergeSeriesAhTa = True              # TaFromTv child
     CalculateNetRadiation = False
     CalculateAvailableEnergy = False
     
     # Add-ons
-    Massman = True
+    Massman = True                     # disabled by BypassCorrections*
     CorrectSWC = True
     MergeSeriesWS = True
     PenmanMonteith = True
     gaps = True
-    qnqsat = True
+    qTprofile = True
     footprint = True
     convertFc = True
     climatology = False
@@ -60,6 +61,8 @@
         PNGFilePath = ../AliceSpringsMulga/level3/PNG/
     [[Footprint]]
         FootprintFilePath = ../AliceSpringsMulga/level3_footprint/
+        xlFilePath = ../AliceSpringsMulga/level3_footprint/
+        xlFileName = ASM_EC_2012_L3_Footprint.xls
     [[Climatology]]
         xlFilePath = ../AliceSpringsMulga/level3_climatology/
         xlFileName = ASM_EC_2012_L3_qprofile.xls
@@ -67,9 +70,21 @@
 [Output]
     #OFL2 = "['xlDateTime', 'Year', 'Month', 'Day', 'Hour', 'Minute', 'Second', 'Hdh', 'Fm', 'Fc', 'Fe', 'Fh', 'Fg', 'Fn', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustar', 'L', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'Tpanel_CR1000', 'Tpanel_CR3000b', 'theta', 'eta', 'u', 'v', 'w', 'uu', 'uv', 'uw', 'uA', 'uC', 'uT', 'vA', 'vC', 'vT', 'vv', 'vw', 'ww', 'AhAh', 'CcCc', 'wT', 'wA', 'wC', 'Ts', 'Sws', 'svwc_s_baresoil', 'Ts_bs', 'delTs_bs', 'Fgc_bs', 'svwc_s_understory', 'Ts_mu', 'delTs_mu', 'Fgc_mu', 'svwc_s_mulga', 'Ts_ms', 'delTs_ms', 'Fgc_ms', 'svwc_10cm_baresoil_a1', 'svwc_60cm_baresoil_a1', 'svwc_100cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_60cm_mulga_a1', 'svwc_100cm_mulga_a1', 'svwc_10cm_understory_a1', 'svwc_60cm_understory_a1', 'svwc_100cm_understory_a1', 'svwc_10cm_baresoil_a2', 'svwc_60cm_baresoil_a2', 'svwc_100cm_baresoil_a2', 'svwc_143cm_baresoil_a2', 'svwc_10cm_a_mulga_a2', 'svwc_10cm_b_mulga_a2', 'svwc_60cm_mulga_a2', 'svwc_100cm_mulga_a2', 'svwc_10cm_a_understory_a2', 'svwc_10cm_b_understory_a2', 'svwc_60cm_understory_a2', 'svwc_100cm_understory_a2', 'rhom', 'rhod', 'Ta', 'Ah', 'e', 'RH', 'esat', 'q', 'qsat', 'VPD', 'Ta_150cm', 'Ta_200cm', 'Ah_200cm', 'e_200cm', 'RH_200cm', 'esat_200cm', 'q_200cm', 'qsat_200cm', 'VPD_200cm', 'Ta_375cm', 'Ta_425cm', 'Ah_425cm', 'e_425cm', 'RH_425cm', 'esat_425cm', 'q_425cm', 'qsat_425cm', 'VPD_425cm', 'Ta_607cm', 'Ta_657cm', 'Ah_657cm', 'e_657cm', 'RH_657cm', 'esat_657cm', 'q_657cm', 'qsat_657cm', 'VPD_657cm', 'Ta_1147cm', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Ws_WS', 'Wd_WS', 'Ws_CSAT_Sd', 'Wd_CSAT_Sd', 'Ws_WS_Sd', 'Wd_WS_Sd', 'Ws_WS_200cm', 'Ws_WS_200cm_Sd', 'Ws_WS_425cm', 'Ws_WS_425cm_Sd', 'Ws_WS_662cm', 'Ws_WS_662cm_Sd', 'Rain', 'Ce_1layer', 'rav_1layer', 'rE_1layer', 'GE_1layer', 'Ce_base', 'rav_base', 'rE_base', 'GE_base', 'Ce_top', 'rav_top', 'rE_top', 'GE_top', 'Ce_full', 'rav_full', 'rE_full', 'GE_full', 'rav_2layer', 'rE_2layer', 'GE_2layer', 'ram', 'rC', 'GC', 'xr', 'ET', 'NEP', 'NEE']"
     L3_Corrected = "['Fm', 'Fc', 'Fe', 'Fh', 'Fg', 'Fn', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustar', 'L', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'Tpanel_CR1000', 'Tpanel_CR3000b', 'theta', 'eta', 'u', 'v', 'w', 'uu', 'uv', 'uw', 'uA', 'uC', 'uT', 'vA', 'vC', 'vT', 'vv', 'vw', 'ww', 'AhAh', 'CcCc', 'wT', 'wA', 'wC', 'Ts', 'Sws', 'svwc_s_baresoil', 'Ts_bs', 'delTs_bs', 'Fgc_bs', 'svwc_s_understory', 'Ts_mu', 'delTs_mu', 'Fgc_mu', 'svwc_s_mulga', 'Ts_ms', 'delTs_ms', 'Fgc_ms', 'svwc_10cm_baresoil_a1', 'svwc_60cm_baresoil_a1', 'svwc_100cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_60cm_mulga_a1', 'svwc_100cm_mulga_a1', 'svwc_10cm_understory_a1', 'svwc_60cm_understory_a1', 'svwc_100cm_understory_a1', 'svwc_10cm_baresoil_a2', 'svwc_60cm_baresoil_a2', 'svwc_100cm_baresoil_a2', 'svwc_143cm_baresoil_a2', 'svwc_10cm_a_mulga_a2', 'svwc_10cm_b_mulga_a2', 'svwc_60cm_mulga_a2', 'svwc_100cm_mulga_a2', 'svwc_10cm_a_understory_a2', 'svwc_10cm_b_understory_a2', 'svwc_60cm_understory_a2', 'svwc_100cm_understory_a2', 'rhom', 'rhod', 'Ta', 'Ah', 'e', 'RH', 'esat', 'q', 'qsat', 'VPD', 'Ta_150cm', 'Ta_200cm', 'Ah_200cm', 'e_200cm', 'RH_200cm', 'esat_200cm', 'q_200cm', 'qsat_200cm', 'VPD_200cm', 'Ta_375cm', 'Ta_425cm', 'Ah_425cm', 'e_425cm', 'RH_425cm', 'esat_425cm', 'q_425cm', 'qsat_425cm', 'VPD_425cm', 'Ta_607cm', 'Ta_657cm', 'Ah_657cm', 'e_657cm', 'RH_657cm', 'esat_657cm', 'q_657cm', 'qsat_657cm', 'VPD_657cm', 'Ta_1147cm', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Ws_WS', 'Wd_WS', 'Ws_CSAT_Sd', 'Wd_CSAT_Sd', 'Ws_WS_Sd', 'Wd_WS_Sd', 'Ws_WS_200cm', 'Ws_WS_200cm_Sd', 'Ws_WS_425cm', 'Ws_WS_425cm_Sd', 'Ws_WS_662cm', 'Ws_WS_662cm_Sd', 'Rain', 'Ce_1layer', 'rav_1layer', 'rE_1layer', 'GE_1layer', 'Ce_base', 'rav_base', 'rE_base', 'GE_base', 'Ce_top', 'rav_top', 'rE_top', 'GE_top', 'Ce_full', 'rav_full', 'rE_full', 'GE_full', 'rav_2layer', 'rE_2layer', 'GE_2layer', 'ram', 'rC', 'GC', 'xr', 'ET', 'NEP', 'NEE']"
+    Footprint = "['xr', 'Wd_CSAT_Compass']"
     #noDefaultXl = True
     PNGFile = True
     FootprintFile = False
+    FootprintFile = True
+    FootprintFileType = Vector            # Vector or Matrix
+    FootprintFileDataType = Climatology   # Footprint, Weighted or Climatology
+    FootprintSummaryFile = True
+
+[Rb]
+    [[series]]
+        0 = "['2', 'Ws_WS_200cm', 'Tvp_200cm', 'Tvp_200_425', 'dU_200_425', 'dTvp_200_425', 'Rb_200_425']"
+        1 = "['4.25', 'Ws_WS_425cm', 'Tvp_425cm', 'Tvp_425_657', 'dU_425_657', 'dTvp_425_657', 'Rb_425_657']"
+        2 = "['6.6', 'Ws_WS_662cm', 'Tvp_657cm', 'Tvp_657_1167', 'dU_657_1167', 'dTvp_657_1167', 'Rb_657_1167']"
+        3 = "['11.67', 'Ws_CSAT', 'Tvp']"
 
 [Filters]
     # Default Fc_in = 'Fc'
@@ -78,15 +93,25 @@
     #ustar_threshold = 0.25
 
 [Footprint]
+    etaadd = 45                  # CSAT azimuth - 90, degrees
     zm = 11.67                   # measurement height, m
     zc = 6.5                     # canopoy height, m
     z0 = 0.8                     # roughness length, z0 = zc / 3e (Brutseart 1982, eqn 5.7), m
-    r = 90                       # % of flux footprint
-    #default wd = "['Wd_CSAT']"
+    r = 95                       # % of flux footprint (max: 96)
+    #default wd = Wd_CSAT
     wd = Wd_CSAT_Compass
-    loglist = False
-    #    [[AnalysisDates]]
-    #            0          = "['2011-1-24 0:00','2011-1-24 0:30']"
+    #default weights Fluxes = "['Fc', 'Fe']
+    loglist = True
+    ExcludeDay = False
+    ExcludeNight = True
+    ExcludeHours = False
+    ClimateXmin = -1000
+    ClimateXmax = 2000
+    ClimateYmin = -2000
+    ClimateYmax = 1000
+    ClimatePixel = 100
+    #[[AnalysisDates]]
+    #    0          = "['2012-4-23 0:00','2012-4-29 23:30']"
 
 [Climatology]
     ##Built in functions
@@ -161,8 +186,9 @@
     CSATarm = 0.475  # distance from CSAT mounting point to CSAT sensor
     IRGAarm = 0.315  # distance from CSAT mounting point to IRGA sensor
 
-[qprofile]
-    p_in = ps
+[qTprofile]
+    #default p_in = ps
+    Ta_in = "['Ta_200cm','Ta_425cm','Ta_657cm','Ta']"
     e_in = "['e_200cm','e_425cm','e_657cm','e']"
     esat_in = "['esat_200cm','esat_425cm','esat_657cm','esat']"
     q_out = "['q_200cm','q_425cm','q_657cm','q']"
@@ -171,6 +197,12 @@
     qsat_attr = "['Saturated specific humidity at 200 cm height','Saturated specific humidity at 425 cm height','Saturated specific humidity at 657 cm height','Saturated specific humidity at 1167 cm height']"
     VPD_out = "['VPD_200cm','VPD_425cm','VPD_657cm','VPD']"
     VPD_attr = "['Vapour pressure deficit at 200 cm height','Vapour pressure deficit at 425 cm height','Vapour pressure deficit at 657 cm height','Vapour pressure deficit at 1167 cm height']"
+    mr_out = "['mr_200cm','mr_425cm','mr_657cm','mr']"
+    mr_attr = "['Humidity mixing ratio at 200 cm height','Humidity mixing ratio at 425 cm height','Humidity mixing ratio at 657 cm height','Humidity mixing ratio at 1167 cm height']"
+    Tv_out = "['Tv_200cm','Tv_425cm','Tv_657cm','Tv']"
+    Tv_attr = "['Virtual temperature at 200 cm height','Virtual temperature at 425 cm height','Virtual temperature at 657 cm height','Virtual temperature at 1167 cm height']"
+    Tvp_out = "['Tvp_200cm','Tvp_425cm','Tvp_657cm','Tvp']"
+    Tvp_attr = "['Virtual potential temperature at 200 cm height','Virtual potential temperature at 425 cm height','Virtual potential temperature at 657 cm height','Virtual potential temperature at 1167 cm height']"
 
 [PenmanMonteith]
     # Default PMin = "['Fe', 'Ta', 'Ah', 'ps', 'Ws', 'Fn', 'Fsd', 'Fg', 'VPD']"
@@ -486,6 +518,18 @@
     [[Ws]]
         [[[MergeSeries]]]
             Source = "['Ws_WS','Ws_CSAT']"
+    [[Tvp_200_425]]
+        [[[AverageSeries]]]
+            Source = "['Tvp_200cm','Tvp_425cm']"
+    [[Tvp_425_657]]
+        [[[AverageSeries]]]
+            Source = "['Tvp_425cm','Tvp_657cm']"
+    [[Tvp_657_1167]]
+        [[[AverageSeries]]]
+            Source = "['Tvp_657cm','Tvp']"
+#    [[L]]		    
+#        [[[ExcludeHours]]]
+#	    Source = "['2010-09-02 0:00', '2010-12-31 23:30',['0:00', '0:30', '1:00', '1:30']"
 
 
 [PlotSpec]
@@ -550,6 +594,15 @@
         YRMin = "['.01','.01','.01','.01','.01','.01','.01']"
         YRMax = "['.4','.4','.4','.4','.4','.4','.4']"
     [[43]]
+        Title = "Bulk Richardson number"
+        Variables = "['Rb_200_425', 'Rb_425_657', 'Rb_657_1167']"
+    [[44]]
+        Title = "Tvp"
+        Variables = "['Tvp_200cm', 'Tvp_425cm', 'Tvp_657cm', 'Tvp', 'dTvp_200_425', 'dTvp_425_657', 'dTvp_657_1167']"
+    [[45]]
+        Title = "U"
+        Variables = "['Ws_WS_200cm', 'Ws_WS_425cm', 'Ws_WS_662cm', 'Ws_CSAT', 'dU_200_425', 'dU_425_657', 'dU_657_1167']"
+    [[44]]
         Type = xy
         Title = "xy plots:  Ah"
         XSeries = "['Ah_HMP']"

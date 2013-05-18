@@ -1,6 +1,6 @@
 [General]
     InputLevel = L4
-    OutputLevel = L4_GapFilled
+    OutputLevel = Footprint
     netCDFv3 = False
     Platform = Mac    # Mac or PC
 
@@ -21,6 +21,7 @@
     CalculateET = True
     convertFc = True
     climatology = False
+    footprint = True
 
 [Files]
     [[L3]]
@@ -38,18 +39,51 @@
         ncFileName = ASM_EC_2012_L4_GapFilled.nc
         xlFilePath = ../AliceSpringsMulga/level4/
         xlFileName = ASM_EC_2012_L4_GapFilled.xls
+    [[Footprint]]
+        FootprintFilePath = ../AliceSpringsMulga/level3_footprint/test/
+        xlFilePath = ../AliceSpringsMulga/level4/
+        xlFileName = ASM_EC_2010_L4_Footprint.xls
     [[PNG]]
         PNGFilePath = ../AliceSpringsMulga/level4/PNG/
 
 [Output]
     #OFL2 = "['xlDateTime', 'Year', 'Month', 'Day', 'Hour', 'Minute', 'Second', 'Hdh', 'Fm', 'Fc', 'Fe', 'Fh', 'Fg', 'Fn', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustar', 'L', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'Tpanel_CR1000', 'Tpanel_CR3000b', 'theta', 'eta', 'u', 'v', 'w', 'uu', 'uv', 'uw', 'uA', 'uC', 'uT', 'vA', 'vC', 'vT', 'vv', 'vw', 'ww', 'AhAh', 'CcCc', 'wT', 'wA', 'wC', 'Ts', 'Sws', 'svwc_s_baresoil', 'Ts_bs', 'delTs_bs', 'Fgc_bs', 'svwc_s_understory', 'Ts_mu', 'delTs_mu', 'Fgc_mu', 'svwc_s_mulga', 'Ts_ms', 'delTs_ms', 'Fgc_ms', 'svwc_10cm_baresoil_a1', 'svwc_60cm_baresoil_a1', 'svwc_100cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_60cm_mulga_a1', 'svwc_100cm_mulga_a1', 'svwc_10cm_understory_a1', 'svwc_60cm_understory_a1', 'svwc_100cm_understory_a1', 'svwc_10cm_baresoil_a2', 'svwc_60cm_baresoil_a2', 'svwc_100cm_baresoil_a2', 'svwc_143cm_baresoil_a2', 'svwc_10cm_a_mulga_a2', 'svwc_10cm_b_mulga_a2', 'svwc_60cm_mulga_a2', 'svwc_100cm_mulga_a2', 'svwc_10cm_a_understory_a2', 'svwc_10cm_b_understory_a2', 'svwc_60cm_understory_a2', 'svwc_100cm_understory_a2', 'rhom', 'rhod', 'Ta', 'Ah', 'e', 'RH', 'esat', 'q', 'qsat', 'VPD', 'Ta_150cm', 'Ta_200cm', 'Ah_200cm', 'e_200cm', 'RH_200cm', 'esat_200cm', 'q_200cm', 'qsat_200cm', 'VPD_200cm', 'Ta_375cm', 'Ta_425cm', 'Ah_425cm', 'e_425cm', 'RH_425cm', 'esat_425cm', 'q_425cm', 'qsat_425cm', 'VPD_425cm', 'Ta_607cm', 'Ta_657cm', 'Ah_657cm', 'e_657cm', 'RH_657cm', 'esat_657cm', 'q_657cm', 'qsat_657cm', 'VPD_657cm', 'Ta_1147cm', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Ws_WS', 'Wd_WS', 'Ws_CSAT_Sd', 'Wd_CSAT_Sd', 'Ws_WS_Sd', 'Wd_WS_Sd', 'Ws_WS_200cm', 'Ws_WS_200cm_Sd', 'Ws_WS_425cm', 'Ws_WS_425cm_Sd', 'Ws_WS_662cm', 'Ws_WS_662cm_Sd', 'Rain', 'Ce_1layer', 'rav_1layer', 'rE_1layer', 'GE_1layer', 'Ce_base', 'rav_base', 'rE_base', 'GE_base', 'Ce_top', 'rav_top', 'rE_top', 'GE_top', 'Ce_full', 'rav_full', 'rE_full', 'GE_full', 'rav_2layer', 'rE_2layer', 'GE_2layer', 'ram', 'rC', 'GC', 'NEP', 'NEE', 'GPP', 'Re', 'ET']"
     L4_GapFilled = "['Fm', 'Fc', 'Fe', 'Fh', 'Fg', 'Fn', 'Fsd', 'Fsu', 'Flu', 'Fld', 'albedo', 'ustar', 'L', 'Diag_CSAT', 'Diag_7500', 'AGC_7500', 'Vbat', 'Tpanel', 'Tpanel_CR1000', 'Tpanel_CR3000b', 'theta', 'eta', 'u', 'v', 'w', 'uu', 'uv', 'uw', 'uA', 'uC', 'uT', 'vA', 'vC', 'vT', 'vv', 'vw', 'ww', 'AhAh', 'CcCc', 'wT', 'wA', 'wC', 'Ts', 'Sws', 'svwc_s_baresoil', 'Ts_bs', 'delTs_bs', 'Fgc_bs', 'svwc_s_understory', 'Ts_mu', 'delTs_mu', 'Fgc_mu', 'svwc_s_mulga', 'Ts_ms', 'delTs_ms', 'Fgc_ms', 'svwc_10cm_baresoil_a1', 'svwc_60cm_baresoil_a1', 'svwc_100cm_baresoil_a1', 'svwc_10cm_mulga_a1', 'svwc_60cm_mulga_a1', 'svwc_100cm_mulga_a1', 'svwc_10cm_understory_a1', 'svwc_60cm_understory_a1', 'svwc_100cm_understory_a1', 'svwc_10cm_baresoil_a2', 'svwc_60cm_baresoil_a2', 'svwc_100cm_baresoil_a2', 'svwc_143cm_baresoil_a2', 'svwc_10cm_a_mulga_a2', 'svwc_10cm_b_mulga_a2', 'svwc_60cm_mulga_a2', 'svwc_100cm_mulga_a2', 'svwc_10cm_a_understory_a2', 'svwc_10cm_b_understory_a2', 'svwc_60cm_understory_a2', 'svwc_100cm_understory_a2', 'rhom', 'rhod', 'Ta', 'Ah', 'e', 'RH', 'esat', 'q', 'qsat', 'VPD', 'Ta_150cm', 'Ta_200cm', 'Ah_200cm', 'e_200cm', 'RH_200cm', 'esat_200cm', 'q_200cm', 'qsat_200cm', 'VPD_200cm', 'Ta_375cm', 'Ta_425cm', 'Ah_425cm', 'e_425cm', 'RH_425cm', 'esat_425cm', 'q_425cm', 'qsat_425cm', 'VPD_425cm', 'Ta_607cm', 'Ta_657cm', 'Ah_657cm', 'e_657cm', 'RH_657cm', 'esat_657cm', 'q_657cm', 'qsat_657cm', 'VPD_657cm', 'Ta_1147cm', 'ps', 'Tv_CSAT', 'Ah_7500_Av', 'H_ppt', 'Cc_7500_Av', 'C_ppm', 'Ws_CSAT', 'Wd_CSAT_Compass', 'Ws_WS', 'Wd_WS', 'Ws_CSAT_Sd', 'Wd_CSAT_Sd', 'Ws_WS_Sd', 'Wd_WS_Sd', 'Ws_WS_200cm', 'Ws_WS_200cm_Sd', 'Ws_WS_425cm', 'Ws_WS_425cm_Sd', 'Ws_WS_662cm', 'Ws_WS_662cm_Sd', 'Rain', 'Ce_1layer', 'rav_1layer', 'rE_1layer', 'GE_1layer', 'Ce_base', 'rav_base', 'rE_base', 'GE_base', 'Ce_top', 'rav_top', 'rE_top', 'GE_top', 'Ce_full', 'rav_full', 'rE_full', 'GE_full', 'rav_2layer', 'rE_2layer', 'GE_2layer', 'ram', 'rC', 'GC', 'NEP', 'NEE', 'GPP', 'Re', 'ET']"
+    Footprint = "['GPP','Re']"
     #noDefaultXl = True
     PNGFile = True
+    FootprintFile = True
+    FootprintFileType = Vector            # Vector or Matrix
+    FootprintFileDataType = Climatology   # Footprint, Weighted or Climatology
+    FootprintSummaryFile = False
 
 [Params]
     # default firstMonth = 1
     # default secondMonth = 12
+
+[Footprint]
+    etaadd = 45                  # CSAT azimuth - 90, degrees
+    zm = 11.67                   # measurement height, m
+    zc = 6.5                     # canopoy height, m
+    z0 = 0.8                     # roughness length, z0 = zc / 3e (Brutseart 1982, eqn 5.7), m
+    r = 95                       # % of flux footprint
+    #default wd = Wd_CSAT
+    wd = Wd_CSAT_Compass
+    #default weights Fluxes = "['GPP', 'Re']
+    loglist = True
+    ExcludeDay = True
+    ExcludeNight = False
+    ExcludeHours = False
+    ClimateXmin = -1000
+    ClimateXmax = 2000
+    ClimateYmin = -2000
+    ClimateYmax = 1000
+    ClimatePixel = 100
+    [[AnalysisDates]]
+#        0          = "['2010-12-12 13:30','2010-12-12 14:00']"
+#        1          = "['2010-10-26 11:00','2010-10-26 11:00']"
+#        0          = "['2010-10-15 12:00','2010-10-15 12:00']"
+        0          = "['2010-12-10 0:00','2010-12-17 23:30']"
 
 [CalculateET]
     # Default Fe_in = Fe
@@ -197,6 +231,9 @@
     [[Ws]]
         [[[MergeSeries]]]
             Source = "['Ws_WS','Ws_CSAT']"
+#    [[L]]		    
+#        [[[ExcludeHours]]]
+#	    Source = "['2010-09-02 0:00', '2010-12-31 23:30',['0:00', '0:30', '1:00', '1:30']"
 
 
 [PlotSpec]

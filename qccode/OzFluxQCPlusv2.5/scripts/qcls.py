@@ -1,5 +1,5 @@
 """
-    OzFlux QC v2.4 19 Apr 2013;
+    OzFlux QC Plus v2.5 18 May 2013;
 
     Version History:
     <<v1.0: 21 Jul 2011, code diversion reconciliation>>
@@ -9,6 +9,7 @@
     <<v2.2 11 Feb 2013, Climatology implemented at L3 and L4; Penman-Monteith updated to output Gc, correct Gst computation to use air-to-soil q gradient rather than saturation deficit>>
     <<v2.3 24 Feb 2013, ET calculation added, controlfiles revised to simplify function calls>>
     <<v2.4 19 Apr 2013, WPL error introduced in v2.3 corrected, weighted footprint output added>>
+    <<v2.5 18 May 2013, Footprint model complete (rotated to geographic coordinates (m)-1d & 2d footprints, weighted footrpints, footprint climatology)>>
 """
 
 import sys
@@ -135,9 +136,10 @@ def l3qc(cf,ds2):
         qcts.CorrectSWC(cf,ds3)
     
     # apply linear corrections to the data
-    ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', do_linear'
-    log.info(' Applying linear corrections ...')
-    qcck.do_linear(cf,ds3)
+    if ((not qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections')) or (qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections') and cf['Functions']['BypassCorrections'] != 'True')):
+        ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', do_linear'
+        log.info(' Applying linear corrections ...')
+        qcck.do_linear(cf,ds3)
     
     # determine HMP Ah if not output by datalogger
     if qcutils.cfkeycheck(cf,Base='Functions',ThisOne='CalculateAh') and cf['Functions']['CalculateAh'] == 'True':
@@ -167,32 +169,36 @@ def l3qc(cf,ds2):
     qcts.CalculateMeteorologicalVariables(cf,ds3)
     
     # do the 2D coordinate rotation
-    ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', CoordRotation2D'
-    qcts.CoordRotation2D(cf,ds3)
+    if ((not qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections')) or (qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections') and cf['Functions']['BypassCorrections'] != 'True')):
+        ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', CoordRotation2D'
+        qcts.CoordRotation2D(cf,ds3)
     
     # do the Massman frequency attenuation correction
-    if qcutils.cfkeycheck(cf,Base='Functions',ThisOne='Massman') and cf['Functions']['Massman'] == 'True':
+    if (((not qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections')) or (qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections') and cf['Functions']['BypassCorrections'] != 'True')) and (qcutils.cfkeycheck(cf,Base='Functions',ThisOne='Massman') and cf['Functions']['Massman'] == 'True')):
         ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', Massman'
         qcts.MassmanStandard(cf,ds3)
     
     # calculate the fluxes
-    ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', CalculateFluxes'
-    if qcutils.cfkeycheck(cf,Base='Functions',ThisOne='Massman') and cf['Functions']['Massman'] == 'True':
-        qcts.CalculateFluxes(cf,ds3,massman='True')
-    else:
-        qcts.CalculateFluxes(cf,ds3)
+    if ((not qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections')) or (qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections') and cf['Functions']['BypassCorrections'] != 'True')):
+        ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', CalculateFluxes'
+        if qcutils.cfkeycheck(cf,Base='Functions',ThisOne='Massman') and cf['Functions']['Massman'] == 'True':
+            qcts.CalculateFluxes(cf,ds3,massman='True')
+        else:
+            qcts.CalculateFluxes(cf,ds3)
     
     # approximate wT from virtual wT using wA (ref: Campbell OPECSystem manual)
-    ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', FhvtoFh'
-    qcts.FhvtoFh(cf,ds3)
+    if ((not qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections')) or (qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections') and cf['Functions']['BypassCorrections'] != 'True')):
+        ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', FhvtoFh'
+        qcts.FhvtoFh(cf,ds3)
     
     # correct the H2O & CO2 flux due to effects of flux on density measurements
-    if qcutils.cfkeycheck(cf,Base='Functions',ThisOne='WPLcov') and cf['Functions']['WPLcov'] == 'True':
-        ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', WPLcov'
-        qcts.do_WPL(cf,ds3,cov='True')
-    else:
-        ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', WPL'
-        qcts.do_WPL(cf,ds3)
+    if ((not qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections')) or (qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections') and cf['Functions']['BypassCorrections'] != 'True')):
+        if qcutils.cfkeycheck(cf,Base='Functions',ThisOne='WPLcov') and cf['Functions']['WPLcov'] == 'True':
+            ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', WPLcov'
+            qcts.do_WPL(cf,ds3,cov='True')
+        else:
+            ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', WPL'
+            qcts.do_WPL(cf,ds3)
     
     # calculate the net radiation from the Kipp and Zonen CNR1
     if qcutils.cfkeycheck(cf,Base='Functions',ThisOne='CalculateNetRadiation') and cf['Functions']['CalculateNetRadiation'] == 'True':
@@ -212,34 +218,40 @@ def l3qc(cf,ds2):
             qcts.MergeSeries(ds3,'Ws',srclist,[0,10])
     
     # average ground heat flux before correcting for storage above sensors
-    if qcutils.cfkeycheck(cf,Base='Functions',ThisOne='PostCorrectSoilAverage') and cf['Functions']['PostCorrectSoilAverage'] == 'True':
-        ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', SoilAverage'
+    if ((not qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections')) or (qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections') and cf['Functions']['BypassCorrections'] != 'True')):
+        if qcutils.cfkeycheck(cf,Base='Functions',ThisOne='PostCorrectSoilAverage') and cf['Functions']['PostCorrectSoilAverage'] == 'True':
+            ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', SoilAverage'
     
-    if 'SoilAverage' not in ds3.globalattributes['L3Functions']:
-        ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', SoilAverage'
-        srclist = qcutils.GetAverageList(cf,'Fg',default=['Fg_01a'])
-        if len(srclist) > 0:
-            qcts.AverageSeriesByElements(ds3,'Fg',srclist)
+    if ((not qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections')) or (qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections') and cf['Functions']['BypassCorrections'] != 'True')):
+        if 'SoilAverage' not in ds3.globalattributes['L3Functions']:
+            ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', SoilAverage'
+            srclist = qcutils.GetAverageList(cf,'Fg',default=['Fg_01a'])
+            if len(srclist) > 0:
+                qcts.AverageSeriesByElements(ds3,'Fg',srclist)
     
     # average the soil temperature data
-    srclist = qcutils.GetAverageList(cf,'Ts',default=['Ts_01a'])
-    if len(srclist) > 0:
-        qcts.AverageSeriesByElements(ds3,'Ts',srclist)
+    if ((not qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections')) or (qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections') and cf['Functions']['BypassCorrections'] != 'True')):
+        srclist = qcutils.GetAverageList(cf,'Ts',default=['Ts_01a'])
+        if len(srclist) > 0:
+            qcts.AverageSeriesByElements(ds3,'Ts',srclist)
     
     # average soil moisture
-    srclist = qcutils.GetAverageList(cf,'Sws',default=['Sws_01a'])
-    if len(srclist) > 0:
-        qcts.AverageSeriesByElements(ds3,'Sws',srclist)
+    if ((not qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections')) or (qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections') and cf['Functions']['BypassCorrections'] != 'True')):
+        srclist = qcutils.GetAverageList(cf,'Sws',default=['Sws_01a'])
+        if len(srclist) > 0:
+            qcts.AverageSeriesByElements(ds3,'Sws',srclist)
         
     # correct the measured soil heat flux for storage in the soil layer above the sensor
-    ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', CorrectFgForStorage'
-    qcts.CorrectFg(cf,ds3)
+    if ((not qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections')) or (qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections') and cf['Functions']['BypassCorrections'] != 'True')):
+        ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', CorrectFgForStorage'
+        qcts.CorrectFg(cf,ds3)
     
     # average ground heat flux after correcting for storage above sensors
-    if qcutils.cfkeycheck(cf,Base='Functions',ThisOne='PostCorrectSoilAverage') and cf['Functions']['PostCorrectSoilAverage'] == 'True':
-        srclist = qcutils.GetAverageList(cf,'Fg',default=['Fg_01a'])
-        if len(srclist) > 0:
-            qcts.AverageSeriesByElements(ds3,'Fg',srclist)
+    if ((not qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections')) or (qcutils.cfkeycheck(cf,Base='Functions',ThisOne='BypassCorrections') and cf['Functions']['BypassCorrections'] != 'True')):
+        if qcutils.cfkeycheck(cf,Base='Functions',ThisOne='PostCorrectSoilAverage') and cf['Functions']['PostCorrectSoilAverage'] == 'True':
+            srclist = qcutils.GetAverageList(cf,'Fg',default=['Fg_01a'])
+            if len(srclist) > 0:
+                qcts.AverageSeriesByElements(ds3,'Fg',srclist)
     
     # calculate the available energy
     if qcutils.cfkeycheck(cf,Base='Functions',ThisOne='CalculateAvailableEnergy') and cf['Functions']['CalculateAvailableEnergy'] == 'True':
@@ -253,8 +265,8 @@ def l3qc(cf,ds2):
         qcutils.prepOzFluxVars(cf,ds3)
     
     # calculate specific humidity and saturated specific humidity profile
-    if qcutils.cfkeycheck(cf,Base='Functions',ThisOne='qnqsat') and cf['Functions']['qnqsat'] == 'True':
-        ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', qnqsat'
+    if qcutils.cfkeycheck(cf,Base='Functions',ThisOne='qTprofile') and cf['Functions']['qTprofile'] == 'True':
+        ds3.globalattributes['L3Functions'] = ds3.globalattributes['L3Functions']+', qTprofile'
         qcts.CalculateSpecificHumidityProfile(cf,ds3)
     
     # calculate Penman-Monteith inversion

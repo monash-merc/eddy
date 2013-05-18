@@ -494,97 +494,97 @@ def CalculateNetRadiation(ds,Fn_out,Fsd_in,Fsu_in,Fld_in,Flu_in):
         ds.series[Fn_out]['Attr']['units'] = 'W/m2'
 
 def CalculateSpecificHumidityProfile(cf,ds):
-    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='ps_in'):
-        ps_in = cf['qprofile']['p_in']
+    if qcutils.cfkeycheck(cf,Base='qTprofile',ThisOne='ps_in'):
+        ps_in = cf['qTprofile']['p_in']
     else:
         ps_in = 'ps'
     
-    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='Ta_in'):
-        Ta_in = ast.literal_eval(cf['qprofile']['Ta_in'])
+    if qcutils.cfkeycheck(cf,Base='qTprofile',ThisOne='Ta_in'):
+        Ta_in = ast.literal_eval(cf['qTprofile']['Ta_in'])
     else:
         log.error('  No input air temperature variables identified')
         return
     
-    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='e_in'):
-        e_vars = ast.literal_eval(cf['qprofile']['e_in'])
+    if qcutils.cfkeycheck(cf,Base='qTprofile',ThisOne='e_in'):
+        e_vars = ast.literal_eval(cf['qTprofile']['e_in'])
     else:
         log.error('  No input vapour pressure variables identified')
         return
     
-    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='esat_in'):
-        esat_vars = ast.literal_eval(cf['qprofile']['esat_in'])
+    if qcutils.cfkeycheck(cf,Base='qTprofile',ThisOne='esat_in'):
+        esat_vars = ast.literal_eval(cf['qTprofile']['esat_in'])
     else:
         log.error('  No input saturation vapour pressure variables identified')
         return
     
-    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='q_out'):
-        q_vars = ast.literal_eval(cf['qprofile']['q_out'])
+    if qcutils.cfkeycheck(cf,Base='qTprofile',ThisOne='q_out'):
+        q_vars = ast.literal_eval(cf['qTprofile']['q_out'])
     else:
         log.error('  No output specific humidity variables identified')
         return
     
-    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='qsat_out'):
-        qsat_vars = ast.literal_eval(cf['qprofile']['qsat_out'])
+    if qcutils.cfkeycheck(cf,Base='qTprofile',ThisOne='qsat_out'):
+        qsat_vars = ast.literal_eval(cf['qTprofile']['qsat_out'])
     else:
         log.error('  No output saturation specific humidity variables identified')
         return
     
-    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='VPD_out'):
-        VPD_vars = ast.literal_eval(cf['qprofile']['VPD_out'])
+    if qcutils.cfkeycheck(cf,Base='qTprofile',ThisOne='VPD_out'):
+        VPD_vars = ast.literal_eval(cf['qTprofile']['VPD_out'])
     else:
         log.error('  No output vapour pressure deficit variables identified')
         return
     
-    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='mr_out'):
-        mr_vars = ast.literal_eval(cf['qprofile']['mr_out'])
+    if qcutils.cfkeycheck(cf,Base='qTprofile',ThisOne='mr_out'):
+        mr_vars = ast.literal_eval(cf['qTprofile']['mr_out'])
     else:
         log.error('  No output mixing ratio variables identified')
         return
     
-    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='Tv_out'):
-        Tv_vars = ast.literal_eval(cf['qprofile']['Tv_out'])
+    if qcutils.cfkeycheck(cf,Base='qTprofile',ThisOne='Tv_out'):
+        Tv_vars = ast.literal_eval(cf['qTprofile']['Tv_out'])
     else:
         log.error('  No output virtual temperature variables identified')
         return
     
-    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='Tvp_out'):
-        Tvp_vars = ast.literal_eval(cf['qprofile']['Tvp_out'])
+    if qcutils.cfkeycheck(cf,Base='qTprofile',ThisOne='Tvp_out'):
+        Tvp_vars = ast.literal_eval(cf['qTprofile']['Tvp_out'])
     else:
         log.error('  No output virtual potential temperature variables identified')
         return
     
-    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='q_attr'):
-        q_attrs = ast.literal_eval(cf['qprofile']['q_attr'])
+    if qcutils.cfkeycheck(cf,Base='qTprofile',ThisOne='q_attr'):
+        q_attrs = ast.literal_eval(cf['qTprofile']['q_attr'])
     else:
         log.error('  Specific humidity attributes not identified')
         return
     
-    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='qsat_attr'):
-        qsat_attrs = ast.literal_eval(cf['qprofile']['qsat_attr'])
+    if qcutils.cfkeycheck(cf,Base='qTprofile',ThisOne='qsat_attr'):
+        qsat_attrs = ast.literal_eval(cf['qTprofile']['qsat_attr'])
     else:
         log.error('  Saturated specific humidity attributes not identified')
         return
     
-    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='VPD_attr'):
-        VPD_attrs = ast.literal_eval(cf['qprofile']['VPD_attr'])
+    if qcutils.cfkeycheck(cf,Base='qTprofile',ThisOne='VPD_attr'):
+        VPD_attrs = ast.literal_eval(cf['qTprofile']['VPD_attr'])
     else:
         log.error('  Vapour pressure deficit attributes not identified')
         return
     
-    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='mr_attr'):
-        mr_attrs = ast.literal_eval(cf['qprofile']['mr_attr'])
+    if qcutils.cfkeycheck(cf,Base='qTprofile',ThisOne='mr_attr'):
+        mr_attrs = ast.literal_eval(cf['qTprofile']['mr_attr'])
     else:
         log.error('  Mixing ratio attributes not identified')
         return
     
-    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='Tv_attr'):
-        Tv_attrs = ast.literal_eval(cf['qprofile']['Tv_attr'])
+    if qcutils.cfkeycheck(cf,Base='qTprofile',ThisOne='Tv_attr'):
+        Tv_attrs = ast.literal_eval(cf['qTprofile']['Tv_attr'])
     else:
         log.error('  Virtual temperature attributes not identified')
         return
     
-    if qcutils.cfkeycheck(cf,Base='qprofile',ThisOne='Tvp_attr'):
-        Tvp_attrs = ast.literal_eval(cf['qprofile']['Tvp_attr'])
+    if qcutils.cfkeycheck(cf,Base='qTprofile',ThisOne='Tvp_attr'):
+        Tvp_attrs = ast.literal_eval(cf['qTprofile']['Tvp_attr'])
     else:
         log.error('  Virtual potential temperature attributes not identified')
         return
@@ -1720,10 +1720,14 @@ def do_footprint_2d(cf,ds,level='L3'):
         log.error('r needs to be smaller than 96')
         return
     
+    if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='ExcludeHours') and cf['Footprint']['ExcludeHours'] == 'True':
+        qcck.do_excludehours(cf,ds,'L')
+    
     sigmaw,f = qcutils.GetSeriesasMA(ds,'ww')
     sigmav,f = qcutils.GetSeriesasMA(ds,'vv')
     ustar,f = qcutils.GetSeriesasMA(ds,'ustar')
     L,Lf = qcutils.GetSeriesasMA(ds,'L')
+    Fsd,f = qcutils.GetSeriesasMA(ds,'Fsd')
     n = len(L)
     if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='AnalysisDates'):
         ldt = ds.series['DateTime']['Data']
@@ -1747,9 +1751,21 @@ def do_footprint_2d(cf,ds,level='L3'):
         index = numpy.where(analysisflag == 0)[0]
         Lf[index] = 9999
     
+    if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='ExcludeDay') and cf['Footprint']['ExcludeDay'] == 'True':
+        Dayindex = numpy.where(Fsd > 10)[0]
+        Lf[Dayindex] = 7
+    
+    if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='ExcludeNight') and cf['Footprint']['ExcludeNight'] == 'True':
+        Nightindex = numpy.where(Fsd < 10)[0]
+        Lf[Nightindex] = 7
+    
     zeta = numpy.ma.zeros(n,dtype=float)
     Lfindex = numpy.where(numpy.mod(Lf,10)!=0)[0]
     zetaindex = numpy.where(numpy.mod(Lf,10)==0)[0]
+    if len(zetaindex) == 0:
+        log.warn('   Footprint:  no observations passed filtering')
+        return
+    
     zeta[Lfindex] = 9999999
     zeta[zetaindex] = (zm - d) / L[zetaindex]
     
@@ -1802,6 +1818,21 @@ def do_footprint_2d(cf,ds,level='L3'):
     wd,f = qcutils.GetSeriesasMA(ds,wdin)
     eta,f = qcutils.GetSeriesasMA(ds,'eta')
     xr = numpy.ma.zeros(n,dtype=float)
+    if qcutils.cfkeycheck(cf,Base='Output',ThisOne='FootprintFileDataType') and cf['Output']['FootprintFileDataType'] == 'Climatology':
+        if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='ClimateXmin') and qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='ClimateXmax') and qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='ClimateYmin') and qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='ClimateYmax') and qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='ClimatePixel'):
+            n = ((float(cf['Footprint']['ClimateXmax'])) - (float(cf['Footprint']['ClimateXmin']))) / (float(cf['Footprint']['ClimatePixel']))
+            m = ((float(cf['Footprint']['ClimateYmax'])) - (float(cf['Footprint']['ClimateYmin']))) / (float(cf['Footprint']['ClimatePixel']))
+            xmin = (float(cf['Footprint']['ClimateXmin']))
+            xmax = (float(cf['Footprint']['ClimateXmax']))
+            ymin = (float(cf['Footprint']['ClimateYmin']))
+            ymax = (float(cf['Footprint']['ClimateYmax']))
+            p = (float(cf['Footprint']['ClimatePixel']))
+            fc_c_2d = numpy.ma.zeros((n,m),dtype=float)
+            fc_e_2d = numpy.ma.zeros((n,m),dtype=float)
+        else:
+            log.error('  Footprint climatology: Spatial parameters missing from controlfile')
+            return
+    
     do_index = numpy.where((sigmaw > 0) & (sigmav > 0) & (ustar > 0.2) & (h > 1) & (h > zm))[0]
     for i in range(len(do_index)):
         if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='loglist') and cf['Footprint']['loglist'] == 'True':
@@ -1811,8 +1842,22 @@ def do_footprint_2d(cf,ds,level='L3'):
             Fc[do_index[i]] = numpy.float(-9999)
             Fe[do_index[i]] = numpy.float(-9999)
         
-        xr[do_index[i]] = footprint_2d(cf,sigmaw[do_index[i]],sigmav[do_index[i]],ustar[do_index[i]],zm,h[do_index[i]],znot,r,wd[do_index[i]],zeta[do_index[i]],L[do_index[i]],zc,ds.series['DateTime']['Data'][do_index[i]],eta[do_index[i]],Fc[do_index[i]],Fe[do_index[i]],level)
-    
+        if qcutils.cfkeycheck(cf,Base='Output',ThisOne='FootprintFileDataType') and cf['Output']['FootprintFileDataType'] == 'Climatology' and qcutils.cfkeycheck(cf,Base='Output',ThisOne='FootprintFile') and cf['Output']['FootprintFile'] == 'True':
+            xr[do_index[i]],x_2d,y_2d,fw_c_2d,fw_e_2d,filenames,labels = footprint_2d(cf,sigmaw[do_index[i]],sigmav[do_index[i]],ustar[do_index[i]],zm,h[do_index[i]],znot,r,wd[do_index[i]],zeta[do_index[i]],L[do_index[i]],zc,ds.series['DateTime']['Data'][do_index[i]],eta[do_index[i]],Fc[do_index[i]],Fe[do_index[i]],level)
+            fc_c_2d,fc_e_2d,fc_x2d,fc_y2d = footprint_climatology(fc_c_2d,fc_e_2d,x_2d,y_2d,fw_c_2d,fw_e_2d,n,m,xmin,xmax,ymin,ymax,p)
+        else:
+            xr[do_index[i]] = footprint_2d(cf,sigmaw[do_index[i]],sigmav[do_index[i]],ustar[do_index[i]],zm,h[do_index[i]],znot,r,wd[do_index[i]],zeta[do_index[i]],L[do_index[i]],zc,ds.series['DateTime']['Data'][do_index[i]],eta[do_index[i]],Fc[do_index[i]],Fe[do_index[i]],level)
+        
+    if qcutils.cfkeycheck(cf,Base='Output',ThisOne='FootprintFileDataType') and cf['Output']['FootprintFileDataType'] == 'Climatology' and qcutils.cfkeycheck(cf,Base='Output',ThisOne='FootprintFile') and cf['Output']['FootprintFile'] == 'True':
+        if qcutils.cfkeycheck(cf, Base='Output', ThisOne='FootprintFileType') and cf['Output']['FootprintFileType'] == 'Vector':
+            footprint_vector_out(filenames[0],fc_x2d,fc_y2d,fc_c_2d,labels[0])
+            footprint_vector_out(filenames[2],fc_x2d,fc_y2d,fc_e_2d,labels[1])
+        elif qcutils.cfkeycheck(cf, Base='Output', ThisOne='FootprintFileType') and cf['Output']['FootprintFileType'] == 'Matrix':
+            footprint_matrix_out(filenames[1],fc_x2d,fc_y2d,fc_c_2d)
+            footprint_matrix_out(filenames[3],fc_x2d,fc_y2d,fc_e_2d)
+        else:
+            log.error('  Footprint climatology:  FootprintFileType (Vector or Matrix) not defined in controlfile')
+        
     qcutils.CreateSeries(ds,'xr',xr,FList=['L','ww','vv','ustar'],Descr='integrated footprint in the direction of the wind',Units='m')
     flag_index = numpy.ma.where((xr == 0) & (numpy.mod(ds.series['xr']['Flag'],10)==0))[0]
     ustar_index = numpy.ma.where(ustar < 0.2)[0]
@@ -2459,15 +2504,26 @@ def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp,eta,F
         y  = numpy.concatenate((y2,[0],y1))
         
         m = len(y)
-        x_2d = numpy.zeros((n,m), dtype=float)
-        y_2d = numpy.zeros((n,m), dtype=float)
-        f_2d = numpy.zeros((n,m), dtype=float)
-        for i in range(0, n):
-            for j in range(0, m):
-                x_2d[i,j] = (x[i] * numpy.cos(numpy.deg2rad(-eta))) + (y[j] * numpy.sin(numpy.deg2rad(-eta)))   # longitudal rotation of the x,y plane
-                y_2d[i,j] = -(y[j] * numpy.cos(numpy.deg2rad(-eta))) - (x[i] * numpy.sin(numpy.deg2rad(-eta)))   # lateral rotation of the x,y plane
-                f_2d[i,j] = f_ci[i] * 1/(sqrt2pi*sigmay[i]) *  math.exp(-y[j]**2 / (2*sigmay[i]**2))
         
+        y_rot = numpy.reshape(y,(m,1))
+        xy = numpy.broadcast_arrays(x, f_ci, sigmay, y_rot)
+        if not qcutils.cfkeycheck(cf, Base='Footprint', ThisOne='etaadd'):
+            log.error('   Footprint:  CSAT azimuth not provided for coordinate rotation')
+            return
+        
+        x_2d = (xy[0] * numpy.cos(numpy.deg2rad(-eta+float(cf['Footprint']['etaadd'])))) + (xy[3] * numpy.sin(numpy.deg2rad(-eta+float(cf['Footprint']['etaadd']))))   # longitudal rotation of the x,y plane
+        y_2d = (xy[3] * numpy.cos(numpy.deg2rad(-eta+45))) - (xy[0] * numpy.sin(numpy.deg2rad(-eta+45)))   # lateral rotation of the x,y plane and axis conversion for wind components
+        f_2d = xy[1] * 1/(sqrt2pi*xy[2]) *  numpy.exp(-xy[3]**2 / (2*xy[2]**2))
+        
+        #x_2d = numpy.zeros((n,m), dtype=float)
+        #y_2d = numpy.zeros((n,m), dtype=float)
+        #f_2d = numpy.zeros((n,m), dtype=float)
+        #for i in range(0, n):
+        #    for j in range(0, m):
+        #        x_2d[i,j] = (x[i] * numpy.cos(numpy.deg2rad(-eta))) + (y[j] * numpy.sin(numpy.deg2rad(-eta)))   # longitudal rotation of the x,y plane
+        #        y_2d[i,j] = -(y[j] * numpy.cos(numpy.deg2rad(-eta))) - (x[i] * numpy.sin(numpy.deg2rad(-eta)))   # lateral rotation of the x,y plane and axis conversion for wind components
+        #        f_2d[i,j] = f_ci[i] * 1/(sqrt2pi*sigmay[i]) *  math.exp(-y[j]**2 / (2*sigmay[i]**2))
+        #
         fw_c_2d = f_2d * Fc
         fw_e_2d = f_2d * Fe
         STList = []
@@ -2476,12 +2532,16 @@ def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp,eta,F
             filetext1 = 'Fe'
             excltext0 = 'fw_Fc'
             excltext1 = 'fw_Fe'
+            excltext3 = 'fc_Fc'
+            excltext4 = 'fc_Fe'
         
         if level == 'L4':
             filetext0 = 'GPP'
             filetext1 = 'Re'
             excltext0 = 'fw_GPP'
             excltext1 = 'fw_Re'
+            excltext3 = 'fc_GPP'
+            excltext4 = 'fc_Re'
         
         for fmt in ['%Y','%m','%d','%H','%M']:
             STList.append(timestamp.strftime(fmt))
@@ -2492,196 +2552,224 @@ def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp,eta,F
             matrixFcFileName = cf['Files']['Footprint']['FootprintFilePath']+filetext0+'_w_footprint_2d_matrix_'+''.join(STList)+'.xls'
             vectorFeFileName = cf['Files']['Footprint']['FootprintFilePath']+filetext1+'_w_footprint_2d_vectors_'+''.join(STList)+'.xls'
             matrixFeFileName = cf['Files']['Footprint']['FootprintFilePath']+filetext1+'_w_footprint_2d_matrix_'+''.join(STList)+'.xls'
+            vectorFcCFileName = cf['Files']['Footprint']['FootprintFilePath']+filetext0+'_c_footprint_2d_vectors.xls'
+            matrixFcCFileName = cf['Files']['Footprint']['FootprintFilePath']+filetext0+'_c_footprint_2d_matrix.xls'
+            vectorFeCFileName = cf['Files']['Footprint']['FootprintFilePath']+filetext1+'_c_footprint_2d_vectors.xls'
+            matrixFeCFileName = cf['Files']['Footprint']['FootprintFilePath']+filetext1+'_c_footprint_2d_matrix.xls'
         
-        xlFile = xlwt.Workbook()
-        xlSheet = xlFile.add_sheet('summary')
-        xlCol = 1
-        xlRow = 0
-        xlSheet.write(xlRow,xlCol,'Measurement height (zm)')
-        xlCol = xlCol - 1
-        xlSheet.write(xlRow,xlCol,zm)
-        xlRow = xlRow + 1
-        xlCol = 1
-        xlSheet.write(xlRow,xlCol,'Canopy height (zc)')
-        xlCol = xlCol - 1
-        xlSheet.write(xlRow,xlCol,zc)
-        xlRow = xlRow + 1
-        xlCol = 1
-        xlSheet.write(xlRow,xlCol,'Roughness length (z0)')
-        xlCol = xlCol - 1
-        xlSheet.write(xlRow,xlCol,znot)
-        xlRow = xlRow + 1
-        xlCol = 1
-        xlSheet.write(xlRow,xlCol,'PBL height (zi)')
-        xlCol = xlCol - 1
-        xlSheet.write(xlRow,xlCol,h)
-        xlRow = xlRow + 1
-        xlCol = 1
-        xlSheet.write(xlRow,xlCol,'Monin-Obukhov length (L)')
-        xlCol = xlCol - 1
-        xlSheet.write(xlRow,xlCol,L)
-        xlRow = xlRow + 1
-        xlCol = 1
-        xlSheet.write(xlRow,xlCol,'Stability coefficient (z-d/L, zeta)')
-        xlCol = xlCol - 1
-        xlSheet.write(xlRow,xlCol,zeta)
-        xlRow = xlRow + 1
-        xlCol = 1
-        xlSheet.write(xlRow,xlCol,'Friction coefficient (ustar)')
-        xlCol = xlCol - 1
-        xlSheet.write(xlRow,xlCol,ustar)
-        xlRow = xlRow + 1
-        xlCol = 1
-        xlSheet.write(xlRow,xlCol,'sd(w) (sigma_w)')
-        xlCol = xlCol - 1
-        xlSheet.write(xlRow,xlCol,sigmaw)
-        xlRow = xlRow + 1
-        xlCol = 1
-        xlSheet.write(xlRow,xlCol,'sd(v) (sigma_v)')
-        xlCol = xlCol - 1
-        xlSheet.write(xlRow,xlCol,sigmav)
-        xlRow = xlRow + 1
-        xlCol = 1
-        if level == 'L3':
-            xlSheet.write(xlRow,xlCol,'Fc')
+        if qcutils.cfkeycheck(cf, Base='Output', ThisOne='FootprintSummaryFile') and cf['Output']['FootprintSummaryFile'] == 'True':
+            xlFile = xlwt.Workbook()
+            xlSheet = xlFile.add_sheet('summary')
+            xlCol = 1
+            xlRow = 0
+            xlSheet.write(xlRow,xlCol,'Measurement height (zm)')
             xlCol = xlCol - 1
-            xlSheet.write(xlRow,xlCol,Fc)
+            xlSheet.write(xlRow,xlCol,zm)
             xlRow = xlRow + 1
             xlCol = 1
-            xlSheet.write(xlRow,xlCol,'Fe')
+            xlSheet.write(xlRow,xlCol,'Canopy height (zc)')
             xlCol = xlCol - 1
-            xlSheet.write(xlRow,xlCol,Fe)
-        elif level == 'L4':
-            xlSheet.write(xlRow,xlCol,'GPP')
-            xlCol = xlCol - 1
-            xlSheet.write(xlRow,xlCol,Fc)
+            xlSheet.write(xlRow,xlCol,zc)
             xlRow = xlRow + 1
             xlCol = 1
-            xlSheet.write(xlRow,xlCol,'Re')
+            xlSheet.write(xlRow,xlCol,'Roughness length (z0)')
             xlCol = xlCol - 1
-            xlSheet.write(xlRow,xlCol,Fe)
-        
-        xlRow = xlRow + 1
-        xlCol = 1
-        
-        xlCol = 3
-        xlRow = 0
-        xlSheet.write(xlRow,xlCol,'Wind direction (wd)')
-        xlCol = xlCol - 1
-        xlSheet.write(xlRow,xlCol,wd)
-        xlRow = xlRow + 1
-        xlCol = 3
-        xlSheet.write(xlRow,xlCol,'% of flux footprint (r)')
-        xlCol = xlCol - 1
-        xlSheet.write(xlRow,xlCol,r)
-        xlRow = xlRow + 1
-        xlCol = 3
-        xlSheet.write(xlRow,xlCol,'Extent of footprint up to r% (xr)')
-        xlCol = xlCol - 1
-        xlSheet.write(xlRow,xlCol,xr)
-        xlRow = xlRow + 1
-        
-        xlSheet = xlFile.add_sheet('crosswind_integrated')
-        for i in range(0,n):
-            xlSheet.write(i,0,x[i])
-            xlSheet.write(i,1,f_ci[i])
-        
-        xlFile.save(summaryFileName)
-        vectorout = open(vectorFileName, 'w')
-        csvSheet = csv.writer(vectorout, dialect='excel-tab')
-        csvSheet.writerow(['x','y','f'])
-        for i in range(0,n):
-            for j in range(0,m):
-                xout = x_2d[i,j]
-                yout = y_2d[i,j]
-                fout = f_2d[i,j]
-                fwFcout = fw_c_2d[i,j]
-                fwFeout = fw_e_2d[i,j]
-                csvSheet.writerow([xout,yout,fout])
-        
-        vectorout.close()
-        #matrixout = open(matrixFileName, 'w')
-        #csvSheet = csv.writer(matrixout, dialect='excel-tab')
-        #xout = numpy.zeros(n+1,dtype=float)
-        #xout[0] = -9999
-        #for i in range(0,n):
-        #    xout[i+1] = x_2d[i,0]
-        #
-        #csvSheet.writerow(xout)
-        #for j in range(0,m):
-        #    yout = y_2d[0,j]
-        #    dataout = f_2d[j]
-        #    ydataout = numpy.zeros(n+1,dtype=float)
-        #    ydataout[0] = yout
-        #    for i in range(0,n):
-        #        ydataout[i+1] = f_2d[i,j]
-        #    
-        #    csvSheet.writerow(ydataout)
-        #
-        #matrixout.close()
-        if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='weights') and cf['Footprint']['weights'] == 'True':
-            vectorout = open(vectorFcFileName, 'w')
-            csvSheet = csv.writer(vectorout, dialect='excel-tab')
-            csvSheet.writerow(['x','y',excltext0])
-            for i in range(0,n):
-                for j in range(0,m):
-                    xout = x_2d[i,j]
-                    yout = y_2d[i,j]
-                    fwFcout = fw_c_2d[i,j]
-                    csvSheet.writerow([xout,yout,fwFcout])
+            xlSheet.write(xlRow,xlCol,znot)
+            xlRow = xlRow + 1
+            xlCol = 1
+            xlSheet.write(xlRow,xlCol,'PBL height (zi)')
+            xlCol = xlCol - 1
+            xlSheet.write(xlRow,xlCol,h)
+            xlRow = xlRow + 1
+            xlCol = 1
+            xlSheet.write(xlRow,xlCol,'Monin-Obukhov length (L)')
+            xlCol = xlCol - 1
+            xlSheet.write(xlRow,xlCol,L)
+            xlRow = xlRow + 1
+            xlCol = 1
+            xlSheet.write(xlRow,xlCol,'Stability coefficient (z-d/L, zeta)')
+            xlCol = xlCol - 1
+            xlSheet.write(xlRow,xlCol,zeta)
+            xlRow = xlRow + 1
+            xlCol = 1
+            xlSheet.write(xlRow,xlCol,'Friction coefficient (ustar)')
+            xlCol = xlCol - 1
+            xlSheet.write(xlRow,xlCol,ustar)
+            xlRow = xlRow + 1
+            xlCol = 1
+            xlSheet.write(xlRow,xlCol,'sd(w) (sigma_w)')
+            xlCol = xlCol - 1
+            xlSheet.write(xlRow,xlCol,sigmaw)
+            xlRow = xlRow + 1
+            xlCol = 1
+            xlSheet.write(xlRow,xlCol,'sd(v) (sigma_v)')
+            xlCol = xlCol - 1
+            xlSheet.write(xlRow,xlCol,sigmav)
+            xlRow = xlRow + 1
+            xlCol = 1
+            if level == 'L3':
+                xlSheet.write(xlRow,xlCol,'Fc')
+                xlCol = xlCol - 1
+                xlSheet.write(xlRow,xlCol,Fc)
+                xlRow = xlRow + 1
+                xlCol = 1
+                xlSheet.write(xlRow,xlCol,'Fe')
+                xlCol = xlCol - 1
+                xlSheet.write(xlRow,xlCol,Fe)
+            elif level == 'L4':
+                xlSheet.write(xlRow,xlCol,'GPP')
+                xlCol = xlCol - 1
+                xlSheet.write(xlRow,xlCol,Fc)
+                xlRow = xlRow + 1
+                xlCol = 1
+                xlSheet.write(xlRow,xlCol,'Re')
+                xlCol = xlCol - 1
+                xlSheet.write(xlRow,xlCol,Fe)
             
-            vectorout.close()
-            #matrixout = open(matrixFcFileName, 'w')
-            #csvSheet = csv.writer(matrixout, dialect='excel-tab')
-            #xout = numpy.zeros(n+1,dtype=float)
-            #xout[0] = -9999
-            #for i in range(0,n):
-            #    xout[i+1] = x_2d[i,0]
-            #
-            #csvSheet.writerow(xout)
-            #for j in range(0,m):
-            #    yout = y_2d[0,j]
-            #    dataout = fw_c_2d[j]
-            #    ydataout = numpy.zeros(n+1,dtype=float)
-            #    ydataout[0] = yout
-            #    for i in range(0,n):
-            #        ydataout[i+1] = fw_c_2d[i,j]
-            #    
-            #    csvSheet.writerow(ydataout)
-            #
-            #matrixout.close()
-            vectorout = open(vectorFeFileName, 'w')
-            csvSheet = csv.writer(vectorout, dialect='excel-tab')
-            csvSheet.writerow(['x','y',excltext1])
-            for i in range(0,n):
-                for j in range(0,m):
-                    xout = x_2d[i,j]
-                    yout = y_2d[i,j]
-                    fwFeout = fw_e_2d[i,j]
-                    csvSheet.writerow([xout,yout,fwFeout])
+            xlRow = xlRow + 1
+            xlCol = 1
             
-            vectorout.close()
-            #matrixout = open(matrixFeFileName, 'w')
-            #csvSheet = csv.writer(matrixout, dialect='excel-tab')
-            #xout = numpy.zeros(n+1,dtype=float)
-            #xout[0] = -9999
-            #for i in range(0,n):
-            #    xout[i+1] = x_2d[i,0]
-            #
-            #csvSheet.writerow(xout)
-            #for j in range(0,m):
-            #    yout = y_2d[0,j]
-            #    dataout = fw_e_2d[j]
-            #    ydataout = numpy.zeros(n+1,dtype=float)
-            #    ydataout[0] = yout
-            #    for i in range(0,n):
-            #        ydataout[i+1] = fw_e_2d[i,j]
-            #    
-            #    csvSheet.writerow(ydataout)
-            #
-            #matrixout.close()
-    
+            xlCol = 3
+            xlRow = 0
+            xlSheet.write(xlRow,xlCol,'eta')
+            xlCol = xlCol - 1
+            xlSheet.write(xlRow,xlCol,eta)
+            xlRow = xlRow + 1
+            xlCol = 3
+            xlSheet.write(xlRow,xlCol,'Wind direction (wd)')
+            xlCol = xlCol - 1
+            xlSheet.write(xlRow,xlCol,wd)
+            xlRow = xlRow + 1
+            xlCol = 3
+            xlSheet.write(xlRow,xlCol,'% of flux footprint (r)')
+            xlCol = xlCol - 1
+            xlSheet.write(xlRow,xlCol,r)
+            xlRow = xlRow + 1
+            xlCol = 3
+            xlSheet.write(xlRow,xlCol,'Extent of footprint up to r% (xr)')
+            xlCol = xlCol - 1
+            xlSheet.write(xlRow,xlCol,xr)
+            xlRow = xlRow + 1
+            
+            xlSheet = xlFile.add_sheet('crosswind_integrated')
+            for i in range(0,n):
+                xlSheet.write(i,0,x[i])
+                xlSheet.write(i,1,f_ci[i])
+            
+            xlFile.save(summaryFileName)
+        
+        if qcutils.cfkeycheck(cf, Base='Output', ThisOne='FootprintFileDataType') and cf['Output']['FootprintFileDataType'] == 'Footprint':
+            if qcutils.cfkeycheck(cf, Base='Output', ThisOne='FootprintFileType') and cf['Output']['FootprintFileType'] == 'Vector':
+                footprint_vector_out(vectorFileName,x_2d,y_2d,f_2d,'f')
+            
+            if qcutils.cfkeycheck(cf, Base='Output', ThisOne='FootprintFileType') and cf['Output']['FootprintFileType'] == 'Matrix':
+                footprint_matrix_out(matrixFileName,x_2d,y_2d,f_2d)
+        
+        if qcutils.cfkeycheck(cf, Base='Output', ThisOne='FootprintFileDataType') and cf['Output']['FootprintFileDataType'] == 'Weighted':
+            if qcutils.cfkeycheck(cf, Base='Output', ThisOne='FootprintFileType') and cf['Output']['FootprintFileType'] == 'Vector':
+                footprint_vector_out(vectorFcFileName,x_2d,y_2d,fw_c_2d,excltext0)
+                footprint_vector_out(vectorFeFileName,x_2d,y_2d,fw_e_2d,excltext1)
+            
+            if qcutils.cfkeycheck(cf, Base='Output', ThisOne='FootprintFileType') and cf['Output']['FootprintFileType'] == 'Matrix':
+                footprint_matrix_out(matrixFcFileName,x_2d,y_2d,fw_c_2d)
+                footprint_matrix_out(matrixFeFileName,x_2d,y_2d,fw_e_2d)
+            
+        if qcutils.cfkeycheck(cf, Base='Output', ThisOne='FootprintFileDataType') and cf['Output']['FootprintFileDataType'] == 'Climatology':
+            filenames = [vectorFcCFileName, matrixFcCFileName, vectorFeCFileName, matrixFeCFileName]
+            labels = [excltext3, excltext4]
+            return xr, x_2d, y_2d, fw_c_2d, fw_e_2d, filenames, labels
+
     return xr
+
+def footprint_climatology(fc_c,fc_e,x_2d,y_2d,fw_c,fw_e,n,m,xmin,xmax,ymin,ymax,p):
+    
+    #x = numpy.arange(xmin+(0.5*p),xmax,p,dtype=float)
+    #y = numpy.arange(ymin+(0.5*p),ymax,p,dtype=float)
+    #y_rot = numpy.reshape(y,(len(y),1))
+    #xy = numpy.broadcast_arrays(x, y_rot)
+    #fc_c1 = numpy.zeros((len(fc_c),len(fc_c[0])),dtype=float) + numpy.mean(fw_c[numpy.where((x_2d > xy[0]) & (x_2d < xy[0] + p) & (y_2d > xy[1]) & (y_2d < xy[0] + p))])
+    #fc_cindex = numpy.where((fc_c1 != 0) & (fc_c1 != 'nan'))
+    #fc_c[fc_cindex] = fc_c[fc_cindex] + fc_c1[fc_cindex]
+    #
+    x = numpy.arange(xmin+(0.5*p),xmax,p,dtype=float)
+    y = numpy.arange(ymin+(0.5*p),ymax,p,dtype=float)
+    y_rot = numpy.reshape(y,(len(y),1))
+    xy = numpy.broadcast_arrays(x, y_rot)
+    ii = 0
+    for i in range(int(xmin),int(xmax),int(p)):
+        jj = 0
+        for j in range(int(ymin),int(ymax),int(p)):
+            xindex = numpy.where((x_2d > i) & (x_2d < i + p))
+            yindex = numpy.where((y_2d > j) & (y_2d < j + p))
+            if (len(xindex[0]) != 0) & (len(yindex[0]) != 0):
+                mask = numpy.zeros((len(x_2d),len(y_2d[0])),dtype=int)
+                mask[xindex] = 1
+                mask[yindex] = mask[yindex] + 1
+                maskindex = numpy.where(mask > 1)
+                if len(maskindex[0]) != 0:
+                    fc_c[jj,ii] = fc_c[jj,ii] + numpy.mean(fw_c[maskindex])
+                    fc_e[jj,ii] = fc_e[jj,ii] + numpy.mean(fw_e[maskindex])
+            
+            jj = jj + 1
+        
+        ii = ii + 1
+    
+    return fc_c, fc_e, xy[0], xy[1]
+
+def footprint_matrix_out(filename,x_2d,y_2d,f_2d):
+    #matrixout = open(filename, 'w')
+    #csvSheet = csv.writer(matrixout, dialect='excel-tab')
+    #n = len(x_2d)
+    #m = len(x_2d[0])
+    #xout = numpy.zeros(n+1,dtype=float)
+    #xout[0] = -9999
+    #for i in range(0,n):
+    #    xout[i+1] = x_2d[i,0]
+    #
+    #csvSheet.writerow(xout)
+    #for j in range(0,m):
+    #    yout = y_2d[0,j]
+    #    dataout = f_2d[j]
+    #    ydataout = numpy.zeros(n+1,dtype=float)
+    #    ydataout[0] = yout
+    #    for i in range(0,n):
+    #        ydataout[i+1] = f_2d[i,j]
+    #    
+    #    csvSheet.writerow(ydataout)
+    #
+    #matrixout.close()
+    
+    n = len(x_2d)
+    m = len(x_2d[0])
+    out = numpy.zeros((n+1,m+1),dtype=float)
+    out[0,0] = -9999
+    out[0,1:] = x_2d[0,:]
+    out[1:,0] = y_2d[:,0]
+    out[1:,1:] = f_2d[:,:]
+    numpy.savetxt(filename,out,delimiter='\t')
+    
+    return
+
+def footprint_vector_out(filename,x_2d,y_2d,f_2d,text):
+    #vectorout = open(filename, 'w')
+    #csvSheet = csv.writer(vectorout, dialect='excel-tab')
+    #csvSheet.writerow(['x','y',text])
+    #n = len(x_2d)
+    #m = len(x_2d[0])
+    #for i in range(0,n):
+    #    for j in range(0,m):
+    #        csvSheet.writerow([x_2d[i,j],y_2d[i,j],f_2d[i,j]])
+    #
+    #vectorout.close()
+    
+    log.info('     '+filename+' cols: x, y, '+text)
+    x = numpy.reshape(x_2d,(1,(len(x_2d)*len(x_2d[0]))))
+    y = numpy.reshape(y_2d,(1,(len(x_2d)*len(x_2d[0]))))
+    f = numpy.reshape(f_2d,(1,(len(x_2d)*len(x_2d[0]))))
+    out = numpy.vstack((x,y,f)).T
+    numpy.savetxt(filename,out,delimiter='\t')
+    
+    return
 
 def GapFillFromAlternate(cf,ds,series=''):
     """
