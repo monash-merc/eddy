@@ -2512,7 +2512,7 @@ def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp,eta,F
             return
         
         x_2d = (xy[0] * numpy.cos(numpy.deg2rad(-eta+float(cf['Footprint']['etaadd'])))) + (xy[3] * numpy.sin(numpy.deg2rad(-eta+float(cf['Footprint']['etaadd']))))   # longitudal rotation of the x,y plane
-        y_2d = (xy[3] * numpy.cos(numpy.deg2rad(-eta+45))) - (xy[0] * numpy.sin(numpy.deg2rad(-eta+45)))   # lateral rotation of the x,y plane and axis conversion for wind components
+        y_2d = (xy[3] * numpy.cos(numpy.deg2rad(-eta+float(cf['Footprint']['etaadd'])))) - (xy[0] * numpy.sin(numpy.deg2rad(-eta+float(cf['Footprint']['etaadd']))))   # lateral rotation of the x,y plane
         f_2d = xy[1] * 1/(sqrt2pi*xy[2]) *  numpy.exp(-xy[3]**2 / (2*xy[2]**2))
         
         #x_2d = numpy.zeros((n,m), dtype=float)
@@ -2521,7 +2521,7 @@ def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp,eta,F
         #for i in range(0, n):
         #    for j in range(0, m):
         #        x_2d[i,j] = (x[i] * numpy.cos(numpy.deg2rad(-eta))) + (y[j] * numpy.sin(numpy.deg2rad(-eta)))   # longitudal rotation of the x,y plane
-        #        y_2d[i,j] = -(y[j] * numpy.cos(numpy.deg2rad(-eta))) - (x[i] * numpy.sin(numpy.deg2rad(-eta)))   # lateral rotation of the x,y plane and axis conversion for wind components
+        #        y_2d[i,j] = -(y[j] * numpy.cos(numpy.deg2rad(-eta))) - (x[i] * numpy.sin(numpy.deg2rad(-eta)))   # lateral rotation of the x,y plane
         #        f_2d[i,j] = f_ci[i] * 1/(sqrt2pi*sigmay[i]) *  math.exp(-y[j]**2 / (2*sigmay[i]**2))
         #
         fw_c_2d = f_2d * Fc
