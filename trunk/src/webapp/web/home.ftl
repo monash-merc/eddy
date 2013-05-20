@@ -163,7 +163,7 @@
             </p>
 
             <p>
-                The <b>Resources</b> menu provides direct link to information on the data available, the data format, licence information and information on utilities for accessing the data files
+                The <b>Resources</b> menu provides direct links to information on the data available, the data format, licence information and information on utilities for accessing the data files
                 stored on this portal.
             </p>
 
