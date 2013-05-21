@@ -48,7 +48,7 @@
                 <key>MON399d1cdc-a788-4a05-9f01-d3dcbcafdf8d</key>
                 <relation type="isOutputOf"/>
             </relatedObject>
-            <subject type="gcmd">Earth Science - Atmosphere - Atmospheric Pressure</subject>
+            <subject type="gcmd">Earth Science - Atmosphere - Atmospheric Radiation</subject>
             <subject type="gcmd">Earth Science - Atmosphere - Atmospheric Pressure</subject>
             <subject type="gcmd">Earth Science - Atmosphere - Atmospheric Temperature</subject>
             <subject type="gcmd">Earth Science - Atmosphere - Atmospheric Water Vapour</subject>
