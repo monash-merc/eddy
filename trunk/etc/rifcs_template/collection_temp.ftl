@@ -81,7 +81,7 @@
                 &lt;ul&gt;
                     &lt;li&gt;copy, re-use, share and distribute the copies of the data &lt;/li&gt;
                     &lt;li&gt;not use the data for commercial purposes &lt;/li&gt;
-                &lt;/ul&gt
+                &lt;/ul&gt;
 
                 &lt;p&gt;
                     provided that, whenever the data is copied, re-used, or distributed the user ensures that:
