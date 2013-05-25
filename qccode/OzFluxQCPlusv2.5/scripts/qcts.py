@@ -1642,6 +1642,7 @@ def do_attributes(cf,ds):
                     ds.series[ThisOne]['Attr'][attr] = cf['Variables'][ThisOne]['Attr'][attr]
 
 def do_bulkRichardson(cf,ds):
+    log.info('  Computing bulk Richardson values from qT profile')
     IncludeList = cf['Rb']['series'].keys()
     NumHeights = len(IncludeList)
     # calculate layer values
@@ -1751,6 +1752,24 @@ def do_footprint_2d(cf,ds,level='L3'):
         index = numpy.where(analysisflag == 0)[0]
         Lf[index] = 9999
     
+    if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='Fluxes'):
+        Fluxesin = ast.literal_eval(cf['Footprint']['Fluxes'])
+        Fc,fFc = qcutils.GetSeriesasMA(ds,Fluxesin[0])
+        Fe,fFe = qcutils.GetSeriesasMA(ds,Fluxesin[1])
+        Fh,fFh = qcutils.GetSeriesasMA(ds,Fluxesin[2])
+    else:
+        if level == 'L3':
+            Fc,fFc = qcutils.GetSeriesasMA(ds,'Fc')
+            Fe,fFe = qcutils.GetSeriesasMA(ds,'Fe')
+            Fh,fFh = qcutils.GetSeriesasMA(ds,'Fh')
+        elif level == 'L4':
+            Fc,fFc = qcutils.GetSeriesasMA(ds,'GPP')
+            Fe,fFe = qcutils.GetSeriesasMA(ds,'Re')
+            Fh = fFh = numpy.zeros(len(fFe),dtype=int)
+        else:
+            log.error('  Footprint:  invalid input fluxes or analysis level')
+            return
+    
     if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='ExcludeDay') and cf['Footprint']['ExcludeDay'] == 'True':
         Dayindex = numpy.where(Fsd > 10)[0]
         Lf[Dayindex] = 7
@@ -1800,21 +1819,6 @@ def do_footprint_2d(cf,ds,level='L3'):
     else:
         wdin = 'Wd_CSAT'
     
-    if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='Fluxes'):
-        Fluxesin = ast.literal_eval(cf['Footprint']['Fluxes'])
-        Fc,fFc = qcutils.GetSeriesasMA(ds,Fluxesin[0])
-        Fe,fFe = qcutils.GetSeriesasMA(ds,Fluxesin[1])
-    else:
-        if level == 'L3':
-            Fc,fFc = qcutils.GetSeriesasMA(ds,'Fc')
-            Fe,fFe = qcutils.GetSeriesasMA(ds,'Fe')
-        elif level == 'L4':
-            Fc,fFc = qcutils.GetSeriesasMA(ds,'GPP')
-            Fe,fFe = qcutils.GetSeriesasMA(ds,'Re')
-        else:
-            log.error('  Footprint:  invalid input fluxes or analysis level')
-            return
-    
     wd,f = qcutils.GetSeriesasMA(ds,wdin)
     eta,f = qcutils.GetSeriesasMA(ds,'eta')
     xr = numpy.ma.zeros(n,dtype=float)
@@ -1827,8 +1831,11 @@ def do_footprint_2d(cf,ds,level='L3'):
             ymin = (float(cf['Footprint']['ClimateYmin']))
             ymax = (float(cf['Footprint']['ClimateYmax']))
             p = (float(cf['Footprint']['ClimatePixel']))
-            fc_c_2d = numpy.ma.zeros((n,m),dtype=float)
+            fc_c1_2d = numpy.ma.zeros((n,m),dtype=float)
             fc_e_2d = numpy.ma.zeros((n,m),dtype=float)
+            fc_h_2d = numpy.ma.zeros((n,m),dtype=float)
+            fc_c2_2d = numpy.ma.zeros((n,m),dtype=float)
+            fc_c3_2d = numpy.ma.zeros((n,m),dtype=float)
         else:
             log.error('  Footprint climatology: Spatial parameters missing from controlfile')
             return
@@ -1838,23 +1845,47 @@ def do_footprint_2d(cf,ds,level='L3'):
         if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='loglist') and cf['Footprint']['loglist'] == 'True':
             log.info('    Footprint: '+str(ds.series['DateTime']['Data'][do_index[i]]))
         
-        if numpy.mod(fFc[do_index[i]],10)!=0 or numpy.mod(fFe[do_index[i]],10)!=0:
+        if numpy.mod(fFc[do_index[i]],10)!=0 or numpy.mod(fFe[do_index[i]],10)!=0 or numpy.mod(fFh[do_index[i]],10)!=0:
             Fc[do_index[i]] = numpy.float(-9999)
             Fe[do_index[i]] = numpy.float(-9999)
+            Fh[do_index[i]] = numpy.float(-9999)
         
         if qcutils.cfkeycheck(cf,Base='Output',ThisOne='FootprintFileDataType') and cf['Output']['FootprintFileDataType'] == 'Climatology' and qcutils.cfkeycheck(cf,Base='Output',ThisOne='FootprintFile') and cf['Output']['FootprintFile'] == 'True':
-            xr[do_index[i]],x_2d,y_2d,fw_c_2d,fw_e_2d,filenames,labels = footprint_2d(cf,sigmaw[do_index[i]],sigmav[do_index[i]],ustar[do_index[i]],zm,h[do_index[i]],znot,r,wd[do_index[i]],zeta[do_index[i]],L[do_index[i]],zc,ds.series['DateTime']['Data'][do_index[i]],eta[do_index[i]],Fc[do_index[i]],Fe[do_index[i]],level)
-            fc_c_2d,fc_e_2d,fc_x2d,fc_y2d = footprint_climatology(fc_c_2d,fc_e_2d,x_2d,y_2d,fw_c_2d,fw_e_2d,n,m,xmin,xmax,ymin,ymax,p)
+            xr[do_index[i]],x_2d,y_2d,fw_c1_2d,fw_e_2d,fw_h_2d,fw_c2_2d,fw_c3_2d,filenames,labels = footprint_2d(cf,sigmaw[do_index[i]],sigmav[do_index[i]],ustar[do_index[i]],zm,h[do_index[i]],znot,r,wd[do_index[i]],zeta[do_index[i]],L[do_index[i]],zc,ds.series['DateTime']['Data'][do_index[i]],eta[do_index[i]],Fc[do_index[i]],Fe[do_index[i]],Fh[do_index[i]],level)
+            if level == 'L3':
+                fc_c1_2d,fc_e_2d,fc_h_2d,fc_c2_2d,fc_c3_2d,fc_x2d,fc_y2d = footprint_climatology(fc_c1_2d,fc_e_2d,x_2d,y_2d,fw_c1_2d,fw_e_2d,n,m,xmin,xmax,ymin,ymax,p,fc_h=fc_h_2d,fc_c2=fc_c2_2d,fc_c3=fc_c3_2d,fw_h=fw_h_2d,fw_c2=fw_c2_2d,fw_c3=fw_c3_2d)
+            
+            if level == 'L4':
+                fc_c1_2d,fc_e_2d,fc_x2d,fc_y2d = footprint_climatology(fc_c1_2d,fc_e_2d,x_2d,y_2d,fw_c1_2d,fw_e_2d,n,m,xmin,xmax,ymin,ymax,p)
+        
         else:
-            xr[do_index[i]] = footprint_2d(cf,sigmaw[do_index[i]],sigmav[do_index[i]],ustar[do_index[i]],zm,h[do_index[i]],znot,r,wd[do_index[i]],zeta[do_index[i]],L[do_index[i]],zc,ds.series['DateTime']['Data'][do_index[i]],eta[do_index[i]],Fc[do_index[i]],Fe[do_index[i]],level)
+            xr[do_index[i]] = footprint_2d(cf,sigmaw[do_index[i]],sigmav[do_index[i]],ustar[do_index[i]],zm,h[do_index[i]],znot,r,wd[do_index[i]],zeta[do_index[i]],L[do_index[i]],zc,ds.series['DateTime']['Data'][do_index[i]],eta[do_index[i]],Fc[do_index[i]],Fe[do_index[i]],Fh[do_index[i]],level)
         
     if qcutils.cfkeycheck(cf,Base='Output',ThisOne='FootprintFileDataType') and cf['Output']['FootprintFileDataType'] == 'Climatology' and qcutils.cfkeycheck(cf,Base='Output',ThisOne='FootprintFile') and cf['Output']['FootprintFile'] == 'True':
         if qcutils.cfkeycheck(cf, Base='Output', ThisOne='FootprintFileType') and cf['Output']['FootprintFileType'] == 'Vector':
-            footprint_vector_out(filenames[0],fc_x2d,fc_y2d,fc_c_2d,labels[0])
-            footprint_vector_out(filenames[2],fc_x2d,fc_y2d,fc_e_2d,labels[1])
+            for i in range(len(labels)):
+                if labels[i] == 'fc_GPP' or labels[i] == 'fc_Fc':
+                    footprint_vector_out(filenames[0][i],fc_x2d,fc_y2d,fc_c1_2d,labels[i])
+                if labels[i] == 'fc_Re' or labels[i] == 'fc_Fe':
+                    footprint_vector_out(filenames[0][i],fc_x2d,fc_y2d,fc_e_2d,labels[i])
+                if labels[i] == 'fc_Fh':
+                    footprint_vector_out(filenames[0][i],fc_x2d,fc_y2d,fc_h_2d,labels[i])
+                if labels[i] == 'fc_PosFc':
+                    footprint_vector_out(filenames[0][i],fc_x2d,fc_y2d,fc_c2_2d,labels[i])
+                if labels[i] == 'fc_NegFc':
+                    footprint_vector_out(filenames[0][i],fc_x2d,fc_y2d,fc_c3_2d,labels[i])
         elif qcutils.cfkeycheck(cf, Base='Output', ThisOne='FootprintFileType') and cf['Output']['FootprintFileType'] == 'Matrix':
-            footprint_matrix_out(filenames[1],fc_x2d,fc_y2d,fc_c_2d)
-            footprint_matrix_out(filenames[3],fc_x2d,fc_y2d,fc_e_2d)
+            for i in range(len(labels)):
+                if labels[i] == 'fc_GPP' or labels[i] == 'fc_Fc':
+                    footprint_matrix_out(filenames[1][i],fc_x2d,fc_y2d,fc_c1_2d,labels[i])
+                if labels[i] == 'fc_Re' or labels[i] == 'fc_Fe':
+                    footprint_matrix_out(filenames[1][i],fc_x2d,fc_y2d,fc_e_2d,labels[i])
+                if labels[i] == 'fc_Fh':
+                    footprint_matrix_out(filenames[1][i],fc_x2d,fc_y2d,fc_h_2d,labels[i])
+                if labels[i] == 'fc_PosFc':
+                    footprint_matrix_out(filenames[1][i],fc_x2d,fc_y2d,fc_c2_2d,labels[i])
+                if labels[i] == 'fc_NegFc':
+                    footprint_matrix_out(filenames[1][i],fc_x2d,fc_y2d,fc_c3_2d,labels[i])
         else:
             log.error('  Footprint climatology:  FootprintFileType (Vector or Matrix) not defined in controlfile')
         
@@ -2384,7 +2415,7 @@ def FilterFcByUstar(cf, ds, Fc_out='Fc', Fc_in='Fc', ustar_in='ustar'):
     units = qcutils.GetUnitsFromds(ds, Fc_in)
     qcutils.CreateSeries(ds,Fc_out,Fc,Flag=Fc_flag,Descr=descr,Units=units)
 
-def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp,eta,Fc,Fe,level):
+def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp,eta,Fc,Fe,Fh,level):
     """
         footprint_2d.py
         
@@ -2515,47 +2546,94 @@ def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp,eta,F
         y_2d = (xy[3] * numpy.cos(numpy.deg2rad(-eta+float(cf['Footprint']['etaadd'])))) - (xy[0] * numpy.sin(numpy.deg2rad(-eta+float(cf['Footprint']['etaadd']))))   # lateral rotation of the x,y plane
         f_2d = xy[1] * 1/(sqrt2pi*xy[2]) *  numpy.exp(-xy[3]**2 / (2*xy[2]**2))
         
-        #x_2d = numpy.zeros((n,m), dtype=float)
-        #y_2d = numpy.zeros((n,m), dtype=float)
-        #f_2d = numpy.zeros((n,m), dtype=float)
-        #for i in range(0, n):
-        #    for j in range(0, m):
-        #        x_2d[i,j] = (x[i] * numpy.cos(numpy.deg2rad(-eta))) + (y[j] * numpy.sin(numpy.deg2rad(-eta)))   # longitudal rotation of the x,y plane
-        #        y_2d[i,j] = -(y[j] * numpy.cos(numpy.deg2rad(-eta))) - (x[i] * numpy.sin(numpy.deg2rad(-eta)))   # lateral rotation of the x,y plane
-        #        f_2d[i,j] = f_ci[i] * 1/(sqrt2pi*sigmay[i]) *  math.exp(-y[j]**2 / (2*sigmay[i]**2))
-        #
-        fw_c_2d = f_2d * Fc
-        fw_e_2d = f_2d * Fe
         STList = []
-        if level == 'L3':
-            filetext0 = 'Fc'
-            filetext1 = 'Fe'
-            excltext0 = 'fw_Fc'
-            excltext1 = 'fw_Fe'
-            excltext3 = 'fc_Fc'
-            excltext4 = 'fc_Fe'
-        
-        if level == 'L4':
-            filetext0 = 'GPP'
-            filetext1 = 'Re'
-            excltext0 = 'fw_GPP'
-            excltext1 = 'fw_Re'
-            excltext3 = 'fc_GPP'
-            excltext4 = 'fc_Re'
-        
         for fmt in ['%Y','%m','%d','%H','%M']:
+            STList.append('_')
             STList.append(timestamp.strftime(fmt))
-            summaryFileName = cf['Files']['Footprint']['FootprintFilePath']+'footprint_2d_summary_'+''.join(STList)+'.xls'
-            vectorFileName = cf['Files']['Footprint']['FootprintFilePath']+'footprint_2d_vectors_'+''.join(STList)+'.xls'
-            matrixFileName = cf['Files']['Footprint']['FootprintFilePath']+'footprint_2d_matrix_'+''.join(STList)+'.xls'
-            vectorFcFileName = cf['Files']['Footprint']['FootprintFilePath']+filetext0+'_w_footprint_2d_vectors_'+''.join(STList)+'.xls'
-            matrixFcFileName = cf['Files']['Footprint']['FootprintFilePath']+filetext0+'_w_footprint_2d_matrix_'+''.join(STList)+'.xls'
-            vectorFeFileName = cf['Files']['Footprint']['FootprintFilePath']+filetext1+'_w_footprint_2d_vectors_'+''.join(STList)+'.xls'
-            matrixFeFileName = cf['Files']['Footprint']['FootprintFilePath']+filetext1+'_w_footprint_2d_matrix_'+''.join(STList)+'.xls'
-            vectorFcCFileName = cf['Files']['Footprint']['FootprintFilePath']+filetext0+'_c_footprint_2d_vectors.xls'
-            matrixFcCFileName = cf['Files']['Footprint']['FootprintFilePath']+filetext0+'_c_footprint_2d_matrix.xls'
-            vectorFeCFileName = cf['Files']['Footprint']['FootprintFilePath']+filetext1+'_c_footprint_2d_vectors.xls'
-            matrixFeCFileName = cf['Files']['Footprint']['FootprintFilePath']+filetext1+'_c_footprint_2d_matrix.xls'
+        
+        summaryFileName = cf['Files']['Footprint']['FootprintFilePath']+'footprint_2d_summary'+''.join(STList)+'.xls'
+        vectorFileName = cf['Files']['Footprint']['FootprintFilePath']+'footprint_2d_vectors'+''.join(STList)+'.xls'
+        matrixFileName = cf['Files']['Footprint']['FootprintFilePath']+'footprint_2d_matrix'+''.join(STList)+'.xls'
+        
+        if qcutils.cfkeycheck(cf,Base='Output',ThisOne='FootprintFileDataType') and (cf['Output']['FootprintFileDataType'] == 'Weighted' or cf['Output']['FootprintFileDataType'] == 'Climatology'):
+            check = numpy.zeros(5,dtype=int)
+            matrixfiles = []
+            vectorfiles = []
+            labels = []
+            if level == 'L3':
+                if cf['Output']['FootprintFileDataType'] == 'Weighted':
+                    labels.append('fw_Fc')
+                    labels.append('fw_Fe')
+                    labels.append('fw_Fh')
+                    vectorfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'Fc_w_footprint_2d_vectors'+''.join(STList)+'.xls')
+                    matrixfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'Fc_w_footprint_2d_matrix'+''.join(STList)+'.xls')
+                    vectorfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'Fe_w_footprint_2d_vectors'+''.join(STList)+'.xls')
+                    matrixfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'Fe_w_footprint_2d_matrix'+''.join(STList)+'.xls')
+                    vectorfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'Fh_w_footprint_2d_vectors'+''.join(STList)+'.xls')
+                    matrixfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'Fh_w_footprint_2d_matrix'+''.join(STList)+'.xls')
+                    fw_c1_2d = f_2d * Fc
+                    fw_e_2d = f_2d * Fe
+                    fw_h_2d = f_2d * Fh
+                
+                if cf['Output']['FootprintFileDataType'] == 'Climatology':
+                    fw_c1_2d = numpy.zeros((len(f_2d),len(f_2d[0])),dtype=float)
+                    fw_c2_2d = numpy.zeros((len(f_2d),len(f_2d[0])),dtype=float)
+                    fw_c3_2d = numpy.zeros((len(f_2d),len(f_2d[0])),dtype=float)
+                    fw_e_2d = numpy.zeros((len(f_2d),len(f_2d[0])),dtype=float)
+                    fw_h_2d = numpy.zeros((len(f_2d),len(f_2d[0])),dtype=float)
+                
+                if cf['Output']['FootprintFileDataType'] == 'Climatology' and (qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='FcBoth') and cf['Footprint']['FcBoth'] == 'True'):
+                    labels.append('fc_Fc')
+                    vectorfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'Fc_c_footprint_2d_vectors'+''.join(STList)+'.xls')
+                    matrixfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'Fc_c_footprint_2d_matrix'+''.join(STList)+'.xls')
+                    fw_c1_2d = f_2d * Fc
+                
+                if cf['Output']['FootprintFileDataType'] == 'Climatology' and (qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='Fe') and cf['Footprint']['Fe'] == 'True'):
+                    labels.append('fc_Fe')
+                    vectorfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'Fe_c_footprint_2d_vectors'+''.join(STList)+'.xls')
+                    matrixfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'Fe_c_footprint_2d_matrix'+''.join(STList)+'.xls')
+                    fw_e_2d = f_2d * Fe
+                
+                if cf['Output']['FootprintFileDataType'] == 'Climatology' and (qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='Fh') and cf['Footprint']['Fh'] == 'True'):
+                    labels.append('fc_Fh')
+                    vectorfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'Fh_c_footprint_2d_vectors'+''.join(STList)+'.xls')
+                    matrixfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'Fh_c_footprint_2d_matrix'+''.join(STList)+'.xls')
+                    fw_h_2d = f_2d * Fh
+                
+                if cf['Output']['FootprintFileDataType'] == 'Climatology' and (qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='FcPos') and cf['Footprint']['FcPos'] == 'True'):
+                    labels.append('fc_PosFc')
+                    vectorfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'PosFc_c_footprint_2d_vectors'+''.join(STList)+'.xls')
+                    matrixfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'PosFc_c_footprint_2d_matrix'+''.join(STList)+'.xls')
+                    if Fc > 0:
+                        fw_c2_2d = f_2d * Fc
+                
+                if cf['Output']['FootprintFileDataType'] == 'Climatology' and (qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='FcNeg') and cf['Footprint']['FcNeg'] == 'True'):
+                    labels.append('fc_NegFc')
+                    vectorfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'NegFc_c_footprint_2d_vectors'+''.join(STList)+'.xls')
+                    matrixfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'NegFc_c_footprint_2d_matrix'+''.join(STList)+'.xls')
+                    if Fc < 0:
+                        fw_c3_2d = f_2d * Fc
+            
+            if level == 'L4':
+                fw_c1_2d = f_2d * Fc
+                fw_e_2d = f_2d * Fe
+                if cf['Output']['FootprintFileDataType'] == 'Weighted':
+                    labels.append('fw_GPP')
+                    labels.append('fw_Re')
+                    vectorfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'GPP_w_footprint_2d_vectors'+''.join(STList)+'.xls')
+                    matrixfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'GPP_w_footprint_2d_matrix'+''.join(STList)+'.xls')
+                    vectorfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'Re_w_footprint_2d_vectors'+''.join(STList)+'.xls')
+                    matrixfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'Re_w_footprint_2d_matrix'+''.join(STList)+'.xls')
+                
+                if cf['Output']['FootprintFileDataType'] == 'Climatology':
+                    labels.append('fc_GPP')
+                    labels.append('fc_Re')
+                    vectorfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'GPP_c_footprint_2d_vectors'+''.join(STList)+'.xls')
+                    matrixfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'GPP_c_footprint_2d_matrix'+''.join(STList)+'.xls')
+                    vectorfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'Re_c_footprint_2d_vectors'+''.join(STList)+'.xls')
+                    matrixfiles.append(cf['Files']['Footprint']['FootprintFilePath']+'Re_c_footprint_2d_matrix'+''.join(STList)+'.xls')
+            
+            filenames = [vectorfiles, matrixfiles]
         
         if qcutils.cfkeycheck(cf, Base='Output', ThisOne='FootprintSummaryFile') and cf['Output']['FootprintSummaryFile'] == 'True':
             xlFile = xlwt.Workbook()
@@ -2616,6 +2694,11 @@ def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp,eta,F
                 xlSheet.write(xlRow,xlCol,'Fe')
                 xlCol = xlCol - 1
                 xlSheet.write(xlRow,xlCol,Fe)
+                xlRow = xlRow + 1
+                xlCol = 1
+                xlSheet.write(xlRow,xlCol,'Fh')
+                xlCol = xlCol - 1
+                xlSheet.write(xlRow,xlCol,Fh)
             elif level == 'L4':
                 xlSheet.write(xlRow,xlCol,'GPP')
                 xlCol = xlCol - 1
@@ -2667,30 +2750,22 @@ def footprint_2d(cf,sigmaw,sigmav,ustar,zm,h,znot,r,wd,zeta,L,zc,timestamp,eta,F
         
         if qcutils.cfkeycheck(cf, Base='Output', ThisOne='FootprintFileDataType') and cf['Output']['FootprintFileDataType'] == 'Weighted':
             if qcutils.cfkeycheck(cf, Base='Output', ThisOne='FootprintFileType') and cf['Output']['FootprintFileType'] == 'Vector':
-                footprint_vector_out(vectorFcFileName,x_2d,y_2d,fw_c_2d,excltext0)
-                footprint_vector_out(vectorFeFileName,x_2d,y_2d,fw_e_2d,excltext1)
+                footprint_vector_out(filenames[0][0],x_2d,y_2d,fw_c1_2d,labels[0])
+                footprint_vector_out(filenames[0][1],x_2d,y_2d,fw_e_2d,labels[1])
+                footprint_vector_out(filenames[0][2],x_2d,y_2d,fw_h_2d,labels[2])
             
             if qcutils.cfkeycheck(cf, Base='Output', ThisOne='FootprintFileType') and cf['Output']['FootprintFileType'] == 'Matrix':
-                footprint_matrix_out(matrixFcFileName,x_2d,y_2d,fw_c_2d)
-                footprint_matrix_out(matrixFeFileName,x_2d,y_2d,fw_e_2d)
+                footprint_matrix_out(filenames[1][0],x_2d,y_2d,fw_c1_2d)
+                footprint_matrix_out(filenames[1][1],x_2d,y_2d,fw_e_2d)
+                footprint_matrix_out(filenames[1][2],x_2d,y_2d,fw_h_2d)
             
         if qcutils.cfkeycheck(cf, Base='Output', ThisOne='FootprintFileDataType') and cf['Output']['FootprintFileDataType'] == 'Climatology':
-            filenames = [vectorFcCFileName, matrixFcCFileName, vectorFeCFileName, matrixFeCFileName]
-            labels = [excltext3, excltext4]
-            return xr, x_2d, y_2d, fw_c_2d, fw_e_2d, filenames, labels
+            return xr, x_2d, y_2d, fw_c1_2d, fw_e_2d, fw_h_2d, fw_c2_2d, fw_c3_2d, filenames, labels
 
     return xr
 
-def footprint_climatology(fc_c,fc_e,x_2d,y_2d,fw_c,fw_e,n,m,xmin,xmax,ymin,ymax,p):
+def footprint_climatology(fc_c,fc_e,x_2d,y_2d,fw_c,fw_e,n,m,xmin,xmax,ymin,ymax,p,fc_h='',fc_c2='',fc_c3='',fw_h='',fw_c2='',fw_c3=''):
     
-    #x = numpy.arange(xmin+(0.5*p),xmax,p,dtype=float)
-    #y = numpy.arange(ymin+(0.5*p),ymax,p,dtype=float)
-    #y_rot = numpy.reshape(y,(len(y),1))
-    #xy = numpy.broadcast_arrays(x, y_rot)
-    #fc_c1 = numpy.zeros((len(fc_c),len(fc_c[0])),dtype=float) + numpy.mean(fw_c[numpy.where((x_2d > xy[0]) & (x_2d < xy[0] + p) & (y_2d > xy[1]) & (y_2d < xy[0] + p))])
-    #fc_cindex = numpy.where((fc_c1 != 0) & (fc_c1 != 'nan'))
-    #fc_c[fc_cindex] = fc_c[fc_cindex] + fc_c1[fc_cindex]
-    #
     x = numpy.arange(xmin+(0.5*p),xmax,p,dtype=float)
     y = numpy.arange(ymin+(0.5*p),ymax,p,dtype=float)
     y_rot = numpy.reshape(y,(len(y),1))
@@ -2709,12 +2784,19 @@ def footprint_climatology(fc_c,fc_e,x_2d,y_2d,fw_c,fw_e,n,m,xmin,xmax,ymin,ymax,
                 if len(maskindex[0]) != 0:
                     fc_c[jj,ii] = fc_c[jj,ii] + numpy.mean(fw_c[maskindex])
                     fc_e[jj,ii] = fc_e[jj,ii] + numpy.mean(fw_e[maskindex])
+                    if fc_h != '':
+                        fc_h[jj,ii] = fc_h[jj,ii] + numpy.mean(fw_h[maskindex])
+                        fc_c2[jj,ii] = fc_c2[jj,ii] + numpy.mean(fw_c2[maskindex])
+                        fc_c3[jj,ii] = fc_c3[jj,ii] + numpy.mean(fw_c3[maskindex])
             
             jj = jj + 1
         
         ii = ii + 1
     
-    return fc_c, fc_e, xy[0], xy[1]
+    if fc_h == '':
+        return fc_c, fc_e, xy[0], xy[1]
+    else:
+        return fc_c, fc_e, fc_h, fc_c2, fc_c3, xy[0], xy[1]
 
 def footprint_matrix_out(filename,x_2d,y_2d,f_2d):
     #matrixout = open(filename, 'w')

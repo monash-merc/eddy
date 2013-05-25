@@ -31,7 +31,8 @@ ListFile.write(outstr+'\n')
 ncGlobalAttList = ncFile.ncattrs()
 if len(ncGlobalAttList)!=0:
     for gattr in ncGlobalAttList:
-        outstr = '   '+gattr+': '+getattr(ncFile,gattr)
+        print gattr
+        outstr = '   '+gattr+': '+str(getattr(ncFile,gattr))
         #outstr.encode('ascii','ignore')
         print outstr
         ListFile.write(outstr+'\n')
@@ -67,7 +68,7 @@ for ThisOne in ncVarNames:
     ListFile.write(outstr+'\n')
     attList = var.ncattrs()
     for attr in attList:
-        outstr = '      '+attr+': '+getattr(var,attr)
+        outstr = '      '+attr+': '+str(getattr(var,attr))
         print outstr
         ListFile.write(outstr+'\n')
 

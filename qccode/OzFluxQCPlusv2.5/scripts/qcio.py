@@ -162,6 +162,35 @@ def nc_read_series(cf,level):
     get_datetime(ds)
     return ds
 
+def nc_read_file(ncFullName):
+    netCDF4.default_encoding = 'latin-1'
+    ncFile = netCDF4.Dataset(ncFullName,'r')
+    ds = DataStructure()
+    gattrlist = ncFile.ncattrs()
+    if len(gattrlist)!=0:
+        for gattr in gattrlist:
+            ds.globalattributes[gattr] = getattr(ncFile,gattr)
+            if 'time_step' in ds.globalattributes: c.ts = ds.globalattributes['time_step']
+    for ThisOne in ncFile.variables.keys():
+        if '_QCFlag' not in ThisOne:
+            # create the series in the data structure
+            ds.series[unicode(ThisOne)] = {}
+            # get the data variable object
+            ds.series[ThisOne]['Data'] = ncFile.variables[ThisOne][:]
+            # check for a QC flag and if it exists, load it
+            if ThisOne+'_QCFlag' in ncFile.variables.keys():
+                ds.series[ThisOne]['Flag'] = ncFile.variables[ThisOne+'_QCFlag'][:]
+            # get the variable attributes
+            vattrlist = ncFile.variables[ThisOne].ncattrs()
+            if len(vattrlist)!=0:
+                ds.series[ThisOne]['Attr'] = {}
+                for vattr in vattrlist:
+                    ds.series[ThisOne]['Attr'][vattr] = getattr(ncFile.variables[ThisOne],vattr)
+    ncFile.close()
+    # get a series of Python datetime objects
+    get_datetime(ds)
+    return ds
+
 def nc_write_OzFlux_series(cf,ds,level):
     ncFullName = cf['Files'][level]['ncFilePath']+cf['Files'][level]['ncFileName']
     log.info(' Writing netCDF file '+ncFullName)

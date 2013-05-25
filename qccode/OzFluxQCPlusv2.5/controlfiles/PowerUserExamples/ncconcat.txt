@@ -1,0 +1,14 @@
+[General]
+    netCDFv3 = False
+
+[Files]
+    [[Out]]
+        ncFilePath = ../ncData/ASM/
+        ncFileName = ASM_EC_2010-2012_L3in.nc
+    [[In]]
+        0 = ../../AliceSpringsMulga/level3/ASM_EC_2010_L3_Corrected.nc
+        1 = ../../AliceSpringsMulga/level3/ASM_EC_2011_L3_Corrected.nc
+        2 = ../../AliceSpringsMulga/level3/ASM_EC_2012_L3_Corrected.nc
+#        0 = ../ncData/ASM/ASM_EC_2010_L3.nc
+#        1 = ../ncData/ASM/ASM_EC_2011_L3.nc
+#        2 = ../ncData/ASM/ASM_EC_2012_L3.nc

@@ -46,42 +46,43 @@
 # [Plots]     - definition of time series plots
 #
 [General]
-Platform = PC    # Mac or PC
+    Platform = Mac    # Mac or PC
 
 [Functions]
-# Mandatory functions:
-# do_linear
-# TaFromTv
-# CalculateMetVars
-# CoordRotation2D
-# CalculateFluxes
-# FhvtoFh
-# CorrectFgForStorage
-# do_qcchecks
-# do_Ah7500check
-# WPL if WPLcov not True
-WPLcov = True
-# PreCorrectSoilAverage if PostCorrectSoilAverage not True
-PostCorrectSoilAverage = True
-
-# Default functions (standard set)
-MergeSeriesAhTa = True
-CalculateNetRadiation = True
-CalculateAvailableEnergy = True
-
-# Add-ons
-Massman = False
-CorrectSWC = False
-MergeSeriesWS = False
-PenmanMonteith = False
-gaps = False
-qnqsat = False
-footprint = False
-convertFc = False
-climatology = False
-CalculateAh = False
-ustarFilter = False
-CalculateET = False
+    # un-comment following line to skip mandatory (*) corrections (input already corrected)
+    # BypassCorrections = True
+    # Mandatory functions:
+    # do_linear*
+    # CalculateMetVars
+    # CoordRotation2D*
+    # CalculateFluxes*
+    # FhvtoFh*
+    # CorrectFgForStorage*
+    # do_qcchecks*
+    # do_Ah7500check*
+    # WPL if WPLcov not True*
+    WPLcov = True
+    # PreCorrectSoilAverage if PostCorrectSoilAverage not True*
+    PostCorrectSoilAverage = True
+    
+    # Default functions (standard set True)
+    MergeSeriesAhTa = True              # TaFromTv child
+    CalculateNetRadiation = False
+    CalculateAvailableEnergy = False
+    
+    # Add-ons
+    Massman = True                     # disabled by BypassCorrections*
+    CorrectSWC = True
+    MergeSeriesWS = True
+    PenmanMonteith = True
+    gaps = True
+    qTprofile = True
+    footprint = True
+    convertFc = True
+    climatology = False
+    CalculateAh = False
+    ustarFilter = False
+    CalculateET = True
 
 [Files]
     [[L2]]
@@ -103,11 +104,11 @@ CalculateET = False
     SwsSeries = "['Sws_01a']"	
 
 #[Massman]
-#zmd =   # instrument height above displacement plane, z-d; d = 2 / 3 * h; h = canopy height, z = measurement height
-#z0 =  # roughness length from Brutseart 1982, eqn 5.7: h / z = 3 * e  z0 = 3eh; h = canopy height, ln(e) = 1
-#angle =  # angle between CSAT3 mounting point and IRGA sensor head mid-path, degrees
-#CSATarm =  # distance from CSAT mounting point to CSAT sensor, m
-#IRGAarm =  # distance from CSAT mounting point to IRGA sensor, m
+    #zmd =   # instrument height above displacement plane, z-d; d = 2 / 3 * h; h = canopy height, z = measurement height
+    #z0 =  # roughness length from Brutseart 1982, eqn 5.7: h / z = 3 * e  z0 = 3eh; h = canopy height, ln(e) = 1
+    #angle =  # angle between CSAT3 mounting point and IRGA sensor head mid-path, degrees
+    #CSATarm =  # distance from CSAT mounting point to CSAT sensor, m
+    #IRGAarm =  # distance from CSAT mounting point to IRGA sensor, m
 
 [Output]
 #***

@@ -42,6 +42,7 @@
     CalculateAh = False
     ustarFilter = False
     CalculateET = True
+    bulkRichardson = True
 
 [Files]
     [[L2]]
