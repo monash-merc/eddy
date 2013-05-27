@@ -67,31 +67,21 @@
             <description type="rights" xml:lang="en">
             <#if tern>
                 &lt;p&gt;
-                    TERN Attribution-Share Alike-Non Commercial (TERN-BY-SA-NC) Data Licence v1.0
+                The data is subjected to conditions described in the TERN Attribution-Share Alike-Non Commercial (TERN-BY-SA-NC) Data Licence v1.0
+                (http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0).
                 &lt;/p&gt;
-
                 &lt;p&gt;
-                    This is a summary of the TERN Attribution-Share ALike-Non Commercial (TERN-BY-SA-NC) Data Licence v1.0 (http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0).
+                This data licence lets others distribute, remix and build upon the work, but only if:
                 &lt;/p&gt;
-
                 &lt;p&gt;
-                    The TERN Attribution-Share Alike- Non Commercial (TERN BY-SA-NC) Data Licence v1.0 restricts the development of new data/products, so that a user can:
+                (1) it is for non-commercial purposes,
                 &lt;/p&gt;
-
-                &lt;ul&gt;
-                    &lt;li&gt;copy, re-use, share and distribute the copies of the data &lt;/li&gt;
-                    &lt;li&gt;not use the data for commercial purposes &lt;/li&gt;
-                &lt;/ul&gt;
-
                 &lt;p&gt;
-                    provided that, whenever the data is copied, re-used, or distributed the user ensures that:
+                (2) they credit the original creator/s and any other nominated parties, and
                 &lt;/p&gt;
-
-                &lt;ul&gt;
-                    &lt;li&gt;credit is given to the original sources/s of the data (and any other nominated parties) in the manner stipulated (Attribution); &lt;/li&gt;
-                    &lt;li&gt;the data cannot be used for commercial purposes (No Commercial); and &lt;/li&gt;
-                    &lt;li&gt;If the data is altered, transformed, the resulting datasets can only be used under the same license conditions. &lt;/li&gt;
-                &lt;/ul&gt;
+                &lt;p&gt;
+                (3) they licence their derivative works under the same terms
+                &lt;/p&gt;
             <#else>
             ${licenceContents}
             </#if>
