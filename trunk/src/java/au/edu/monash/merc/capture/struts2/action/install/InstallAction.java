@@ -237,6 +237,8 @@ public class InstallAction extends InstallBaseAction {
         ldapProp.setLdapSupported(true);
         ldapProp.setLdapServer("directory.monash.edu.au");
         ldapProp.setBaseDN("o=Monash University, c=AU");
+        //we not require bind the base dn.
+        ldapProp.setBindBaseDnRequired(false);
         ldapProp.setAttUID("uid");
         ldapProp.setAttMail("mail");
         ldapProp.setAttGender("gender");
