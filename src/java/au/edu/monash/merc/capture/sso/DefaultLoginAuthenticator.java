@@ -43,79 +43,80 @@ import au.edu.monash.merc.capture.util.ldap.LdapUser;
 @Component
 public class DefaultLoginAuthenticator implements LoginAuthenticator {
 
-	@Autowired
-	private UserDAO userDao;
+    @Autowired
+    private UserDAO userDao;
 
-	@Autowired
-	private LDAPUtil ldapUtil;
+    @Autowired
+    private LDAPUtil ldapUtil;
 
-	@Autowired
-	private ConfigSettings configSettings;
+    @Autowired
+    private ConfigSettings configSettings;
 
-	public void setLdapUtil(LDAPUtil ldapUtil) {
-		this.ldapUtil = ldapUtil;
-	}
+    public void setLdapUtil(LDAPUtil ldapUtil) {
+        this.ldapUtil = ldapUtil;
+    }
 
-	public void setUserDAO(UserDAO userDao) {
-		this.userDao = userDao;
-	}
+    public void setUserDAO(UserDAO userDao) {
+        this.userDao = userDao;
+    }
 
-	public void setConfigSettings(ConfigSettings configSettings) {
-		this.configSettings = configSettings;
-	}
+    public void setConfigSettings(ConfigSettings configSettings) {
+        this.configSettings = configSettings;
+    }
 
-	private void initLdapEnv() {
+    private void initLdapEnv() {
 
-		LdapProperty ldapProp = new LdapProperty();
-		ldapProp.setLdapFactory(configSettings.getPropValue(ConfigSettings.LDAP_FACTORY));
-		ldapProp.setLdapServer(configSettings.getPropValue(ConfigSettings.LDAP_SERVER_URL));
-		ldapProp.setProtocol(configSettings.getPropValue(ConfigSettings.LDAP_SECURITY_PROTOCOL));
-		ldapProp.setAuthentication(configSettings.getPropValue(ConfigSettings.LDAP_AUTHENTICATION));
-		ldapProp.setBaseDN(configSettings.getPropValue(ConfigSettings.LDAP_BASE_DN));
-		ldapProp.setAttUID(configSettings.getPropValue(ConfigSettings.LDAP_UID_ATTR_NAME));
-		ldapProp.setAttMail(configSettings.getPropValue(ConfigSettings.LDAP_MAIL_ATTR_NAME));
-		ldapProp.setAttGender(configSettings.getPropValue(ConfigSettings.LDAP_GENDER_ATTR_NAME));
-		ldapProp.setAttCN(configSettings.getPropValue(ConfigSettings.LDAP_CN_ATTR_NAME));
-		ldapProp.setAttSn(configSettings.getPropValue(ConfigSettings.LDAP_SN_ATTR_NAME));
-		ldapProp.setAttGivenname(configSettings.getPropValue(ConfigSettings.LDAP_GIVENNAME_ATTR_NAME));
-		ldapProp.setAttPersonalTitle(configSettings.getPropValue(ConfigSettings.LDAP_PERSONAL_TITLE_ATTR_NAME));
-		this.ldapUtil.initEnv(ldapProp);
-	}
+        LdapProperty ldapProp = new LdapProperty();
+        ldapProp.setLdapFactory(configSettings.getPropValue(ConfigSettings.LDAP_FACTORY));
+        ldapProp.setLdapServer(configSettings.getPropValue(ConfigSettings.LDAP_SERVER_URL));
+        ldapProp.setProtocol(configSettings.getPropValue(ConfigSettings.LDAP_SECURITY_PROTOCOL));
+        ldapProp.setAuthentication(configSettings.getPropValue(ConfigSettings.LDAP_AUTHENTICATION));
+        ldapProp.setBaseDN(configSettings.getPropValue(ConfigSettings.LDAP_BASE_DN));
+        ldapProp.setBindBaseDnRequired(Boolean.valueOf(configSettings.getPropValue(ConfigSettings.LDAP_BIND_BASE_DN_REQUIRED)));
+        ldapProp.setAttUID(configSettings.getPropValue(ConfigSettings.LDAP_UID_ATTR_NAME));
+        ldapProp.setAttMail(configSettings.getPropValue(ConfigSettings.LDAP_MAIL_ATTR_NAME));
+        ldapProp.setAttGender(configSettings.getPropValue(ConfigSettings.LDAP_GENDER_ATTR_NAME));
+        ldapProp.setAttCN(configSettings.getPropValue(ConfigSettings.LDAP_CN_ATTR_NAME));
+        ldapProp.setAttSn(configSettings.getPropValue(ConfigSettings.LDAP_SN_ATTR_NAME));
+        ldapProp.setAttGivenname(configSettings.getPropValue(ConfigSettings.LDAP_GIVENNAME_ATTR_NAME));
+        ldapProp.setAttPersonalTitle(configSettings.getPropValue(ConfigSettings.LDAP_PERSONAL_TITLE_ATTR_NAME));
+        this.ldapUtil.initEnv(ldapProp);
+    }
 
-	@Override
-	public User validateLogin(String uniqueId, String password, boolean ldapSupported) {
-		String pwd = MD5.hash(password);
-		User user = this.userDao.checkUserLogin(uniqueId, pwd);
+    @Override
+    public User validateLogin(String uniqueId, String password, boolean ldapSupported) {
+        String pwd = MD5.hash(password);
+        User user = this.userDao.checkUserLogin(uniqueId, pwd);
 
-		// if user name and password are matched, just return this user. the action level should check the user account
-		// status whether is activated or not
-		if (user != null) {
-			return user;
-		}
+        // if user name and password are matched, just return this user. the action level should check the user account
+        // status whether is activated or not
+        if (user != null) {
+            return user;
+        }
 
-		// if user name and password are not matched, then check whether the ldap is supported or not.
-		if (ldapSupported) {
-			user = this.userDao.getByUserUnigueId(uniqueId);
-			if (user != null) {
-				verifyLdapUser(uniqueId, password);
-				return user;
-			}
-		}
+        // if user name and password are not matched, then check whether the ldap is supported or not.
+        if (ldapSupported) {
+            user = this.userDao.getByUserUnigueId(uniqueId);
+            if (user != null) {
+                verifyLdapUser(uniqueId, password);
+                return user;
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public LdapUser validataLdapUser(String authcatId, String password) {
-		// initialize the ldap env
-		initLdapEnv();
-		return ldapUtil.validateLdapUser(authcatId, password);
-	}
+    @Override
+    public LdapUser validataLdapUser(String authcatId, String password) {
+        // initialize the ldap env
+        initLdapEnv();
+        return ldapUtil.validateLdapUser(authcatId, password);
+    }
 
-	public void verifyLdapUser(String authcatId, String password) {
-		// initialize the ldap env
-		initLdapEnv();
-		this.ldapUtil.login(authcatId, password);
-	}
+    public void verifyLdapUser(String authcatId, String password) {
+        // initialize the ldap env
+        initLdapEnv();
+        this.ldapUtil.login(authcatId, password);
+    }
 
 }
