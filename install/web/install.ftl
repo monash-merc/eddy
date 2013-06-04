@@ -278,6 +278,13 @@
 					<td><@s.textfield name="ldapProp.baseDN" cssClass="install_input_field" /></td>
 					<td><div class="name_comment">* The base dn value</div></td>
 				</tr>
+                <tr>
+                    <td>Bind Base DN Required:</td>
+                    <td><@s.select name="ldapProp.bindBaseDnRequired"  list="trueFalseMap" cssClass="input_select_normal"  /></td>
+                    <td>
+                        <div class="name_comment">* If binding the base dn required when connection to the ldap server</div>
+                    </td>
+                </tr>
 				<tr>
 					<td>UID Attribute Name: </td>
 					<td><@s.textfield name="ldapProp.attUID" cssClass="install_input_field" /></td>

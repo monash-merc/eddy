@@ -189,6 +189,7 @@ public class Installer {
 			if (ldapProperty.isLdapSupported()) {
 				s = s.replaceFirst("LADP_SERVER", "ldap://" + ldapProperty.getLdapServer());
 				s = s.replaceFirst("BASE_DN", ldapProperty.getBaseDN());
+                s = s.replaceFirst("BIND_BASE_DN_REQUIRED", String.valueOf(ldapProperty.isBindBaseDnRequired()));
 				s = s.replaceFirst("ATT_UID", ldapProperty.getAttUID());
 				s = s.replaceFirst("ATT_MAIL", ldapProperty.getAttMail());
 				s = s.replaceFirst("ATT_GENDER", ldapProperty.getAttGender());

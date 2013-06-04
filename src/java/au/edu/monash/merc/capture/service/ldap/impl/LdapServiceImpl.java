@@ -43,40 +43,41 @@ import au.edu.monash.merc.capture.util.ldap.LdapUser;
 @Service
 public class LdapServiceImpl implements LdapService {
 
-	@Autowired
-	private LDAPUtil ldapUtil;
+    @Autowired
+    private LDAPUtil ldapUtil;
 
-	@Autowired
-	private ConfigSettings configSettings;
+    @Autowired
+    private ConfigSettings configSettings;
 
-	public void setLdapUtil(LDAPUtil ldapUtil) {
-		this.ldapUtil = ldapUtil;
-	}
+    public void setLdapUtil(LDAPUtil ldapUtil) {
+        this.ldapUtil = ldapUtil;
+    }
 
-	public void setConfigSettings(ConfigSettings configSettings) {
-		this.configSettings = configSettings;
-	}
+    public void setConfigSettings(ConfigSettings configSettings) {
+        this.configSettings = configSettings;
+    }
 
-	@PostConstruct
-	public void initLdapEnv() {
-		LdapProperty ldapProp = new LdapProperty();
-		ldapProp.setLdapFactory(configSettings.getPropValue(ConfigSettings.LDAP_FACTORY));
-		ldapProp.setLdapServer(configSettings.getPropValue(ConfigSettings.LDAP_SERVER_URL));
-		ldapProp.setProtocol(configSettings.getPropValue(ConfigSettings.LDAP_SECURITY_PROTOCOL));
-		ldapProp.setAuthentication(configSettings.getPropValue(ConfigSettings.LDAP_AUTHENTICATION));
-		ldapProp.setBaseDN(configSettings.getPropValue(ConfigSettings.LDAP_BASE_DN));
-		ldapProp.setAttUID(configSettings.getPropValue(ConfigSettings.LDAP_UID_ATTR_NAME));
-		ldapProp.setAttMail(configSettings.getPropValue(ConfigSettings.LDAP_MAIL_ATTR_NAME));
-		ldapProp.setAttGender(configSettings.getPropValue(ConfigSettings.LDAP_GENDER_ATTR_NAME));
-		ldapProp.setAttCN(configSettings.getPropValue(ConfigSettings.LDAP_CN_ATTR_NAME));
-		ldapProp.setAttSn(configSettings.getPropValue(ConfigSettings.LDAP_SN_ATTR_NAME));
-		ldapProp.setAttGivenname(configSettings.getPropValue(ConfigSettings.LDAP_GIVENNAME_ATTR_NAME));
-		ldapProp.setAttPersonalTitle(configSettings.getPropValue(ConfigSettings.LDAP_PERSONAL_TITLE_ATTR_NAME));
-		this.ldapUtil.initEnv(ldapProp);
-	}
+    @PostConstruct
+    public void initLdapEnv() {
+        LdapProperty ldapProp = new LdapProperty();
+        ldapProp.setLdapFactory(configSettings.getPropValue(ConfigSettings.LDAP_FACTORY));
+        ldapProp.setLdapServer(configSettings.getPropValue(ConfigSettings.LDAP_SERVER_URL));
+        ldapProp.setProtocol(configSettings.getPropValue(ConfigSettings.LDAP_SECURITY_PROTOCOL));
+        ldapProp.setAuthentication(configSettings.getPropValue(ConfigSettings.LDAP_AUTHENTICATION));
+        ldapProp.setBaseDN(configSettings.getPropValue(ConfigSettings.LDAP_BASE_DN));
+        ldapProp.setBindBaseDnRequired(Boolean.valueOf(configSettings.getPropValue(ConfigSettings.LDAP_BIND_BASE_DN_REQUIRED)));
+        ldapProp.setAttUID(configSettings.getPropValue(ConfigSettings.LDAP_UID_ATTR_NAME));
+        ldapProp.setAttMail(configSettings.getPropValue(ConfigSettings.LDAP_MAIL_ATTR_NAME));
+        ldapProp.setAttGender(configSettings.getPropValue(ConfigSettings.LDAP_GENDER_ATTR_NAME));
+        ldapProp.setAttCN(configSettings.getPropValue(ConfigSettings.LDAP_CN_ATTR_NAME));
+        ldapProp.setAttSn(configSettings.getPropValue(ConfigSettings.LDAP_SN_ATTR_NAME));
+        ldapProp.setAttGivenname(configSettings.getPropValue(ConfigSettings.LDAP_GIVENNAME_ATTR_NAME));
+        ldapProp.setAttPersonalTitle(configSettings.getPropValue(ConfigSettings.LDAP_PERSONAL_TITLE_ATTR_NAME));
+        this.ldapUtil.initEnv(ldapProp);
+    }
 
-	@Override
-	public LdapUser searchLdapUser(String cnOrEmail) {
-		return this.ldapUtil.findUserInfo(cnOrEmail);
-	}
+    @Override
+    public LdapUser searchLdapUser(String cnOrEmail) {
+        return this.ldapUtil.findUserInfo(cnOrEmail);
+    }
 }
