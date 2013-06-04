@@ -116,13 +116,14 @@ public class LDAPUtil {
         }
     }
 
-    public void initEnv(String ldapFactory, String serverUrl, String protocol, String authentication, String baseDn, String uidAttrName,
+    public void initEnv(String ldapFactory, String serverUrl, String protocol, String authentication, String baseDn, boolean bindBaseDnRequired, String uidAttrName,
                         String mailAttrName, String cnAttrName, String genderAttrName, String personalTitleAttrName, String snAttrName, String givennameAttrName) {
         this.ldapFactory = ldapFactory;
         this.serverUrl = serverUrl;
         this.protocol = protocol;
         this.authentication = authentication;
         this.baseDn = baseDn;
+        this.bindBaseDnRequired = bindBaseDnRequired;
         this.uidAttrName = uidAttrName;
         this.mailAttrName = mailAttrName;
         this.cnAttrName = cnAttrName;
