@@ -30,6 +30,7 @@
     CalculateAvailableEnergy = False
     
     # Add-ons
+    BypassSwsTcorr = False
     Massman = True                     # disabled by BypassCorrections*
     CorrectSWC = True
     MergeSeriesWS = True
@@ -75,10 +76,9 @@
     #noDefaultXl = True
     PNGFile = True
     FootprintFile = False
-    FootprintFile = True
     FootprintFileType = Vector            # Vector or Matrix
     FootprintFileDataType = Climatology   # Footprint, Weighted or Climatology
-    FootprintSummaryFile = True
+    FootprintSummaryFile = False
 
 [Rb]
     [[series]]
@@ -98,11 +98,16 @@
     zm = 11.67                   # measurement height, m
     zc = 6.5                     # canopoy height, m
     z0 = 0.8                     # roughness length, z0 = zc / 3e (Brutseart 1982, eqn 5.7), m
-    r = 95                       # % of flux footprint (max: 96)
+    r = 95                       # % of flux footprint
     #default wd = Wd_CSAT
     wd = Wd_CSAT_Compass
-    #default weights Fluxes = "['Fc', 'Fe']
-    loglist = True
+    #default weights Fluxes = "['Fc', 'Fe', 'Fh']"
+    loglist = False
+    FcBoth = True                     # split Fc to keep Positive, Negative or Both values
+    FcPos = True                     # split Fc to keep Positive, Negative or Both values
+    FcNeg = True                     # split Fc to keep Positive, Negative or Both values
+    Fe = True
+    Fh = True
     ExcludeDay = False
     ExcludeNight = True
     ExcludeHours = False
@@ -158,23 +163,14 @@
     # CF:  CalculateFluxes, EWPL: FeWPLCov, CWPL: FcWPLCov
     #
     # Default FhvtoFhArgs:  "['Ta','Fh','Tv_CSAT','Fe','ps','Ah','Fh','Fh rotated and converted from virtual heat flux']"
-    #FhvtoFhArgs = "['Ta_HMP','Fh_rm','Tv_CSAT','Fe_rm','ps','Ah_HMP','Fh_rmv','Fh rotated, massman corrected, and converted from virtual heat flux']"
     FhvtoFhArgs = "['Ta','Fh','Tv_CSAT','Fe','ps','Ah','Fh','Fh rotated, massman corrected, and converted from virtual heat flux']"
     # Default CF = "['Ta', 'Ah', 'ps']"
     # Default WPL|Massman EWPL = "['Fe','wA','Fh','Ta','Ah','ps']"
     # Default WPL|Massman CWPL = "['Fc','wC','Fh','wA','Ta','Ah','Cc_7500_Av','ps']"
-    #EWPL = "['Fe_wpl','wAM','Fh_rmv','Ta_HMP','Ah_HMP','ps','wAwpl']"
-    #CWPL = "['Fc_wpl','wCM','Fh_rmv','wAwpl','Ta_HMP','Ah_HMP','Cc_7500_Av','ps']"
     # Default MetVars = "['Ta','ps','Ah']"
-    #MetVars = "['Ta_HMP','ps','Ah_HMP']"
-    #CF = "['Ta_HMP','Ah_HMP','ps','wTM','wAM','wCM','uwM','vwM','Fh_rm','Fe_rm','Fc_rm','Fm_rm','ustarM']"
     # Default MassmanVars = "['Ta','Ah','ps']"
-    #MassmanVars = "['Ta_HMP','Ah_HMP','ps']"
     # Default MassmanOuts = "['ustar','ustar','L','L','uw','vw','wT','wA','wC']"
-    #MassmanOuts = "['ustar','ustarM','L','LM','uwM','vwM','wTM','wAM','wCM']"
     # Default gapsvars = "['Fc','Fe','Fh']"
-    #gapsvars = "['Fc_wpl','Fe_wpl','Fh_rmv']"
-    #AhcheckFc = "['Fc_wpl']"
     [[CFgArgs]]
         0 = "['Fgc_bs','Fg_bs','Ts_bs','Sws_bs']"
         1 = "['Fgc_ms','Fg_ms','Ts_ms','Sws_ms']"

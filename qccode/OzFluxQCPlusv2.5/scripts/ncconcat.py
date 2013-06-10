@@ -35,6 +35,7 @@ for n in InFile_list[1:]:
     log.info('ncconcat: reading data from '+ncFileName)
     print 'ncconcat: reading data from '+ncFileName
     ds_n = qcio.nc_read_file(ncFileName)
+    nRecs_n = len(ds_n.series['xlDateTime']['Data'])
     nRecs = len(ds.series['xlDateTime']['Data'])
     for ThisOne in ds_n.series.keys():
         if ThisOne in ds.series.keys():
@@ -50,6 +51,12 @@ for n in InFile_list[1:]:
             ds.series[ThisOne]['Attr'] = {}
             for attr in ds_n.series[ThisOne]['Attr'].keys():
                 ds.series[ThisOne]['Attr'][attr] = ds_n.series[ThisOne]['Attr'][attr]
+    
+    for ThisOne in ds.series.keys():
+        if ThisOne not in ds_n.series.keys():
+            ds.series[ThisOne]['Data'] = numpy.append(ds.series[ThisOne]['Data'],numpy.array([-9999]*nRecs_n,dtype=numpy.float64))
+            ds.series[ThisOne]['Flag'] = numpy.append(ds.series[ThisOne]['Flag'],numpy.array([1]*nRecs_n,dtype=numpy.int32))
+
 ds.globalattributes['NumRecs'] = str(len(ds.series['xlDateTime']['Data']))
 
 # write the netCDF file
