@@ -140,6 +140,7 @@ public class LDAPUtil {
         this.protocol = ldapProp.getProtocol();
         this.authentication = ldapProp.getAuthentication();
         this.baseDn = ldapProp.getBaseDN();
+        this.bindBaseDnRequired = ldapProp.isBindBaseDnRequired();
         this.uidAttrName = ldapProp.getAttUID();
         this.mailAttrName = ldapProp.getAttMail();
         this.cnAttrName = ldapProp.getAttCN();
