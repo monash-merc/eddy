@@ -1643,12 +1643,28 @@ def do_attributes(cf,ds):
 
 def do_bulkRichardson(cf,ds):
     log.info('  Computing bulk Richardson values from qT profile')
-    IncludeList = cf['Rb']['series'].keys()
+    IncludeList = cf['RiB']['series'].keys()
     NumHeights = len(IncludeList)
+    if 'sigmaw' not in ds.series.keys():
+        varw,f = qcutils.GetSeriesasMA(ds,'ww')
+        windex = numpy.where(varw > 0)[0]
+        n = len(varw)
+        sigmaw = numpy.zeros(n,dtype=float)
+        sigmaw[windex] = numpy.sqrt(varw[windex])
+        qcutils.CreateSeries(ds,'sigmaw',sigmaw,FList=['ww'],Descr='standard deviation of vertical windspeed',Units='m^.5/s^.5')
+    
+    if 'zeta' not in ds.series.keys():
+        if qcutils.cfkeycheck(cf,Base='RiB',ThisOne='zmd'):
+            zmd = float(cf['RiB']['zmd'])
+        
+        L,Lf = qcutils.GetSeriesasMA(ds,'L')
+        zeta = zmd / L
+        qcutils.CreateSeries(ds,'zeta',zeta,FList=['L'],Descr='stability coefficient, (z-d)/L',Units='unitless')
+    
     # calculate layer values
     for i in range(NumHeights-1):
-        IncludeHeightList = ast.literal_eval(cf['Rb']['series'][str(i)])
-        NextHeightList = ast.literal_eval(cf['Rb']['series'][str(i+1)])
+        IncludeHeightList = ast.literal_eval(cf['RiB']['series'][str(i)])
+        NextHeightList = ast.literal_eval(cf['RiB']['series'][str(i+1)])
         U_top,f = qcutils.GetSeriesasMA(ds,NextHeightList[1])
         U_bottom,f = qcutils.GetSeriesasMA(ds,IncludeHeightList[1])
         Tvp_top,f = qcutils.GetSeriesasMA(ds,NextHeightList[2])
@@ -1661,10 +1677,10 @@ def do_bulkRichardson(cf,ds):
             AverageSeriesByElements(ds,IncludeHeightList[3],srclist)
         
         Tvp_bar,f = qcutils.GetSeriesasMA(ds,IncludeHeightList[3])
-        Rb = (9.8 * delta_Tvp * delta_z) / (Tvp_bar * (delta_U ** 2))
+        RiB = (9.8 * delta_Tvp * delta_z) / (Tvp_bar * (delta_U ** 2))
         qcutils.CreateSeries(ds,IncludeHeightList[4],delta_U,FList=[IncludeHeightList[1],IncludeHeightList[2],IncludeHeightList[3],'Fc'],Descr='U_upper less U_lower',Units='m/s')
         qcutils.CreateSeries(ds,IncludeHeightList[5],delta_Tvp,FList=[IncludeHeightList[1],IncludeHeightList[2],IncludeHeightList[3],'Fc'],Descr='Tvp_upper less Tvp_lower',Units='m/s')
-        qcutils.CreateSeries(ds,IncludeHeightList[6],Rb,FList=[IncludeHeightList[1],IncludeHeightList[2],IncludeHeightList[3],'Fc'],Descr='Bulk Richardson number',Units='none')
+        qcutils.CreateSeries(ds,IncludeHeightList[6],RiB,FList=[IncludeHeightList[1],IncludeHeightList[2],IncludeHeightList[3],'Fc'],Descr='Bulk Richardson number',Units='none')
         flaglist = [IncludeHeightList[4],IncludeHeightList[5],IncludeHeightList[6]]
         for ThisOne in flaglist:
             flag = numpy.where(numpy.mod(ds.series[ThisOne]['Flag'],10)!=0)[0]
@@ -1726,15 +1742,25 @@ def do_footprint_2d(cf,ds,level='L3'):
     
     varw,f = qcutils.GetSeriesasMA(ds,'ww')
     varv,f = qcutils.GetSeriesasMA(ds,'vv')
-    sigmaw = numpy.sqrt(varw)
-    sigmav = numpy.sqrt(varv)
-    qcutils.CreateSeries(ds,'sigmaw',sigmaw,FList=['ww'],Descr='standard deviation of vertical windspeed',Units='m^.5/s^.5')
+    windex = numpy.where(varw > 0)[0]
+    badw = numpy.where(varw < c.eps)[0]
+    vindex = numpy.where(varv > 0)[0]
+    badv = numpy.where(varv < c.eps)[0]
     ustar,f = qcutils.GetSeriesasMA(ds,'ustar')
     L,Lf = qcutils.GetSeriesasMA(ds,'L')
     Fsd,f = qcutils.GetSeriesasMA(ds,'Fsd')
     n = len(L)
     includedate = len(L)
     excludehours = 0
+    sigmaw = numpy.zeros(n,dtype=float)
+    sigmav = numpy.zeros(n,dtype=float)
+    sigmaw[windex] = numpy.sqrt(varw[windex])
+    sigmav[vindex] = numpy.sqrt(varv[vindex])
+    Lf[badw] = 9999
+    Lf[badv] = 9999
+    zeta = (zm - d) / L
+    qcutils.CreateSeries(ds,'zeta',zeta,FList=['L'],Descr='stability coefficient, (z-d)/L',Units='unitless')
+    qcutils.CreateSeries(ds,'sigmaw',sigmaw,FList=['ww'],Descr='standard deviation of vertical windspeed',Units='m^.5/s^.5')
     if qcutils.cfkeycheck(cf,Base='Footprint',ThisOne='AnalysisDates'):
         ldt = ds.series['DateTime']['Data']
         IncludeList = cf['Footprint']['AnalysisDates'].keys()
@@ -1789,15 +1815,12 @@ def do_footprint_2d(cf,ds,level='L3'):
         excludehours = len(Nightindex)
         Lf[Nightindex] = 7
     
-    zeta = numpy.ma.zeros(n,dtype=float)
     ustarindex = numpy.where((ustar < 0.2) & (numpy.mod(Lf,10)==0))[0]
     Lf[ustarindex] = 18
     index_noFlux = numpy.ma.where((numpy.mod(Lf,10)==0) & ((numpy.mod(fFc,10)!=0) | (numpy.mod(fFe,10)!=0) | (numpy.mod(fFh,10)!=0)))[0]
     Lf[index_noFlux] = 31
     Lfindex = numpy.where(numpy.mod(Lf,10)!=0)[0]
-    zetaindex = numpy.where(numpy.mod(Lf,10)==0)[0]
     zeta[Lfindex] = 9999999
-    zeta[zetaindex] = (zm - d) / L[zetaindex]
     index_zero_L = numpy.ma.where(zeta > 9999998)[0]
     index_neutral = numpy.ma.where((zeta > -0.1) & (zeta < 0.1))[0]
     index_slight_stable = numpy.ma.where((zeta > 0.1) & (zeta < 1))[0]
@@ -1834,7 +1857,7 @@ def do_footprint_2d(cf,ds,level='L3'):
     log.info('   '+str(len(index_unstable))+':  unstable, -1 > zeta > -2')
     log.info('   '+str(len(index_very_unstable))+':  very unstable, zeta < -2')
     if qcutils.cfkeycheck(cf,Base='Output',ThisOne='FootprintFile') and cf['Output']['FootprintFile'] == 'True':
-        filename = cf['Files']['Footprint']['FootprintFilePath']+'stats.txt'
+        filename = cf['Files']['Footprint']['FootprintFilePath']+'stats_'+level+'.txt'
         out = open(filename,'w')
         out.write('Total measurements:  '+str(includedate)+'\n')
         out.write('Masked measurements (not included):  '+str(includedate-len(zetaindex))+'\n')

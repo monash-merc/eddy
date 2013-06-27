@@ -82,15 +82,23 @@ def mixingratio(ps,vp):
     mr = 0.622*vp/(ps- vp)
     return mr
 
-def molen(T,Ah,p,ustar,Fh):
+def molen(T,Ah,p,ustar,wT):
+#def molenx(T,Ah,p,ustar,Fh):
+#    # Calculate the Monin-Obukhov length
+#    #  This version was introduced with MassmanStandard
+#    #  Calculated values of L are too large, generating neutral conditions in 99.9% of observations 
+#    ustar = numpy.sqrt(ustar**2)
+#    L = -theta(T, p)*densitydryair(T, p)*c.Cp*(ustar**3)/(c.g*c.k*Fh)
+#    return L
+#
     # Calculate the Monin-Obukhov length
+    # Stull (1988) Eq. 5.7c, uses virtual potential temperature
     ustar = numpy.sqrt(ustar**2)
-    L = -theta(T, p)*densitydryair(T, p)*c.Cp*(ustar**3)/(c.g*c.k*Fh)
-    return L
-
-def molenv(Tv,ustar,Fhv):
-    # Calculate the Obukhov length using sonic virtual temperature measurement
-    L = -(Tv * ustar ** 3) / (c.k * c.g * Fhv)
+    vp = vapourpressure(Ah,T)
+    mr = mixingratio(p,vp)
+    Tv = theta(T,p)
+    Tvp = virtualtheta(Tv,mr)
+    L = -Tvp*(ustar**3)/(c.g*c.k*wT)
     return L
 
 def qfromrh(RH, T, p):
@@ -150,3 +158,11 @@ def vapourpressure(Ah,Ta):
     vp = 0.000001*Ah*(Ta+273.15)*c.R/c.Mv
     return vp
 
+def virtualtheta(theta,mr):
+    # Calculate virtual potential temperature
+    #  theta - potential temperature, K
+    #  mr - mixing ratio, kg/kg
+    # Returns
+    #  Tvp - virtual potential temperature, K
+    Tvp = theta * (1 + (0.61 * mr))
+    return Tvp

@@ -25,7 +25,10 @@ def autonc2xl(cf,InLevel,OutLevel):
     # get the variables
     ds = nc_read_series(cf,InLevel)
     # write the variables to the excel file
-    xl_write_series(cf,ds,OutLevel)
+    if qcutils.cfkeycheck(cf,Base='Output',ThisOne='Format') and cf['Output']['Format'] == 'Subset':
+        xl_write_series(cf,ds,OutLevel)
+    else:
+        xl_write_library(cf,ds,OutLevel)
 
 def autoxl2nc(cf,InLevel,OutLevel):
     # get the data series from the Excel file
@@ -361,6 +364,103 @@ def xl_read_series(cf,level):
                 log.error('  xl_read_series: series '+ThisOne+' not found in xl file')
     return ds
 
+def xl_write_library(cf,ds,level):
+    log.info(' Opening the Excel file ')
+    xlfullname = cf['Files'][level]['xlFilePath']+cf['Files'][level]['xlFileName']
+    xlfile = xlwt.Workbook()
+    if qcutils.cfkeycheck(cf,Base='General',ThisOne='Platform') and cf['General']['Platform'] == 'Mac':
+        xlfile.dates_1904 = True
+    # add sheets to the Excel file
+    xlAttrSheet = xlfile.add_sheet('Attr')
+    xlDataSheet = xlfile.add_sheet('Data')
+    xlFlagSheet = xlfile.add_sheet('Flag')
+    # write the global attributes
+    log.info(' Writing the global attributes to Excel file '+xlfullname)
+    xlcol = 0
+    xlrow = 0
+    xlAttrSheet.write(xlrow,xlcol,'Global attributes')
+    xlrow = xlrow + 1
+    globalattrlist = ds.globalattributes.keys()
+    globalattrlist.sort()
+    for ThisOne in [x for x in globalattrlist if 'Flag' not in x]:
+        xlAttrSheet.write(xlrow,xlcol,ThisOne)
+        xlAttrSheet.write(xlrow,xlcol+1,str(ds.globalattributes[ThisOne]))
+        xlrow = xlrow + 1
+    for ThisOne in [x for x in globalattrlist if 'Flag' in x]:
+        xlAttrSheet.write(xlrow,xlcol,ThisOne)
+        xlAttrSheet.write(xlrow,xlcol+1,str(ds.globalattributes[ThisOne]))
+        xlrow = xlrow + 1
+    # write the variable attributes
+    log.info(' Writing the variable attributes to Excel file '+xlfullname)
+    xlrow = xlrow + 1
+    xlAttrSheet.write(xlrow,xlcol,'Variable attributes')
+    xlrow = xlrow + 1
+    xlcol_varname = 0
+    xlcol_attrname = 1
+    xlcol_attrvalue = 2
+    variablelist = ds.series.keys()
+    variablelist.sort()
+    if 'DateTime' in variablelist:
+        variablelist.remove('DateTime')
+    for ThisOne in variablelist:
+        xlAttrSheet.write(xlrow,xlcol_varname,ThisOne)
+        attributelist = ds.series[ThisOne]['Attr'].keys()
+        attributelist.sort()
+        for Attr in attributelist:
+            xlAttrSheet.write(xlrow,xlcol_attrname,Attr)
+            xlAttrSheet.write(xlrow,xlcol_attrvalue,ds.series[ThisOne]['Attr'][Attr])
+            xlrow = xlrow + 1
+    # write the Excel date/time to the data and the QC flags as the first column
+    log.info(' Writing the datetime to Excel file '+xlfullname)
+    nRecs = len(ds.series['xlDateTime']['Data'])
+    d_xf = xlwt.easyxf(num_format_str='dd/mm/yyyy hh:mm')
+    xlDataSheet.write(2,xlcol,'xlDateTime')
+    for j in range(nRecs):
+        xlDataSheet.write(j+3,xlcol,ds.series['xlDateTime']['Data'][j],d_xf)
+        xlFlagSheet.write(j+3,xlcol,ds.series['xlDateTime']['Data'][j],d_xf)
+    # remove xlDateTime from the list of variables to be written to the Excel file
+    variablelist.remove('xlDateTime')
+    # now start looping over the other variables in the xl file
+    xlcol = xlcol + 1
+    # loop over variables to be output to xl file
+    for ThisOne in variablelist:
+        # put up a progress message
+        log.info(' Writing '+ThisOne+' into column '+str(xlcol)+' of the Excel file')
+        # write the units and the variable name to the header rows in the xl file
+        attrlist = ds.series[ThisOne]['Attr'].keys()
+        if 'long_name' in attrlist:
+            longname = ds.series[ThisOne]['Attr']['long_name']
+        elif 'Description' in attrlist:
+            longname = ds.series[ThisOne]['Attr']['Description']
+        else:
+            longname = None
+        if 'units' in attrlist:
+            units = ds.series[ThisOne]['Attr']['units']
+        elif 'Units' in attrlist:
+            units = ds.series[ThisOne]['Attr']['Units']
+        else:
+            units = None
+        xlDataSheet.write(0,xlcol,longname)
+        xlDataSheet.write(1,xlcol,units)
+        xlDataSheet.write(2,xlcol,ThisOne)
+        # loop over the values in the variable series (array writes don't seem to work)
+        for j in range(nRecs):
+            xlDataSheet.write(j+3,xlcol,float(ds.series[ThisOne]['Data'][j]))
+        # check to see if this variable has a quality control flag
+        if 'Flag' in ds.series[ThisOne].keys():
+            # write the QC flag name to the xk file
+            xlFlagSheet.write(2,xlcol,ThisOne)
+            # specify the format of the QC flag (integer)
+            d_xf = xlwt.easyxf(num_format_str='0')
+            # loop over QV flag values and write to xl file
+            for j in range(nRecs):
+                xlFlagSheet.write(j+3,xlcol,int(ds.series[ThisOne]['Flag'][j]),d_xf)
+        # increment the column pointer
+        xlcol = xlcol + 1
+    
+    log.info(' Saving the Excel file '+xlfullname)
+    xlfile.save(xlfullname)
+
 def xl_write_series(cf,ds,level):
     log.info(' Opening the Excel file ')
     nRecs = len(ds.series['xlDateTime']['Data'])
@@ -379,17 +479,17 @@ def xl_write_series(cf,ds,level):
         xlDataSheet.write(j+10,xlCol,ds.series['xlDateTime']['Data'][j],d_xf)
     xlFlagSheet.write(9,xlCol,'TIMESTAMP')
     xlDataSheet.write(9,xlCol,'TIMESTAMP')
-    xlDataSheet.write(0,xlCol,'Site:')
-    xlDataSheet.write(0,xlCol+1,ds.globalattributes['site'])
-    xlDataSheet.write(2,xlCol,'Institution:')
-    xlDataSheet.write(2,xlCol+1,ds.globalattributes['institution'])
-    xlDataSheet.write(1,xlCol,'Latitude:')
-    xlDataSheet.write(1,xlCol+1,ds.globalattributes['latitude'])
-    xlDataSheet.write(1,xlCol+2,'Longitude:')
-    xlDataSheet.write(1,xlCol+3,ds.globalattributes['longitude'])
-    xlDataSheet.write(3,xlCol,'Contact:')
-    xlDataSheet.write(3,xlCol+1,ds.globalattributes['contact'])
-    if qcutils.cfkeycheck(cf,Base='Output',ThisOne='FlagDefs') and cf['Output']['FlagDefs'] != 'False':
+    if not qcutils.cfkeycheck(cf,Base='Output',ThisOne='FlagDefs') or (qcutils.cfkeycheck(cf,Base='Output',ThisOne='FlagDefs') and cf['Output']['FlagDefs'] == 'True'):
+        xlDataSheet.write(0,xlCol,'Site:')
+        xlDataSheet.write(0,xlCol+1,ds.globalattributes['site'])
+        xlDataSheet.write(2,xlCol,'Institution:')
+        xlDataSheet.write(2,xlCol+1,ds.globalattributes['institution'])
+        xlDataSheet.write(1,xlCol,'Latitude:')
+        xlDataSheet.write(1,xlCol+1,ds.globalattributes['latitude'])
+        xlDataSheet.write(1,xlCol+2,'Longitude:')
+        xlDataSheet.write(1,xlCol+3,ds.globalattributes['longitude'])
+        xlDataSheet.write(3,xlCol,'Contact:')
+        xlDataSheet.write(3,xlCol+1,ds.globalattributes['contact'])
         xlFlagSheet.write(0,xlCol,'0:')
         xlFlagSheet.write(0,xlCol+1,ds.globalattributes['Flag0'])
         xlFlagSheet.write(0,xlCol+2,'1:')
