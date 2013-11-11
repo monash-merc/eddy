@@ -19,6 +19,6 @@
     <validator name="stringlength" class="com.opensymphony.xwork2.validator.validators.StringLengthFieldValidator"/>
     <validator name="regex" class="com.opensymphony.xwork2.validator.validators.RegexFieldValidator"/>
     <validator name="conditionalvisitor" class="com.opensymphony.xwork2.validator.validators.ConditionalVisitorFieldValidator"/>
-    <validator name="passwordintegrity" class ="au.edu.monash.merc.capture.struts2.validator.PasswordIntegrityValidator" />
-    <validator name="displayname" class ="au.edu.monash.merc.capture.struts2.validator.DisplayNameValidator" />
+    <validator name="passwordintegrity" class="au.edu.monash.merc.capture.struts2.validator.PasswordIntegrityValidator"/>
+    <validator name="displayname" class="au.edu.monash.merc.capture.struts2.validator.DisplayNameValidator"/>
 </validators>
