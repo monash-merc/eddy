@@ -7,7 +7,7 @@
 	<constant name="struts.configuration.xml.reload" value="false" />
 	<constant name="struts.custom.i18n.resources" value="messageResource" />
 	<constant name="struts.i18n.encoding" value="UTF-8" />
-	<constant name="struts.action.extension" value="action,do,jspa,jspx,," />
+	<constant name="struts.action.extension" value="jspx,do,jspa,action,," />
 	<constant name="struts.serve.static" value="true" />
 	<constant name="struts.serve.static.browserCache" value="false" />
 	<constant name="struts.ui.theme" value="simple" />
