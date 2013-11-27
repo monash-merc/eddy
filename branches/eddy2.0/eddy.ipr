@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="AntConfiguration">
-    <defaultAnt bundledAnt="true" />
-    <buildFile url="file://$PROJECT_DIR$/build.xml">
-      <additionalClassPath />
-      <antReference projectDefault="true" />
-      <customJdkName value="" />
-      <maximumHeapSize value="128" />
-      <maximumStackSize value="2" />
-      <properties />
-    </buildFile>
+    <buildFile url="file://$PROJECT_DIR$/build.xml" />
   </component>
   <component name="ClearCaseSharedConfig">
     <option name="myUseUcmModel" value="true" />
@@ -29,7 +21,11 @@
       <entry name="?*.tld" />
       <entry name="?*.ftl" />
     </wildcardResourcePatterns>
-    <annotationProcessing enabled="false" useClasspath="true" />
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+    </annotationProcessing>
   </component>
   <component name="CopyrightManager" default="merc">
     <copyright>
@@ -261,5 +257,42 @@
     <mapping directory="" vcs="svn" />
   </component>
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
+  <component name="libraryTable">
+    <library name="axis">
+      <CLASSES>
+        <root url="file://$PROJECT_DIR$/lib/axis" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="file://$PROJECT_DIR$/lib/axis" />
+      </SOURCES>
+      <jarDirectory url="file://$PROJECT_DIR$/lib/axis" recursive="false" />
+      <jarDirectory url="file://$PROJECT_DIR$/lib/axis" recursive="false" type="SOURCES" />
+    </library>
+    <library name="compile-lib">
+      <CLASSES>
+        <root url="file://$PROJECT_DIR$/lib/compile-lib" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+      <jarDirectory url="file://$PROJECT_DIR$/lib/compile-lib" recursive="false" />
+    </library>
+    <library name="core-lib">
+      <CLASSES>
+        <root url="file://$PROJECT_DIR$/lib/core-lib" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+      <jarDirectory url="file://$PROJECT_DIR$/lib/core-lib" recursive="false" />
+    </library>
+    <library name="net-cdf-lib">
+      <CLASSES>
+        <root url="file://$PROJECT_DIR$/lib/net-cdf-lib" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+      <jarDirectory url="file://$PROJECT_DIR$/lib/net-cdf-lib" recursive="false" />
+    </library>
+  </component>
 </project>
 

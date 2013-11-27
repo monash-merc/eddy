@@ -211,7 +211,7 @@ public class InstallAction extends InstallBaseAction {
         appProp.setHdlWsPath("pids");
         appProp.setHdlWsMethod("mint");
         appProp.setHdlWsAppId("c4b16dc56797f1dfbf545e2397ac7b6bcc54b8ec");
-        appProp.setHdlResolverAddress("http://hdl.handle.net/");
+        appProp.setHdlResolverAddress("http://hdl.handle.net");
 
         // creative commons license web service
         appProp.setCcLicenseWsAddress("http://api.creativecommons.org/rest/1.5/license/standard");
