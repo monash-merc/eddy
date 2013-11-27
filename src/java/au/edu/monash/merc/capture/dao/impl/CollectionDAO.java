@@ -64,9 +64,7 @@ public class CollectionDAO extends HibernateGenericDAO<Collection> implements IC
 		Criteria userCriteria = criteria.createCriteria("owner");
 		userCriteria.add(Restrictions.eq("id", uid));
 		criteria.setProjection(Projections.rowCount());
-
-		// int total = ((Integer) criteria.list().get(0)).intValue();
-		int total = ((Integer) criteria.uniqueResult()).intValue();
+		int total = ((Long) criteria.uniqueResult()).intValue();
 
 		Pagination<Collection> p = new Pagination<Collection>(startPageNo, recordsPerPage, total);
 
@@ -103,7 +101,7 @@ public class CollectionDAO extends HibernateGenericDAO<Collection> implements IC
 		permCriteria.add(Restrictions.eq("viewAllowed", true)).add(Restrictions.eq("permType", PermType.ANONYMOUS.code()));
 
 		criteria.setProjection(Projections.rowCount());
-		int total = ((Integer) criteria.uniqueResult()).intValue();
+		int total = ((Long) criteria.uniqueResult()).intValue();
 
 		Pagination<Collection> p = new Pagination<Collection>(startPageNo, recordsPerPage, total);
 
@@ -141,7 +139,7 @@ public class CollectionDAO extends HibernateGenericDAO<Collection> implements IC
 		// count total
 		Criteria criteria = this.session().createCriteria(this.persistClass);
 		criteria.setProjection(Projections.rowCount());
-		int total = ((Integer) criteria.uniqueResult()).intValue();
+		int total = ((Long) criteria.uniqueResult()).intValue();
 		Pagination<Collection> p = new Pagination<Collection>(startPageNo, recordsPerPage, total);
 
 		// query collections by size-per-page
@@ -197,7 +195,7 @@ public class CollectionDAO extends HibernateGenericDAO<Collection> implements IC
 
 	public boolean checkCollectionNameExisted(String colName) {
 		Criteria criteria = this.session().createCriteria(this.persistClass);
-		int num = (Integer) criteria.setProjection(Projections.rowCount()).add(Restrictions.eq("name", colName)).uniqueResult();
+		long num = (Long) criteria.setProjection(Projections.rowCount()).add(Restrictions.eq("name", colName)).uniqueResult();
 		if (num == 1) {
 			return true;
 		} else {

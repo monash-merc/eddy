@@ -27,18 +27,7 @@
  */
 package au.edu.monash.merc.capture.struts2.multipart;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.opensymphony.xwork2.inject.Inject;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.RequestContext;
@@ -49,7 +38,11 @@ import org.apache.log4j.Logger;
 import org.apache.struts2.StrutsConstants;
 import org.apache.struts2.dispatcher.multipart.MultiPartRequest;
 
-import com.opensymphony.xwork2.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 /**
  * This is a multipart request handler, but utilises commons-filupload 1.2 and adds a listener to the file upload
@@ -351,4 +344,8 @@ public class MonitoredMultiPartRequest implements MultiPartRequest {
 		};
 	}
 
+    @Override
+    public void cleanUp() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

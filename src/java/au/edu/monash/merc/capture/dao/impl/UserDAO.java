@@ -61,7 +61,7 @@ public class UserDAO extends HibernateGenericDAO<User> implements IUserRepositor
 
 	@Override
 	public boolean checkUserUniqueIdExisted(String uniqueId) {
-		int num = (Integer) this.session().createCriteria(this.persistClass).setProjection(Projections.rowCount())
+		long num = (Long) this.session().createCriteria(this.persistClass).setProjection(Projections.rowCount())
 				.add(Restrictions.eq("uniqueId", uniqueId).ignoreCase()).uniqueResult();
 		if (num == 1) {
 			return true;
@@ -72,7 +72,7 @@ public class UserDAO extends HibernateGenericDAO<User> implements IUserRepositor
 
 	@Override
 	public boolean checkUserDisplayNameExisted(String userDisplayName) {
-		int num = (Integer) this.session().createCriteria(this.persistClass).setProjection(Projections.rowCount())
+        long num = (Long) this.session().createCriteria(this.persistClass).setProjection(Projections.rowCount())
 				.add(Restrictions.eq("displayName", userDisplayName).ignoreCase()).uniqueResult();
 		if (num == 1) {
 			return true;
@@ -83,7 +83,7 @@ public class UserDAO extends HibernateGenericDAO<User> implements IUserRepositor
 
 	@Override
 	public boolean checkEmailExisted(String email) {
-		int num = (Integer) this.session().createCriteria(this.persistClass).setProjection(Projections.rowCount())
+        long num = (Long) this.session().createCriteria(this.persistClass).setProjection(Projections.rowCount())
 				.add(Restrictions.eq("email", email).ignoreCase()).uniqueResult();
 		if (num == 1) {
 			return true;
@@ -104,7 +104,7 @@ public class UserDAO extends HibernateGenericDAO<User> implements IUserRepositor
 		Criteria criteria = this.session().createCriteria(this.persistClass);
 		criteria.add(Restrictions.and(Restrictions.ne("userType", UserType.ALLREGUSER.code()), Restrictions.ne("userType", UserType.ANONYMOUS.code())));
 		criteria.setProjection(Projections.rowCount());
-		int total = ((Integer) criteria.uniqueResult()).intValue();
+		int total = ((Long) criteria.uniqueResult()).intValue();
 
 		Pagination<User> p = new Pagination<User>(startPageNo, recordsPerPage, total);
 		Criteria qcriteria = this.session().createCriteria(this.persistClass);
@@ -136,7 +136,7 @@ public class UserDAO extends HibernateGenericDAO<User> implements IUserRepositor
 		criteria.add(Restrictions.eq("isActivated", true)).add(
 				Restrictions.and(Restrictions.ne("userType", UserType.ALLREGUSER.code()), Restrictions.ne("userType", UserType.ANONYMOUS.code())));
 		criteria.setProjection(Projections.rowCount());
-		int total = ((Integer) criteria.uniqueResult()).intValue();
+		int total = ((Long) criteria.uniqueResult()).intValue();
 
 		Pagination<User> p = new Pagination<User>(startPageNo, recordsPerPage, total);
 		Criteria qcriteria = this.session().createCriteria(this.persistClass);
@@ -167,7 +167,7 @@ public class UserDAO extends HibernateGenericDAO<User> implements IUserRepositor
 		Criteria criteria = this.session().createCriteria(this.persistClass);
 		criteria.add(Restrictions.eq("isActivated", false));
 		criteria.setProjection(Projections.rowCount());
-		int total = ((Integer) criteria.uniqueResult()).intValue();
+		int total = ((Long) criteria.uniqueResult()).intValue();
 
 		Pagination<User> p = new Pagination<User>(startPageNo, recordsPerPage, total);
 		Criteria qcriteria = this.session().createCriteria(this.persistClass);
