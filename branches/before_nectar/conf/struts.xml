@@ -1,0 +1,633 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+    <constant name="struts.devMode" value="false"/>
+    <constant name="struts.configuration.xml.reload" value="false"/>
+    <constant name="struts.custom.i18n.resources" value="messageResource"/>
+    <constant name="struts.i18n.encoding" value="UTF-8"/>
+    <constant name="struts.action.extension" value="jspx,do,jspa,action,,"/>
+    <constant name="struts.serve.static" value="true"/>
+    <constant name="struts.serve.static.browserCache" value="false"/>
+    <constant name="struts.ui.theme" value="simple"/>
+    <constant name="struts.enable.SlashesInActionNames" value="true"/>
+    <bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="merc"
+          class="au.edu.monash.merc.capture.struts2.multipart.MonitoredMultiPartRequest" scope="default"/>
+    <constant name="struts.multipart.handler" value="merc"/>
+    <constant name="struts.multipart.maxSize" value="2048000000"/>
+    <!-- constant name="struts.multipart.saveDir" value="temp" / -->
+
+    <package name="core.merc" extends="struts-default">
+        <result-types>
+            <result-type name="freemarker" class="org.apache.struts2.views.freemarker.FreemarkerResult" default="true"/>
+            <result-type name="json" class="org.apache.struts2.json.JSONResult"/>
+            <result-type name="rawtext" class="au.edu.monash.merc.capture.struts2.dispatcher.RawTextResult"/>
+        </result-types>
+
+        <interceptors>
+            <interceptor name="authenInterceptor"
+                         class="au.edu.monash.merc.capture.struts2.intercepter.AuthenticationInterceptor"/>
+            <interceptor-stack name="noneAuthStack">
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+            <interceptor-stack name="authenStack">
+                <interceptor-ref name="defaultStack"/>
+                <interceptor-ref name="authenInterceptor"/>
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="noneAuthStack"/>
+
+        <global-results>
+            <result name="login" type="chain">
+                <param name="actionName">showLogin</param>
+                <param name="namespace">/user</param>
+            </result>
+
+            <result name="redirectco" type="redirectAction">
+                <param name="namespace">${redNamespace}</param>
+                <param name="actionName">${redActionName}</param>
+                <param name="collection.id">${collection.id}</param>
+                <param name="collection.owner.id">${collection.owner.id}</param>
+                <param name="viewType">${viewType}</param>
+            </result>
+
+            <result name="file_not_found" type="freemarker">/web/404.html</result>
+            <result name="invocation_target_exception" type="freemarker">
+                /web/globalError/invocation_target_exception.ftl
+            </result>
+        </global-results>
+
+        <global-exception-mappings>
+            <exception-mapping result="file_not_found" exception="java.io.FileNotFoundException"/>
+            <exception-mapping result="invocation_target_exception"
+                               exception="java.lang.reflect.InvocationTargetException"/>
+        </global-exception-mappings>
+
+        <action name="*">
+            <result type="freemarker">/web/{1}.ftl</result>
+        </action>
+        <action name="home" class="merc.homeAction" method="home">
+            <result type="freemarker">/web/home.ftl</result>
+        </action>
+    </package>
+
+    <package name="core.user" extends="core.merc" namespace="/user">
+        <default-interceptor-ref name="noneAuthStack"/>
+        <action name="*">
+            <result type="freemarker">/web/user/{1}.ftl</result>
+        </action>
+
+        <action name="registerUser" class="user.userAction" method="register">
+            <result name="input">/web/user/user_register.ftl</result>
+            <result>/web/user/user_action_finished.ftl</result>
+        </action>
+
+        <action name="registerLdapUser" class="user.userAction" method="registerLdapUser">
+            <result name="input">/web/user/ldap_user_register.ftl</result>
+            <result>/web/user/user_action_finished.ftl</result>
+        </action>
+
+        <action name="showLogin" class="user.userAction" method="showLogin">
+            <result>/web/user/user_login.ftl</result>
+        </action>
+
+        <action name="userLogin" class="user.userAction" method="login">
+            <result name="input">/web/user/user_login.ftl</result>
+            <result name="success">/web/user/login_success.ftl</result>
+        </action>
+
+        <action name="forgotPassword" class="user.forgetPWDAction" method="forgotPassword">
+            <result name="input">/web/user/user_request_resetpwd.ftl</result>
+            <result name="success">/web/user/user_action_finished.ftl</result>
+        </action>
+
+        <action name="resetPassword" class="user.userResetPwdAction" method="resetPassword">
+            <result name="input">/web/user/show_reset_pwd_page.ftl</result>
+            <result name="success">/web/user/user_action_finished.ftl</result>
+        </action>
+
+        <action name="verifyPwdReset" class="user.userResetPwdAction" method="verifyPasswdReset">
+            <result name="error">/web/user/show_reset_pwd_error_page.ftl</result>
+            <result name="success">/web/user/show_reset_pwd_page.ftl</result>
+        </action>
+
+        <action name="userLogout" class="user.userAction" method="logout">
+            <result>/web/home.ftl</result>
+        </action>
+
+        <action name="viewImage" class="user.viewImgAction" method="viewImage">
+            <result name="success" type="stream">
+                <param name="contentType">image/jpeg</param>
+                <param name="inputName">imageStream</param>
+                <param name="allowCaching">false</param>
+                <param name="bufferSize">1024</param>
+            </result>
+        </action>
+
+    </package>
+
+    <package name="core.captchCode" extends="core.merc" namespace="/captch">
+        <default-interceptor-ref name="noneAuthStack"/>
+        <action name="captchCode" class="security.captchImgAction" method="genSecurityCaptchCode">
+            <result name="success" type="stream">
+                <param name="contentType">image/jpeg</param>
+                <param name="inputName">imageStream</param>
+                <param name="allowCaching">false</param>
+                <param name="bufferSize">1024</param>
+            </result>
+        </action>
+    </package>
+
+    <package name="core.admin" extends="core.merc" namespace="/admin">
+        <default-interceptor-ref name="authenStack"/>
+
+        <action name="*">
+            <result type="freemarker">/web/admin/{1}.ftl</result>
+        </action>
+
+        <action name="verifyAccount" class="admin.adminAction" method="verifyAccount">
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/admin/activate_user_account.ftl</result>
+        </action>
+
+        <action name="activateUserAccount" class="admin.adminAction" method="activateUserAccount">
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/admin/admin_action_finished.ftl</result>
+        </action>
+
+        <action name="rejectUserAccount" class="admin.adminAction" method="rejectUserAccount">
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/admin/admin_action_finished.ftl</result>
+        </action>
+
+        <action name="listUsers" class="admin.adminAction" method="listUsers">
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/admin/listUsers.ftl</result>
+        </action>
+
+        <action name="displayUserHome" class="admin.userProfileAction" method="displayUserHome">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="success">/web/admin/profile_events.ftl</result>
+        </action>
+
+        <action name="showUserStatus" class="admin.adminAction" method="showUserStatus">
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/admin/user_details.ftl</result>
+        </action>
+
+        <action name="manageUser" class="admin.adminAction" method="manageUser">
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/admin/user_details.ftl</result>
+        </action>
+
+        <action name="showProfile" class="admin.userProfileAction" method="showProfile">
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/admin/profile_details.ftl</result>
+        </action>
+
+        <action name="showProfileUpdate" class="admin.userProfileAction" method="showProfileUpdate">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/admin/edit_profile.ftl</result>
+        </action>
+
+        <action name="updateProfile" class="admin.userProfileAction" method="updateProfile">
+            <result name="input">/web/admin/edit_profile.ftl</result>
+            <result name="error">/web/admin/edit_profile.ftl</result>
+            <result name="success">/web/admin/profile_details.ftl</result>
+        </action>
+
+        <action name="listUserEvents" class="admin.eventAction" method="listUserEvents">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/admin/user_events.ftl</result>
+        </action>
+
+        <action name="deleteUserEvent" class="admin.eventAction" method="deleteEvent">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/admin/user_events.ftl</result>
+        </action>
+
+        <action name="showImageUpload" class="admin.jcropImageAction" method="showImageUpload">
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/jcrop/upload_image.ftl</result>
+        </action>
+
+        <action name="uploadImage" class="admin.jcropImageAction" method="uploadImage">
+            <result name="input">/web/jcrop/upload_image.ftl</result>
+            <result name="error">/web/jcrop/upload_image.ftl</result>
+            <result name="success">/web/jcrop/jcrop_image.ftl</result>
+        </action>
+
+        <action name="saveAvatar" class="admin.jcropImageAction" method="saveAvatar">
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/jcrop/jcrop_image.ftl</result>
+        </action>
+
+        <action name="showChangePwd" class="admin.changePwdAction" method="showChangePwd">
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/admin/change_pwd.ftl</result>
+        </action>
+
+        <action name="changePassword" class="admin.changePwdAction" method="changePassword">
+            <result name="input">/web/admin/change_pwd.ftl</result>
+            <result name="error">/web/admin/change_pwd.ftl</result>
+            <result name="success">/web/admin/admin_action_finished.ftl</result>
+        </action>
+    </package>
+
+
+    <!-- core.data package for create collection and datafile -->
+    <package name="core.data" extends="core.merc" namespace="/data">
+
+        <default-interceptor-ref name="authenStack"/>
+
+        <action name="*">
+            <result type="freemarker">/web/data/{1}.ftl</result>
+        </action>
+
+        <!-- list owner collections -->
+        <action name="listUserCollections" class="data.listAllColAction" method="listUserCollections">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="success">/web/data/list_collections.ftl</result>
+        </action>
+        <!-- list all collections -->
+        <action name="listAllCollections" class="data.listAllColAction" method="listAllCollections">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="success">/web/data/list_collections.ftl</result>
+        </action>
+
+        <action name="showCreateCollection" class="data.createColAction" method="showCreateCollection">
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/data/create_collection.ftl</result>
+        </action>
+
+        <action name="createCollection" class="data.createColAction" method="createCollection">
+            <result name="input">/web/data/create_collection.ftl</result>
+            <result name="success">/web/data/view_col_detail.ftl</result>
+        </action>
+
+        <!-- view the collection detail from collection list -->
+        <action name="viewColDetails" class="data.viewColDetailsAction" method="viewCollectionDetail">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/data/view_col_detail.ftl</result>
+        </action>
+
+        <!-- show the editing collection screen from the collection details -->
+        <action name="showEditCollection" class="data.showColEditAction" method="showEditCollection">
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/data/edit_collection.ftl</result>
+        </action>
+
+        <!-- edit the collection -->
+        <action name="editCollection" class="data.editColAction" method="editCollection">
+            <result name="input">/web/data/edit_collection.ftl</result>
+            <result name="success">/web/data/view_col_detail.ftl</result>
+        </action>
+
+        <!-- delete the collection action -->
+        <action name="deleteCollection" class="data.deleteColAction" method="deleteCollection">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/data/delete_collection_success.ftl</result>
+        </action>
+
+
+        <!-- AJAX call to retrieve all user names -->
+        <action name="getAllUserNames" class="data.collectionAction" method="getAllUserNames">
+            <result name="success" type="json">
+                <param name="noCache">true</param>
+                <param name="root">userNames</param>
+            </result>
+        </action>
+
+        <!-- capture the user dataset, ajax version for file import -->
+        <action name="importFile" class="data.importFileAction" method="importFile">
+            <result name="success" type="json">
+                <param name="noCache">true</param>
+                <param name="root">importResponse</param>
+                <param name="contentType">text/html</param>
+            </result>
+        </action>
+
+        <action name="uploadprogress" class="data.uploadProgress">
+            <result name="success" type="rawtext"/>
+        </action>
+
+        <!-- delete the dataset -->
+        <action name="deleteDataset" class="data.deleteDStAction" method="deleteDataset">
+            <result name="input">/web/data/view_col_detail.ftl</result>
+            <result name="success">/web/data/view_col_detail.ftl</result>
+        </action>
+
+        <!-- export the dataset -->
+        <action name="preExportDs" class="data.exportDatasetAction" method="preDsExport">
+            <result name="input">/web/data/export_ds_error.ftl</result>
+            <result name="error">/web/data/export_ds_error.ftl</result>
+            <result name="success">/web/data/export_ds_condition.ftl</result>
+        </action>
+
+        <action name="exportDataset" class="data.exportDatasetAction" method="exportDataset">
+            <result name="input">/web/data/export_ds_condition.ftl</result>
+            <result name="error">/web/data/export_ds_error.ftl</result>
+            <result name="success" type="stream">
+                <param name="contentType">${contentType}</param>
+                <param name="inputName">dsInputStream</param>
+                <param name="contentDisposition">${contentDisposition}</param>
+                <param name="bufferSize">${bufferSize}</param>
+            </result>
+        </action>
+
+        <!-- view dataset -->
+        <action name="viewDatasetData" class="data.viewDsDataAction" method="viewDatasetData">
+            <result name="input">/web/data/view_dataset_error.ftl</result>
+            <result name="success">/web/data/view_dataset_details.ftl</result>
+        </action>
+
+        <!-- show the metadata registration -->
+        <action name="showMdRegister" class="data.metadataRegAction" method="showMdRegister">
+            <result name="input">/web/mdreg/metadata_register.ftl</result>
+            <result name="error">/web/mdreg/metadata_register_error.ftl</result>
+            <result name="success">/web/mdreg/metadata_register.ftl</result>
+        </action>
+
+        <!-- The metadata registration -->
+        <action name="mdRegister" class="data.metadataRegAction" method="mdRegister">
+            <result name="input">/web/mdreg/metadata_register.ftl</result>
+            <result name="error">/web/mdreg/metadata_register_error.ftl</result>
+            <result name="success">/web/mdreg/metadata_register_finished.ftl</result>
+        </action>
+
+        <!-- show show search party action -->
+        <action name="showSearchParty" class="data.partyAction" method="showSearchParty">
+            <result name="input">/web/mdreg/search_party.ftl</result>
+            <result name="error">/web/mdreg/search_party.ftl</result>
+            <result name="success">/web/mdreg/search_party.ftl</result>
+        </action>
+
+        <!--  search party action -->
+        <action name="searchParty" class="data.partyAction" method="searchParty">
+            <result name="input">/web/mdreg/search_party.ftl</result>
+            <result name="error">/web/mdreg/search_party.ftl</result>
+            <result name="pnotfound" type="chain">
+                <param name="actionName">showAddUDParty</param>
+                <param name="namespace">/data</param>
+                <param name="searchCnOrEmail">${searchCnOrEmail}</param>
+            </result>
+            <result name="success">/web/mdreg/search_party_results.ftl</result>
+        </action>
+
+        <!-- select search party action -->
+        <action name="selectParty" class="data.partyAction" method="selectParty">
+            <result name="input">/web/mdreg/search_party_results.ftl</result>
+            <result name="error">/web/mdreg/search_party_results.ftl</result>
+            <result name="success">/web/mdreg/party_detail.ftl</result>
+        </action>
+
+        <!-- show add an user-defined party -->
+        <action name="showAddUDParty" class="data.partyAction" method="showAddUDParty">
+            <result name="input">/web/mdreg/add_ud_party.ftl</result>
+            <result name="error">/web/mdreg/add_ud_party.ftl</result>
+            <result name="success">/web/mdreg/add_ud_party.ftl</result>
+        </action>
+
+        <!-- add an user-defined party -->
+        <action name="addUDParty" class="data.partyAction" method="addUDParty">
+            <result name="input">/web/mdreg/add_ud_party.ftl</result>
+            <result name="error">/web/mdreg/add_ud_party.ftl</result>
+            <result name="success">/web/mdreg/party_detail.ftl</result>
+        </action>
+
+        <!-- show edit user defined party -->
+        <action name="showEditUDParty" class="data.partyAction" method="showEditUDParty">
+            <result name="input">/web/mdreg/update_ud_party.ftl</result>
+            <result name="error">/web/mdreg/update_ud_party.ftl</result>
+            <result name="success">/web/mdreg/update_ud_party.ftl</result>
+        </action>
+
+        <!-- update user-defined party -->
+        <action name="updateUDParty" class="data.partyAction" method="updateUDParty">
+            <result name="input">/web/mdreg/update_ud_party.ftl</result>
+            <result name="error">/web/mdreg/update_ud_party.ftl</result>
+            <result name="success">/web/mdreg/party_detail.ftl</result>
+        </action>
+
+        <!-- collection license options action -->
+        <action name="licenceOptions" class="data.licenceAction" method="showLicenceOptions">
+            <result name="input">/web/mdreg/licence_error.ftl</result>
+            <result name="error">/web/mdreg/licence_error.ftl</result>
+            <result name="success">/web/mdreg/licence_options.ftl</result>
+        </action>
+
+        <!-- select licence action -->
+        <action name="selectLicence" class="data.licenceAction" method="selectLicence">
+            <result name="input">/web/mdreg/licence_options.ftl</result>
+            <result name="error">/web/mdreg/licence_options.ftl</result>
+            <result name="success">/web/mdreg/licence_content.ftl</result>
+        </action>
+
+        <!-- AJAX call to save the licence -->
+        <action name="saveLicence" class="data.licenceAction" method="saveLicence">
+            <result name="success" type="json">
+                <param name="noCache">true</param>
+                <param name="root">licenceResponse</param>
+            </result>
+        </action>
+
+        <!-- Dataset verify action -->
+        <action name="dsverify" class="data.dsVerifyAction" method="dsVerify">
+            <result name="success" type="json">
+                <param name="noCache">true</param>
+                <param name="root">dsVerifyResponse</param>
+            </result>
+        </action>
+
+        <!-- RestrictAccess setup action -->
+        <action name="rasetup" class="data.raSetupAction" method="raSetup">
+            <result name="success" type="json">
+                <param name="noCache">true</param>
+                <param name="root">raResponse</param>
+            </result>
+        </action>
+
+    </package>
+
+    <!-- collection permissions package -->
+    <package name="core.perm" extends="core.merc" namespace="/perm">
+        <default-interceptor-ref name="authenStack"/>
+
+        <action name="*">
+            <result type="freemarker">/web/perm/{1}.ftl</result>
+        </action>
+
+        <action name="showSetColPermissions" class="perm.permAction" method="showSetColPermissions">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="success">/web/perm/collection_permissions.ftl</result>
+        </action>
+
+        <action name="setColPermissions" class="perm.permAction" method="setColPermissions">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="success">/web/perm/collection_permissions.ftl</result>
+        </action>
+    </package>
+
+    <!-- Search Function -->
+    <package name="core.search" extends="core.merc" namespace="/search">
+        <default-interceptor-ref name="noneAuthStack"/>
+        <action name="*">
+            <result type="freemarker">/web/search/{1}.ftl</result>
+        </action>
+
+        <action name="showSearch" class="search.searchAction" method="showSearch">
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/search/search.ftl</result>
+        </action>
+
+        <action name="search" class="search.searchAction" method="search">
+            <result name="input">/web/search/search.ftl</result>
+            <result name="error">/web/search/search.ftl</result>
+            <result name="success">/web/search/search.ftl</result>
+        </action>
+
+    </package>
+
+    <!-- view collection without logged in -->
+    <package name="core.pub" extends="core.merc" namespace="/pub">
+        <default-interceptor-ref name="noneAuthStack"/>
+        <action name="*">
+            <result type="freemarker">/web/pub/{1}.ftl</result>
+        </action>
+        <action name="listPubCollections" class="data.listAllColAction" method="listPubCollections">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="success">/web/data/list_collections.ftl</result>
+        </action>
+
+        <!-- view collection details -->
+        <action name="viewColDetails" class="data.viewColDetailsAction" method="viewCollectionDetail">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/data/view_col_detail.ftl</result>
+        </action>
+
+        <!-- export the dataset -->
+        <action name="preExportDs" class="data.exportDatasetAction" method="preDsExport">
+            <result name="error">/web/data/export_ds_error.ftl</result>
+            <result name="success">/web/data/export_ds_condition.ftl</result>
+        </action>
+
+        <action name="exportDataset" class="data.exportDatasetAction" method="exportDataset">
+            <result name="input">/web/data/export_ds_condition.ftl</result>
+            <result name="error">/web/data/export_ds_error.ftl</result>
+            <result name="success" type="stream">
+                <param name="contentType">${contentType}</param>
+                <param name="inputName">dsInputStream</param>
+                <param name="contentDisposition">${contentDisposition}</param>
+                <param name="bufferSize">${bufferSize}</param>
+            </result>
+        </action>
+
+        <action name="viewDatasetData" class="data.viewDsDataAction" method="viewDatasetData">
+            <result name="input">/web/data/view_dataset_error.ftl</result>
+            <result name="success">/web/data/view_dataset_details.ftl</result>
+        </action>
+    </package>
+
+    <!-- Site Action - resouces and help -->
+    <package name="core.resource" extends="core.merc" namespace="/site">
+        <default-interceptor-ref name="noneAuthStack"/>
+        <action name="*">
+            <result type="freemarker">/web/res/{1}.ftl</result>
+        </action>
+        <!-- Data Information action -->
+        <action name="datainfo" class="site.resourceAction" method="datainfo">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/site/datainfo.ftl</result>
+        </action>
+
+        <!-- Restrict Access info action -->
+        <action name="rainfo" class="site.resourceAction" method="rainfo">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/site/rainfo.ftl</result>
+        </action>
+
+        <!-- Licensing Information action -->
+        <action name="licenceinfo" class="site.resourceAction" method="licenceinfo">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/site/licenceinfo.ftl</result>
+        </action>
+
+        <!-- NetCDF action -->
+        <action name="netcdf" class="site.resourceAction" method="netcdf">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/site/netcdf.ftl</result>
+        </action>
+
+        <!-- Utilities action -->
+        <action name="utilities" class="site.resourceAction" method="utilities">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/site/utilities.ftl</result>
+        </action>
+
+        <!-- FAQ action -->
+        <action name="faq" class="site.resourceAction" method="faq">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/site/faq.ftl</result>
+        </action>
+
+        <!-- User guide action -->
+        <action name="userguide" class="site.resourceAction" method="userguide">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/site/user_guide.ftl</result>
+        </action>
+
+        <!-- download doc action -->
+        <action name="ddoc" class="site.resourceAction" method="ddoc">
+            <result name="success" type="stream">
+                <param name="contentType">${contentType}</param>
+                <param name="inputName">fileInputStream</param>
+                <param name="contentDisposition">${contentDisposition}</param>
+                <param name="bufferSize">${bufferSize}</param>
+            </result>
+        </action>
+
+    </package>
+
+    <!-- Map View -->
+    <package name="core.mapview" extends="core.merc" namespace="/mapview">
+        <default-interceptor-ref name="noneAuthStack"/>
+        <action name="*">
+            <result type="freemarker">/web/map/{1}.ftl</result>
+        </action>
+        <action name="showMapView" class="data.locationAction" method="showMapView">
+            <result name="input">/web/common/action_error.ftl</result>
+            <result name="error">/web/common/action_error.ftl</result>
+            <result name="success">/web/map/list_map_view.ftl</result>
+        </action>
+
+        <!-- AJAX call to retrieve all sites in the map -->
+        <action name="viewLocations" class="data.locationAction" method="viewLocations">
+            <result name="success" type="json">
+                <param name="noCache">true</param>
+                <param name="root">locationResponse</param>
+            </result>
+        </action>
+
+        <!-- AJAX call to retrieve all collection for a point in the map -->
+        <action name="listSites" class="data.locationAction" method="listSites">
+            <result name="success" type="json">
+                <param name="noCache">true</param>
+                <param name="root">sitesResponse</param>
+            </result>
+        </action>
+    </package>
+</struts>

@@ -1,0 +1,30 @@
+#mask {
+	position: absolute; /* important */
+	top: 0px; /* start from top */
+	left: 0px; /* start from left */
+	height: 100%; /* cover the whole page */
+	width: 100%; /* cover the whole page */
+	display: none; /* don't show it '*/
+	background: url("../images/ui-modal-bg.png") repeat scroll 50% 50% #EEEEEE;
+}
+
+/* style a specific modal window  */
+#modal_window {
+	position: absolute;
+	display: none;
+	padding: 20px;
+	background: #ffffff;
+	color: #003766;
+    border: 3px solid #003766;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.loading_image {
+	border: 0 none;
+	vertical-align: middle;
+	margin-top: 1px;
+	margin-bottom: 2px;
+	margin-left: 5px;
+}

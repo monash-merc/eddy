@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC
+        "-//OpenSymphony Group//XWork Validator 1.0.2//EN"
+        "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+<validators>
+    <field name="selectedPartyBean.partyKey">
+        <field-validator type="stringlength">
+            <param name="maxLength">100</param>
+            <param name="minLength">1</param>
+            <message>${getText("ands.add.party.party.key.range")}</message>
+        </field-validator>
+    </field>
+    <field name="selectedPartyBean.personTitle">
+        <field-validator type="requiredstring" short-circuit="true">
+            <param name="trim">true</param>
+            <message>${getText("ands.add.party.party.title.required")}</message>
+        </field-validator>
+        <field-validator type="stringlength">
+            <param name="maxLength">20</param>
+            <param name="minLength">1</param>
+            <message>${getText("ands.add.party.party.title.range")}</message>
+        </field-validator>
+    </field>
+
+    <field name="selectedPartyBean.personGivenName">
+        <field-validator type="requiredstring" short-circuit="true">
+            <param name="trim">true</param>
+            <message>${getText("ands.add.party.party.first.name.required")}</message>
+        </field-validator>
+        <field-validator type="stringlength">
+            <param name="maxLength">20</param>
+            <param name="minLength">1</param>
+            <message>${getText("ands.add.party.party.first.name.range")}</message>
+        </field-validator>
+    </field>
+
+    <field name="selectedPartyBean.personFamilyName">
+        <field-validator type="requiredstring" short-circuit="true">
+            <param name="trim">true</param>
+            <message>${getText("ands.add.party.party.last.name.required")}</message>
+        </field-validator>
+        <field-validator type="stringlength">
+            <param name="maxLength">20</param>
+            <param name="minLength">1</param>
+            <message>${getText("ands.add.party.party.last.name.range")}</message>
+        </field-validator>
+    </field>
+
+    <field name="selectedPartyBean.email">
+        <field-validator type="requiredstring" short-circuit="true">
+            <param name="trim">true</param>
+            <message>${getText("ands.add.party.party.email.required")}</message>
+        </field-validator>
+        <field-validator type="email">
+            <message>${getText("ands.add.party.party.email.regex.invalid")}</message>
+        </field-validator>
+    </field>
+
+    <field name="selectedPartyBean.address">
+        <field-validator type="requiredstring" short-circuit="true">
+            <param name="trim">true</param>
+            <message>${getText("ands.add.party.party.address.required")}</message>
+        </field-validator>
+        <field-validator type="stringlength">
+            <param name="maxLength">255</param>
+            <param name="minLength">1</param>
+            <message>${getText("ands.add.party.party.address.range")}</message>
+        </field-validator>
+    </field>
+
+    <field name="selectedPartyBean.url">
+        <field-validator type="requiredstring" short-circuit="true">
+            <param name="trim">true</param>
+            <message>${getText("ands.add.party.party.url.required")}</message>
+        </field-validator>
+        <field-validator type="url">
+            <message>${getText("ands.add.party.party.url.regex.invalid")}</message>
+        </field-validator>
+    </field>
+
+    <field name="selectedPartyBean.description">
+        <field-validator type="stringlength">
+            <param name="maxLength">2000</param>
+            <param name="minLength">0</param>
+            <param name="trim">true</param>
+            <message>${getText("ands.add.party.party.desc.hint")}</message>
+        </field-validator>
+    </field>
+
+    <field name="selectedPartyBean.originateSourceValue">
+        <field-validator type="requiredstring" short-circuit="true">
+            <param name="trim">true</param>
+            <message>${getText("ands.add.party.party.group.url.required")}</message>
+        </field-validator>
+        <field-validator type="url">
+            <message>${getText("ands.add.party.party.group.url.regex.invalid")}</message>
+        </field-validator>
+    </field>
+</validators>  		
+
+
