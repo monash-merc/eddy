@@ -39,6 +39,7 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
+import au.edu.monash.merc.capture.dto.ldap.LdapUser;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
@@ -247,7 +248,6 @@ public class LDAPUtil {
                 if (firstNameAtt != null) {
                     usr.setFirstName((String) firstNameAtt.get());
                 }
-
                 return usr;
             }
         } catch (NamingException nex) {
@@ -499,7 +499,7 @@ public class LDAPUtil {
         String usrdn = ldap.findUserDn("xiyu");
         System.out.println("user dn: " + usrdn);
 
-        LdapUser luser = ldap.findUserInfo("Simon Yu");
+        LdapUser luser = ldap.findUserInfo("Anthony Beitz");
         if (luser != null) {
             System.out.println("title: " + luser.getTitle());
             System.out.println("display name: " + luser.getDisplayName());

@@ -37,6 +37,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Properties;
 
+import au.edu.monash.merc.capture.dto.LdapWsProperty;
 import org.apache.commons.io.FileUtils;
 
 import sun.security.action.GetPropertyAction;
@@ -196,21 +197,30 @@ public class Installer {
      * @param ldapTempFileName
      * @param destLdapFile
      */
-    public static void writeLdapConfig(LdapProperty ldapProperty, String ldapTempFileName, String destLdapFile) {
+    public static void writeLdapConfig(LdapProperty ldapProperty, LdapWsProperty ldapWsProperty, String ldapTempFileName, String destLdapFile) {
         try {
             String s = FileUtils.readFileToString(new File(ldapTempFileName));
             s = s.replaceFirst("LDAP_SUPPORTED", String.valueOf(ldapProperty.isLdapSupported()));
+            s = s.replaceFirst("LDAP_WS_ENABLED", String.valueOf(ldapWsProperty.isLdapWsEnabled()));
             if (ldapProperty.isLdapSupported()) {
-                s = s.replaceFirst("LADP_SERVER", "ldap://" + ldapProperty.getLdapServer());
-                s = s.replaceFirst("BASE_DN", ldapProperty.getBaseDN());
-                s = s.replaceFirst("BIND_BASE_DN_REQUIRED", String.valueOf(ldapProperty.isBindBaseDnRequired()));
-                s = s.replaceFirst("ATT_UID", ldapProperty.getAttUID());
-                s = s.replaceFirst("ATT_MAIL", ldapProperty.getAttMail());
-                s = s.replaceFirst("ATT_GENDER", ldapProperty.getAttGender());
-                s = s.replaceFirst("ATT_CN", ldapProperty.getAttCN());
-                s = s.replaceFirst("ATT_SN", ldapProperty.getAttSn());
-                s = s.replaceFirst("ATT_GIVENNAME", ldapProperty.getAttGivenname());
-                s = s.replaceFirst("ATT_PTITLE", ldapProperty.getAttPersonalTitle());
+                //ldap authentication web service enabled
+                if (ldapWsProperty.isLdapWsEnabled()) {
+                    s = s.replaceFirst("LDAP_WS_HOST", ldapWsProperty.getLdapWsServer());
+                    s = s.replaceFirst("LDAP_WS_PORT", String.valueOf(ldapWsProperty.getLdapWsPort()));
+                    s = s.replaceFirst("LDAP_WS_CERT_ERROR_IGNORE", String.valueOf(ldapWsProperty.isCertErrorIgnore()));
+                } else {
+                    //local ldap server authentication
+                    s = s.replaceFirst("LADP_SERVER", "ldap://" + ldapProperty.getLdapServer());
+                    s = s.replaceFirst("BASE_DN", ldapProperty.getBaseDN());
+                    s = s.replaceFirst("BIND_BASE_DN_REQUIRED", String.valueOf(ldapProperty.isBindBaseDnRequired()));
+                    s = s.replaceFirst("ATT_UID", ldapProperty.getAttUID());
+                    s = s.replaceFirst("ATT_MAIL", ldapProperty.getAttMail());
+                    s = s.replaceFirst("ATT_GENDER", ldapProperty.getAttGender());
+                    s = s.replaceFirst("ATT_CN", ldapProperty.getAttCN());
+                    s = s.replaceFirst("ATT_SN", ldapProperty.getAttSn());
+                    s = s.replaceFirst("ATT_GIVENNAME", ldapProperty.getAttGivenname());
+                    s = s.replaceFirst("ATT_PTITLE", ldapProperty.getAttPersonalTitle());
+                }
             }
             FileUtils.writeStringToFile(new File(destLdapFile), s);
         } catch (Exception e) {

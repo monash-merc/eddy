@@ -355,6 +355,40 @@
                 <div class="name_comment">* Ldap authentication supported</div>
             </td>
         </tr>
+
+
+        <tr>
+            <td width="250">LADP Authentication Web Service Enabled:</td>
+            <td><@s.select name="ldapWsProp.ldapWsEnabled"  list="trueFalseMap" cssClass="input_select_normal"  /></td>
+            <td>
+                <div class="name_comment">* Ldap authentication web service enabled</div>
+            </td>
+        </tr>
+
+        <tr>
+            <td>LADP Authentication Web Service Host:</td>
+            <td><@s.textfield name="ldapWsProp.ldapWsServer" cssClass="install_input_field" /></td>
+            <td>
+                <div class="name_comment">* The ldap authentication web service host</div>
+            </td>
+        </tr>
+
+        <tr>
+            <td>LADP Authentication Web Service Port:</td>
+            <td><@s.textfield name="ldapWsProp.ldapWsPort" cssClass="install_input_field" /></td>
+            <td>
+                <div class="name_comment">* The ldap authentication web service Port</div>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Ignore Certificate Error?</td>
+            <td><@s.select name="ldapWsProp.certErrorIgnore"  list="trueFalseMap" cssClass="input_select_normal"  /></td>
+            <td>
+                <div class="name_comment">* If ignore LADP authentication web service certificate error, please select TRUE</div>
+            </td>
+        </tr>
+
         <tr>
             <td>LADP Server:</td>
             <td><@s.textfield name="ldapProp.ldapServer" cssClass="install_input_field" /></td>

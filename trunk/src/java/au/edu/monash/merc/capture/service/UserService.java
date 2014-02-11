@@ -32,7 +32,7 @@ import java.util.List;
 import au.edu.monash.merc.capture.domain.User;
 import au.edu.monash.merc.capture.dto.OrderBy;
 import au.edu.monash.merc.capture.dto.page.Pagination;
-import au.edu.monash.merc.capture.util.ldap.LdapUser;
+import au.edu.monash.merc.capture.dto.ldap.LdapUser;
 
 public interface UserService {
 
@@ -54,7 +54,7 @@ public interface UserService {
 
     boolean checkEmailExisted(String email);
 
-    User validateLogin(String username, String password, boolean ldap);
+    User login(String username, String password, boolean ldap);
 
     List<User> getAllActiveUsers();
 
@@ -64,7 +64,9 @@ public interface UserService {
 
     Pagination<User> getAllInActiveUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
-    LdapUser checkLdapUser(String authcatId, String password);
+    LdapUser verifyLdapUser(String authcatId, String password);
+
+    LdapUser ldapLookup(String cnOrEmail);
 
     User getVirtualUser(int userType);
 }

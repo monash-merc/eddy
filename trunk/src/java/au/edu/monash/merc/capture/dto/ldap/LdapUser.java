@@ -25,15 +25,87 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package au.edu.monash.merc.capture.service.ldap;
+package au.edu.monash.merc.capture.dto.ldap;
 
-import au.edu.monash.merc.capture.dto.ldap.LdapUser;
+public class LdapUser {
 
-public interface LdapService {
+	private String uid;
 
-    LdapUser lookup(String snOrEmail);
+	private String title;
 
-    LdapUser verifyLdapUser(String authcatId, String password);
+	private String firstName;
 
-    boolean login(String authcatId, String password);
+	private String lastName;
+
+	private String displayName;
+
+	private String mail;
+
+	private String gender;
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+		String[] fullName = displayName.split(" ");
+		// System.out.println(" display name split length: " + fullName.length);
+		if (fullName != null && fullName.length == 2) {
+			this.lastName = fullName[1];
+			this.firstName = fullName[0];
+		} else {
+			this.firstName = displayName;
+			this.lastName = "";
+		}
+	}
+
+	public String getMail() {
+		return mail;
+	}
+
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
 }

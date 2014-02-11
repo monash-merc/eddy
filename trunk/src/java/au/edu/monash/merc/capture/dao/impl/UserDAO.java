@@ -95,7 +95,7 @@ public class UserDAO extends HibernateGenericDAO<User> implements IUserRepositor
     @Override
     public User checkUserLogin(String username, String password) {
         return (User) this.session().createCriteria(this.persistClass).add(Restrictions.eq("uniqueId", username))
-                .add(Restrictions.eq("password", password)).setComment("UserDAO.validateLogin").uniqueResult();
+                .add(Restrictions.eq("password", password)).setComment("UserDAO.login").uniqueResult();
     }
 
     @SuppressWarnings("unchecked")
