@@ -40,7 +40,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import au.edu.monash.merc.capture.service.UserService;
-import au.edu.monash.merc.capture.util.ldap.LdapUser;
+import au.edu.monash.merc.capture.dto.ldap.LdapUser;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:applicationContext.xml")
@@ -59,7 +59,7 @@ public class UserServiceLdapTest extends AbstractTransactionalJUnit4SpringContex
 	public void verifyLdapUser() {
 		String authcatId = "mercsaka";
 		String pwd = "ldap!";
-		LdapUser usr = this.userService.checkLdapUser(authcatId, pwd);
+		LdapUser usr = this.userService.verifyLdapUser(authcatId, pwd);
 		Assert.assertNull(usr);
 
 	}

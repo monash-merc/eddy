@@ -40,106 +40,111 @@ import au.edu.monash.merc.capture.dto.OrderBy;
 import au.edu.monash.merc.capture.dto.page.Pagination;
 import au.edu.monash.merc.capture.service.UserService;
 import au.edu.monash.merc.capture.sso.LoginAuthenticator;
-import au.edu.monash.merc.capture.util.ldap.LdapUser;
+import au.edu.monash.merc.capture.dto.ldap.LdapUser;
 
 @Scope("prototype")
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
 
-	@Autowired
-	private UserDAO userDao;
+    @Autowired
+    private UserDAO userDao;
 
-	@Autowired
-	private LoginAuthenticator authenticator;
+    @Autowired
+    private LoginAuthenticator authenticator;
 
-	public UserDAO getUserDao() {
-		return userDao;
-	}
+    public UserDAO getUserDao() {
+        return userDao;
+    }
 
-	public void setUserDao(UserDAO userDao) {
-		this.userDao = userDao;
-	}
+    public void setUserDao(UserDAO userDao) {
+        this.userDao = userDao;
+    }
 
-	@Override
-	public void saveUser(User user) {
-		this.userDao.add(user);
-	}
+    @Override
+    public void saveUser(User user) {
+        this.userDao.add(user);
+    }
 
-	@Override
-	public void updateUser(User user) {
-		this.userDao.update(user);
+    @Override
+    public void updateUser(User user) {
+        this.userDao.update(user);
 
-	}
+    }
 
-	@Override
-	public void deleteUser(User user) {
-		this.userDao.remove(user);
-	}
+    @Override
+    public void deleteUser(User user) {
+        this.userDao.remove(user);
+    }
 
-	@Override
-	public User getUserById(long id) {
-		return this.userDao.get(id);
-	}
+    @Override
+    public User getUserById(long id) {
+        return this.userDao.get(id);
+    }
 
-	@Override
-	public User getByUserEmail(String email) {
-		return this.userDao.getByUserEmail(email);
-	}
+    @Override
+    public User getByUserEmail(String email) {
+        return this.userDao.getByUserEmail(email);
+    }
 
-	@Override
-	public User getByUserUnigueId(String uniqueId) {
-		return this.userDao.getByUserUnigueId(uniqueId);
-	}
+    @Override
+    public User getByUserUnigueId(String uniqueId) {
+        return this.userDao.getByUserUnigueId(uniqueId);
+    }
 
-	@Override
-	public boolean checkUserUniqueIdExisted(String uniqueId) {
-		return this.userDao.checkUserUniqueIdExisted(uniqueId);
-	}
+    @Override
+    public boolean checkUserUniqueIdExisted(String uniqueId) {
+        return this.userDao.checkUserUniqueIdExisted(uniqueId);
+    }
 
-	@Override
-	public boolean checkUserDisplayNameExisted(String userName) {
-		return this.userDao.checkUserDisplayNameExisted(userName);
-	}
+    @Override
+    public boolean checkUserDisplayNameExisted(String userName) {
+        return this.userDao.checkUserDisplayNameExisted(userName);
+    }
 
-	@Override
-	public boolean checkEmailExisted(String email) {
-		return this.userDao.checkEmailExisted(email);
-	}
+    @Override
+    public boolean checkEmailExisted(String email) {
+        return this.userDao.checkEmailExisted(email);
+    }
 
-	@Override
-	public User validateLogin(String username, String password, boolean ldap) {
-		return this.authenticator.validateLogin(username, password, ldap);
-	}
+    @Override
+    public User login(String username, String password, boolean ldap) {
+        return this.authenticator.login(username, password, ldap);
+    }
 
-	@Override
-	public List<User> getAllActiveUsers() {
-		return this.userDao.getAllActiveUsers();
-	}
+    @Override
+    public List<User> getAllActiveUsers() {
+        return this.userDao.getAllActiveUsers();
+    }
 
-	@Override
-	public Pagination<User> getAllUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
-		return this.userDao.getAllUsers(startPageNo, recordsPerPage, orderBys);
-	}
+    @Override
+    public Pagination<User> getAllUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
+        return this.userDao.getAllUsers(startPageNo, recordsPerPage, orderBys);
+    }
 
-	@Override
-	public Pagination<User> getAllActiveUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
-		return this.userDao.getAllActiveUsers(startPageNo, recordsPerPage, orderBys);
-	}
+    @Override
+    public Pagination<User> getAllActiveUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
+        return this.userDao.getAllActiveUsers(startPageNo, recordsPerPage, orderBys);
+    }
 
-	@Override
-	public Pagination<User> getAllInActiveUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
-		return this.userDao.getAllInActiveUsers(startPageNo, recordsPerPage, orderBys);
-	}
+    @Override
+    public Pagination<User> getAllInActiveUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
+        return this.userDao.getAllInActiveUsers(startPageNo, recordsPerPage, orderBys);
+    }
 
-	@Override
-	public LdapUser checkLdapUser(String authcatId, String password) {
-		return this.authenticator.validataLdapUser(authcatId, password);
-	}
+    @Override
+    public LdapUser verifyLdapUser(String authcatId, String password) {
+        return this.authenticator.verifyLdapUser(authcatId, password);
+    }
 
-	@Override
-	public User getVirtualUser(int userType) {
-		return this.userDao.getVirtualUser(userType);
-	}
+    @Override
+    public LdapUser ldapLookup(String cnOrEmail) {
+        return this.authenticator.ldapLookup(cnOrEmail);
+    }
+
+    @Override
+    public User getVirtualUser(int userType) {
+        return this.userDao.getVirtualUser(userType);
+    }
 
 }
