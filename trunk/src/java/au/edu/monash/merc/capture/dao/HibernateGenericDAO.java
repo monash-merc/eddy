@@ -39,7 +39,7 @@ import org.springframework.stereotype.Repository;
 
 import au.edu.monash.merc.capture.repository.IRepository;
 
-@Scope("prototpe")
+@Scope("prototype")
 @Repository
 public class HibernateGenericDAO<T> implements IRepository<T> {
 

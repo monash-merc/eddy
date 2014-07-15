@@ -35,7 +35,6 @@
       <option name="myName" value="merc" />
       <option name="myLocal" value="true" />
     </copyright>
-    <module2copyright />
     <LanguageOptions name="CSS">
       <option name="fileTypeOverride" value="1" />
     </LanguageOptions>
@@ -69,9 +68,6 @@
         </modules>
       </facet-type>
     </autodetection-disabled>
-  </component>
-  <component name="GradleSettings">
-    <option name="gradleHome" value="$PROJECT_DIR$/../../gradle-1.6" />
   </component>
   <component name="IdProvider" IDEtalkID="C736A3A4248807D73D3CCC0D42470298" />
   <component name="InspectionProjectProfileManager">
