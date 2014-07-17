@@ -224,12 +224,12 @@ public class InstallAction extends InstallBaseAction {
 
         // mail
         mailProp = new MailProperty();
-        mailProp.setMailServer("smtp.monash.edu.au");
-        mailProp.setMailServerPort(25);
-        mailProp.setAuthenticated(false);
-        mailProp.setTlsEnabled(false);
-        mailProp.setUserName("mailUser");
-        mailProp.setPassword("mailUserPassword");
+        mailProp.setMailServer("smtp.gmail.com");
+        mailProp.setMailServerPort(587);
+        mailProp.setAuthenticated(true);
+        mailProp.setTlsEnabled(true);
+        mailProp.setUserName("your email address");
+        mailProp.setPassword("your email password");
 
         // Ldap
         ldapProp = new LdapProperty();
@@ -247,7 +247,7 @@ public class InstallAction extends InstallBaseAction {
         ldapProp.setAttGivenname("givenname");
 
         ldapWsProp = new LdapWsProperty();
-        ldapWsProp.setLdapWsEnabled(false);
+        ldapWsProp.setLdapWsEnabled(true);
         ldapWsProp.setLdapWsServer("https://vera094.its.monash.edu.au");
         ldapWsProp.setLdapWsPort(443);
         ldapWsProp.setCertErrorIgnore(true);
