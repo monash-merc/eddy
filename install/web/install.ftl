@@ -364,7 +364,15 @@
                 <div class="name_comment">* Ldap authentication web service enabled</div>
             </td>
         </tr>
-
+        <tr>
+            <td colspan="3"></td>
+        <tr>
+        <tr>
+            <td colspan="3"><font color="#006400">Provide the following three fields when Ldap authentication web service enabled</font></td>
+        </tr>
+        <tr>
+            <td colspan="3"></td>
+        <tr>
         <tr>
             <td>LADP Authentication Web Service Host:</td>
             <td><@s.textfield name="ldapWsProp.ldapWsServer" cssClass="install_input_field" /></td>
@@ -388,7 +396,15 @@
                 <div class="name_comment">* If ignore LADP authentication web service certificate error, please select TRUE</div>
             </td>
         </tr>
-
+        <tr>
+            <td colspan="3"></td>
+        <tr>
+        <tr>
+            <td colspan="3"><font color="#006400">Provide the following Ldap fields when Ldap authentication supported and ldap athentiction web service disabled</font></td>
+        <tr>
+        <tr>
+            <td colspan="3"></td>
+        <tr>
         <tr>
             <td>LADP Server:</td>
             <td><@s.textfield name="ldapProp.ldapServer" cssClass="install_input_field" /></td>
