@@ -27,22 +27,18 @@
  */
 package au.edu.monash.merc.capture.struts2.action.install;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
+import au.edu.monash.merc.capture.dto.*;
+import au.edu.monash.merc.capture.util.CaptureUtil;
+import au.edu.monash.merc.capture.util.Installer;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import au.edu.monash.merc.capture.dto.ApplicationProperty;
-import au.edu.monash.merc.capture.dto.JdbcProperty;
-import au.edu.monash.merc.capture.dto.LdapProperty;
-import au.edu.monash.merc.capture.dto.MailProperty;
-import au.edu.monash.merc.capture.util.CaptureUtil;
-import au.edu.monash.merc.capture.util.Installer;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 @Scope("prototype")
 @Controller("install.installAction")
@@ -63,6 +59,8 @@ public class InstallAction extends InstallBaseAction {
     private MailProperty mailProp;
 
     private LdapProperty ldapProp;
+
+    private LdapWsProperty ldapWsProp;
 
     private Map<String, String> dbTypeNames = new HashMap<String, String>();
 
@@ -143,7 +141,8 @@ public class InstallAction extends InstallBaseAction {
             // LDAP configuration file
             String ldapTempFile = installTempConfPath + LDAP_PROP_FILE;
             String destLdapFile = destPropConfRoot + LDAP_PROP_FILE;
-            Installer.writeLdapConfig(ldapProp, ldapTempFile, destLdapFile);
+
+            Installer.writeLdapConfig(ldapProp, ldapWsProp, ldapTempFile, destLdapFile);
 
             // Spring configuration file
             String springConfFile = installTempConfPath + SPRING_CONF_FILE;
@@ -225,12 +224,12 @@ public class InstallAction extends InstallBaseAction {
 
         // mail
         mailProp = new MailProperty();
-        mailProp.setMailServer("smtp.monash.edu.au");
-        mailProp.setMailServerPort(25);
-        mailProp.setAuthenticated(false);
-        mailProp.setTlsEnabled(false);
-        mailProp.setUserName("mailUser");
-        mailProp.setPassword("mailUserPassword");
+        mailProp.setMailServer("smtp.gmail.com");
+        mailProp.setMailServerPort(587);
+        mailProp.setAuthenticated(true);
+        mailProp.setTlsEnabled(true);
+        mailProp.setUserName("your email address");
+        mailProp.setPassword("your email password");
 
         // Ldap
         ldapProp = new LdapProperty();
@@ -244,9 +243,14 @@ public class InstallAction extends InstallBaseAction {
         ldapProp.setAttGender("gender");
         ldapProp.setAttCN("cn");
         ldapProp.setAttSn("sn");
-        ldapProp.setAttPersonalTitle("personaltitle");
+        ldapProp.setAttPersonalTitle("personalTitle");
         ldapProp.setAttGivenname("givenname");
 
+        ldapWsProp = new LdapWsProperty();
+        ldapWsProp.setLdapWsEnabled(true);
+        ldapWsProp.setLdapWsServer("http://ldsws.erc.monash.edu");
+        ldapWsProp.setLdapWsPort(443);
+        ldapWsProp.setCertErrorIgnore(true);
     }
 
     public void validateInstall() {
@@ -441,42 +445,62 @@ public class InstallAction extends InstallBaseAction {
 
         // ldap configuration validation
         if (ldapProp.isLdapSupported()) {
-            if (StringUtils.isBlank(ldapProp.getLdapServer())) {
-                addFieldError("ldapserver", "The ldap server must be provided");
-                hasError = true;
-            }
-            if (StringUtils.isBlank(ldapProp.getBaseDN())) {
-                addFieldError("basedn", "The ldap server base dn must be provided");
-                hasError = true;
-            }
-            if (StringUtils.isBlank(ldapProp.getAttUID())) {
-                addFieldError("attuid", "The attribute uid name must be provided");
-                hasError = true;
-            }
+            boolean ldapAuthenWsEnabled = ldapWsProp.isLdapWsEnabled();
+            if (ldapAuthenWsEnabled) {
+                if (StringUtils.isBlank(ldapWsProp.getLdapWsServer())) {
+                    addFieldError("ldapwshost", "The ldap authentication web service server must be provided");
+                    hasError = true;
+                } else {
+                    if (!StringUtils.startsWith(ldapWsProp.getLdapWsServer(), "https://")
+                            && (!StringUtils.startsWith(ldapWsProp.getLdapWsServer(), "http://"))) {
+                        addFieldError("ldapwshost", "The protocol (https or http) must be included in the ldap authentication web service host");
+                        hasError = true;
+                    }
+                }
 
-            if (StringUtils.isBlank(ldapProp.getAttMail())) {
-                addFieldError("attmail", "The attribute mail name must be provided");
-                hasError = true;
-            }
-            if (StringUtils.isBlank(ldapProp.getAttGender())) {
-                addFieldError("attgender", "The attribute gender name must be provided");
-                hasError = true;
-            }
-            if (StringUtils.isBlank(ldapProp.getAttCN())) {
-                addFieldError("attcn", "The attribute cn name must be provided");
-                hasError = true;
-            }
-            if (StringUtils.isBlank(ldapProp.getAttGivenname())) {
-                addFieldError("attgivenname", "The attribute givenname name must be provided");
-                hasError = true;
-            }
-            if (StringUtils.isBlank(ldapProp.getAttSn())) {
-                addFieldError("attsn", "The attribute sn name must be provided");
-                hasError = true;
-            }
-            if (StringUtils.isBlank(ldapProp.getAttPersonalTitle())) {
-                addFieldError("attptitle", "The attribute personaltitle name must be provided");
-                hasError = true;
+                if (ldapWsProp.getLdapWsPort() == 0) {
+                    addFieldError("ldapwshost", "The ldap authentication web service port must be provided");
+                    hasError = true;
+                }
+
+            } else {
+                if (StringUtils.isBlank(ldapProp.getLdapServer())) {
+                    addFieldError("ldapserver", "The ldap server must be provided");
+                    hasError = true;
+                }
+                if (StringUtils.isBlank(ldapProp.getBaseDN())) {
+                    addFieldError("basedn", "The ldap server base dn must be provided");
+                    hasError = true;
+                }
+                if (StringUtils.isBlank(ldapProp.getAttUID())) {
+                    addFieldError("attuid", "The attribute uid name must be provided");
+                    hasError = true;
+                }
+
+                if (StringUtils.isBlank(ldapProp.getAttMail())) {
+                    addFieldError("attmail", "The attribute mail name must be provided");
+                    hasError = true;
+                }
+                if (StringUtils.isBlank(ldapProp.getAttGender())) {
+                    addFieldError("attgender", "The attribute gender name must be provided");
+                    hasError = true;
+                }
+                if (StringUtils.isBlank(ldapProp.getAttCN())) {
+                    addFieldError("attcn", "The attribute cn name must be provided");
+                    hasError = true;
+                }
+                if (StringUtils.isBlank(ldapProp.getAttGivenname())) {
+                    addFieldError("attgivenname", "The attribute givenname name must be provided");
+                    hasError = true;
+                }
+                if (StringUtils.isBlank(ldapProp.getAttSn())) {
+                    addFieldError("attsn", "The attribute sn name must be provided");
+                    hasError = true;
+                }
+                if (StringUtils.isBlank(ldapProp.getAttPersonalTitle())) {
+                    addFieldError("attptitle", "The attribute personaltitle name must be provided");
+                    hasError = true;
+                }
             }
         }
 
@@ -585,4 +609,11 @@ public class InstallAction extends InstallBaseAction {
         this.ldapProp = ldapProp;
     }
 
+    public LdapWsProperty getLdapWsProp() {
+        return ldapWsProp;
+    }
+
+    public void setLdapWsProp(LdapWsProperty ldapWsProp) {
+        this.ldapWsProp = ldapWsProp;
+    }
 }

@@ -32,13 +32,11 @@ import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.domain.Avatar;
 import au.edu.monash.merc.capture.domain.Profile;
 import au.edu.monash.merc.capture.domain.User;
+import au.edu.monash.merc.capture.dto.ldap.LdapUser;
 import au.edu.monash.merc.capture.exception.ConfigException;
-import au.edu.monash.merc.capture.service.ldap.LdapService;
 import au.edu.monash.merc.capture.util.MD5;
-import au.edu.monash.merc.capture.util.ldap.LdapUser;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -53,13 +51,6 @@ public class HomeAction extends BaseAction {
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     private String appName;
-
-    @Autowired
-    private LdapService ldapService;
-
-    public void setLdapService(LdapService ldapService) {
-        this.ldapService = ldapService;
-    }
 
     public String home() {
         appName = configSetting.getPropValue(ConfigSettings.APPLICATION_NAME);
@@ -153,7 +144,7 @@ public class HomeAction extends BaseAction {
                     String adminEmail = configSetting.getPropValue(ConfigSettings.SYSTEM_ADMIN_EMAIL);
                     if (StringUtils.equalsIgnoreCase(password, "ldap")) {
 
-                        LdapUser ldapUser = ldapService.searchLdapUser(adminEmail);
+                        LdapUser ldapUser = userService.ldapLookup(adminEmail);
                         if (ldapUser == null) {
                             throw new ConfigException("System administrator doesn't exist in the LDAP Server");
                         }

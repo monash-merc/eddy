@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011, Monash e-Research Centre
+ * Copyright (c) 2010-2013, Monash e-Research Centre
  * (Monash University, Australia)
  * All rights reserved.
  *
@@ -25,87 +25,57 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package au.edu.monash.merc.capture.util.ldap;
 
-public class LdapUser {
+package au.edu.monash.merc.capture.dto;
 
-	private String uid;
+import java.io.Serializable;
 
-	private String title;
+/**
+ * Created with IntelliJ IDEA.
+ * User: simonyu
+ * Date: 10/02/2014
+ * Time: 3:07 PM
+ * To change this template use File | Settings | File Templates.
+ */
+public class LdapWsProperty implements Serializable {
 
-	private String firstName;
+    private boolean ldapWsEnabled;
 
-	private String lastName;
+    private String ldapWsServer;
 
-	private String displayName;
+    private int ldapWsPort;
 
-	private String mail;
+    private boolean certErrorIgnore;
 
-	private String gender;
+    public boolean isLdapWsEnabled() {
+        return ldapWsEnabled;
+    }
 
-	public String getUid() {
-		return uid;
-	}
+    public void setLdapWsEnabled(boolean ldapWsEnabled) {
+        this.ldapWsEnabled = ldapWsEnabled;
+    }
 
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
+    public String getLdapWsServer() {
+        return ldapWsServer;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public void setLdapWsServer(String ldapWsServer) {
+        this.ldapWsServer = ldapWsServer;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public int getLdapWsPort() {
+        return ldapWsPort;
+    }
 
-	public String getDisplayName() {
-		return displayName;
-	}
+    public void setLdapWsPort(int ldapWsPort) {
+        this.ldapWsPort = ldapWsPort;
+    }
 
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-		String[] fullName = displayName.split(" ");
-		// System.out.println(" display name split length: " + fullName.length);
-		if (fullName != null && fullName.length == 2) {
-			this.lastName = fullName[1];
-			this.firstName = fullName[0];
-		} else {
-			this.firstName = displayName;
-			this.lastName = "";
-		}
-	}
+    public boolean isCertErrorIgnore() {
+        return certErrorIgnore;
+    }
 
-	public String getMail() {
-		return mail;
-	}
-
-	public void setMail(String mail) {
-		this.mail = mail;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getGender() {
-		return gender;
-	}
-
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
-
+    public void setCertErrorIgnore(boolean certErrorIgnore) {
+        this.certErrorIgnore = certErrorIgnore;
+    }
 }

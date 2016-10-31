@@ -32,11 +32,10 @@ import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.config.SystemPropertiesConfigurer;
 import au.edu.monash.merc.capture.domain.Party;
 import au.edu.monash.merc.capture.dto.PartyBean;
+import au.edu.monash.merc.capture.dto.ldap.LdapUser;
 import au.edu.monash.merc.capture.exception.DataCaptureException;
 import au.edu.monash.merc.capture.rifcs.PartyActivityWSService;
-import au.edu.monash.merc.capture.service.ldap.LdapService;
 import au.edu.monash.merc.capture.util.CaptureUtil;
-import au.edu.monash.merc.capture.util.ldap.LdapUser;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +44,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Simon Yu
@@ -61,9 +63,6 @@ import java.util.*;
 public class PartyAction extends DMCoreAction {
     @Autowired
     private PartyActivityWSService paWsService;
-
-    @Autowired
-    private LdapService ldapService;
 
     private PartyBean selectedPartyBean;
 
@@ -144,12 +143,16 @@ public class PartyAction extends DMCoreAction {
     private List<PartyBean> searchPartyFromDb(String cnOrEmail) {
         List<PartyBean> tempPbs = new ArrayList<PartyBean>();
         List<Party> foundParties = this.dmService.getPartyByUserNameOrEmail(cnOrEmail);
+
         if (foundParties != null && foundParties.size() > 0) {
             for (Party p : foundParties) {
                 if (p.isFromRm()) {
                     //always to get the new researcher master party.
-                    String email = p.getEmail();
-                    PartyBean rmPartyBean = searchPartyFromRMWS(email);
+                    String emailOrCn = p.getEmail();
+                    if (StringUtils.isBlank(emailOrCn)) {
+                        emailOrCn = p.getPersonGivenName() + " " + p.getPersonFamilyName();
+                    }
+                    PartyBean rmPartyBean = searchPartyFromRMWS(emailOrCn);
                     if (rmPartyBean != null) {
                         tempPbs.add(rmPartyBean);
                     }
@@ -166,7 +169,7 @@ public class PartyAction extends DMCoreAction {
 
         LdapUser ldapUser = null;
         try {
-            ldapUser = ldapService.searchLdapUser(cnOrEmail);
+            ldapUser = userService.ldapLookup(cnOrEmail);
         } catch (Exception e) {
             throw new DataCaptureException(e);
         }

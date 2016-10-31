@@ -27,17 +27,14 @@
  */
 package au.edu.monash.merc.capture.sso;
 
+import au.edu.monash.merc.capture.dao.impl.UserDAO;
+import au.edu.monash.merc.capture.domain.User;
+import au.edu.monash.merc.capture.dto.ldap.LdapUser;
+import au.edu.monash.merc.capture.service.ldap.LdapService;
+import au.edu.monash.merc.capture.util.MD5;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import au.edu.monash.merc.capture.config.ConfigSettings;
-import au.edu.monash.merc.capture.dao.impl.UserDAO;
-import au.edu.monash.merc.capture.domain.User;
-import au.edu.monash.merc.capture.dto.LdapProperty;
-import au.edu.monash.merc.capture.util.MD5;
-import au.edu.monash.merc.capture.util.ldap.LDAPUtil;
-import au.edu.monash.merc.capture.util.ldap.LdapUser;
 
 @Scope("prototype")
 @Component
@@ -47,44 +44,18 @@ public class DefaultLoginAuthenticator implements LoginAuthenticator {
     private UserDAO userDao;
 
     @Autowired
-    private LDAPUtil ldapUtil;
+    private LdapService ldapService;
 
-    @Autowired
-    private ConfigSettings configSettings;
-
-    public void setLdapUtil(LDAPUtil ldapUtil) {
-        this.ldapUtil = ldapUtil;
+    public void setLdapService(LdapService ldapService) {
+        this.ldapService = ldapService;
     }
 
     public void setUserDAO(UserDAO userDao) {
         this.userDao = userDao;
     }
 
-    public void setConfigSettings(ConfigSettings configSettings) {
-        this.configSettings = configSettings;
-    }
-
-    private void initLdapEnv() {
-
-        LdapProperty ldapProp = new LdapProperty();
-        ldapProp.setLdapFactory(configSettings.getPropValue(ConfigSettings.LDAP_FACTORY));
-        ldapProp.setLdapServer(configSettings.getPropValue(ConfigSettings.LDAP_SERVER_URL));
-        ldapProp.setProtocol(configSettings.getPropValue(ConfigSettings.LDAP_SECURITY_PROTOCOL));
-        ldapProp.setAuthentication(configSettings.getPropValue(ConfigSettings.LDAP_AUTHENTICATION));
-        ldapProp.setBaseDN(configSettings.getPropValue(ConfigSettings.LDAP_BASE_DN));
-        ldapProp.setBindBaseDnRequired(Boolean.valueOf(configSettings.getPropValue(ConfigSettings.LDAP_BIND_BASE_DN_REQUIRED)));
-        ldapProp.setAttUID(configSettings.getPropValue(ConfigSettings.LDAP_UID_ATTR_NAME));
-        ldapProp.setAttMail(configSettings.getPropValue(ConfigSettings.LDAP_MAIL_ATTR_NAME));
-        ldapProp.setAttGender(configSettings.getPropValue(ConfigSettings.LDAP_GENDER_ATTR_NAME));
-        ldapProp.setAttCN(configSettings.getPropValue(ConfigSettings.LDAP_CN_ATTR_NAME));
-        ldapProp.setAttSn(configSettings.getPropValue(ConfigSettings.LDAP_SN_ATTR_NAME));
-        ldapProp.setAttGivenname(configSettings.getPropValue(ConfigSettings.LDAP_GIVENNAME_ATTR_NAME));
-        ldapProp.setAttPersonalTitle(configSettings.getPropValue(ConfigSettings.LDAP_PERSONAL_TITLE_ATTR_NAME));
-        this.ldapUtil.initEnv(ldapProp);
-    }
-
     @Override
-    public User validateLogin(String uniqueId, String password, boolean ldapSupported) {
+    public User login(String uniqueId, String password, boolean ldapSupported) {
         String pwd = MD5.hash(password);
         User user = this.userDao.checkUserLogin(uniqueId, pwd);
 
@@ -98,8 +69,10 @@ public class DefaultLoginAuthenticator implements LoginAuthenticator {
         if (ldapSupported) {
             user = this.userDao.getByUserUnigueId(uniqueId);
             if (user != null) {
-                verifyLdapUser(uniqueId, password);
-                return user;
+                boolean logined = this.ldapService.login(uniqueId, password);
+                if (logined) {
+                    return user;
+                }
             }
         }
 
@@ -107,16 +80,12 @@ public class DefaultLoginAuthenticator implements LoginAuthenticator {
     }
 
     @Override
-    public LdapUser validataLdapUser(String authcatId, String password) {
-        // initialize the ldap env
-        initLdapEnv();
-        return ldapUtil.validateLdapUser(authcatId, password);
+    public LdapUser verifyLdapUser(String authcatId, String password) {
+        return this.ldapService.verifyLdapUser(authcatId, password);
     }
 
-    public void verifyLdapUser(String authcatId, String password) {
-        // initialize the ldap env
-        initLdapEnv();
-        this.ldapUtil.login(authcatId, password);
+    @Override
+    public LdapUser ldapLookup(String cnOrEmail) {
+        return this.ldapService.lookup(cnOrEmail);
     }
-
 }
