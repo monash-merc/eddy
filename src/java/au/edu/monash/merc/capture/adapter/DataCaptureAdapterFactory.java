@@ -36,38 +36,37 @@ import au.edu.monash.merc.capture.exception.DCInstantiationException;
 
 /**
  * The DataCaptureAdapterFactory class provides the DataCaptureAdapter creation function
- * 
+ *
  * @author Simon Yu - Xiaoming.Yu@monash.edu
  * @version v2.0
  * @since v1.0
- * 
  */
 @Scope("prototype")
 @Component
 public class DataCaptureAdapterFactory {
 
-	@Autowired
-	private ConfigSettings configSettings;
+    @Autowired
+    private ConfigSettings configSettings;
 
-	public void setConfigSettings(ConfigSettings configSettings) {
-		this.configSettings = configSettings;
-	}
+    public void setConfigSettings(ConfigSettings configSettings) {
+        this.configSettings = configSettings;
+    }
 
-	private String captureAdapterClass = NetCDFDataCaptureAdapter.class.getName();
+    private String captureAdapterClass = NetCDFDataCaptureAdapter.class.getName();
 
-	public DataCaptureAdapter createInstance() {
-		String adapterClass = configSettings.getPropValue(ConfigSettings.DATA_CAPTURE_ADAPTER_CLASS);
-		if (adapterClass != null && !("".equals(adapterClass))) {
-			captureAdapterClass = adapterClass;
-		}
-		try {
-			Class<?> clazz = Class.forName(captureAdapterClass);
-			if (clazz.isInterface()) {
-				throw new DCInstantiationException(clazz.getName() + ", Specified class is an interface");
-			}
-			return (DataCaptureAdapter) (clazz.newInstance());
-		} catch (Exception e) {
-			throw new DCInstantiationException(e);
-		}
-	}
+    public DataCaptureAdapter createInstance() {
+        String adapterClass = configSettings.getPropValue(ConfigSettings.DATA_CAPTURE_ADAPTER_CLASS);
+        if (adapterClass != null && !("".equals(adapterClass))) {
+            captureAdapterClass = adapterClass;
+        }
+        try {
+            Class<?> clazz = Class.forName(captureAdapterClass);
+            if (clazz.isInterface()) {
+                throw new DCInstantiationException(clazz.getName() + ", Specified class is an interface");
+            }
+            return (DataCaptureAdapter) (clazz.newInstance());
+        } catch (Exception e) {
+            throw new DCInstantiationException(e);
+        }
+    }
 }

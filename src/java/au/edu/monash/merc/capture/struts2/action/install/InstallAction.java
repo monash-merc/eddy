@@ -243,12 +243,12 @@ public class InstallAction extends InstallBaseAction {
         ldapProp.setAttGender("gender");
         ldapProp.setAttCN("cn");
         ldapProp.setAttSn("sn");
-        ldapProp.setAttPersonalTitle("personaltitle");
+        ldapProp.setAttPersonalTitle("personalTitle");
         ldapProp.setAttGivenname("givenname");
 
         ldapWsProp = new LdapWsProperty();
         ldapWsProp.setLdapWsEnabled(true);
-        ldapWsProp.setLdapWsServer("https://vera094.its.monash.edu.au");
+        ldapWsProp.setLdapWsServer("http://ldsws.erc.monash.edu");
         ldapWsProp.setLdapWsPort(443);
         ldapWsProp.setCertErrorIgnore(true);
     }
