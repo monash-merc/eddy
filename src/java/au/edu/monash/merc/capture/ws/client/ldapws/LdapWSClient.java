@@ -275,11 +275,11 @@ public class LdapWSClient {
     public static void main(String[] args) throws Exception {
         WSConfig wsConfig = new WSConfig();
         wsConfig.setIgnoreCertError(true);
-        wsConfig.setLdapAuthenServiceHost("http://ldsws.erc.monash.edu");
-        wsConfig.setLdapAuthenServicePort(80);
+        wsConfig.setLdapAuthenServiceHost("https://ldsws.erc.monash.edu");
+        wsConfig.setLdapAuthenServicePort(443);
 
         LdapWSClient wsClient = new LdapWSClient(wsConfig);
-        LdapUser ldapUser = wsClient.verifyLdapUser("xiyu", "xxxx");
+        LdapUser ldapUser = wsClient.verifyLdapUser("xiyu", "1212");
         if (ldapUser != null)
             System.out.println(" --- verify  ldap user : " + ldapUser.getDisplayName() + " email: " + ldapUser.getMail());
         System.out.println("login: " + wsClient.login("xiyu", "xxx"));

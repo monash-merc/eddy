@@ -248,7 +248,7 @@ public class InstallAction extends InstallBaseAction {
 
         ldapWsProp = new LdapWsProperty();
         ldapWsProp.setLdapWsEnabled(true);
-        ldapWsProp.setLdapWsServer("http://ldsws.erc.monash.edu");
+        ldapWsProp.setLdapWsServer("https://ldsws.erc.monash.edu");
         ldapWsProp.setLdapWsPort(443);
         ldapWsProp.setCertErrorIgnore(true);
     }
