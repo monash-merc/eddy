@@ -28,11 +28,14 @@
         <interceptors>
             <interceptor name="authenInterceptor"
                          class="au.edu.monash.merc.capture.struts2.intercepter.AuthenticationInterceptor"/>
+            <interceptor name="xssInterceptor" class="au.edu.monash.merc.capture.struts2.intercepter.XssInterceptor"/>
             <interceptor-stack name="noneAuthStack">
                 <interceptor-ref name="defaultStack"/>
+                <interceptor-ref name="xssInterceptor"/>
             </interceptor-stack>
             <interceptor-stack name="authenStack">
                 <interceptor-ref name="defaultStack"/>
+                <interceptor-ref name="xssInterceptor"/>
                 <interceptor-ref name="authenInterceptor"/>
             </interceptor-stack>
         </interceptors>
