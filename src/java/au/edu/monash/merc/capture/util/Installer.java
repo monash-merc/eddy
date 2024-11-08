@@ -40,7 +40,6 @@ import java.util.Properties;
 import au.edu.monash.merc.capture.dto.LdapWsProperty;
 import org.apache.commons.io.FileUtils;
 
-import sun.security.action.GetPropertyAction;
 import au.edu.monash.merc.capture.dto.ApplicationProperty;
 import au.edu.monash.merc.capture.dto.LdapProperty;
 import au.edu.monash.merc.capture.exception.ConfigException;
@@ -254,7 +253,8 @@ public class Installer {
     public static void save(Properties prop, String fileName) {
         OutputStream out = null;
         try {
-            String lineSeparator = (String) AccessController.doPrivileged(new GetPropertyAction("line.separator"));
+//            String lineSeparator = (String) AccessController.doPrivileged(new GetPropertyAction("line.separator"));
+            String lineSeparator = System.lineSeparator();
             out = new FileOutputStream(new File(fileName));
             OutputStreamWriter writer = new OutputStreamWriter(out, "UTF-8");
             writer.write("#");

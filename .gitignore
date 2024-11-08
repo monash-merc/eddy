@@ -2,3 +2,6 @@
 build/
 deploy/
 dist/
+.idea
+eddy.iml
+target/
