@@ -32,7 +32,6 @@ import au.edu.monash.merc.capture.dao.impl.PermissionDAO;
 import au.edu.monash.merc.capture.domain.Permission;
 import au.edu.monash.merc.capture.dto.InheritPermissionBean;
 import au.edu.monash.merc.capture.service.PermissionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,12 +40,12 @@ import java.util.List;
 
 /**
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * <p/>
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 26/03/13 4:29 PM
+ * <p/>
+ * Date: 26/03/13 4:29 PM
  */
 
 @Scope("prototype")
@@ -54,10 +53,9 @@ import java.util.List;
 @Transactional
 public class PermissionServiceImpl implements PermissionService {
 
-    @Autowired
-    private PermissionDAO permissionDao;
+    private final PermissionDAO permissionDao;
 
-    public void setPermissionDao(PermissionDAO permissionDao) {
+    public PermissionServiceImpl(PermissionDAO permissionDao) {
         this.permissionDao = permissionDao;
     }
 

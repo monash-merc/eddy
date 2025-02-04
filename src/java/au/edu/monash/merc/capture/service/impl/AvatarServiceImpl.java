@@ -27,50 +27,47 @@
  */
 package au.edu.monash.merc.capture.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import au.edu.monash.merc.capture.dao.impl.AvatarDAO;
 import au.edu.monash.merc.capture.domain.Avatar;
 import au.edu.monash.merc.capture.service.AvatarService;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Scope("prototype")
 @Service
 @Transactional
 public class AvatarServiceImpl implements AvatarService {
 
-	@Autowired
-	private AvatarDAO avatarDao;
+    private final AvatarDAO avatarDao;
 
-	@Override
-	public void saveAvatar(Avatar avatar) {
-		this.avatarDao.add(avatar);
-	}
+    public AvatarServiceImpl(AvatarDAO avatarDao) {
+        this.avatarDao = avatarDao;
+    }
 
-	@Override
-	public Avatar getAvatarById(long id) {
-		return this.avatarDao.get(id);
-	}
+    @Override
+    public void saveAvatar(Avatar avatar) {
+        this.avatarDao.add(avatar);
+    }
 
-	@Override
-	public Avatar getUserAvatar(long userId) {
-		return this.avatarDao.getUserAvatar(userId);
-	}
+    @Override
+    public Avatar getAvatarById(long id) {
+        return this.avatarDao.get(id);
+    }
 
-	@Override
-	public void updateAvatar(Avatar avatar) {
-		this.avatarDao.update(avatar);
-	}
+    @Override
+    public Avatar getUserAvatar(long userId) {
+        return this.avatarDao.getUserAvatar(userId);
+    }
 
-	@Override
-	public void deleteAvatar(Avatar avatar) {
-		this.avatarDao.remove(avatar);
-	}
+    @Override
+    public void updateAvatar(Avatar avatar) {
+        this.avatarDao.update(avatar);
+    }
 
-	public void setAvatarDao(AvatarDAO avatarDao) {
-		this.avatarDao = avatarDao;
-	}
+    @Override
+    public void deleteAvatar(Avatar avatar) {
+        this.avatarDao.remove(avatar);
+    }
 
 }

@@ -68,11 +68,14 @@ public class SpammerMailServiceImpl implements MailService {
 
 		Properties props = System.getProperties();
 		props.put(SMTP_PROPERTY, smtpServer);
+		props.put("mail.smtp.host", smtpServer);
+//		props.put("mail.smtp.auth", "true");
+
 		Session session = Session.getDefaultInstance(props, null);
 		Message msg = new MimeMessage(session);
 		try {
 			msg.setFrom(new InternetAddress(emailFrom));
-			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailTo, false));
+			msg.setRecipients(Message.RecipientType.TO, new InternetAddress[]{new InternetAddress(emailFrom)});
 			msg.setSubject(emailSubject);
 			msg.setText(emailBody);
 			msg.setSentDate(new Date());
@@ -87,10 +90,11 @@ public class SpammerMailServiceImpl implements MailService {
 
 	public static void main(String[] args) throws Exception {
 		SpammerMailServiceImpl mail = new SpammerMailServiceImpl();
-		mail.setSmtpServer("smtp.monash.edu.au");
-		String emailFrom = "ozflux_data_management_system";
-		String emailTo = "Xiaoming.Yu@monash.edu";
+		mail.setSmtpServer("smtp.monash.edu");
+		String emailFrom = "xiaoming.yu@monash.edu";
+		String emailTo = "xiaoming.yu@monash.edu";
 		String emailSubject = "Reset your password confirmation";
+		String password = "a9c682fcccba973f070e7426462b9aa6";
 
 		StringBuilder builder = new StringBuilder();
 		builder.append("Hi Nigel.Holdgate, ");

@@ -50,8 +50,6 @@ import java.util.*;
 @Controller("data.createColAction")
 public class CreateColAction extends DMCoreAction {
 
-    private boolean mdRegEnabled;
-
     private boolean globalCoverage;
 
     private Licence licence;
@@ -100,6 +98,8 @@ public class CreateColAction extends DMCoreAction {
      * @return a String represents SUCCESS or ERROR.
      */
     public String createCollection() {
+        System.out.println("==== enter createCollection ====");
+        System.out.println("====== mapEnabled: " + this.mapEnabled);
         // any root path error. directly return the error to front input page.
         if (!checkDataStorePath()) {
             return INPUT;
@@ -144,25 +144,27 @@ public class CreateColAction extends DMCoreAction {
             collection.setOwner(user);
             // set collection modified by some user, in this case is an owner user
             collection.setModifiedByUser(user);
-            //check the location
-            String spatialType = null;
-            String spatialValue = null;
-            if (globalCoverage) {
-                spatialType = CoverageType.GLOBAL.type();
-                spatialValue = SpatialValue.GLOBAL.value();
-            } else {
-                Location alocation = collection.getLocation();
-                String spValue = alocation.getSpatialCoverage();
-                // check the spatial coverage and type
-                if (StringUtils.isBlank(spValue)) {
-                    spatialType = CoverageType.UNKNOWN.type();
-                    spatialValue = SpatialValue.UNKNOWN.value();
 
+            //check the location
+            String spatialType = CoverageType.UNKNOWN.type();
+            String spatialValue = SpatialValue.UNKNOWN.value();
+            System.out.println("====== mapEnabled: " + this.mapEnabled);
+            //  if map enabled
+            if (mapEnabled) {
+                if (globalCoverage) {
+                    spatialType = CoverageType.GLOBAL.type();
+                    spatialValue = SpatialValue.GLOBAL.value();
                 } else {
-                    spatialType = CoverageType.KML.type();
-                    spatialValue = spValue;
+                    Location alocation = collection.getLocation();
+                    String spValue = alocation.getSpatialCoverage();
+                    // check the spatial coverage and type
+                    if (StringUtils.isNotBlank(spValue)) {
+                        spatialType = CoverageType.KML.type();
+                        spatialValue = spValue;
+                    }
                 }
             }
+
             //location
             Location location = this.dmService.getLocationByCoverageType(spatialType, spatialValue);
             if (location == null) {
@@ -173,7 +175,6 @@ public class CreateColAction extends DMCoreAction {
             }
             //save the location inot collection
             collection.setLocation(location);
-
             List<Permission> coDefaultPerms = setCollectionDefaultPermissions(collection);
             collection.setPermissions(coDefaultPerms);
 
@@ -184,41 +185,6 @@ public class CreateColAction extends DMCoreAction {
 
             //save the collection
             this.dmService.createCollection(collection, dataStorePath);
-
-            // create handle if handle service is enabled
-            String hdlEnabledStr = configSetting.getPropValue(ConfigSettings.HANDLE_SERVICE_ENABLED);
-            if (Boolean.valueOf(hdlEnabledStr)) {
-                String handle = null;
-                try {
-                    handle = createHandle(collection);
-                    collection.setPersistIdentifier(handle);
-                    this.dmService.updateCollection(collection);
-                } catch (Exception e) {
-                    logger.error(getText("create.collection.handle.persistent.identifier.failed") + ", " + e.getMessage());
-                    addActionError(getText("create.collection.handle.persistent.identifier.failed"));
-                    try {
-                        //keep the current location first, then we can check the reference later.
-                        // if no references, then we have to delete this location.
-                        //as the collection will be deleted
-                        Location currentLocation = collection.getLocation();
-                        long locationId = 0;
-                        if (currentLocation != null) {
-                            locationId = currentLocation.getId();
-                        }
-
-                        //check the reference
-                        boolean collectionReferenced = this.dmService.findAnyReferencedCollectionsByLocationId(locationId);
-                        if (!collectionReferenced) {
-                            this.dmService.deleteLocationById(locationId);
-                        }
-                        //then delete the collection
-                        this.dmService.deleteCollection(collection, dataStorePath);
-                    } catch (Exception ex) {
-                        logger.error(ex.getMessage() + ". Failed to roll back the collection");
-                    }
-                    return INPUT;
-                }
-            }
             // set view type is user
             viewType = UserViewType.USER.type();
 
@@ -237,16 +203,8 @@ public class CreateColAction extends DMCoreAction {
                 licence.setContents(htmlLicence);
             }
 
-            // populate the rifcs registration if enabled
-            String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
-            mdRegEnabled = Boolean.valueOf(mdRegEnabledStr).booleanValue();
-
             //set the full permissions for owner
             setupFullPermissions();
-            //if metadata registration disabled. then we remove the metadata registration permission
-            if (!mdRegEnabled) {
-                permissionBean.setMdRegAllowed(false);
-            }
 
             // populate the collection links
             populateLinksInUsrCollection();
@@ -383,21 +341,13 @@ public class CreateColAction extends DMCoreAction {
         return true;
     }
 
-    public boolean isMdRegEnabled() {
-        return mdRegEnabled;
-    }
-
-    public void setMdRegEnabled(boolean mdRegEnabled) {
-        this.mdRegEnabled = mdRegEnabled;
-    }
-
-    public boolean isGlobalCoverage() {
-        return globalCoverage;
-    }
-
-    public void setGlobalCoverage(boolean globalCoverage) {
-        this.globalCoverage = globalCoverage;
-    }
+//    public boolean isGlobalCoverage() {
+//        return globalCoverage;
+//    }
+//
+//    public void setGlobalCoverage(boolean globalCoverage) {
+//        this.globalCoverage = globalCoverage;
+//    }
 
     public Licence getLicence() {
         return licence;

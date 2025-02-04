@@ -25,15 +25,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package au.edu.monash.merc.capture.service.ldap;
-
-import au.edu.monash.merc.capture.dto.ldap.LdapUser;
-
-public interface LdapService {
-
-    LdapUser lookup(String snOrEmail);
-
-    LdapUser verifyLdapUser(String authcatId, String password);
-
-    boolean login(String authcatId, String password);
-}
+//package au.edu.monash.merc.capture.service.ldap;
+//
+//import au.edu.monash.merc.capture.dto.ldap.LdapUser;
+//
+////TODO: remove LdapService and Implementation
+//public interface LdapService {
+//
+//    LdapUser lookup(String snOrEmail);
+//
+//    LdapUser verifyLdapUser(String authcatId, String password);
+//
+//    boolean login(String authcatId, String password);
+//}

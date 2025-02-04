@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -112,6 +113,17 @@ public class BaseAction extends ActionSupport implements SessionAware, ServletRe
     protected static String REDIRECTCO = "redirectco";
 
     protected static String PNOTFOUND = "pnotfound";
+
+    protected boolean mapEnabled;
+
+    public String web() {
+        return SUCCESS;
+    }
+
+    @PostConstruct
+    public void webInit() {
+        this.mapEnabled = Boolean.parseBoolean(this.configSetting.getPropValue(ConfigSettings.GOOGLE_MAP_ENABLED));
+    }
 
     public void setConfigSetting(ConfigSettings configSetting) {
         this.configSetting = configSetting;
@@ -545,5 +557,13 @@ public class BaseAction extends ActionSupport implements SessionAware, ServletRe
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public boolean isMapEnabled() {
+        return mapEnabled;
+    }
+
+    public void setMapEnabled(boolean mapEnabled) {
+        this.mapEnabled = mapEnabled;
     }
 }

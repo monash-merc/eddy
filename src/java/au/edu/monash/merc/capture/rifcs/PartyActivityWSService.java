@@ -33,13 +33,13 @@ import au.edu.monash.merc.capture.dto.ActivityBean;
 import au.edu.monash.merc.capture.dto.PartyBean;
 import au.edu.monash.merc.capture.dto.ProjectBean;
 
-public interface PartyActivityWSService {
-
-    String getNlaId(String authcateId);
-
-    PartyBean getParty(String nlaId);
-
-    List<ProjectBean> getProjects(String nlaId);
-
-    ActivityBean getActivity(String projectId);
-}
+//public interface PartyActivityWSService {
+//
+//    String getNlaId(String authcateId);
+//
+//    PartyBean getParty(String nlaId);
+//
+//    List<ProjectBean> getProjects(String nlaId);
+//
+//    ActivityBean getActivity(String projectId);
+//}

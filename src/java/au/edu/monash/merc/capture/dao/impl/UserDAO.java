@@ -27,25 +27,30 @@
  */
 package au.edu.monash.merc.capture.dao.impl;
 
-import java.util.List;
-
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Repository;
-
+import au.edu.monash.merc.capture.common.UserType;
 import au.edu.monash.merc.capture.dao.HibernateGenericDAO;
 import au.edu.monash.merc.capture.domain.User;
-import au.edu.monash.merc.capture.common.UserType;
 import au.edu.monash.merc.capture.dto.OrderBy;
 import au.edu.monash.merc.capture.dto.page.Pagination;
 import au.edu.monash.merc.capture.repository.IUserRepository;
+import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Scope("prototype")
 @Repository
 public class UserDAO extends HibernateGenericDAO<User> implements IUserRepository {
+
+    public UserDAO(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
     @Override
     public User getByUserEmail(String email) {

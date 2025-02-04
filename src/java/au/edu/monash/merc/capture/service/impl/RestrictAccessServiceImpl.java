@@ -38,12 +38,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * <p/>
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 22/04/13 3:28 PM
+ * <p/>
+ * Date: 22/04/13 3:28 PM
  */
 
 @Scope("prototype")
@@ -51,10 +51,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class RestrictAccessServiceImpl implements RestrictAccessService {
 
-    @Autowired
-    private RestrictAccessDAO restrictAccessDao;
+    private final RestrictAccessDAO restrictAccessDao;
 
-    public void setRestrictAccessDao(RestrictAccessDAO restrictAccessDao) {
+    public RestrictAccessServiceImpl(RestrictAccessDAO restrictAccessDao) {
         this.restrictAccessDao = restrictAccessDao;
     }
 

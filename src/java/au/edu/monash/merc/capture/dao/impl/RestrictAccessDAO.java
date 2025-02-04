@@ -33,22 +33,28 @@ import au.edu.monash.merc.capture.domain.RestrictAccess;
 import au.edu.monash.merc.capture.repository.IRestrictAccessRepository;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
 /**
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * <p/>
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 22/04/13 3:17 PM
+ * <p/>
+ * Date: 22/04/13 3:17 PM
  */
 @Scope("prototype")
 @Repository
 public class RestrictAccessDAO extends HibernateGenericDAO<RestrictAccess> implements IRestrictAccessRepository {
+    public RestrictAccessDAO(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
+
     @Override
     public RestrictAccess getRAByDatasetId(long datasetId) {
         Criteria criteria = this.session().createCriteria(this.persistClass);

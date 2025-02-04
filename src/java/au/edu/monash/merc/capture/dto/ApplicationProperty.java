@@ -53,45 +53,11 @@ public class ApplicationProperty implements Serializable {
 
     private String securityHashSeq;
 
-    private boolean stageEnabled;
-
-    private String stageLocation;
-
-    private boolean mdRegEnabled;
+    private String andsRegGroupName;
 
     private String rifcsStoreLocation;
 
-    private String activityKey;
-
-    private String collectionRifcsTemplate;
-
-    private String partyRifcsTemplate;
-
-    private String rmPartyRifcsTemplate;
-
-    private String rmWsName;
-
-    private String rmWsEndpointAddress;
-
-    private int rmWsTimeout;
-
-    private String andsRegGroupName;
-
-    private boolean hdlWsEnabled;
-
-    private String hdlWsHostName;
-
-    private int hdlWsHostPort;
-
-    private String hdlWsAppId;
-
-    private String hdlWsPath;
-
-    private String hdlWsMethod;
-
-    private String authDomain;
-
-    private String hdlResolverAddress;
+    private boolean mapEnabled;
 
     public String getAppName() {
         return appName;
@@ -109,20 +75,12 @@ public class ApplicationProperty implements Serializable {
         this.storeLocation = storeLocation;
     }
 
-    public boolean isStageEnabled() {
-        return stageEnabled;
+    public String getCollectionPhysicalLocation() {
+        return collectionPhysicalLocation;
     }
 
-    public void setStageEnabled(boolean stageEnabled) {
-        this.stageEnabled = stageEnabled;
-    }
-
-    public String getStageLocation() {
-        return stageLocation;
-    }
-
-    public void setStageLocation(String stageLocation) {
-        this.stageLocation = stageLocation;
+    public void setCollectionPhysicalLocation(String collectionPhysicalLocation) {
+        this.collectionPhysicalLocation = collectionPhysicalLocation;
     }
 
     public String getAdminEmail() {
@@ -189,12 +147,12 @@ public class ApplicationProperty implements Serializable {
         this.securityHashSeq = securityHashSeq;
     }
 
-    public boolean isMdRegEnabled() {
-        return mdRegEnabled;
+    public void setAndsRegGroupName(String andsRegGroupName) {
+        this.andsRegGroupName = andsRegGroupName;
     }
 
-    public void setMdRegEnabled(boolean mdRegEnabled) {
-        this.mdRegEnabled = mdRegEnabled;
+    public String getAndsRegGroupName() {
+        return andsRegGroupName;
     }
 
     public String getRifcsStoreLocation() {
@@ -205,139 +163,11 @@ public class ApplicationProperty implements Serializable {
         this.rifcsStoreLocation = rifcsStoreLocation;
     }
 
-    public String getActivityKey() {
-        return activityKey;
+    public boolean isMapEnabled() {
+        return mapEnabled;
     }
 
-    public void setActivityKey(String activityKey) {
-        this.activityKey = activityKey;
-    }
-
-    public String getCollectionRifcsTemplate() {
-        return collectionRifcsTemplate;
-    }
-
-    public void setCollectionRifcsTemplate(String collectionRifcsTemplate) {
-        this.collectionRifcsTemplate = collectionRifcsTemplate;
-    }
-
-    public String getPartyRifcsTemplate() {
-        return partyRifcsTemplate;
-    }
-
-    public void setPartyRifcsTemplate(String partyRifcsTemplate) {
-        this.partyRifcsTemplate = partyRifcsTemplate;
-    }
-
-    public String getRmPartyRifcsTemplate() {
-        return rmPartyRifcsTemplate;
-    }
-
-    public void setRmPartyRifcsTemplate(String rmPartyRifcsTemplate) {
-        this.rmPartyRifcsTemplate = rmPartyRifcsTemplate;
-    }
-
-    public String getRmWsName() {
-        return rmWsName;
-    }
-
-    public void setRmWsName(String rmWsName) {
-        this.rmWsName = rmWsName;
-    }
-
-    public String getRmWsEndpointAddress() {
-        return rmWsEndpointAddress;
-    }
-
-    public void setRmWsEndpointAddress(String rmWsEndpointAddress) {
-        this.rmWsEndpointAddress = rmWsEndpointAddress;
-    }
-
-    public int getRmWsTimeout() {
-        return rmWsTimeout;
-    }
-
-    public void setRmWsTimeout(int rmWsTimeout) {
-        this.rmWsTimeout = rmWsTimeout;
-    }
-
-    public String getCollectionPhysicalLocation() {
-        return collectionPhysicalLocation;
-    }
-
-    public void setCollectionPhysicalLocation(String collectionPhysicalLocation) {
-        this.collectionPhysicalLocation = collectionPhysicalLocation;
-    }
-
-    public String getAndsRegGroupName() {
-        return andsRegGroupName;
-    }
-
-    public void setAndsRegGroupName(String andsRegGroupName) {
-        this.andsRegGroupName = andsRegGroupName;
-    }
-
-    public boolean isHdlWsEnabled() {
-        return hdlWsEnabled;
-    }
-
-    public void setHdlWsEnabled(boolean hdlWsEnabled) {
-        this.hdlWsEnabled = hdlWsEnabled;
-    }
-
-    public String getHdlWsHostName() {
-        return hdlWsHostName;
-    }
-
-    public void setHdlWsHostName(String hdlWsHostName) {
-        this.hdlWsHostName = hdlWsHostName;
-    }
-
-    public int getHdlWsHostPort() {
-        return hdlWsHostPort;
-    }
-
-    public void setHdlWsHostPort(int hdlWsHostPort) {
-        this.hdlWsHostPort = hdlWsHostPort;
-    }
-
-    public String getHdlWsAppId() {
-        return hdlWsAppId;
-    }
-
-    public void setHdlWsAppId(String hdlWsAppId) {
-        this.hdlWsAppId = hdlWsAppId;
-    }
-
-    public String getHdlWsPath() {
-        return hdlWsPath;
-    }
-
-    public void setHdlWsPath(String hdlWsPath) {
-        this.hdlWsPath = hdlWsPath;
-    }
-
-    public String getHdlWsMethod() {
-        return hdlWsMethod;
-    }
-
-    public void setHdlWsMethod(String hdlWsMethod) {
-        this.hdlWsMethod = hdlWsMethod;
-    }
-
-    public String getAuthDomain() {
-        return authDomain;
-    }
-
-    public void setAuthDomain(String authDomain) {
-        this.authDomain = authDomain;
-    }
-
-    public String getHdlResolverAddress() {
-        return hdlResolverAddress;
-    }
-
-    public void setHdlResolverAddress(String hdlResolverAddress) {
-        this.hdlResolverAddress = hdlResolverAddress;
+    public void setMapEnabled(boolean mapEnabled) {
+        this.mapEnabled = mapEnabled;
     }
 }

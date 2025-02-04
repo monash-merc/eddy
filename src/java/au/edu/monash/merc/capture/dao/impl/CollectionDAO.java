@@ -27,25 +27,30 @@
  */
 package au.edu.monash.merc.capture.dao.impl;
 
-import java.util.List;
-
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Repository;
-
+import au.edu.monash.merc.capture.common.PermType;
 import au.edu.monash.merc.capture.dao.HibernateGenericDAO;
 import au.edu.monash.merc.capture.domain.Collection;
-import au.edu.monash.merc.capture.common.PermType;
 import au.edu.monash.merc.capture.dto.OrderBy;
 import au.edu.monash.merc.capture.dto.page.Pagination;
 import au.edu.monash.merc.capture.repository.ICollectionRepository;
+import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Scope("prototype")
 @Repository
 public class CollectionDAO extends HibernateGenericDAO<Collection> implements ICollectionRepository {
+
+    public CollectionDAO(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
     @SuppressWarnings("unchecked")
     @Override

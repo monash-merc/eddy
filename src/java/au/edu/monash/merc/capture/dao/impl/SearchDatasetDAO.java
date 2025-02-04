@@ -32,11 +32,13 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
@@ -51,136 +53,140 @@ import au.edu.monash.merc.capture.repository.ISearchDatasetRepository;
 @Repository
 public class SearchDatasetDAO extends HibernateGenericDAO<Dataset> implements ISearchDatasetRepository {
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Pagination<Dataset> search(SearchBean searchBean, int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
+    public SearchDatasetDAO(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
-		Criteria criteria = this.session().createCriteria(this.persistClass);
+    @SuppressWarnings("unchecked")
+    @Override
+    public Pagination<Dataset> search(SearchBean searchBean, int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
 
-		// set any query associated to collection
-		setCollectionCriterion(criteria, searchBean);
+        Criteria criteria = this.session().createCriteria(this.persistClass);
 
-		// set the dataset search criterion restrictions
-		setDatasetCriterion(criteria, searchBean);
+        // set any query associated to collection
+        setCollectionCriterion(criteria, searchBean);
 
-		// set the variable metadata search criterion restrictions
-		// setVariableMetaCriterion(criteria, searchBean);
+        // set the dataset search criterion restrictions
+        setDatasetCriterion(criteria, searchBean);
 
-		criteria.setProjection(Projections.rowCount());
+        // set the variable metadata search criterion restrictions
+        // setVariableMetaCriterion(criteria, searchBean);
 
-		int total = ((Long) criteria.uniqueResult()).intValue();
+        criteria.setProjection(Projections.rowCount());
 
-		Pagination<Dataset> dsPage = new Pagination<Dataset>(startPageNo, recordsPerPage, total);
+        int total = ((Long) criteria.uniqueResult()).intValue();
 
-		Criteria findCriteria = this.session().createCriteria(this.persistClass);
-		// set any query associated to collection
-		setCollectionCriterion(findCriteria, searchBean);
-		// set the dataset search criterion restrictions
-		setDatasetCriterion(findCriteria, searchBean);
-		// set the variable metadata search criterion restrictions
-		// setVariableMetaCriterion(findCriteria, searchBean);
+        Pagination<Dataset> dsPage = new Pagination<Dataset>(startPageNo, recordsPerPage, total);
 
-		// add orders
-		if (orderBys != null && orderBys.length > 0) {
-			for (int i = 0; i < orderBys.length; i++) {
-				Order order = orderBys[i].getOrder();
-				if (order != null) {
-					findCriteria.addOrder(order);
-				}
-			}
-		} else {
-			findCriteria.addOrder(Order.asc("name"));
-		}
+        Criteria findCriteria = this.session().createCriteria(this.persistClass);
+        // set any query associated to collection
+        setCollectionCriterion(findCriteria, searchBean);
+        // set the dataset search criterion restrictions
+        setDatasetCriterion(findCriteria, searchBean);
+        // set the variable metadata search criterion restrictions
+        // setVariableMetaCriterion(findCriteria, searchBean);
 
-		// calculate the first result from the pagination and set this value into the start search index
-		findCriteria.setFirstResult(dsPage.getFirstResult());
-		// set the max results (size-per-page)
-		findCriteria.setMaxResults(dsPage.getSizePerPage());
-		List<Dataset> dsList = findCriteria.list();
-		dsPage.setPageResults(dsList);
- 
-		return dsPage;
-	}
+        // add orders
+        if (orderBys != null && orderBys.length > 0) {
+            for (int i = 0; i < orderBys.length; i++) {
+                Order order = orderBys[i].getOrder();
+                if (order != null) {
+                    findCriteria.addOrder(order);
+                }
+            }
+        } else {
+            findCriteria.addOrder(Order.asc("name"));
+        }
 
-	private void setCollectionCriterion(Criteria criteria, SearchBean searchBean) {
+        // calculate the first result from the pagination and set this value into the start search index
+        findCriteria.setFirstResult(dsPage.getFirstResult());
+        // set the max results (size-per-page)
+        findCriteria.setMaxResults(dsPage.getSizePerPage());
+        List<Dataset> dsList = findCriteria.list();
+        dsPage.setPageResults(dsList);
 
-		String coName = searchBean.getCollectionName();
-		Date fromDate = searchBean.getStartDate();
-		Date endDate = searchBean.getEndDate();
+        return dsPage;
+    }
 
-		Criteria coCriteria = null;
-		if (StringUtils.isNotBlank(coName)) {
-			coCriteria = criteria.createCriteria("collection");
-			// set the search restriction for data collection
-			coCriteria.add(Restrictions.like("name", (coName.trim() + "%"), MatchMode.ANYWHERE).ignoreCase());
-		}
-		if (fromDate != null) {
-			if (coCriteria == null) {
-				coCriteria = criteria.createCriteria("collection");
-			}
-			coCriteria.add(Restrictions.ge("createdTime", fromDate));
-		}
+    private void setCollectionCriterion(Criteria criteria, SearchBean searchBean) {
 
-		if (endDate != null) {
-			if (coCriteria == null) {
-				coCriteria = criteria.createCriteria("collection");
-			}
-			coCriteria.add(Restrictions.le("createdTime", endDate));
-		}
+        String coName = searchBean.getCollectionName();
+        Date fromDate = searchBean.getStartDate();
+        Date endDate = searchBean.getEndDate();
 
-		String researcherName = searchBean.getResearcherName();
+        Criteria coCriteria = null;
+        if (StringUtils.isNotBlank(coName)) {
+            coCriteria = criteria.createCriteria("collection");
+            // set the search restriction for data collection
+            coCriteria.add(Restrictions.like("name", (coName.trim() + "%"), MatchMode.ANYWHERE).ignoreCase());
+        }
+        if (fromDate != null) {
+            if (coCriteria == null) {
+                coCriteria = criteria.createCriteria("collection");
+            }
+            coCriteria.add(Restrictions.ge("createdTime", fromDate));
+        }
 
-		if (StringUtils.isNotBlank(researcherName)) {
-			if (coCriteria == null) {
-				coCriteria = criteria.createCriteria("collection");
-			}
-			Criteria researcherCrit = coCriteria.createCriteria("owner");
-			researcherCrit.add(Restrictions.like("displayName", (researcherName.trim() + "%"), MatchMode.ANYWHERE).ignoreCase());
-		}
-	}
+        if (endDate != null) {
+            if (coCriteria == null) {
+                coCriteria = criteria.createCriteria("collection");
+            }
+            coCriteria.add(Restrictions.le("createdTime", endDate));
+        }
 
-	private void setDatasetCriterion(Criteria criteria, SearchBean searchBean) {
-		String siteName = searchBean.getSiteName();
-		String dsName = searchBean.getDatasetName();
-		String dsLevel = searchBean.getDatasetLevel();
+        String researcherName = searchBean.getResearcherName();
 
-		Criterion snCr = null;
-		if (StringUtils.isNotBlank(siteName)) {
-			snCr = Restrictions.like("siteName", (siteName.trim() + "%"), MatchMode.ANYWHERE).ignoreCase();
-			criteria.add(snCr);
-		}
-		Criterion dsNameCr = null;
-		if (StringUtils.isNotBlank(dsName)) {
-			dsNameCr = Restrictions.like("name", (dsName.trim() + "%"), MatchMode.ANYWHERE).ignoreCase();
-			criteria.add(dsNameCr);
-		}
-		Criterion dsLevelCr = null;
-		if (StringUtils.isNotBlank(dsLevel)) {
-			dsLevelCr = Restrictions.eq("netCDFLevel", dsLevel);
-			criteria.add(dsLevelCr);
-		}
-	}
+        if (StringUtils.isNotBlank(researcherName)) {
+            if (coCriteria == null) {
+                coCriteria = criteria.createCriteria("collection");
+            }
+            Criteria researcherCrit = coCriteria.createCriteria("owner");
+            researcherCrit.add(Restrictions.like("displayName", (researcherName.trim() + "%"), MatchMode.ANYWHERE).ignoreCase());
+        }
+    }
 
-	// private void setVariableMetaCriterion(Criteria criteria, SearchBean searchBean){
-	//
-	// List<VariableBean> listVars = searchBean.getVarBeans();
-	// if (listVars.size() > 0) {
-	// Criteria varCriteria = criteria.createCriteria("metaVariables");
-	// Criteria attCriteria = varCriteria.createCriteria("metaAttributes");
-	// for (VariableBean vb : listVars) {
-	// varCriteria.add(Restrictions.like("name", (vb.getVarName() + "%"), MatchMode.ANYWHERE).ignoreCase());
-	// List<AttributeBean> listAtts = vb.getAttBeans();
-	// for (AttributeBean ab : listAtts) {
-	// attCriteria.add(Restrictions.eq("name", ab.getAttributeName()));
-	// if (ab.getComparison().equals("equals")) {
-	// attCriteria.add(Restrictions.eq("value", ab.getValue()));
-	// } else {
-	// attCriteria.add(Restrictions.like("value", (ab.getValue() + "%"), MatchMode.ANYWHERE)
-	// .ignoreCase());
-	// }
-	// }
-	// }
-	// }
-	// }
+    private void setDatasetCriterion(Criteria criteria, SearchBean searchBean) {
+        String siteName = searchBean.getSiteName();
+        String dsName = searchBean.getDatasetName();
+        String dsLevel = searchBean.getDatasetLevel();
+
+        Criterion snCr = null;
+        if (StringUtils.isNotBlank(siteName)) {
+            snCr = Restrictions.like("siteName", (siteName.trim() + "%"), MatchMode.ANYWHERE).ignoreCase();
+            criteria.add(snCr);
+        }
+        Criterion dsNameCr = null;
+        if (StringUtils.isNotBlank(dsName)) {
+            dsNameCr = Restrictions.like("name", (dsName.trim() + "%"), MatchMode.ANYWHERE).ignoreCase();
+            criteria.add(dsNameCr);
+        }
+        Criterion dsLevelCr = null;
+        if (StringUtils.isNotBlank(dsLevel)) {
+            dsLevelCr = Restrictions.eq("netCDFLevel", dsLevel);
+            criteria.add(dsLevelCr);
+        }
+    }
+
+    // private void setVariableMetaCriterion(Criteria criteria, SearchBean searchBean){
+    //
+    // List<VariableBean> listVars = searchBean.getVarBeans();
+    // if (listVars.size() > 0) {
+    // Criteria varCriteria = criteria.createCriteria("metaVariables");
+    // Criteria attCriteria = varCriteria.createCriteria("metaAttributes");
+    // for (VariableBean vb : listVars) {
+    // varCriteria.add(Restrictions.like("name", (vb.getVarName() + "%"), MatchMode.ANYWHERE).ignoreCase());
+    // List<AttributeBean> listAtts = vb.getAttBeans();
+    // for (AttributeBean ab : listAtts) {
+    // attCriteria.add(Restrictions.eq("name", ab.getAttributeName()));
+    // if (ab.getComparison().equals("equals")) {
+    // attCriteria.add(Restrictions.eq("value", ab.getValue()));
+    // } else {
+    // attCriteria.add(Restrictions.like("value", (ab.getValue() + "%"), MatchMode.ANYWHERE)
+    // .ignoreCase());
+    // }
+    // }
+    // }
+    // }
+    // }
 
 }

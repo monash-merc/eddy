@@ -32,55 +32,62 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
+import au.edu.monash.merc.capture.util.imgcaptcha.CaptchaUtil;
+import au.edu.monash.merc.capture.util.imgcaptcha.GeneratedImgCaptcha;
+import au.edu.monash.merc.capture.util.imgcaptcha.ImgCaptcha;
+import au.edu.monash.merc.capture.util.imgcaptcha.ImgConfig;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import au.edu.monash.merc.capture.util.captcha.GradiatedBackgroundProducer;
-import au.edu.monash.merc.capture.util.captcha.ImageUtil;
-import au.edu.monash.merc.capture.util.captcha.ImgCaptcha;
 
 @Scope("prototype")
 @Controller("security.captchImgAction")
 public class SecurityCaptchImgAction extends BaseAction {
 
-	/** The InputStream imageStream. * */
-	protected InputStream imageStream;
+    /**
+     * The InputStream imageStream. *
+     */
+    protected InputStream imageStream;
 
-	public String genSecurityCaptchCode() {
+    public String genSecurityCaptchCode() {
 
-		ByteArrayOutputStream output = null;
-		try {
-			output = new ByteArrayOutputStream();
-			ImgCaptcha captcha = new ImgCaptcha.Builder(200, 45).addText().addBackground(
-					new GradiatedBackgroundProducer()).gimp().addNoise().addBorder().build();
+        ByteArrayOutputStream output = null;
+        try {
+            output = new ByteArrayOutputStream();
+            // set the image config
+            ImgConfig config = new ImgConfig();
+            //set the dark mode
+            config.setDark(true);
+            ImgCaptcha captcha = new ImgCaptcha(config);
+            GeneratedImgCaptcha generatedImgCaptcha = captcha.generate();
+            BufferedImage captchaImage = generatedImgCaptcha.getImage();
+            String code = generatedImgCaptcha.getCode();
+            //Save this code in the session.
+            saveInSession(ActConstants.SESSION_SECURITY_CODE, code);
+            CaptchaUtil.writeImage(output, captchaImage);
 
-			String code = captcha.getCode();
-			//Save this code in the session.
-			saveInSession(ActConstants.SESSION_SECURITY_CODE, code);	
-			BufferedImage img = captcha.getImage();
-			ImageUtil.writeImage(output, img);
-			this.imageStream = new ByteArrayInputStream(output.toByteArray());
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ERROR;
-		} finally {
-			if (output != null) {
-				try {
-					output.close();
-				} catch (Exception e) {
-					// ignore whatever.
-				}
-			}
-		}
+            this.imageStream = new ByteArrayInputStream(output.toByteArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ERROR;
+        } finally {
+            if (output != null) {
+                try {
+                    output.close();
+                } catch (Exception e) {
+                    // ignore whatever.
+                }
+            }
+        }
 
-		return SUCCESS;
-	}
+        return SUCCESS;
+    }
 
-	public InputStream getImageStream() {
-		return imageStream;
-	}
+    public InputStream getImageStream() {
+        return imageStream;
+    }
 
-	public void setImageStream(InputStream imageStream) {
-		this.imageStream = imageStream;
-	}
+    public void setImageStream(InputStream imageStream) {
+        this.imageStream = imageStream;
+    }
 }

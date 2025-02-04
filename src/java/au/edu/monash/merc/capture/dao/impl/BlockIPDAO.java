@@ -27,32 +27,37 @@
  */
 package au.edu.monash.merc.capture.dao.impl;
 
-import org.hibernate.Query;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Repository;
-
 import au.edu.monash.merc.capture.dao.HibernateGenericDAO;
 import au.edu.monash.merc.capture.domain.IPBlock;
 import au.edu.monash.merc.capture.repository.IBlockIPRepository;
+import org.hibernate.Query;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
 
 @Scope("prototype")
 @Repository
 public class BlockIPDAO extends HibernateGenericDAO<IPBlock> implements IBlockIPRepository {
 
-	@Override
-	public void deleteIPBlockByIp(String ipAddress) {
-		String del_hql = "DELETE FROM " + this.persistClass.getSimpleName() + " AS ipb WHERE ipb.ip = :ipAddress";
-		Query query = this.session().createQuery(del_hql);
-		query.setString("ipAddres", ipAddress);
-		query.executeUpdate();
-	}
+    public BlockIPDAO(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
-	@Override
-	public IPBlock getIPBlockByIp(String ipAddress) {
-		return (IPBlock) this.session().createCriteria(this.persistClass).add(Restrictions.eq("ip", ipAddress))
-				.setComment("BlockIPDAO.getIPBlockByIp").uniqueResult();
+    @Override
+    public void deleteIPBlockByIp(String ipAddress) {
+        String del_hql = "DELETE FROM " + this.persistClass.getSimpleName() + " AS ipb WHERE ipb.ip = :ipAddress";
+        Query query = this.session().createQuery(del_hql);
+        query.setString("ipAddres", ipAddress);
+        query.executeUpdate();
+    }
 
-	}
+    @Override
+    public IPBlock getIPBlockByIp(String ipAddress) {
+        return (IPBlock) this.session().createCriteria(this.persistClass).add(Restrictions.eq("ip", ipAddress))
+                .setComment("BlockIPDAO.getIPBlockByIp").uniqueResult();
+
+    }
 
 }

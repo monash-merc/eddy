@@ -27,73 +27,78 @@
  */
 package au.edu.monash.merc.capture.dao.impl;
 
-import java.util.List;
-
-import org.hibernate.Criteria;
-import org.hibernate.Query;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Repository;
-
 import au.edu.monash.merc.capture.dao.HibernateGenericDAO;
 import au.edu.monash.merc.capture.domain.AuditEvent;
 import au.edu.monash.merc.capture.dto.OrderBy;
 import au.edu.monash.merc.capture.dto.page.Pagination;
 import au.edu.monash.merc.capture.repository.IAuditEventRepository;
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Scope("prototype")
 @Repository
 public class AuditEventDAO extends HibernateGenericDAO<AuditEvent> implements IAuditEventRepository {
 
-	@Override
-	public void deleteAuditEventById(long eId) {
-		String del_hql = "DELETE FROM " + this.persistClass.getSimpleName() + " AS ae WHERE ae.id = :id";
-		Query query = this.session().createQuery(del_hql);
-		query.setLong("id", eId);
-		query.executeUpdate();
-	}
+    public AuditEventDAO(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
-	@Override
-	public void deleteEventByIdWithUserId(long eId, long userId) {
-		String del_hql = "DELETE FROM " + this.persistClass.getSimpleName() + " AS ae WHERE ae.id = :eid AND ae.eventOwner.id = :uid";
-		Query query = this.session().createQuery(del_hql);
-		query.setLong("eid", eId);
-		query.setLong("uid", userId);
-		query.executeUpdate();
-	}
+    @Override
+    public void deleteAuditEventById(long eId) {
+        String del_hql = "DELETE FROM " + this.persistClass.getSimpleName() + " AS ae WHERE ae.id = :id";
+        Query query = this.session().createQuery(del_hql);
+        query.setLong("id", eId);
+        query.executeUpdate();
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Pagination<AuditEvent> getEventByUserId(long uid, int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		Criteria userCriteria = criteria.createCriteria("eventOwner");
-		userCriteria.add(Restrictions.eq("id", uid));
-		criteria.setProjection(Projections.rowCount());
-		int total = ((Long) criteria.uniqueResult()).intValue();
-		Pagination<AuditEvent> pev = new Pagination<AuditEvent>(startPageNo, recordsPerPage, total);
-		// query collections by size-per-page
-		Criteria queryCriteria = this.session().createCriteria(this.persistClass);
-		Criteria qownerCrit = queryCriteria.createCriteria("eventOwner");
-		qownerCrit.add(Restrictions.eq("id", uid));
-		// add orders
-		if (orderBys != null && orderBys.length > 0) {
-			for (int i = 0; i < orderBys.length; i++) {
-				Order order = orderBys[i].getOrder();
-				if (order != null) {
-					queryCriteria.addOrder(order);
-				}
-			}
-		} else {
-			queryCriteria.addOrder(Order.desc("createdTime"));
-		}
-		queryCriteria.setFirstResult(pev.getFirstResult());
-		// set the max results (size-per-page)
-		queryCriteria.setMaxResults(pev.getSizePerPage());
-		List<AuditEvent> evlist = queryCriteria.list();
-		pev.setPageResults(evlist);
-		return pev;
-	}
+    @Override
+    public void deleteEventByIdWithUserId(long eId, long userId) {
+        String del_hql = "DELETE FROM " + this.persistClass.getSimpleName() + " AS ae WHERE ae.id = :eid AND ae.eventOwner.id = :uid";
+        Query query = this.session().createQuery(del_hql);
+        query.setLong("eid", eId);
+        query.setLong("uid", userId);
+        query.executeUpdate();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Pagination<AuditEvent> getEventByUserId(long uid, int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        Criteria userCriteria = criteria.createCriteria("eventOwner");
+        userCriteria.add(Restrictions.eq("id", uid));
+        criteria.setProjection(Projections.rowCount());
+        int total = ((Long) criteria.uniqueResult()).intValue();
+        Pagination<AuditEvent> pev = new Pagination<AuditEvent>(startPageNo, recordsPerPage, total);
+        // query collections by size-per-page
+        Criteria queryCriteria = this.session().createCriteria(this.persistClass);
+        Criteria qownerCrit = queryCriteria.createCriteria("eventOwner");
+        qownerCrit.add(Restrictions.eq("id", uid));
+        // add orders
+        if (orderBys != null && orderBys.length > 0) {
+            for (int i = 0; i < orderBys.length; i++) {
+                Order order = orderBys[i].getOrder();
+                if (order != null) {
+                    queryCriteria.addOrder(order);
+                }
+            }
+        } else {
+            queryCriteria.addOrder(Order.desc("createdTime"));
+        }
+        queryCriteria.setFirstResult(pev.getFirstResult());
+        // set the max results (size-per-page)
+        queryCriteria.setMaxResults(pev.getSizePerPage());
+        List<AuditEvent> evlist = queryCriteria.list();
+        pev.setPageResults(evlist);
+        return pev;
+    }
 
 }

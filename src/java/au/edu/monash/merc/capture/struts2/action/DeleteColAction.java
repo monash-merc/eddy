@@ -72,18 +72,13 @@ public class DeleteColAction extends DMCoreAction {
                 }
                 // delete collection include permissions and dataset files
                 if (collection.isPublished()) {
-                    // populate the rifcs registration if enabled
-                    String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
-                    boolean mdRegEnabled = Boolean.valueOf(mdRegEnabledStr).booleanValue();
-                    if (mdRegEnabled) {
-                        String rifcsRootPath = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_STORE_LOCATION);
-                        this.dmService.deletePublisheCollection(collection, dataStorePath, rifcsRootPath);
-                    }
+                    String rifcsRootPath = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_STORE_LOCATION);
+                    this.dmService.deletePublisheCollection(collection, dataStorePath, rifcsRootPath);
                 } else {
                     this.dmService.deleteCollection(collection, dataStorePath);
                 }
 
-                //try delete this location if can
+                //try to delete this location if can
                 try {
                     boolean collectionReferenced = this.dmService.findAnyReferencedCollectionsByLocationId(locationId);
                     if (!collectionReferenced) {

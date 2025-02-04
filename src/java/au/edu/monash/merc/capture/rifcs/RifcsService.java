@@ -26,20 +26,20 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package au.edu.monash.merc.capture.rifcs;
-
-import java.util.Map;
-
-/**
- * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
- * @version 1.0
- * @since 1.0
- *        <p/>
- *        Date: 5/03/13 2:49 PM
- */
-public interface RifcsService {
-
-    void createRifcs(String identifier, Map<String, Object> templateValues, String rifcsTemplate);
-}
+//package au.edu.monash.merc.capture.rifcs;
+//
+//import java.util.Map;
+//
+///**
+// * @author Simon Yu
+// *         <p/>
+// *         Email: xiaoming.yu@monash.edu
+// * @version 1.0
+// * @since 1.0
+// *        <p/>
+// *        Date: 5/03/13 2:49 PM
+// */
+//public interface RifcsService {
+//
+//    void createRifcs(String identifier, Map<String, Object> templateValues, String rifcsTemplate);
+//}

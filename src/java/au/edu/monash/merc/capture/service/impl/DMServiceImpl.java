@@ -29,25 +29,18 @@ package au.edu.monash.merc.capture.service.impl;
 
 import au.edu.monash.merc.capture.adapter.DataCaptureAdapter;
 import au.edu.monash.merc.capture.adapter.DataCaptureAdapterFactory;
-import au.edu.monash.merc.capture.common.CoverageType;
-import au.edu.monash.merc.capture.common.LicenceType;
 import au.edu.monash.merc.capture.common.PermType;
-import au.edu.monash.merc.capture.domain.*;
 import au.edu.monash.merc.capture.domain.Collection;
+import au.edu.monash.merc.capture.domain.*;
 import au.edu.monash.merc.capture.dto.*;
 import au.edu.monash.merc.capture.dto.page.Pagination;
 import au.edu.monash.merc.capture.exception.DataCaptureException;
 import au.edu.monash.merc.capture.file.FileSystemSerivce;
 import au.edu.monash.merc.capture.mail.MailService;
-import au.edu.monash.merc.capture.rifcs.PartyActivityWSService;
-import au.edu.monash.merc.capture.rifcs.RifcsService;
 import au.edu.monash.merc.capture.service.*;
 import au.edu.monash.merc.capture.util.CaptureUtil;
-import au.edu.monash.merc.capture.util.io.DCFileUtils;
 import au.edu.monash.merc.capture.util.stage.StageFileTransferThread;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,110 +55,58 @@ import java.util.*;
 @Transactional
 public class DMServiceImpl implements DMService {
 
-    @Autowired
-    private CollectionService collectionService;
+    private final CollectionService collectionService;
 
-    @Autowired
-    private DatasetService datasetService;
+    private final DatasetService datasetService;
 
-    @Autowired
-    private PermissionService permissionService;
+    private final PermissionService permissionService;
 
-    @Autowired
-    private FileSystemSerivce fileService;
+    private final FileSystemSerivce fileService;
 
-    @Autowired
-    private DataCaptureAdapterFactory adapterFactory;
+    private final DataCaptureAdapterFactory adapterFactory;
 
-    @Autowired
-    private AuditEventService auditEventService;
+    private final AuditEventService auditEventService;
 
-    @Autowired
-    private ProfileService profileService;
+    private final ProfileService profileService;
 
-    @Autowired
-    private AvatarService avatarService;
+    private final AvatarService avatarService;
 
-    @Autowired
-    private MailService mailService;
+    private final MailService mailService;
 
-    @Autowired
-    private PartyService partyService;
+//    @Autowired
+//    private PartyService partyService;
+//
+//    @Autowired
+//    private RifcsService rifcsService;
 
-    @Autowired
-    private RifcsService rifcsService;
+    private final LicenceService licenceService;
 
-    @Autowired
-    private LicenceService licenceService;
+    private final LocationService locationService;
 
-    @Autowired
-    private LocationService locationService;
+//    @Autowired
+//    private PartyActivityWSService paWsService;
 
-    @Autowired
-    private PartyActivityWSService paWsService;
-
-    @Autowired
-    private RestrictAccessService restrictAccessService;
+    private final RestrictAccessService restrictAccessService;
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
-    public void setCollectionService(CollectionService collectionService) {
-        this.collectionService = collectionService;
-    }
-
-    public void setDatasetService(DatasetService datasetService) {
-        this.datasetService = datasetService;
-    }
-
-    public void setPermissionService(PermissionService permissionService) {
+    public DMServiceImpl(PermissionService permissionService, CollectionService collectionService,
+                         DatasetService datasetService, FileSystemSerivce fileService,
+                         DataCaptureAdapterFactory adapterFactory, AuditEventService auditEventService,
+                         ProfileService profileService, AvatarService avatarService,
+                         MailService mailService, LicenceService licenceService,
+                         LocationService locationService, RestrictAccessService restrictAccessService) {
         this.permissionService = permissionService;
-    }
-
-    public void setFileService(FileSystemSerivce fileService) {
+        this.collectionService = collectionService;
+        this.datasetService = datasetService;
         this.fileService = fileService;
-    }
-
-    public void setAdapterFactory(DataCaptureAdapterFactory adapterFactory) {
         this.adapterFactory = adapterFactory;
-    }
-
-    public void setAuditEventService(AuditEventService auditEventService) {
         this.auditEventService = auditEventService;
-    }
-
-    public void setProfileService(ProfileService profileService) {
         this.profileService = profileService;
-    }
-
-    public void setAvatarService(AvatarService avatarService) {
         this.avatarService = avatarService;
-    }
-
-    public void setPartyService(PartyService partyService) {
-        this.partyService = partyService;
-    }
-
-    public void setMailService(MailService mailService) {
         this.mailService = mailService;
-    }
-
-    public void setRifcsService(RifcsService rifcsService) {
-        this.rifcsService = rifcsService;
-    }
-
-    public void setLicenceService(LicenceService licenceService) {
         this.licenceService = licenceService;
-    }
-
-    public void setLocationService(LocationService locationService) {
         this.locationService = locationService;
-    }
-
-    public void setPaWsService(PartyActivityWSService paWsService) {
-        this.paWsService = paWsService;
-    }
-
-    public void setRestrictAccessService(RestrictAccessService restrictAccessService) {
         this.restrictAccessService = restrictAccessService;
     }
 
@@ -643,229 +584,229 @@ public class DMServiceImpl implements DMService {
                          boolean isHtml) {
         this.mailService.sendMail(emailFrom, emailTo, emailSubject, templateValues, templateFile, isHtml);
     }
-
-    @Override
-    public void publishRifcs(MetadataRegistrationBean metadataRegistrationBean) {
-        String destCollectionRifcsFile = null;
-        try {
-            List<PartyBean> partyList = metadataRegistrationBean.getPartyList();
-            // parties
-            List<Party> parties = new ArrayList<Party>();
-            for (PartyBean partybean : partyList) {
-                //we only deal with the selected parties
-                if (partybean.isSelected()) {
-                    // search the party detail by the party's key
-                    Party p = getPartyByPartyKey(partybean.getPartyKey());
-                    // if party not found from the database, we just save it into database;
-                    if (p == null) {
-                        p = copyPartyBeanToParty(partybean);
-                        saveParty(p);
-                    }
-                    parties.add(p);
-                }
-            }
-            Collection collection = metadataRegistrationBean.getCollection();
-            collection.setParties(parties);
-
-            // set the collection true
-            collection.setPublished(true);
-
-            // update the collection first
-            this.updateCollection(collection);
-            String uniqueKey = collection.getUniqueKey();
-            //create collection rifcs
-            String rifcsStoreLocation = metadataRegistrationBean.getRifcsStoreLocation();
-            String collectionRifTemp = metadataRegistrationBean.getRifcsCollectionTemplate();
-            Map<String, Object> collectionTempValues = populateCollectionRifcsMap(metadataRegistrationBean, parties);
-            this.rifcsService.createRifcs(uniqueKey, collectionTempValues, collectionRifTemp);
-            destCollectionRifcsFile = rifcsStoreLocation + File.separator + uniqueKey + ".xml";
-
-            //party
-            String noneRMPartyTemp = metadataRegistrationBean.getRifcsPartyTemplate();
-            String rmPartyTemp = metadataRegistrationBean.getRifcsRMPartyTemplate();
-            for (Party party : parties) {
-                String partyKey = party.getPartyKey();
-                if (party.isFromRm()) {
-                    PartyBean rmPartyBean = this.paWsService.getParty(party.getPartyKey());
-                    String rifcsContents = rmPartyBean.getRifcsContent();
-                    Map<String, Object> rmPartyTempValues = populateRMPartyRifcsMap(rifcsContents);
-                    this.rifcsService.createRifcs(partyKey, rmPartyTempValues, rmPartyTemp);
-                } else {
-                    Map<String, Object> partyTempValues = populateNoneRMPartyRifcsMap(party);
-                    this.rifcsService.createRifcs(partyKey, partyTempValues, noneRMPartyTemp);
-                }
-            }
-        } catch (Exception ex) {
-            //try to remove the collection file if already created whe exception occurs
-            if (StringUtils.isNotBlank(destCollectionRifcsFile)) {
-                try {
-                    DCFileUtils.deleteFile(destCollectionRifcsFile);
-                } catch (Exception fex) {
-                    logger.error(fex);
-                    //ignore whatever exception if deleting file error
-                }
-            }
-            throw new DataCaptureException(ex);
-        }
-    }
-
-    private Map<String, Object> populateCollectionRifcsMap(MetadataRegistrationBean mdRegBean, List<Party> selectedParties) {
-        Map<String, Object> templateMap = new HashMap<String, Object>();
-        Collection collection = mdRegBean.getCollection();
-        String serverName = mdRegBean.getAppName();
-        String localKey = collection.getUniqueKey();
-        String identifier = collection.getPersistIdentifier();
-        String collectionName = collection.getName();
-        String collectionDesc = collection.getDescription();
-        String collectionUrl = mdRegBean.getCollectionUrl();
-        String dateFrom = CaptureUtil.formatDateToW3CDTF(collection.getDateFrom());
-        String dateTo = CaptureUtil.formatDateToW3CDTF(collection.getDateTo());
-        Location location = null;
-        Location spatialLocation = collection.getLocation();
-
-        if (spatialLocation != null) {
-            String spatialType = spatialLocation.getSpatialType();
-            if (!CoverageType.fromType(spatialType).equals(CoverageType.UNKNOWN)) {
-                location = new Location();
-                if (CoverageType.fromType(spatialType).equals(CoverageType.GLOBAL)) {
-                    location.setSpatialType("text");
-                    location.setSpatialCoverage(spatialLocation.getSpatialCoverage());
-                } else {
-                    location.setSpatialType(spatialLocation.getSpatialType());
-                    location.setSpatialCoverage(spatialLocation.getSpatialCoverage());
-                }
-            }
-        }
-
-        Licence licence = mdRegBean.getLicence();
-        String licenceType = licence.getLicenceType();
-        String licenceContents = licence.getContents();
-        //templateMap.put("groupName", groupName);
-        //check if it's handle key, then we add the handle server url
-        String keyId = identifier;
-        if (identifier != null && StringUtils.contains(identifier, "/")) {
-            keyId = "http://hdl.handle.net" + "/" + identifier;
-        }
-        templateMap.put("keyId", keyId);
-
-        templateMap.put("originatingSrc", serverName);
-        templateMap.put("localKey", localKey);
-
-        //if handle provided, just put the handle identifier
-        if (identifier != null && StringUtils.contains(identifier, "/")) {
-            String handleId = "http://hdl.handle.net" + "/" + identifier;
-            templateMap.put("handleId", handleId);
-        }
-
-        templateMap.put("collectionName", collectionName);
-        templateMap.put("collectionUrl", collectionUrl);
-
-        //if location provided, then set the location
-        if (location != null) {
-            templateMap.put("location", location);
-        }
-        templateMap.put("temporalDateFrom", dateFrom);
-        templateMap.put("temporalDateTo", dateTo);
-        templateMap.put("parties", selectedParties);
-        templateMap.put("collectionDesc", collectionDesc);
-        //tern licence
-        if (licenceType.equals(LicenceType.TERN.type())) {
-            templateMap.put("tern", true);
-        } else {
-            //user-defined licence
-            templateMap.put("tern", false);
-            templateMap.put("licenceContents", licenceContents);
-        }
-
-        //citation metadata
-        User owner = collection.getOwner();
-        String givenName = owner.getFirstName();
-        String familyName = owner.getLastName();
-        String creator = givenName + " " + familyName;
-
-        Date date = collection.getCreatedTime();
-        String publicationYear = CaptureUtil.dateToYYYY(date);
-
-        String publisher = mdRegBean.getRifcsGroupName();
-
-        String citationIdentifier = "local: " + identifier;
-        if (identifier != null && StringUtils.contains(identifier, "/")) {
-            citationIdentifier = "hdl: " + identifier;
-        }
-        templateMap.put("creator", creator);
-        templateMap.put("publicationYear", publicationYear);
-        templateMap.put("publisher", publisher);
-        templateMap.put("citationIdentifier", citationIdentifier);
-        return templateMap;
-    }
-
-    private Map<String, Object> populateNoneRMPartyRifcsMap(Party party) {
-        Map<String, Object> templateMap = new HashMap<String, Object>();
-        String groupName = party.getGroupName();
-        String localKey = party.getPartyKey();
-        String originatingSrc = party.getOriginateSourceValue();
-        Date date = GregorianCalendar.getInstance().getTime();
-        String dateModified = CaptureUtil.formatDateToUTC(date);
-        String personTitle = party.getPersonTitle();
-        String givenName = party.getPersonGivenName();
-        String familyName = party.getPersonFamilyName();
-        String webSite = party.getUrl();
-        String emailAddress = party.getEmail();
-        String partyDesc = party.getDescription();
-        templateMap.put("groupName", groupName);
-        templateMap.put("localKey", localKey);
-        templateMap.put("originatingSrc", originatingSrc);
-        templateMap.put("dateModified", dateModified);
-        templateMap.put("identifierKey", localKey);
-        templateMap.put("personTitle", personTitle);
-        templateMap.put("givenName", givenName);
-        templateMap.put("familyName", familyName);
-        templateMap.put("webSite", webSite);
-        templateMap.put("emailAddress", emailAddress);
-        if (StringUtils.isNotBlank(partyDesc)) {
-            templateMap.put("partyDesc", partyDesc);
-        }
-        return templateMap;
-    }
-
-    private Map<String, Object> populateRMPartyRifcsMap(String partyContents) {
-        Map<String, Object> templateMap = new HashMap<String, Object>();
-        templateMap.put("partyContents", partyContents);
-        return templateMap;
-    }
-
-    private Party copyPartyBeanToParty(PartyBean pb) {
-        Party pa = new Party();
-        pa.setPartyKey(pb.getPartyKey());
-        pa.setPersonTitle(pb.getPersonTitle());
-        pa.setPersonGivenName(pb.getPersonGivenName());
-        pa.setPersonFamilyName(pb.getPersonFamilyName());
-        pa.setUrl(pb.getUrl());
-        pa.setEmail(pb.getEmail());
-        pa.setAddress(pb.getAddress());
-        pa.setIdentifierType(pb.getIdentifierType());
-        pa.setIdentifierValue(pb.getIdentifierValue());
-        pa.setOriginateSourceType(pb.getOriginateSourceType());
-        pa.setOriginateSourceValue(pb.getOriginateSourceValue());
-        pa.setGroupName(pb.getGroupName());
-        pa.setFromRm(pb.isFromRm());
-        return pa;
-    }
-
-    @Override
-    public List<Party> getPartiesByCollectionId(long cid) {
-        return this.partyService.getPartiesByCollectionId(cid);
-    }
-
-    @Override
-    public List<Collection> getPublishedCollections() {
-        return this.collectionService.getPublishedCollections();
-    }
-
-    @Override
-    public Collection getPublishedCoByIdentifier(String identifier) {
-        return this.collectionService.getPublishedCoByIdentifier(identifier);
-    }
+//
+//    @Override
+//    public void publishRifcs(MetadataRegistrationBean metadataRegistrationBean) {
+//        String destCollectionRifcsFile = null;
+//        try {
+//            List<PartyBean> partyList = metadataRegistrationBean.getPartyList();
+//            // parties
+//            List<Party> parties = new ArrayList<Party>();
+//            for (PartyBean partybean : partyList) {
+//                //we only deal with the selected parties
+//                if (partybean.isSelected()) {
+//                    // search the party detail by the party's key
+//                    Party p = getPartyByPartyKey(partybean.getPartyKey());
+//                    // if party not found from the database, we just save it into database;
+//                    if (p == null) {
+//                        p = copyPartyBeanToParty(partybean);
+//                        saveParty(p);
+//                    }
+//                    parties.add(p);
+//                }
+//            }
+//            Collection collection = metadataRegistrationBean.getCollection();
+//            collection.setParties(parties);
+//
+//            // set the collection true
+//            collection.setPublished(true);
+//
+//            // update the collection first
+//            this.updateCollection(collection);
+//            String uniqueKey = collection.getUniqueKey();
+//            //create collection rifcs
+//            String rifcsStoreLocation = metadataRegistrationBean.getRifcsStoreLocation();
+//            String collectionRifTemp = metadataRegistrationBean.getRifcsCollectionTemplate();
+//            Map<String, Object> collectionTempValues = populateCollectionRifcsMap(metadataRegistrationBean, parties);
+//            this.rifcsService.createRifcs(uniqueKey, collectionTempValues, collectionRifTemp);
+//            destCollectionRifcsFile = rifcsStoreLocation + File.separator + uniqueKey + ".xml";
+//
+//            //party
+//            String noneRMPartyTemp = metadataRegistrationBean.getRifcsPartyTemplate();
+//            String rmPartyTemp = metadataRegistrationBean.getRifcsRMPartyTemplate();
+//            for (Party party : parties) {
+//                String partyKey = party.getPartyKey();
+//                if (party.isFromRm()) {
+//                    PartyBean rmPartyBean = this.paWsService.getParty(party.getPartyKey());
+//                    String rifcsContents = rmPartyBean.getRifcsContent();
+//                    Map<String, Object> rmPartyTempValues = populateRMPartyRifcsMap(rifcsContents);
+//                    this.rifcsService.createRifcs(partyKey, rmPartyTempValues, rmPartyTemp);
+//                } else {
+//                    Map<String, Object> partyTempValues = populateNoneRMPartyRifcsMap(party);
+//                    this.rifcsService.createRifcs(partyKey, partyTempValues, noneRMPartyTemp);
+//                }
+//            }
+//        } catch (Exception ex) {
+//            //try to remove the collection file if already created whe exception occurs
+//            if (StringUtils.isNotBlank(destCollectionRifcsFile)) {
+//                try {
+//                    DCFileUtils.deleteFile(destCollectionRifcsFile);
+//                } catch (Exception fex) {
+//                    logger.error(fex);
+//                    //ignore whatever exception if deleting file error
+//                }
+//            }
+//            throw new DataCaptureException(ex);
+//        }
+//    }
+//
+//    private Map<String, Object> populateCollectionRifcsMap(MetadataRegistrationBean mdRegBean, List<Party> selectedParties) {
+//        Map<String, Object> templateMap = new HashMap<String, Object>();
+//        Collection collection = mdRegBean.getCollection();
+//        String serverName = mdRegBean.getAppName();
+//        String localKey = collection.getUniqueKey();
+//        String identifier = collection.getPersistIdentifier();
+//        String collectionName = collection.getName();
+//        String collectionDesc = collection.getDescription();
+//        String collectionUrl = mdRegBean.getCollectionUrl();
+//        String dateFrom = CaptureUtil.formatDateToW3CDTF(collection.getDateFrom());
+//        String dateTo = CaptureUtil.formatDateToW3CDTF(collection.getDateTo());
+//        Location location = null;
+//        Location spatialLocation = collection.getLocation();
+//
+//        if (spatialLocation != null) {
+//            String spatialType = spatialLocation.getSpatialType();
+//            if (!CoverageType.fromType(spatialType).equals(CoverageType.UNKNOWN)) {
+//                location = new Location();
+//                if (CoverageType.fromType(spatialType).equals(CoverageType.GLOBAL)) {
+//                    location.setSpatialType("text");
+//                    location.setSpatialCoverage(spatialLocation.getSpatialCoverage());
+//                } else {
+//                    location.setSpatialType(spatialLocation.getSpatialType());
+//                    location.setSpatialCoverage(spatialLocation.getSpatialCoverage());
+//                }
+//            }
+//        }
+//
+//        Licence licence = mdRegBean.getLicence();
+//        String licenceType = licence.getLicenceType();
+//        String licenceContents = licence.getContents();
+//        //templateMap.put("groupName", groupName);
+//        //check if it's handle key, then we add the handle server url
+//        String keyId = identifier;
+//        if (identifier != null && StringUtils.contains(identifier, "/")) {
+//            keyId = "http://hdl.handle.net" + "/" + identifier;
+//        }
+//        templateMap.put("keyId", keyId);
+//
+//        templateMap.put("originatingSrc", serverName);
+//        templateMap.put("localKey", localKey);
+//
+//        //if handle provided, just put the handle identifier
+//        if (identifier != null && StringUtils.contains(identifier, "/")) {
+//            String handleId = "http://hdl.handle.net" + "/" + identifier;
+//            templateMap.put("handleId", handleId);
+//        }
+//
+//        templateMap.put("collectionName", collectionName);
+//        templateMap.put("collectionUrl", collectionUrl);
+//
+//        //if location provided, then set the location
+//        if (location != null) {
+//            templateMap.put("location", location);
+//        }
+//        templateMap.put("temporalDateFrom", dateFrom);
+//        templateMap.put("temporalDateTo", dateTo);
+//        templateMap.put("parties", selectedParties);
+//        templateMap.put("collectionDesc", collectionDesc);
+//        //tern licence
+//        if (licenceType.equals(LicenceType.TERN.type())) {
+//            templateMap.put("tern", true);
+//        } else {
+//            //user-defined licence
+//            templateMap.put("tern", false);
+//            templateMap.put("licenceContents", licenceContents);
+//        }
+//
+//        //citation metadata
+//        User owner = collection.getOwner();
+//        String givenName = owner.getFirstName();
+//        String familyName = owner.getLastName();
+//        String creator = givenName + " " + familyName;
+//
+//        Date date = collection.getCreatedTime();
+//        String publicationYear = CaptureUtil.dateToYYYY(date);
+//
+//        String publisher = mdRegBean.getRifcsGroupName();
+//
+//        String citationIdentifier = "local: " + identifier;
+//        if (identifier != null && StringUtils.contains(identifier, "/")) {
+//            citationIdentifier = "hdl: " + identifier;
+//        }
+//        templateMap.put("creator", creator);
+//        templateMap.put("publicationYear", publicationYear);
+//        templateMap.put("publisher", publisher);
+//        templateMap.put("citationIdentifier", citationIdentifier);
+//        return templateMap;
+//    }
+//
+//    private Map<String, Object> populateNoneRMPartyRifcsMap(Party party) {
+//        Map<String, Object> templateMap = new HashMap<String, Object>();
+//        String groupName = party.getGroupName();
+//        String localKey = party.getPartyKey();
+//        String originatingSrc = party.getOriginateSourceValue();
+//        Date date = GregorianCalendar.getInstance().getTime();
+//        String dateModified = CaptureUtil.formatDateToUTC(date);
+//        String personTitle = party.getPersonTitle();
+//        String givenName = party.getPersonGivenName();
+//        String familyName = party.getPersonFamilyName();
+//        String webSite = party.getUrl();
+//        String emailAddress = party.getEmail();
+//        String partyDesc = party.getDescription();
+//        templateMap.put("groupName", groupName);
+//        templateMap.put("localKey", localKey);
+//        templateMap.put("originatingSrc", originatingSrc);
+//        templateMap.put("dateModified", dateModified);
+//        templateMap.put("identifierKey", localKey);
+//        templateMap.put("personTitle", personTitle);
+//        templateMap.put("givenName", givenName);
+//        templateMap.put("familyName", familyName);
+//        templateMap.put("webSite", webSite);
+//        templateMap.put("emailAddress", emailAddress);
+//        if (StringUtils.isNotBlank(partyDesc)) {
+//            templateMap.put("partyDesc", partyDesc);
+//        }
+//        return templateMap;
+//    }
+//
+//    private Map<String, Object> populateRMPartyRifcsMap(String partyContents) {
+//        Map<String, Object> templateMap = new HashMap<String, Object>();
+//        templateMap.put("partyContents", partyContents);
+//        return templateMap;
+//    }
+//
+//    private Party copyPartyBeanToParty(PartyBean pb) {
+//        Party pa = new Party();
+//        pa.setPartyKey(pb.getPartyKey());
+//        pa.setPersonTitle(pb.getPersonTitle());
+//        pa.setPersonGivenName(pb.getPersonGivenName());
+//        pa.setPersonFamilyName(pb.getPersonFamilyName());
+//        pa.setUrl(pb.getUrl());
+//        pa.setEmail(pb.getEmail());
+//        pa.setAddress(pb.getAddress());
+//        pa.setIdentifierType(pb.getIdentifierType());
+//        pa.setIdentifierValue(pb.getIdentifierValue());
+//        pa.setOriginateSourceType(pb.getOriginateSourceType());
+//        pa.setOriginateSourceValue(pb.getOriginateSourceValue());
+//        pa.setGroupName(pb.getGroupName());
+//        pa.setFromRm(pb.isFromRm());
+//        return pa;
+//    }
+//
+//    @Override
+//    public List<Party> getPartiesByCollectionId(long cid) {
+//        return this.partyService.getPartiesByCollectionId(cid);
+//    }
+//
+//    @Override
+//    public List<Collection> getPublishedCollections() {
+//        return this.collectionService.getPublishedCollections();
+//    }
+//
+//    @Override
+//    public Collection getPublishedCoByIdentifier(String identifier) {
+//        return this.collectionService.getPublishedCoByIdentifier(identifier);
+//    }
 
     @Override
     public void saveLicence(Licence licence) {
@@ -901,57 +842,57 @@ public class DMServiceImpl implements DMService {
     public Licence getLicenceByCollectionId(long cid) {
         return this.licenceService.getLicenceByCollectionId(cid);
     }
+//
+//    @Override
+//    public Party getPartyByEmail(String email) {
+//        return this.partyService.getPartyByEmail(email);
+//    }
+//
+//    @Override
+//    public List<Party> getPartyByUserName(String firstName, String lastName) {
+//        return this.partyService.getPartyByUserName(firstName, lastName);
+//    }
 
-    @Override
-    public Party getPartyByEmail(String email) {
-        return this.partyService.getPartyByEmail(email);
-    }
+//    @Override
+//    public List<Party> getPartyByUserNameOrEmail(String userNameOrEmail) {
+//        String searchFor = null;
+//        List<Party> parties = new ArrayList<Party>();
+//
+//        if (StringUtils.contains(userNameOrEmail, "@")) {
+//            Party foundParty = this.getPartyByEmail(userNameOrEmail);
+//            if (foundParty != null) {
+//                parties.add(foundParty);
+//            }
+//            return parties;
+//        }
+//
+//        String[] names = StringUtils.split(userNameOrEmail, " ");
+//        if (names != null && names.length >= 2) {
+//            String firstName = names[0];
+//            String lastName = names[1];
+//            parties = this.getPartyByUserName(firstName, lastName);
+//        }
+//        if (names != null && names.length == 1) {
+//            String firstName = names[0];
+//            parties = this.getPartyByUserName(firstName, null);
+//        }
+//        return parties;
+//    }
 
-    @Override
-    public List<Party> getPartyByUserName(String firstName, String lastName) {
-        return this.partyService.getPartyByUserName(firstName, lastName);
-    }
-
-    @Override
-    public List<Party> getPartyByUserNameOrEmail(String userNameOrEmail) {
-        String searchFor = null;
-        List<Party> parties = new ArrayList<Party>();
-
-        if (StringUtils.contains(userNameOrEmail, "@")) {
-            Party foundParty = this.getPartyByEmail(userNameOrEmail);
-            if (foundParty != null) {
-                parties.add(foundParty);
-            }
-            return parties;
-        }
-
-        String[] names = StringUtils.split(userNameOrEmail, " ");
-        if (names != null && names.length >= 2) {
-            String firstName = names[0];
-            String lastName = names[1];
-            parties = this.getPartyByUserName(firstName, lastName);
-        }
-        if (names != null && names.length == 1) {
-            String firstName = names[0];
-            parties = this.getPartyByUserName(firstName, null);
-        }
-        return parties;
-    }
-
-    @Override
-    public Party getPartyByPartyKey(String partyKey) {
-        return this.partyService.getPartyByPartyKey(partyKey);
-    }
-
-    @Override
-    public void saveParty(Party party) {
-        this.partyService.saveParty(party);
-    }
-
-    @Override
-    public void updateParty(Party party) {
-        this.partyService.updateParty(party);
-    }
+//    @Override
+//    public Party getPartyByPartyKey(String partyKey) {
+//        return this.partyService.getPartyByPartyKey(partyKey);
+//    }
+//
+//    @Override
+//    public void saveParty(Party party) {
+//        this.partyService.saveParty(party);
+//    }
+//
+//    @Override
+//    public void updateParty(Party party) {
+//        this.partyService.updateParty(party);
+//    }
 
     @Override
     public void saveRestrictAccess(RestrictAccess restrictAccess) {

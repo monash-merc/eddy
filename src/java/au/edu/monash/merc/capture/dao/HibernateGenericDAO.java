@@ -27,17 +27,15 @@
  */
 package au.edu.monash.merc.capture.dao;
 
-import java.lang.reflect.ParameterizedType;
-import java.util.List;
-
+import au.edu.monash.merc.capture.repository.IRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
-import au.edu.monash.merc.capture.repository.IRepository;
+import java.lang.reflect.ParameterizedType;
+import java.util.List;
 
 @Scope("prototype")
 @Repository
@@ -45,22 +43,11 @@ public class HibernateGenericDAO<T> implements IRepository<T> {
 
     protected Class<T> persistClass;
 
-    @Qualifier("sessionFactory")
-    @Autowired
     private SessionFactory sessionFactory;
 
     @SuppressWarnings("unchecked")
-    public HibernateGenericDAO(SessionFactory sessionFactory) {
+    public HibernateGenericDAO(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
         this.persistClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        this.sessionFactory = sessionFactory;
-    }
-
-    @SuppressWarnings("unchecked")
-    public HibernateGenericDAO() {
-        this.persistClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-    }
-
-    public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

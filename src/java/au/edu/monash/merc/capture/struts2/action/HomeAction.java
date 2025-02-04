@@ -138,29 +138,14 @@ public class HomeAction extends BaseAction {
                     superAdmin.setUserType(UserType.SUPERADMIN.code());
                     superAdmin.setRegistedDate(GregorianCalendar.getInstance().getTime());
 
-                    // if the super admin account is authenticated by LDAP, then we just put the password as ldap,
-                    // otherwise, we have to hash the password with MD5
+                    // hash the password with MD5
                     String password = configSetting.getPropValue(ConfigSettings.SYSTEM_ADMIN_PWD);
                     String adminEmail = configSetting.getPropValue(ConfigSettings.SYSTEM_ADMIN_EMAIL);
-                    if (StringUtils.equalsIgnoreCase(password, "ldap")) {
+                    superAdmin.setPassword(MD5.hash(password));
+                    superAdmin.setDisplayName(configSetting.getPropValue(ConfigSettings.SYSTEM_ADMIN_NAME));
+                    superAdmin.setEmail(adminEmail);
+                    superAdmin.setUniqueId(adminEmail);
 
-                        LdapUser ldapUser = userService.ldapLookup(adminEmail);
-                        if (ldapUser == null) {
-                            throw new ConfigException("System administrator doesn't exist in the LDAP Server");
-                        }
-                        gender = ldapUser.getGender();
-                        superAdmin.setPassword("ldap");
-                        superAdmin.setDisplayName(ldapUser.getDisplayName());
-                        superAdmin.setFirstName(ldapUser.getFirstName());
-                        superAdmin.setLastName(ldapUser.getLastName());
-                        superAdmin.setEmail(adminEmail);
-                        superAdmin.setUniqueId(ldapUser.getUid());
-                    } else {
-                        superAdmin.setPassword(MD5.hash(password));
-                        superAdmin.setDisplayName(configSetting.getPropValue(ConfigSettings.SYSTEM_ADMIN_NAME));
-                        superAdmin.setEmail(configSetting.getPropValue(ConfigSettings.SYSTEM_ADMIN_EMAIL));
-                        superAdmin.setUniqueId(configSetting.getPropValue(ConfigSettings.SYSTEM_ADMIN_EMAIL));
-                    }
 
                     // profile
                     Profile adminProf = new Profile();

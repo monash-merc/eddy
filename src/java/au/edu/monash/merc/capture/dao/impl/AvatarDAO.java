@@ -27,25 +27,30 @@
  */
 package au.edu.monash.merc.capture.dao.impl;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Repository;
-
 import au.edu.monash.merc.capture.dao.HibernateGenericDAO;
 import au.edu.monash.merc.capture.domain.Avatar;
 import au.edu.monash.merc.capture.repository.IAvatarRepository;
+import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
 
 @Scope("prototype")
 @Repository
 public class AvatarDAO extends HibernateGenericDAO<Avatar> implements IAvatarRepository {
 
-	@Override
-	public Avatar getUserAvatar(long userId) {
-		Criteria avCriteria = this.session().createCriteria(this.persistClass);
-		Criteria usrCriteria = avCriteria.createCriteria("user");
-		usrCriteria.add(Restrictions.eq("id", userId));
-		return (Avatar) avCriteria.uniqueResult();
-	}
+    public AvatarDAO(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
+
+    @Override
+    public Avatar getUserAvatar(long userId) {
+        Criteria avCriteria = this.session().createCriteria(this.persistClass);
+        Criteria usrCriteria = avCriteria.createCriteria("user");
+        usrCriteria.add(Restrictions.eq("id", userId));
+        return (Avatar) avCriteria.uniqueResult();
+    }
 
 }

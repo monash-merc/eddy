@@ -27,28 +27,33 @@
  */
 package au.edu.monash.merc.capture.dao.impl;
 
-import java.util.List;
-
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Repository;
-
 import au.edu.monash.merc.capture.dao.HibernateGenericDAO;
 import au.edu.monash.merc.capture.domain.GlobalMetadata;
 import au.edu.monash.merc.capture.repository.IGlobalMetadataRepository;
+import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Scope("prototype")
 @Repository
 public class GlobalMetadataDAO extends HibernateGenericDAO<GlobalMetadata> implements IGlobalMetadataRepository {
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<GlobalMetadata> getAllGlobalMetadataByDatasetId(long dsId) {
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		Criteria dsCriteria = criteria.createCriteria("dataset");
-		dsCriteria.add(Restrictions.eq("id", dsId));
-		return criteria.list();
-	}
+    public GlobalMetadataDAO(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<GlobalMetadata> getAllGlobalMetadataByDatasetId(long dsId) {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        Criteria dsCriteria = criteria.createCriteria("dataset");
+        dsCriteria.add(Restrictions.eq("id", dsId));
+        return criteria.list();
+    }
 
 }

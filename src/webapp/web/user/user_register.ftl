@@ -36,7 +36,7 @@
                 <div class="reg_panel">
                 <@s.form action="registerUser.jspx" namespace="/user" method="post">
                     <div class="hints_panel">
-                        <img src="${base}/images/warn.png"/> &nbsp; If you already have a Monash Authcate Account, you can create an account <a href="${base}/user/ldap_user_register">Here</a>
+<#--                        <img src="${base}/images/warn.png"/> &nbsp; If you already have a Monash Authcate Account, you can create an account <a href="${base}/user/ldap_user_register">Here</a>-->
                     </div>
                     <div class="reg_middle_panel">
                         <div class="input_field_row">

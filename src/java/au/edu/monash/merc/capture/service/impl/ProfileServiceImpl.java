@@ -27,54 +27,47 @@
  */
 package au.edu.monash.merc.capture.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import au.edu.monash.merc.capture.dao.impl.ProfileDAO;
 import au.edu.monash.merc.capture.domain.Profile;
 import au.edu.monash.merc.capture.service.ProfileService;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Scope("prototype")
 @Service
 @Transactional
 public class ProfileServiceImpl implements ProfileService {
 
-	@Autowired
-	private ProfileDAO profileDao;
+    private final ProfileDAO profileDao;
 
-	@Override
-	public void saveProfile(Profile profile) {
-		this.profileDao.add(profile);
-	}
+    public ProfileServiceImpl(ProfileDAO profileDao) {
+        this.profileDao = profileDao;
+    }
 
-	@Override
-	public Profile getProfileById(long id) {
-		return this.profileDao.get(id);
-	}
+    @Override
+    public void saveProfile(Profile profile) {
+        this.profileDao.add(profile);
+    }
 
-	@Override
-	public Profile getUserProfile(long userId) {
-		return this.profileDao.getUserProfile(userId);
-	}
+    @Override
+    public Profile getProfileById(long id) {
+        return this.profileDao.get(id);
+    }
 
-	@Override
-	public void updateProfile(Profile profile) {
-		this.profileDao.update(profile);
-	}
+    @Override
+    public Profile getUserProfile(long userId) {
+        return this.profileDao.getUserProfile(userId);
+    }
 
-	@Override
-	public void deleteProfile(Profile profile) {
-		this.profileDao.remove(profile);
-	}
+    @Override
+    public void updateProfile(Profile profile) {
+        this.profileDao.update(profile);
+    }
 
-	public ProfileDAO getProfileDao() {
-		return profileDao;
-	}
-
-	public void setProfileDao(ProfileDAO profileDao) {
-		this.profileDao = profileDao;
-	}
+    @Override
+    public void deleteProfile(Profile profile) {
+        this.profileDao.remove(profile);
+    }
 
 }

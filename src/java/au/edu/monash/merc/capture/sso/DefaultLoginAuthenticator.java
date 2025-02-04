@@ -29,8 +29,6 @@ package au.edu.monash.merc.capture.sso;
 
 import au.edu.monash.merc.capture.dao.impl.UserDAO;
 import au.edu.monash.merc.capture.domain.User;
-import au.edu.monash.merc.capture.dto.ldap.LdapUser;
-import au.edu.monash.merc.capture.service.ldap.LdapService;
 import au.edu.monash.merc.capture.util.MD5;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -43,49 +41,21 @@ public class DefaultLoginAuthenticator implements LoginAuthenticator {
     @Autowired
     private UserDAO userDao;
 
-    @Autowired
-    private LdapService ldapService;
-
-    public void setLdapService(LdapService ldapService) {
-        this.ldapService = ldapService;
-    }
-
     public void setUserDAO(UserDAO userDao) {
         this.userDao = userDao;
     }
 
     @Override
-    public User login(String uniqueId, String password, boolean ldapSupported) {
+    public User login(String uniqueId, String password) {
         String pwd = MD5.hash(password);
         User user = this.userDao.checkUserLogin(uniqueId, pwd);
 
-        // if user name and password are matched, just return this user. the action level should check the user account
+        // if an user's name and password are matched, just return this user. the action level should check the user account
         // status whether is activated or not
         if (user != null) {
             return user;
         }
 
-        // if user name and password are not matched, then check whether the ldap is supported or not.
-        if (ldapSupported) {
-            user = this.userDao.getByUserUnigueId(uniqueId);
-            if (user != null) {
-                boolean logined = this.ldapService.login(uniqueId, password);
-                if (logined) {
-                    return user;
-                }
-            }
-        }
-
         return null;
-    }
-
-    @Override
-    public LdapUser verifyLdapUser(String authcatId, String password) {
-        return this.ldapService.verifyLdapUser(authcatId, password);
-    }
-
-    @Override
-    public LdapUser ldapLookup(String cnOrEmail) {
-        return this.ldapService.lookup(cnOrEmail);
     }
 }

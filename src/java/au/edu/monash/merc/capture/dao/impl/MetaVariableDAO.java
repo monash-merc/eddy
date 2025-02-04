@@ -27,35 +27,40 @@
  */
 package au.edu.monash.merc.capture.dao.impl;
 
-import java.util.List;
-
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Repository;
-
 import au.edu.monash.merc.capture.dao.HibernateGenericDAO;
 import au.edu.monash.merc.capture.domain.MetaAttribute;
 import au.edu.monash.merc.capture.domain.MetaVariable;
 import au.edu.monash.merc.capture.repository.IMetaVariableRepository;
+import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Scope("prototype")
 @Repository
 public class MetaVariableDAO extends HibernateGenericDAO<MetaVariable> implements IMetaVariableRepository {
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<MetaVariable> getAllMetaVariableByDatasetId(long dsId) {
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		Criteria dsCriteria = criteria.createCriteria("dataset");
-		dsCriteria.add(Restrictions.eq("id", dsId));
-		List<MetaVariable> vars = criteria.list();
-		for (MetaVariable var : vars) {
-			List<MetaAttribute> matts = var.getMetaAttributes();
-			for (MetaAttribute matt : matts) {
-				matt.getName();
-			}
-		}
-		return vars;
-	}
+    public MetaVariableDAO(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<MetaVariable> getAllMetaVariableByDatasetId(long dsId) {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        Criteria dsCriteria = criteria.createCriteria("dataset");
+        dsCriteria.add(Restrictions.eq("id", dsId));
+        List<MetaVariable> vars = criteria.list();
+        for (MetaVariable var : vars) {
+            List<MetaAttribute> matts = var.getMetaAttributes();
+            for (MetaAttribute matt : matts) {
+                matt.getName();
+            }
+        }
+        return vars;
+    }
 }

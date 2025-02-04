@@ -28,7 +28,9 @@
 package au.edu.monash.merc.capture.dao.impl;
 
 import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
@@ -40,11 +42,15 @@ import au.edu.monash.merc.capture.repository.IProfileRepository;
 @Repository
 public class ProfileDAO extends HibernateGenericDAO<Profile> implements IProfileRepository {
 
-	@Override
-	public Profile getUserProfile(long userId) {
-		Criteria profCriteria = this.session().createCriteria(this.persistClass);
-		Criteria usrCriteria = profCriteria.createCriteria("user");
-		usrCriteria.add(Restrictions.eq("id", userId));
-		return (Profile) profCriteria.uniqueResult();
-	}
+    public ProfileDAO(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
+
+    @Override
+    public Profile getUserProfile(long userId) {
+        Criteria profCriteria = this.session().createCriteria(this.persistClass);
+        Criteria usrCriteria = profCriteria.createCriteria("user");
+        usrCriteria.add(Restrictions.eq("id", userId));
+        return (Profile) profCriteria.uniqueResult();
+    }
 }

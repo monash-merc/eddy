@@ -46,19 +46,22 @@ import au.edu.monash.merc.capture.service.SearchService;
 @Transactional
 public class SearchServiceImpl implements SearchService {
 
-	@Autowired
-	private SearchDatasetDAO searchDsDao;
+	private final SearchDatasetDAO searchDsDao;
 
-	@Autowired
-	private SearchCoDAO searchCoDao;
+	private final SearchCoDAO searchCoDao;
 
-	public void setSearchDsDao(SearchDatasetDAO searchDsDao) {
+	public SearchServiceImpl(SearchDatasetDAO searchDsDao, SearchCoDAO searchCoDao) {
 		this.searchDsDao = searchDsDao;
-	}
-
-	public void setSearchCoDao(SearchCoDAO searchCoDao) {
 		this.searchCoDao = searchCoDao;
 	}
+
+//	public void setSearchDsDao(SearchDatasetDAO searchDsDao) {
+//		this.searchDsDao = searchDsDao;
+//	}
+//
+//	public void setSearchCoDao(SearchCoDAO searchCoDao) {
+//		this.searchCoDao = searchCoDao;
+//	}
 
 	@Override
 	public Pagination<Dataset> searchDs(SearchBean searchBean, int startPageNo, int recordsPerPage, OrderBy[] orderBys) {

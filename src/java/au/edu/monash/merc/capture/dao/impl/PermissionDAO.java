@@ -28,18 +28,20 @@
 
 package au.edu.monash.merc.capture.dao.impl;
 
+import au.edu.monash.merc.capture.common.PermType;
 import au.edu.monash.merc.capture.dao.HibernateGenericDAO;
 import au.edu.monash.merc.capture.domain.Permission;
-import au.edu.monash.merc.capture.common.PermType;
 import au.edu.monash.merc.capture.dto.InheritPermissionBean;
 import au.edu.monash.merc.capture.repository.IPermissionRepository;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.ResultTransformer;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
@@ -47,16 +49,20 @@ import java.util.List;
 
 /**
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * <p/>
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 26/03/13 1:55 PM
+ * <p/>
+ * Date: 26/03/13 1:55 PM
  */
 @Scope("prototype")
 @Repository
 public class PermissionDAO extends HibernateGenericDAO<Permission> implements IPermissionRepository {
+
+    public PermissionDAO(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
     @Override
     public Permission getUserCollectionPermission(long collectionId, long userId) {

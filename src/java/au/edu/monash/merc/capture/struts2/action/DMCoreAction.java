@@ -80,8 +80,6 @@ public class DMCoreAction extends BaseAction {
 
     private String viewDatasetLink;
 
-    private String andsMdRegLink;
-
     private boolean sharingData;
 
     protected String viewType;
@@ -116,7 +114,6 @@ public class DMCoreAction extends BaseAction {
         deleteDatasetLink = ActConstants.DATASET_DELETE_ACTION;
         viewDatasetLink = ActConstants.DATASET_VIEWDATA_ACTION;
         permissionLink = ActConstants.SET_COLLECTION_PERMISSION_ACTION;
-        andsMdRegLink = ActConstants.ANDS_MD_REG_SHOW_ACTION;
     }
 
     protected void populateLinksInPubCollection() {
@@ -284,12 +281,14 @@ public class DMCoreAction extends BaseAction {
                 pmBean.setDeleteAllowed(true);
             }
 
-            int mdRegAllowed = permission.getMdRegisterAllowed();
-            if (mdRegAllowed == 0) {
-                pmBean.setMdRegAllowed(false);
-            } else {
-                pmBean.setMdRegAllowed(true);
-            }
+//            int mdRegAllowed = permission.getMdRegisterAllowed();
+//            if (mdRegAllowed == 0) {
+//                pmBean.setMdRegAllowed(false);
+//            } else {
+//                pmBean.setMdRegAllowed(true);
+//            }
+            // always set the metadata register perm to false
+            pmBean.setMdRegAllowed(false);
             int acAllowed = permission.getAcAllowed();
             if (acAllowed == 0) {
                 pmBean.setAcAllowed(false);
@@ -320,22 +319,6 @@ public class DMCoreAction extends BaseAction {
         collection.setDescription(htmlDesc);
         // populate the collectionlinks
         populateLinksInUsrCollection();
-    }
-
-
-    protected String createHandle(Collection co) {
-        String serverQName = getServerQName();
-        String appContext = getAppContextPath();
-        StringBuffer collectionUrl = new StringBuffer();
-        collectionUrl.append(serverQName).append(appContext).append(ActConstants.URL_PATH_DEIM);
-        collectionUrl.append("pub/viewColDetails.jspx?collection.id=" + co.getId() + "&collection.owner.id=" + co.getOwner().getId() + "&viewType=anonymous");
-        // create handle if handle service is enabled
-        try {
-            String handle = pidService.genHandleIdentifier(collectionUrl.toString());
-            return handle;
-        } catch (Exception e) {
-            throw new DataCaptureException(e);
-        }
     }
 
 
@@ -539,14 +522,6 @@ public class DMCoreAction extends BaseAction {
 
     public void setPermissionLink(String permissionLink) {
         this.permissionLink = permissionLink;
-    }
-
-    public String getAndsMdRegLink() {
-        return andsMdRegLink;
-    }
-
-    public void setAndsMdRegLink(String andsMdRegLink) {
-        this.andsMdRegLink = andsMdRegLink;
     }
 
     public boolean isSharingData() {

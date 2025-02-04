@@ -49,8 +49,6 @@ public class DeleteDSAction extends DMCoreAction {
 
     private Dataset dataset;
 
-    private boolean mdRegEnabled;
-
     private Licence licence;
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
@@ -83,9 +81,6 @@ public class DeleteDSAction extends DMCoreAction {
             }
 
             retrieveAllRADatasets();
-            // populate the rifcs registration if enabled
-            String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
-            mdRegEnabled = Boolean.valueOf(mdRegEnabledStr).booleanValue();
             // set user type is the owner of collection
             viewType = UserViewType.USER.type();
             populateLinksInUsrCollection();
@@ -253,14 +248,6 @@ public class DeleteDSAction extends DMCoreAction {
 
     public void setDataset(Dataset dataset) {
         this.dataset = dataset;
-    }
-
-    public boolean isMdRegEnabled() {
-        return mdRegEnabled;
-    }
-
-    public void setMdRegEnabled(boolean mdRegEnabled) {
-        this.mdRegEnabled = mdRegEnabled;
     }
 
     public Licence getLicence() {

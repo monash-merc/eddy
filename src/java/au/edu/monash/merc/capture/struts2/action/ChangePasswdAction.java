@@ -51,11 +51,6 @@ public class ChangePasswdAction extends BaseAction {
 	public String showChangePwd() {
 		try {
 			user = retrieveLoggedInUser();
-			if (user.getPassword().equals("ldap")) {
-				addActionError(getText("user.change.ldap.password.not.allowed"));
-				setNavBar();
-				return ERROR;
-			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			addActionError(getText("user.show.change.password.failed"));
@@ -91,6 +86,13 @@ public class ChangePasswdAction extends BaseAction {
 			}
 
 			foundUsr.setPassword(MD5.hash(newPassword));
+			String email = user.getEmail();
+			// set the user email as a unique id
+			foundUsr.setUniqueId(email);
+			// set the unique id hash code.
+			if (StringUtils.isBlank(user.getUniqueId())) {
+				foundUsr.setUidHashCode(generateSecurityHash(email));
+			}
 			this.userService.updateUser(foundUsr);
 			user = foundUsr;
 			addActionMessage(getText("user.change.password.success.msg", new String[] { user.getDisplayName() }));

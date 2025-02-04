@@ -59,4 +59,8 @@ public class MD5 {
 
 		return hexString.toString();
 	}
+	public static void main(String[] args) {
+		String md5str = MD5.hash("merc2dev!");
+		System.out.println(md5str);
+	}
 }

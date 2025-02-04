@@ -69,6 +69,8 @@ public class ImportFileAction extends DMCoreAction {
         // check the collection and user
         try {
             user = retrieveLoggedInUser();
+            System.out.println("===== user: " + user.getEmail());
+            System.out.println("===== collection id: " + collection.getId());
             collection = this.dmService.getCollection(collection.getId(), collection.getOwner().getId());
             collection.setModifiedTime(GregorianCalendar.getInstance().getTime());
             collection.setModifiedByUser(user);

@@ -1,5 +1,5 @@
 body {
-    font: 400 12px/22px "Helvetica Neue", "Lucida Grande", "Bitstream Vera Sans", Helvetica, Arial, Verdana, sans-serif;
+    font: 400 14px/22px "Helvetica Neue", "Lucida Grande", "Bitstream Vera Sans", Helvetica, Arial, Verdana, sans-serif;
     color: #000000;
     min-width: 1024px;
     margin: 0 auto;
@@ -289,11 +289,14 @@ input {
 
 /** ==== OzFlux Nav Bar ==== **/
 .ozfux_nav_div {
+    font-size: 14px;
     background: #003766;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
     font-weight: bold;
+    padding-top: 2px;
+    padding-bottom: 2px;
     clear: both;
 }
 
@@ -617,7 +620,7 @@ input {
 .input_field_title {
     display: block;
     float: left;
-    width: 160px;
+    width: 180px;
     height: 22px;
     line-height: 22px;
     padding-left: 5px;
@@ -625,7 +628,7 @@ input {
 
 .input_field_value_section {
     padding-left: 5px;
-    margin-left: 170px;
+    margin-left: 185px;
     text-align: left;
 }
 

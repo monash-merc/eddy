@@ -137,94 +137,16 @@ public class Installer {
             s = s.replaceFirst("BLOCK_WAITING_TIMES", String.valueOf(appProp.getBlockWaitingTimes()));
             String securityhash = appProp.getSecurityHashSeq();
             s = s.replaceFirst("SECURITY_HASH_SEQ", MD5.hash(securityhash));
-
-            // set publish properties and research master ws if any
-            s = s.replaceFirst("ANDS_MD_REG_ENABLED", String.valueOf(appProp.isMdRegEnabled()));
-
             //Default group name
             s = s.replaceFirst("ANDS_MD_REG_GROUP_NAME", appProp.getAndsRegGroupName());
-
-            //activity rifcs key
             String rifcspath = CaptureUtil.normalizePath(appProp.getRifcsStoreLocation());
             s = s.replaceFirst("ANDS_RIFCS_STORE_LOCATION", rifcspath);
-
-            String activityKey = appProp.getActivityKey();
-            s = s.replaceFirst("ACTIVITY_KEY", activityKey);
-
-            //collection rifcs template
-            String collectionRifcsTemplate = appProp.getCollectionRifcsTemplate();
-            s = s.replaceFirst("COLLECTION_RIFCS_TEMPLATE", collectionRifcsTemplate);
-
-            //party rifcs template
-            String partyRifcsTemplate = appProp.getPartyRifcsTemplate();
-            s = s.replaceFirst("PARTY_RIFCS_TEMPLATE", partyRifcsTemplate);
-
-            //researcher master party rifcs template
-            String rmPartyRifcsTemplate = appProp.getRmPartyRifcsTemplate();
-            s = s.replaceFirst("RM_PARTY_RIFCS_TEMPLATE", rmPartyRifcsTemplate);
-
-            s = s.replaceFirst("RM_WS_NAME", appProp.getRmWsName());
-            s = s.replaceFirst("RM_WS_ENDPOINT_ADDRESS", appProp.getRmWsEndpointAddress());
-            s = s.replaceFirst("RM_WS_TIMEOUT", String.valueOf(appProp.getRmWsTimeout()));
-
-            // handle web service property
-            s = s.replaceFirst("HANDLE_WS_ENABLED", String.valueOf(appProp.isHdlWsEnabled()));
-
-            // normalize the handle service host name
-            String hdlHost = CaptureUtil.normalizePath(appProp.getHdlWsHostName());
-            s = s.replaceFirst("HANDLE_WS_HOST_NAME", hdlHost);
-            s = s.replaceFirst("HANDLE_WS_HOST_PORT", String.valueOf(appProp.getHdlWsHostPort()));
-            s = s.replaceFirst("HANDLE_WS_PATH", appProp.getHdlWsPath());
-            s = s.replaceFirst("HANDLE_WS_MINT_METHOD", appProp.getHdlWsMethod());
-            s = s.replaceFirst("HANDLE_WS_APP_ID", appProp.getHdlWsAppId());
-            s = s.replaceFirst("HANDLE_WS_IDENTIFIER", appProp.getAppName());
-            s = s.replaceFirst("HANDLE_WS_AUTHDOMAIN", appProp.getAuthDomain());
-            String hdlsrv = CaptureUtil.normalizePath(appProp.getHdlResolverAddress());
-            s = s.replaceFirst("HANDLE_RESOLVER_SERVER", hdlsrv);
-
+            s = s.replaceFirst("MAP_ENABLED", String.valueOf(appProp.isMapEnabled()));
             FileUtils.writeStringToFile(new File(destAppFile), s);
         } catch (Exception e) {
             throw new ConfigException(e);
         }
 
-    }
-
-    /**
-     * Create a ldap configuration properties file based on the ldap template configuration file.
-     *
-     * @param ldapProperty
-     * @param ldapTempFileName
-     * @param destLdapFile
-     */
-    public static void writeLdapConfig(LdapProperty ldapProperty, LdapWsProperty ldapWsProperty, String ldapTempFileName, String destLdapFile) {
-        try {
-            String s = FileUtils.readFileToString(new File(ldapTempFileName));
-            s = s.replaceFirst("LDAP_SUPPORTED", String.valueOf(ldapProperty.isLdapSupported()));
-            s = s.replaceFirst("LDAP_WS_ENABLED", String.valueOf(ldapWsProperty.isLdapWsEnabled()));
-            if (ldapProperty.isLdapSupported()) {
-                //ldap authentication web service enabled
-                if (ldapWsProperty.isLdapWsEnabled()) {
-                    s = s.replaceFirst("LDAP_WS_HOST", ldapWsProperty.getLdapWsServer());
-                    s = s.replaceFirst("LDAP_WS_PORT", String.valueOf(ldapWsProperty.getLdapWsPort()));
-                    s = s.replaceFirst("LDAP_WS_CERT_ERROR_IGNORE", String.valueOf(ldapWsProperty.isCertErrorIgnore()));
-                } else {
-                    //local ldap server authentication
-                    s = s.replaceFirst("LADP_SERVER", "ldap://" + ldapProperty.getLdapServer());
-                    s = s.replaceFirst("BASE_DN", ldapProperty.getBaseDN());
-                    s = s.replaceFirst("BIND_BASE_DN_REQUIRED", String.valueOf(ldapProperty.isBindBaseDnRequired()));
-                    s = s.replaceFirst("ATT_UID", ldapProperty.getAttUID());
-                    s = s.replaceFirst("ATT_MAIL", ldapProperty.getAttMail());
-                    s = s.replaceFirst("ATT_GENDER", ldapProperty.getAttGender());
-                    s = s.replaceFirst("ATT_CN", ldapProperty.getAttCN());
-                    s = s.replaceFirst("ATT_SN", ldapProperty.getAttSn());
-                    s = s.replaceFirst("ATT_GIVENNAME", ldapProperty.getAttGivenname());
-                    s = s.replaceFirst("ATT_PTITLE", ldapProperty.getAttPersonalTitle());
-                }
-            }
-            FileUtils.writeStringToFile(new File(destLdapFile), s);
-        } catch (Exception e) {
-            throw new ConfigException(e);
-        }
     }
 
     /**

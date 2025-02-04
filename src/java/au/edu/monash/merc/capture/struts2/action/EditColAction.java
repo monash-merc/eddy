@@ -55,7 +55,7 @@ public class EditColAction extends DMCoreAction {
 
     private boolean mdRegEnabled;
 
-    private boolean globalCoverage;
+    private boolean globalCoverage = true;
 
     private Licence licence;
 
@@ -85,29 +85,31 @@ public class EditColAction extends DMCoreAction {
                 }
 
                 //check the location
-                String spatialType = null;
-                String spatialValue = null;
-                if (globalCoverage) {
-                    spatialType = CoverageType.GLOBAL.type();
-                    spatialValue = SpatialValue.GLOBAL.value();
-                } else {
-                    Location alocation = collection.getLocation();
-                    String spValue = alocation.getSpatialCoverage();
-                    // check the spatial coverage and type
-                    if (StringUtils.isBlank(spValue)) {
-                        spatialType = CoverageType.UNKNOWN.type();
-                        spatialValue = SpatialValue.UNKNOWN.value();
-
+                String spatialType = CoverageType.UNKNOWN.type();
+                String spatialValue = SpatialValue.UNKNOWN.value();
+                long previousLocationId = 0;
+                System.out.println("====== mapEnabled: " + this.mapEnabled);
+                if (mapEnabled) {
+                    if (globalCoverage) {
+                        spatialType = CoverageType.GLOBAL.type();
+                        spatialValue = SpatialValue.GLOBAL.value();
                     } else {
-                        spatialType = CoverageType.KML.type();
-                        spatialValue = spValue;
+                        Location alocation = collection.getLocation();
+                        String spValue = alocation.getSpatialCoverage();
+                        // check the spatial coverage and type
+                        if (StringUtils.isNotBlank(spValue)) {
+                            spatialType = CoverageType.KML.type();
+                            spatialValue = spValue;
+                        }
                     }
-                }
-                //keep the previous location first, then we can check the reference later. if no references, then we have to delete this location.
-                Location previousLocation = existedCollection.getLocation();
-                long locationId = 0;
-                if (previousLocation != null) {
-                    locationId = previousLocation.getId();
+                } else {
+                    //check the existed location.
+                    Location existedLocation = existedCollection.getLocation();
+                    if (existedLocation != null) {
+                        previousLocationId = existedLocation.getId();
+                        spatialType = existedLocation.getSpatialType();
+                        spatialValue = existedLocation.getSpatialCoverage();
+                    }
                 }
 
                 Location location = this.dmService.getLocationByCoverageType(spatialType, spatialValue);
@@ -117,7 +119,7 @@ public class EditColAction extends DMCoreAction {
                     location.setSpatialCoverage(spatialValue);
                     this.dmService.saveLocation(location);
                 }
-                //save the location inot collection
+                //save the location into collection
                 existedCollection.setLocation(location);
 
                 existedCollection.setModifiedByUser(user);
@@ -135,40 +137,27 @@ public class EditColAction extends DMCoreAction {
                 existedCollection.setLicence(this.licence);
 
                 String uniqueKey = existedCollection.getUniqueKey();
-                // create handle if handle service is enabled
+                // get the persist identifier
                 String handleIdentifier = existedCollection.getPersistIdentifier();
                 if (StringUtils.isBlank(uniqueKey)) {
                     // generate the uuid for this collection
                     uniqueKey = pidService.genUUIDWithPrefix();
                     existedCollection.setUniqueKey(uniqueKey);
-                    //no handle identifier. set the unique key first
+                    //no persist identifier. set the unique key first
                     if (StringUtils.isBlank(handleIdentifier)) {
                         existedCollection.setPersistIdentifier(uniqueKey);
                     }
                 }
 
-                //check the handle was created or not
-                // if handle service is enabled
-                String hdlEnabledStr = configSetting.getPropValue(ConfigSettings.HANDLE_SERVICE_ENABLED);
-                if (Boolean.valueOf(hdlEnabledStr)) {
-                    if (!StringUtils.contains(existedCollection.getPersistIdentifier(), "/")) {
-                        try {
-                            handleIdentifier = createHandle(existedCollection);
-                            existedCollection.setPersistIdentifier(handleIdentifier);
-                        } catch (Exception e) {
-                            logger.error(getText("create.collection.handle.persistent.identifier.failed") + ", " + e.getMessage());
-                            addActionError(getText("create.collection.handle.persistent.identifier.failed"));
-                            return INPUT;
-                        }
-                    }
-                }
                 //update the collection
                 this.dmService.updateCollection(existedCollection);
-                //try delete this location if can
+                //try to delete this location if can
                 try {
-                    boolean collectionReferenced = this.dmService.findAnyReferencedCollectionsByLocationId(locationId);
-                    if (!collectionReferenced) {
-                        this.dmService.deleteLocationById(locationId);
+                    if (previousLocationId != 0) {
+                        boolean collectionReferenced = this.dmService.findAnyReferencedCollectionsByLocationId(previousLocationId);
+                        if (!collectionReferenced) {
+                            this.dmService.deleteLocationById(previousLocationId);
+                        }
                     }
                 } catch (Exception dex) {
                     //if delete the location failed, we just log it
@@ -192,19 +181,9 @@ public class EditColAction extends DMCoreAction {
                     licence.setContents(htmlLicence);
                 }
 
-                //retrieve all restrict acess datasets
+                //retrieve all restrict access datasets
                 retrieveAllRADatasets();
-                // populate the rifcs registration if enabled
-                String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
-                mdRegEnabled = Boolean.valueOf(mdRegEnabledStr).booleanValue();
-
-                //The owner of a collection or an admin they can register the metadata
-                if (user != null && mdRegEnabled) {
-                    if ((user.getId() == collection.getOwner().getId()) || (user.getUserType() == UserType.ADMIN.code()) || (user.getUserType() == UserType.SUPERADMIN.code())) {
-                        permissionBean.setMdRegAllowed(true);
-                    }
-                }
-                // populate the collectionlinks
+                // populate the collection links
                 populateLinksInUsrCollection();
 
                 // set action successful message

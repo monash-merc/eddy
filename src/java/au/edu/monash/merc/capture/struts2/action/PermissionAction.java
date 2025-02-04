@@ -276,13 +276,8 @@ public class PermissionAction extends DMCoreAction {
                 permission.setDeleteAllowed(0);
             }
 
-            boolean mdRegAllowed = pmBean.isMdRegAllowed();
-            if (mdRegAllowed) {
-                permission.setMdRegisterAllowed(1);
-            } else {
-                permission.setMdRegisterAllowed(0);
-            }
-
+//            always set the metadata register perm to false
+            permission.setMdRegisterAllowed(0);
             boolean acAllowed = pmBean.isAcAllowed();
             if (acAllowed) {
                 permission.setAcAllowed(1);
@@ -421,11 +416,12 @@ public class PermissionAction extends DMCoreAction {
             toPermissionBean.setDeleteAllowed(true);
         }
 
-        boolean mdRegAllowed = groupPermissionBean.isMdRegAllowed();
-        if (mdRegAllowed) {
-            toPermissionBean.setMdRegAllowed(true);
-        }
-
+//        boolean mdRegAllowed = groupPermissionBean.isMdRegAllowed();
+//        if (mdRegAllowed) {
+//            toPermissionBean.setMdRegAllowed(true);
+//        }
+//        set metadata register always to false
+        toPermissionBean.setMdRegAllowed(false);
         boolean racAllowed = groupPermissionBean.isRacAllowed();
         if (racAllowed) {
             toPermissionBean.setRacAllowed(true);

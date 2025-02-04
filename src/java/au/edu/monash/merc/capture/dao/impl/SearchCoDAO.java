@@ -27,85 +27,90 @@
  */
 package au.edu.monash.merc.capture.dao.impl;
 
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Repository;
-
 import au.edu.monash.merc.capture.dao.HibernateGenericDAO;
 import au.edu.monash.merc.capture.domain.Collection;
 import au.edu.monash.merc.capture.dto.OrderBy;
 import au.edu.monash.merc.capture.dto.SearchBean;
 import au.edu.monash.merc.capture.dto.page.Pagination;
 import au.edu.monash.merc.capture.repository.ISearchCoRepository;
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
+
+import java.util.Date;
+import java.util.List;
 
 @Scope("prototype")
 @Repository
 public class SearchCoDAO extends HibernateGenericDAO<Collection> implements ISearchCoRepository {
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Pagination<Collection> search(SearchBean searchBean, int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		setCollectionCriterion(criteria, searchBean);
-		criteria.setProjection(Projections.rowCount());
-		int total = ((Long) criteria.uniqueResult()).intValue();
-		Pagination<Collection> coPages = new Pagination<Collection>(startPageNo, recordsPerPage, total);
+    public SearchCoDAO(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
-		Criteria findCriteria = this.session().createCriteria(this.persistClass);
-		// set any query associated to collection
-		setCollectionCriterion(findCriteria, searchBean);
-		// add orders
-		if (orderBys != null && orderBys.length > 0) {
-			for (int i = 0; i < orderBys.length; i++) {
-				Order order = orderBys[i].getOrder();
-				if (order != null) {
-					findCriteria.addOrder(order);
-				}
-			}
-		} else {
-			findCriteria.addOrder(Order.asc("name"));
-		}
-		// calculate the first result from the pagination and set this value into the start search index
-		findCriteria.setFirstResult(coPages.getFirstResult());
-		// set the max results (size-per-page)
-		findCriteria.setMaxResults(coPages.getSizePerPage());
-		List<Collection> coList = findCriteria.list();
-		coPages.setPageResults(coList);
-		return coPages;
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public Pagination<Collection> search(SearchBean searchBean, int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        setCollectionCriterion(criteria, searchBean);
+        criteria.setProjection(Projections.rowCount());
+        int total = ((Long) criteria.uniqueResult()).intValue();
+        Pagination<Collection> coPages = new Pagination<Collection>(startPageNo, recordsPerPage, total);
 
-	private void setCollectionCriterion(Criteria criteria, SearchBean searchBean) {
+        Criteria findCriteria = this.session().createCriteria(this.persistClass);
+        // set any query associated to collection
+        setCollectionCriterion(findCriteria, searchBean);
+        // add orders
+        if (orderBys != null && orderBys.length > 0) {
+            for (int i = 0; i < orderBys.length; i++) {
+                Order order = orderBys[i].getOrder();
+                if (order != null) {
+                    findCriteria.addOrder(order);
+                }
+            }
+        } else {
+            findCriteria.addOrder(Order.asc("name"));
+        }
+        // calculate the first result from the pagination and set this value into the start search index
+        findCriteria.setFirstResult(coPages.getFirstResult());
+        // set the max results (size-per-page)
+        findCriteria.setMaxResults(coPages.getSizePerPage());
+        List<Collection> coList = findCriteria.list();
+        coPages.setPageResults(coList);
+        return coPages;
+    }
 
-		String coName = searchBean.getCollectionName();
-		Date fromDate = searchBean.getStartDate();
-		Date endDate = searchBean.getEndDate();
+    private void setCollectionCriterion(Criteria criteria, SearchBean searchBean) {
 
-		if (StringUtils.isNotBlank(coName)) {
-			// set the search restriction for data collection
-			criteria.add(Restrictions.like("name", (coName.trim() + "%"), MatchMode.ANYWHERE).ignoreCase());
-		}
+        String coName = searchBean.getCollectionName();
+        Date fromDate = searchBean.getStartDate();
+        Date endDate = searchBean.getEndDate();
 
-		if (fromDate != null) {
-			criteria.add(Restrictions.ge("createdTime", fromDate));
-		}
+        if (StringUtils.isNotBlank(coName)) {
+            // set the search restriction for data collection
+            criteria.add(Restrictions.like("name", (coName.trim() + "%"), MatchMode.ANYWHERE).ignoreCase());
+        }
 
-		if (endDate != null) {
-			criteria.add(Restrictions.le("createdTime", endDate));
-		}
+        if (fromDate != null) {
+            criteria.add(Restrictions.ge("createdTime", fromDate));
+        }
 
-		String researcherName = searchBean.getResearcherName();
-		if (StringUtils.isNotBlank(researcherName)) {
+        if (endDate != null) {
+            criteria.add(Restrictions.le("createdTime", endDate));
+        }
 
-			Criteria researcherCrit = criteria.createCriteria("owner");
-			researcherCrit.add(Restrictions.like("displayName", (researcherName.trim() + "%"), MatchMode.ANYWHERE).ignoreCase());
-		}
-	}
+        String researcherName = searchBean.getResearcherName();
+        if (StringUtils.isNotBlank(researcherName)) {
+
+            Criteria researcherCrit = criteria.createCriteria("owner");
+            researcherCrit.add(Restrictions.like("displayName", (researcherName.trim() + "%"), MatchMode.ANYWHERE).ignoreCase());
+        }
+    }
 }

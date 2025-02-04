@@ -31,31 +31,30 @@ package au.edu.monash.merc.capture.service.impl;
 import au.edu.monash.merc.capture.dao.impl.LicenceDAO;
 import au.edu.monash.merc.capture.domain.Licence;
 import au.edu.monash.merc.capture.service.LicenceService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * <p/>
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 7/03/13 11:38 AM
+ * <p/>
+ * Date: 7/03/13 11:38 AM
  */
 @Scope("prototype")
 @Service
 @Transactional
 public class LicenceServiceImpl implements LicenceService {
 
-    @Autowired
-    private LicenceDAO licenceDao;
+    private final LicenceDAO licenceDao;
 
-    public void setLicenceDao(LicenceDAO licenceDao) {
+    public LicenceServiceImpl(LicenceDAO licenceDao) {
         this.licenceDao = licenceDao;
     }
+
 
     @Override
     public void saveLicence(Licence licence) {

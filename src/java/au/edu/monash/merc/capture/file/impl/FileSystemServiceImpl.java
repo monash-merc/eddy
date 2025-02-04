@@ -27,17 +27,16 @@
  */
 package au.edu.monash.merc.capture.file.impl;
 
+import au.edu.monash.merc.capture.file.FileSystemSerivce;
+import au.edu.monash.merc.capture.util.io.DCFileUtils;
+import au.edu.monash.merc.capture.util.stage.ScanFileFilter;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.util.List;
-
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
-import au.edu.monash.merc.capture.file.FileSystemSerivce;
-import au.edu.monash.merc.capture.util.io.DCFileUtils;
-import au.edu.monash.merc.capture.util.stage.ScanFileFilter;
 
 @Scope("prototype")
 @Service

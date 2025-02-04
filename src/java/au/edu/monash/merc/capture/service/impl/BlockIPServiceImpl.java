@@ -27,59 +27,52 @@
  */
 package au.edu.monash.merc.capture.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import au.edu.monash.merc.capture.dao.impl.BlockIPDAO;
 import au.edu.monash.merc.capture.domain.IPBlock;
 import au.edu.monash.merc.capture.service.BlockIPService;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Scope("prototype")
 @Service
 @Transactional
 public class BlockIPServiceImpl implements BlockIPService {
 
-	@Autowired
-	private BlockIPDAO blockIPDao;
+    private final BlockIPDAO blockIPDao;
 
-	public BlockIPDAO getBlockIPDao() {
-		return blockIPDao;
-	}
+    public BlockIPServiceImpl(BlockIPDAO blockIPDao) {
+        this.blockIPDao = blockIPDao;
+    }
 
-	public void setBlockIPDao(BlockIPDAO blockIPDao) {
-		this.blockIPDao = blockIPDao;
-	}
+    @Override
+    public void saveIPBlock(IPBlock ipBlock) {
+        this.blockIPDao.add(ipBlock);
+    }
 
-	@Override
-	public void saveIPBlock(IPBlock ipBlock) {
-		this.blockIPDao.add(ipBlock);
-	}
+    @Override
+    public IPBlock getIPBlockById(long id) {
+        return this.blockIPDao.get(id);
+    }
 
-	@Override
-	public IPBlock getIPBlockById(long id) {
-		return this.blockIPDao.get(id);
-	}
+    @Override
+    public void deleteIPBlock(IPBlock ipBlock) {
+        this.blockIPDao.remove(ipBlock);
+    }
 
-	@Override
-	public void deleteIPBlock(IPBlock ipBlock) {
-		this.blockIPDao.remove(ipBlock);
-	}
+    @Override
+    public void updateIPBlock(IPBlock ipBlock) {
+        this.blockIPDao.update(ipBlock);
+    }
 
-	@Override
-	public void updateIPBlock(IPBlock ipBlock) {
-		this.blockIPDao.update(ipBlock);
-	}
+    @Override
+    public IPBlock getIPBlockByIp(String ipAddress) {
+        return this.blockIPDao.getIPBlockByIp(ipAddress);
+    }
 
-	@Override
-	public IPBlock getIPBlockByIp(String ipAddress) {
-		return this.blockIPDao.getIPBlockByIp(ipAddress);
-	}
-
-	@Override
-	public void deleteIPBlockByIP(String ipAddress) {
-		this.blockIPDao.deleteIPBlockByIp(ipAddress);
-	}
+    @Override
+    public void deleteIPBlockByIP(String ipAddress) {
+        this.blockIPDao.deleteIPBlockByIp(ipAddress);
+    }
 
 }

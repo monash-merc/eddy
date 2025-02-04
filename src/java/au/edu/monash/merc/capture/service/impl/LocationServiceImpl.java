@@ -31,7 +31,6 @@ package au.edu.monash.merc.capture.service.impl;
 import au.edu.monash.merc.capture.dao.impl.LocationDAO;
 import au.edu.monash.merc.capture.domain.Location;
 import au.edu.monash.merc.capture.service.LocationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,22 +39,21 @@ import java.util.List;
 
 /**
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * <p/>
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 13/02/13 11:00 AM
+ * <p/>
+ * Date: 13/02/13 11:00 AM
  */
 
 @Scope("prototype")
 @Service
 @Transactional
 public class LocationServiceImpl implements LocationService {
-    @Autowired
-    private LocationDAO locationDao;
+    private final LocationDAO locationDao;
 
-    public void setLocationDao(LocationDAO locationDao) {
+    public LocationServiceImpl(LocationDAO locationDao) {
         this.locationDao = locationDao;
     }
 

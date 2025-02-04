@@ -32,7 +32,9 @@ import au.edu.monash.merc.capture.domain.Party;
 import au.edu.monash.merc.capture.repository.IPartyRepository;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
@@ -41,6 +43,10 @@ import java.util.List;
 @Scope("prototype")
 @Repository
 public class PartyDAO extends HibernateGenericDAO<Party> implements IPartyRepository {
+
+    public PartyDAO(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
     @Override
     public Party getPartyByPartyKey(String partyKey) {

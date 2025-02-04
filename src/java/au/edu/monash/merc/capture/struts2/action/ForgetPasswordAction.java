@@ -77,10 +77,11 @@ public class ForgetPasswordAction extends BaseAction {
 				addActionError(getText("useract.forgotpassword.inactive.account"));
 				return INPUT;
 			}
-			if (foundUser.getPassword().equals("ldap")) {
-				addActionError(getText("useract.forgotpassword.cannot.reset.ldap.account"));
-				return INPUT;
-			}
+//			TODO: remove the ldap check. allow all users to reset password.
+//			if (foundUser.getPassword().equals("ldap")) {
+//				addActionError(getText("useract.forgotpassword.cannot.reset.ldap.account"));
+//				return INPUT;
+//			}
 
 			String displayName = foundUser.getDisplayName();
 			String userFullName = user.getFirstName() + " " + user.getLastName();

@@ -27,7 +27,6 @@
  */
 package au.edu.monash.merc.capture.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -65,99 +64,25 @@ public class ConfigSettings {
 
     public static String USER_HASH_SEQUENCE = "user.security.hash.sequence";
 
-    // ANDS RIF-CS Configuration
-    public static String ANDS_RIFCS_REG_ENABLED = "ands.rifcs.register.enabled";
-
-    public static String ANDS_PARTY_ACTIVITY_WS_NAME = "ands.party.activtiy.rm.ws.name";
-
-    public static String ANDS_PARTY_ACTIVITY_WS_ENDPOINT = "ands.party.activtiy.rm.ws.endpoint";
-
-    public static String ANDS_PARTY_ACTIVITY_WS_TIMEOUT = "ands.party.activtiy.rm.ws.timeout";
-
     public static String ANDS_RIFCS_STORE_LOCATION = "ands.rifcs.files.store.location";
 
     public static String ANDS_RIFCS_REG_GROUP_NAME = "ands.rifcs.register.group.name";
 
-    public static String HANDLE_SERVICE_ENABLED = "ands.handle.ws.enabled";
-
-    public static String HANDLE_SERVICE_IGNORE_CERT_ERROR = "ands.handle.ws.ignore.cert.error";
-
-    public static String HANDLE_SERVICE_HOST = "ands.handle.ws.host.name";
-
-    public static String HANDLE_SERVICE_HOST_PORT = "ands.handle.ws.host.port";
-
-    public static String HANDLE_SERVICE_PATH = "ands.handle.ws.path";
-
-    public static String HANDLE_SERVICE_MINT_METHOD = "ands.handle.ws.mint.method";
-
-    public static String HANDLE_SERVICE_IDENTIFIER = "ands.handle.ws.app.identifier";
-
-    public static String HANDLE_SERVICE_APPID = "ands.handle.ws.authentication.appid";
-
-    public static String HANDLE_SERVICE_AUTH_DOMAIN = "ands.handle.ws.auth.domain";
-
-    public static String HANDLE_RESOLVER_SERVER = "ands.handle.resolver.url";
-
     // Mail Server Configuration
     public static String SMTP_MAIL_SERVER = "smtp.mail.server";
 
-    // LDAP Configuration
-    public static String LDAP_AUTH_SUPPORTED = "ldap.authentication.supported";
-
-    public static String LDAP_AUTH_WS_ENABLED = "ldap.remote.authen.ws.enabled";
-
-    public static String LDAP_AUTH_WS_HOST = "ldap.remote.ws.host.name";
-
-    public static String LDAP_AUTH_WS_PORT = "ldap.remote.ws.host.port";
-
-    public static String LDAP_AUTH_WS_CERT_ERROR_IGNORE = "ldap.remote.ws.cert.error.ignore";
-
-    public static String LDAP_FACTORY = "ldap.factory";
-
-    public static String LDAP_SERVER_URL = "ldap.server.url";
-
-    public static String LDAP_BASE_DN = "ldap.base.dn";
-
-    public static String LDAP_BIND_BASE_DN_REQUIRED = "ldap.bind.base.dn.required";
-
-    public static String LDAP_SECURITY_PROTOCOL = "ldap.security.protocol";
-
-    public static String LDAP_AUTHENTICATION = "ldap.authentication";
-
-    public static String LDAP_UID_ATTR_NAME = "ldap.uid.attrName";
-
-    public static String LDAP_MAIL_ATTR_NAME = "ldap.mail.attrName";
-
-    public static String LDAP_CN_ATTR_NAME = "ldap.cn.attrName";
-
-    public static String LDAP_GENDER_ATTR_NAME = "ldap.gender.attrName";
-
-    public static String LDAP_SN_ATTR_NAME = "ldap.sn.attrName";
-
-    public static String LDAP_GIVENNAME_ATTR_NAME = "ldap.givenname.attrName";
-
-    public static String LDAP_PERSONAL_TITLE_ATTR_NAME = "ldap.personaltitle.attrName";
-
     public static String TERN_DATA_LICENCE = "tern.data.licence";
 
-    public static String OZFLUX_ACTIVITY_KEY = "ozflux.activity.key";
+    public static String GOOGLE_MAP_ENABLED = "google.map.enabled";
 
-    public static String RIFCS_COLLECTION_TEMPLATE = "rifcs.collection.template";
+    private final SystemPropertiesConfigurer sysPropertyConfigurer;
 
-    public static String RIFCS_RM_PARTY_TEMPLATE = "rifcs.rm.party.template";
-
-    public static String RIFCS_NONE_RM_PARTY_TEMPLATE = "rifcs.none.rm.party.template";
-
-    @Autowired
-    @Qualifier("sysPropertyConfigurer")
-    private SystemPropertiesConfigurer sysPropertyConfigurer;
+    public ConfigSettings(@Qualifier("sysPropertyConfigurer") SystemPropertiesConfigurer sysPropertyConfigurer) {
+        this.sysPropertyConfigurer = sysPropertyConfigurer;
+    }
 
     public SystemPropertiesConfigurer getSysPropertyConfigurer() {
         return sysPropertyConfigurer;
-    }
-
-    public void setSysPropertyConfigurer(SystemPropertiesConfigurer sysPropertyConfigurer) {
-        this.sysPropertyConfigurer = sysPropertyConfigurer;
     }
 
     public String getPropValue(String propKey) {

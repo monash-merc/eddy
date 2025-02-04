@@ -86,15 +86,6 @@ public class ViewColDetailsAction extends DMCoreAction {
                 return REDIRECTCO;
             }
 
-//            // if no permission for anonymose
-//            if (viewType.equals(ActConstants.UserViewType.ANONYMOUS.toString())) {
-//                if (!permissionBean.isViewAllowed()) {
-//                    addFieldError("viewPermission", getText("failed.to.get.collection.permission.denied"));
-//                    setNavAfterException();
-//                    return INPUT;
-//                }
-//            }
-
             collection = this.dmService.getCollection(collection.getId(), collection.getOwner().getId());
             if (collection != null) {
                 // convert any newline in the description into a br html tag
@@ -102,33 +93,12 @@ public class ViewColDetailsAction extends DMCoreAction {
                 String htmlDesc = nlToBr(textAreaDesc);
                 collection.setDescription(htmlDesc);
 
-//                // check the view permissions
-//                if (!permissionBean.isViewAllowed()) {
-//                    setActionSuccessMsg(getText("no.permissions.to.view.collection"));
-//                    setNavAfterSuccess();
-//                    return SUCCESS;
-//                }
-
-                // populate the list dataset in this user collection.
-                // datasets = this.dmService.getDatasetByCollectionIdUsrId(collection.getId(), collection.getOwner().getId());
-                //retrieveAllDatasets();
                 retrieveAllRADatasets();
                 // populate the collection links
                 if (viewType.equals(UserViewType.ANONYMOUS.type())) {
                     populateLinksInPubCollection();
                 } else {
                     populateLinksInUsrCollection();
-                }
-
-                // populate the rifcs registration if enabled
-                String mdRegEnabledStr = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_REG_ENABLED);
-                mdRegEnabled = Boolean.valueOf(mdRegEnabledStr).booleanValue();
-
-                //The owner of a collection or an admin they can register the metadata
-                if (user != null && mdRegEnabled) {
-                    if ((user.getId() == collection.getOwner().getId()) || (user.getUserType() == UserType.ADMIN.code()) || (user.getUserType() == UserType.SUPERADMIN.code())) {
-                        permissionBean.setMdRegAllowed(true);
-                    }
                 }
 
                 //get the licence

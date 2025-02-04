@@ -33,7 +33,9 @@ import au.edu.monash.merc.capture.domain.Location;
 import au.edu.monash.merc.capture.repository.ILocationRepository;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
@@ -41,17 +43,21 @@ import java.util.List;
 
 /**
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * <p/>
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 13/02/13 10:18 AM
+ * <p/>
+ * Date: 13/02/13 10:18 AM
  */
 
 @Scope("prototype")
 @Repository
 public class LocationDAO extends HibernateGenericDAO<Location> implements ILocationRepository {
+
+    public LocationDAO(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
     @Override
     public void deleteLocationById(long id) {

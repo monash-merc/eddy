@@ -41,6 +41,8 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.log4j.Logger;
 
+import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -68,13 +70,17 @@ public class XssInterceptor extends AbstractInterceptor {
         if (parameters != null) {
             ValueStack stack = actionContext.getValueStack();
             for (Map.Entry<String, Object> map : parameters.entrySet()) {
-                String value = ((String[]) (map.getValue()))[0];
-                String strip_xss_value = stripXSS(value);
-                if (logger.isDebugEnabled()) {
-                    logger.debug("parameter value: " + value);
-                    logger.debug("strip_xss_value: " + strip_xss_value);
+                Object value = ((Object[]) (map.getValue()))[0];
+                if (value instanceof String) {
+                    String strip_xss_value = stripXSS((String) value);
+                    System.out.println("==== parameter value: " + value);
+                    System.out.println("==== strip_xss_value: " + strip_xss_value);
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("parameter value: " + value);
+                        logger.debug("strip_xss_value: " + strip_xss_value);
+                    }
+                    stack.setValue(map.getKey(), strip_xss_value);
                 }
-                stack.setValue(map.getKey(), strip_xss_value);
             }
         }
         return invocation.invoke();

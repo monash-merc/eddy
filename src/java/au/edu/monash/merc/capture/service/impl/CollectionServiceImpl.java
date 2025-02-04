@@ -27,35 +27,27 @@
  */
 package au.edu.monash.merc.capture.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import au.edu.monash.merc.capture.dao.impl.CollectionDAO;
 import au.edu.monash.merc.capture.domain.Collection;
 import au.edu.monash.merc.capture.dto.OrderBy;
 import au.edu.monash.merc.capture.dto.page.Pagination;
 import au.edu.monash.merc.capture.service.CollectionService;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Scope("prototype")
 @Service
 @Transactional
 public class CollectionServiceImpl implements CollectionService {
 
-    @Autowired
-    private CollectionDAO collectionDAO;
+    private final CollectionDAO collectionDAO;
 
-    public CollectionDAO getCollectionDAO() {
-        return collectionDAO;
-    }
-
-    public void setCollectionDAO(CollectionDAO collectionDAO) {
+    public CollectionServiceImpl(CollectionDAO collectionDAO) {
         this.collectionDAO = collectionDAO;
     }
-
     @Override
     public void deleteCollection(Collection entity) {
         this.collectionDAO.remove(entity);

@@ -27,27 +27,32 @@
  */
 package au.edu.monash.merc.capture.dao.impl;
 
-import java.util.List;
-
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Repository;
-
 import au.edu.monash.merc.capture.dao.HibernateGenericDAO;
 import au.edu.monash.merc.capture.domain.MetaAttribute;
 import au.edu.monash.merc.capture.repository.IMetaAttributeRepository;
+import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Scope("prototype")
 @Repository
 public class MetaAttributeDAO extends HibernateGenericDAO<MetaAttribute> implements IMetaAttributeRepository {
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<MetaAttribute> getAllAttributeByVarId(long varId) {
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		Criteria varCriteria = criteria.createCriteria("metaVariable");
-		varCriteria.add(Restrictions.eq("id", varId));
-		return criteria.list();
-	}
+    public MetaAttributeDAO(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<MetaAttribute> getAllAttributeByVarId(long varId) {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        Criteria varCriteria = criteria.createCriteria("metaVariable");
+        varCriteria.add(Restrictions.eq("id", varId));
+        return criteria.list();
+    }
 }

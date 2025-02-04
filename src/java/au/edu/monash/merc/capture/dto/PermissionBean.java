@@ -147,7 +147,7 @@ public class PermissionBean implements Serializable {
         this.importAllowed = true;
         this.exportAllowed = true;
         this.deleteAllowed = true;
-        this.mdRegAllowed = true;
+//        this.mdRegAllowed = false;
         this.acAllowed = true;
         this.racAllowed = true;
     }

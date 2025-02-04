@@ -31,5 +31,5 @@ public interface IdentifierService {
 
 	public String genUUIDWithPrefix();
 
-	public String genHandleIdentifier(String url);
+//	public String genHandleIdentifier(String url);
 }

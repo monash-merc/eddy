@@ -27,13 +27,6 @@
  */
 package au.edu.monash.merc.capture.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import au.edu.monash.merc.capture.dao.impl.DatasetDAO;
 import au.edu.monash.merc.capture.dao.impl.GlobalMetadataDAO;
 import au.edu.monash.merc.capture.dao.impl.MetaAttributeDAO;
@@ -44,53 +37,29 @@ import au.edu.monash.merc.capture.domain.MetaVariable;
 import au.edu.monash.merc.capture.dto.OrderBy;
 import au.edu.monash.merc.capture.dto.page.Pagination;
 import au.edu.monash.merc.capture.service.DatasetService;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Scope("prototype")
 @Service
 @Transactional
 public class DatasetServiceImpl implements DatasetService {
 
-    @Autowired
-    private DatasetDAO datasetDAO;
+    private final DatasetDAO datasetDAO;
 
-    @Autowired
-    private GlobalMetadataDAO globalMetadataDAO;
+    private final GlobalMetadataDAO globalMetadataDAO;
 
-    @Autowired
-    private MetaVariableDAO metaVariableDAO;
+    private final MetaVariableDAO metaVariableDAO;
 
-    @Autowired
-    private MetaAttributeDAO metaAttributeDAO;
+    private final MetaAttributeDAO metaAttributeDAO;
 
-    public DatasetDAO getDatasetDAO() {
-        return datasetDAO;
-    }
-
-    public void setDatasetDAO(DatasetDAO datasetDAO) {
+    public DatasetServiceImpl(DatasetDAO datasetDAO, GlobalMetadataDAO globalMetadataDAO, MetaVariableDAO metaVariableDAO, MetaAttributeDAO metaAttributeDAO) {
         this.datasetDAO = datasetDAO;
-    }
-
-    public GlobalMetadataDAO getGlobalMetadataDAO() {
-        return globalMetadataDAO;
-    }
-
-    public void setGlobalMetadataDAO(GlobalMetadataDAO globalMetadataDAO) {
         this.globalMetadataDAO = globalMetadataDAO;
-    }
-
-    public MetaVariableDAO getMetaVariableDAO() {
-        return metaVariableDAO;
-    }
-
-    public void setMetaVariableDAO(MetaVariableDAO metaVariableDAO) {
         this.metaVariableDAO = metaVariableDAO;
-    }
-
-    public MetaAttributeDAO getMetaAttributeDAO() {
-        return metaAttributeDAO;
-    }
-
-    public void setMetaAttributeDAO(MetaAttributeDAO metaAttributeDAO) {
         this.metaAttributeDAO = metaAttributeDAO;
     }
 

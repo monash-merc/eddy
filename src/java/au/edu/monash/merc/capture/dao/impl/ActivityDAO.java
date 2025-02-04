@@ -27,60 +27,65 @@
  */
 package au.edu.monash.merc.capture.dao.impl;
 
-import java.util.List;
-
-import org.hibernate.Criteria;
-import org.hibernate.Query;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Repository;
-
 import au.edu.monash.merc.capture.dao.HibernateGenericDAO;
 import au.edu.monash.merc.capture.domain.Activity;
 import au.edu.monash.merc.capture.repository.IActivityRepository;
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Scope("prototype")
 @Repository
 public class ActivityDAO extends HibernateGenericDAO<Activity> implements IActivityRepository {
 
-	@Override
-	public Activity getActivityByActKey(String activityKey) {
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		criteria.add(Restrictions.eq("activityKey", activityKey));
-		return (Activity) criteria.uniqueResult();
-	}
+    public ActivityDAO(@Qualifier("sessionFactory") SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Activity> getAllActivities() {
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		criteria.setComment("ActivityDAO.getAllActivities()");
-		return criteria.list();
-	}
+    @Override
+    public Activity getActivityByActKey(String activityKey) {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        criteria.add(Restrictions.eq("activityKey", activityKey));
+        return (Activity) criteria.uniqueResult();
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Activity> getActivitiesByCollectionId(long cid) {
-		Criteria criteria = this.session().createCriteria(this.persistClass);
-		// create the alias for collections
-		Criteria colcrit = criteria.createAlias("collections", "co");
-		colcrit.add(Restrictions.eq("co.id", cid));
-		return criteria.list();
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Activity> getAllActivities() {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        criteria.setComment("ActivityDAO.getAllActivities()");
+        return criteria.list();
+    }
 
-	@Override
-	public void deleteActivityById(long id) {
-		String del_hql = "DELETE FROM " + this.persistClass.getSimpleName() + " AS ay WHERE ay.id = :id";
-		Query query = this.session().createQuery(del_hql);
-		query.setLong("id", id);
-		query.executeUpdate();
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Activity> getActivitiesByCollectionId(long cid) {
+        Criteria criteria = this.session().createCriteria(this.persistClass);
+        // create the alias for collections
+        Criteria colcrit = criteria.createAlias("collections", "co");
+        colcrit.add(Restrictions.eq("co.id", cid));
+        return criteria.list();
+    }
 
-	@Override
-	public void deleteActivityByActKey(String activityKey) {
-		String del_hql = "DELETE FROM " + this.persistClass.getSimpleName() + " AS ay WHERE ay.activityKey = :activityKey";
-		Query query = this.session().createQuery(del_hql);
-		query.setString("activityKey", activityKey);
-		query.executeUpdate();
-	}
+    @Override
+    public void deleteActivityById(long id) {
+        String del_hql = "DELETE FROM " + this.persistClass.getSimpleName() + " AS ay WHERE ay.id = :id";
+        Query query = this.session().createQuery(del_hql);
+        query.setLong("id", id);
+        query.executeUpdate();
+    }
+
+    @Override
+    public void deleteActivityByActKey(String activityKey) {
+        String del_hql = "DELETE FROM " + this.persistClass.getSimpleName() + " AS ay WHERE ay.activityKey = :activityKey";
+        Query query = this.session().createQuery(del_hql);
+        query.setString("activityKey", activityKey);
+        query.executeUpdate();
+    }
 }

@@ -27,6 +27,7 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -41,193 +42,201 @@ import au.edu.monash.merc.capture.util.MD5;
 @Controller("user.userResetPwdAction")
 public class ResetPasswdAction extends BaseAction {
 
-	// dummy action id for security protection.
-	private long actUId = -1;
+    // dummy action id for security protection.
+    private long actUId = -1;
 
-	// user uid hash code
-	private String usrIdCode;
+    // user uid hash code
+    private String usrIdCode;
 
-	// dummy action name for security protection.
-	private String act;
+    // dummy action name for security protection.
+    private String act;
 
-	// dummy reset password hashcode for security protection
-	private String hashCd;
+    // dummy reset password hashcode for security protection
+    private String hashCd;
 
-	// re-enter new password
-	private String rePassword;
+    // re-enter new password
+    private String rePassword;
 
-	private String securityCode;
+    private String securityCode;
 
-	@Autowired
-	private BlockIPService blockIPService;
+    @Autowired
+    private BlockIPService blockIPService;
 
-	private Logger logger = Logger.getLogger(this.getClass().getName());
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
-	public String verifyPasswdReset() {
-		boolean hasErrors = verifyPasswordResetHasErrors();
-		if (hasErrors) {
-			addActionError(getText("resetpwdact.invalid.confirmation.link"));
-			return ERROR;
-		}
-		// System.out.println("user id = " + actUId + ", act = " + act + ", idCode=" + usrIdCode + ", hashCd=" +
-		// hashCd);
-		try {
-			user = this.userService.getUserById(actUId);
-			if (user == null) {
-				// User doesn't existed
-				addActionError(getText("resetpwdact.invalid.confirmation.link"));
-				return ERROR;
-			}
+    public String verifyPasswdReset() {
+        boolean hasErrors = verifyPasswordResetHasErrors();
+        if (hasErrors) {
+            addActionError(getText("resetpwdact.invalid.confirmation.link"));
+            return ERROR;
+        }
+        // System.out.println("user id = " + actUId + ", act = " + act + ", idCode=" + usrIdCode + ", hashCd=" +
+        // hashCd);
+        try {
+            user = this.userService.getUserById(actUId);
+            if (user == null) {
+                // User doesn't existed
+                addActionError(getText("resetpwdact.invalid.confirmation.link"));
+                return ERROR;
+            }
 
-			if (user.getResetPasswdHashCode() == null) {
-				// The reset password link has been expired
-				addActionError(getText("resetpwdact.expired.confirmation.link"));
-				return ERROR;
-			}
+            if (user.getResetPasswdHashCode() == null) {
+                // The reset password link has been expired
+                addActionError(getText("resetpwdact.expired.confirmation.link"));
+                return ERROR;
+            }
 
-			if (user.getResetPasswdHashCode() != null && (!user.getResetPasswdHashCode().equals(hashCd))) {
-				addActionError(getText("resetpwdact.invalid.confirmation.link"));
-				return ERROR;
-			}
+            if (user.getResetPasswdHashCode() != null && (!user.getResetPasswdHashCode().equals(hashCd))) {
+                addActionError(getText("resetpwdact.invalid.confirmation.link"));
+                return ERROR;
+            }
 
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			addActionError(getText("resetpwdact.validate.reset.password.confirmation.failed"));
-			return ERROR;
-		}
-		return SUCCESS;
-	}
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            addActionError(getText("resetpwdact.validate.reset.password.confirmation.failed"));
+            return ERROR;
+        }
+        return SUCCESS;
+    }
 
-	private boolean verifyPasswordResetHasErrors() {
+    private boolean verifyPasswordResetHasErrors() {
 
-		if ((actUId <= 0) || (act == null) || (usrIdCode == null) || (hashCd == null)) {
-			return true;
-		}
-		if (act != null && (!act.equals(ActConstants.RESET_PWD_ACTION_NAME))) {
-			return true;
-		}
+        if ((actUId <= 0) || (act == null) || (usrIdCode == null) || (hashCd == null)) {
+            return true;
+        }
+        if (act != null && (!act.equals(ActConstants.RESET_PWD_ACTION_NAME))) {
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public String resetPassword() {
+    public String resetPassword() {
 
-		if (checkResetPasswordErrors()) {
-			return INPUT;
-		}
-		try {
-			User usr = this.userService.getUserById(user.getId());
-			// can't find user, means the reset password link has been expired
-			if (usr == null) {
-				addActionError("resetpwdact.invalid.confirmation.link");
-				return INPUT;
-			}
-			// reset password hash code is null, means the reset password link has been expired
-			if (usr.getResetPasswdHashCode() == null) {
-				// The reset password link has been expired
-				addActionError(getText("resetpwdact.expired.confirmation.link"));
-				return INPUT;
-			}
+        if (checkResetPasswordErrors()) {
+            return INPUT;
+        }
+        try {
+            User usr = this.userService.getUserById(user.getId());
+            // can't find user, means the reset password link has been expired
+            if (usr == null) {
+                addActionError("resetpwdact.invalid.confirmation.link");
+                return INPUT;
+            }
+            // reset password hash code is null, means the reset password link has been expired
+            if (usr.getResetPasswdHashCode() == null) {
+                // The reset password link has been expired
+                addActionError(getText("resetpwdact.expired.confirmation.link"));
+                return INPUT;
+            }
 
-			if (usr.getResetPasswdHashCode() != null && (!usr.getResetPasswdHashCode().equals(user.getResetPasswdHashCode()))) {
-				addActionError(getText("resetpwdact.expired.confirmation.link"));
-				return INPUT;
-			}
-			//
-			usr.setPassword(MD5.hash(user.getPassword()));
-			usr.setResetPasswdHashCode(null);
-			this.userService.updateUser(usr);
-			// sign a persistent User
-			user = usr;
-			// find any previous blocked ip, if find, just remove it.
-			String ipAddress = request.getRemoteAddr();
-			IPBlock ipBlock = this.blockIPService.getIPBlockByIp(ipAddress);
-			if (ipBlock != null) {
-				this.blockIPService.deleteIPBlock(ipBlock);
-			}
+            if (usr.getResetPasswdHashCode() != null && (!usr.getResetPasswdHashCode().equals(user.getResetPasswdHashCode()))) {
+                addActionError(getText("resetpwdact.expired.confirmation.link"));
+                return INPUT;
+            }
+            //
+            usr.setPassword(MD5.hash(user.getPassword()));
+            usr.setResetPasswdHashCode(null);
+            String email = user.getEmail();
+            // set the user email as a unique id
+            usr.setUniqueId(email);
+            // set the unique id hash code.
+            if (StringUtils.isBlank(user.getUniqueId())) {
+                usr.setUidHashCode(generateSecurityHash(email));
+            }
+//			update user
+            this.userService.updateUser(usr);
+            // sign a persistent User
+            user = usr;
+            // find any previous blocked ip, if found, just remove it.
+            String ipAddress = request.getRemoteAddr();
+            IPBlock ipBlock = this.blockIPService.getIPBlockByIp(ipAddress);
+            if (ipBlock != null) {
+                this.blockIPService.deleteIPBlock(ipBlock);
+            }
 
-			// set action finished messsage
-			addActionMessage(getText("user.reset.password.successfully.msg", new String[] { user.getDisplayName() }));
-			// set page title and navigation label
-			setNavAfterRegSuccess();
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			addActionError(getText("resetpwdact.failed.to.reset.password"));
-			return INPUT;
-		}
-		return SUCCESS;
-	}
+            // set action finished messsage
+            addActionMessage(getText("user.reset.password.successfully.msg", new String[]{user.getDisplayName()}));
+            // set page title and navigation label
+            setNavAfterRegSuccess();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            addActionError(getText("resetpwdact.failed.to.reset.password"));
+            return INPUT;
+        }
+        return SUCCESS;
+    }
 
-	private void setNavAfterRegSuccess() {
-		String startNav = getText("user.reset.passwd.action.title");
-		setPageTitle(startNav);
-		navigationBar = generateNavLabel(startNav, null, null, null, null, null);
-	}
+    private void setNavAfterRegSuccess() {
+        String startNav = getText("user.reset.passwd.action.title");
+        setPageTitle(startNav);
+        navigationBar = generateNavLabel(startNav, null, null, null, null, null);
+    }
 
-	private boolean checkResetPasswordErrors() {
-		boolean hasError = false;
-		if (!user.getPassword().equals(rePassword)) {
-			addFieldError("password", getText("user.reset.two.passwords.not.same"));
-			hasError = true;
-		}
+    private boolean checkResetPasswordErrors() {
+        boolean hasError = false;
+        if (!user.getPassword().equals(rePassword)) {
+            addFieldError("password", getText("user.reset.two.passwords.not.same"));
+            hasError = true;
+        }
 
-		if (isSecurityCodeError(securityCode)) {
-			addFieldError("securityCode", getText("security.code.invalid"));
-			hasError = true;
-		}
-		return hasError;
-	}
+        if (isSecurityCodeError(securityCode)) {
+            addFieldError("securityCode", getText("security.code.invalid"));
+            hasError = true;
+        }
+        return hasError;
+    }
 
-	public void setBlockIPService(BlockIPService blockIPService) {
-		this.blockIPService = blockIPService;
-	}
+    public void setBlockIPService(BlockIPService blockIPService) {
+        this.blockIPService = blockIPService;
+    }
 
-	public long getActUId() {
-		return actUId;
-	}
+    public long getActUId() {
+        return actUId;
+    }
 
-	public void setActUId(long actUId) {
-		this.actUId = actUId;
-	}
+    public void setActUId(long actUId) {
+        this.actUId = actUId;
+    }
 
-	public String getUsrIdCode() {
-		return usrIdCode;
-	}
+    public String getUsrIdCode() {
+        return usrIdCode;
+    }
 
-	public void setUsrIdCode(String usrIdCode) {
-		this.usrIdCode = usrIdCode;
-	}
+    public void setUsrIdCode(String usrIdCode) {
+        this.usrIdCode = usrIdCode;
+    }
 
-	public String getHashCd() {
-		return hashCd;
-	}
+    public String getHashCd() {
+        return hashCd;
+    }
 
-	public void setHashCd(String hashCd) {
-		this.hashCd = hashCd;
-	}
+    public void setHashCd(String hashCd) {
+        this.hashCd = hashCd;
+    }
 
-	public String getAct() {
-		return act;
-	}
+    public String getAct() {
+        return act;
+    }
 
-	public void setAct(String act) {
-		this.act = act;
-	}
+    public void setAct(String act) {
+        this.act = act;
+    }
 
-	public String getRePassword() {
-		return rePassword;
-	}
+    public String getRePassword() {
+        return rePassword;
+    }
 
-	public void setRePassword(String rePassword) {
-		this.rePassword = rePassword;
-	}
+    public void setRePassword(String rePassword) {
+        this.rePassword = rePassword;
+    }
 
-	public String getSecurityCode() {
-		return securityCode;
-	}
+    public String getSecurityCode() {
+        return securityCode;
+    }
 
-	public void setSecurityCode(String securityCode) {
-		this.securityCode = securityCode;
-	}
+    public void setSecurityCode(String securityCode) {
+        this.securityCode = securityCode;
+    }
 
 }

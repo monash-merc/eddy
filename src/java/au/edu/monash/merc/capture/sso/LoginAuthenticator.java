@@ -28,13 +28,8 @@
 package au.edu.monash.merc.capture.sso;
 
 import au.edu.monash.merc.capture.domain.User;
-import au.edu.monash.merc.capture.dto.ldap.LdapUser;
 
 public interface LoginAuthenticator {
 
-    User login(String username, String password, boolean ldap);
-
-    LdapUser verifyLdapUser(String authcatId, String password);
-
-    LdapUser ldapLookup(String cnOrEmail);
+    User login(String username, String password);
 }

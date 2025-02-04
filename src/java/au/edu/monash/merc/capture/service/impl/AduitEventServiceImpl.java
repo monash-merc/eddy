@@ -27,62 +27,59 @@
  */
 package au.edu.monash.merc.capture.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import au.edu.monash.merc.capture.dao.impl.AuditEventDAO;
 import au.edu.monash.merc.capture.domain.AuditEvent;
 import au.edu.monash.merc.capture.dto.OrderBy;
 import au.edu.monash.merc.capture.dto.page.Pagination;
 import au.edu.monash.merc.capture.service.AuditEventService;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Scope("prototype")
 @Service
 @Transactional
 public class AduitEventServiceImpl implements AuditEventService {
 
-	@Autowired
-	private AuditEventDAO eventDAO;
+    private final AuditEventDAO eventDAO;
 
-	public void setEventDAO(AuditEventDAO eventDAO) {
-		this.eventDAO = eventDAO;
-	}
+    public AduitEventServiceImpl(AuditEventDAO eventDAO) {
+        this.eventDAO = eventDAO;
+    }
 
-	@Override
-	public void saveAuditEvent(AuditEvent event) {
-		this.eventDAO.add(event);
-	}
+    @Override
+    public void saveAuditEvent(AuditEvent event) {
+        this.eventDAO.add(event);
+    }
 
-	@Override
-	public void updateAuditEvent(AuditEvent event) {
-		this.eventDAO.update(event);
-	}
+    @Override
+    public void updateAuditEvent(AuditEvent event) {
+        this.eventDAO.update(event);
+    }
 
-	@Override
-	public void deleteAuditEvent(AuditEvent event) {
-		this.eventDAO.remove(event);
-	}
+    @Override
+    public void deleteAuditEvent(AuditEvent event) {
+        this.eventDAO.remove(event);
+    }
 
-	@Override
-	public void deleteAuditEventById(long eId) {
-		this.eventDAO.deleteAuditEventById(eId);
-	}
+    @Override
+    public void deleteAuditEventById(long eId) {
+        this.eventDAO.deleteAuditEventById(eId);
+    }
 
-	@Override
-	public void deleteEventByIdWithUserId(long eId, long userId) {
-		this.eventDAO.deleteEventByIdWithUserId(eId, userId);
-	}
+    @Override
+    public void deleteEventByIdWithUserId(long eId, long userId) {
+        this.eventDAO.deleteEventByIdWithUserId(eId, userId);
+    }
 
-	@Override
-	public AuditEvent getAuditEventById(long eid) {
-		return this.eventDAO.get(eid);
-	}
+    @Override
+    public AuditEvent getAuditEventById(long eid) {
+        return this.eventDAO.get(eid);
+    }
 
-	@Override
-	public Pagination<AuditEvent> getEventByUserId(long uid, int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
-		return this.eventDAO.getEventByUserId(uid, startPageNo, recordsPerPage, orderBys);
-	}
+    @Override
+    public Pagination<AuditEvent> getEventByUserId(long uid, int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
+        return this.eventDAO.getEventByUserId(uid, startPageNo, recordsPerPage, orderBys);
+    }
 
 }

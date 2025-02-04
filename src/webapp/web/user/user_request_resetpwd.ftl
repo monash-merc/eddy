@@ -32,9 +32,6 @@
             <div class="left_display_inner">
                 <div class="reg_panel">
                 <@s.form action="forgotPassword.jspx" namespace="/user" method="post">
-                    <div class="hints_panel">
-                        <img src="${base}/images/warn.png"/> &nbsp; Monash Authcate user, please contact ITS support service to reset your password
-                    </div>
                     <div class="reg_middle_panel">
                         <div class="input_field_row">
                             <div class="input_field_title">
@@ -60,7 +57,7 @@
                         </div>
                         <div class="input_field_row">
                             <div class="input_field_title">
-                                <@s.text name="user.email" />
+                                <@s.text name="user.email" />:
                             </div>
                             <div class="input_field_value_section">
                                 <@s.textfield name="user.email" />

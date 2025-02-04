@@ -58,29 +58,23 @@ public class InstallAction extends InstallBaseAction {
 
     private MailProperty mailProp;
 
-    private LdapProperty ldapProp;
-
-    private LdapWsProperty ldapWsProp;
-
     private Map<String, String> dbTypeNames = new HashMap<String, String>();
 
     private Map<String, String> trueFalseMap = new HashMap<String, String>();
 
-    private static String JDBC_PROP_FILE = "jdbc.properties";
+    private static final String JDBC_PROP_FILE = "jdbc.properties";
 
-    private static String MAIL_PROP_FILE = "mail.properties";
+    private static final String MAIL_PROP_FILE = "mail.properties";
 
-    private static String APP_PROP_FILE = "dataCapture.properties";
+    private static final String APP_PROP_FILE = "dataCapture.properties";
 
-    private static String LDAP_PROP_FILE = "ldap.properties";
+    private static final String WEB_XML_FILE = "web.xml";
 
-    private static String WEB_XML_FILE = "web.xml";
+    private static final String SPRING_CONF_FILE = "applicationContext.xml";
 
-    private static String SPRING_CONF_FILE = "applicationContext.xml";
+    private static final String STRUTS_FILE = "struts.xml";
 
-    private static String STRUTS_FILE = "struts.xml";
-
-    private Logger logger = Logger.getLogger(this.getClass());
+    private final Logger logger = Logger.getLogger(this.getClass());
 
     public String setup() {
         defaultConf();
@@ -99,7 +93,6 @@ public class InstallAction extends InstallBaseAction {
 
     public String acceptCon() {
         if (!accepted) {
-
             // set the message
             return INPUT;
         }
@@ -119,8 +112,6 @@ public class InstallAction extends InstallBaseAction {
             String destAppFile = destPropConfRoot + APP_PROP_FILE;
 
             // create application configuration file
-            appProp.setAuthDomain(getServerQName());
-
             // write the application configuration file
             Installer.writeAppConfig(appProp, appTempFile, destAppFile);
 
@@ -137,12 +128,6 @@ public class InstallAction extends InstallBaseAction {
             // create mail configuration file
             Installer.writeMailConfig(mailTempFile, mailProp.getMailServer(), mailProp.getMailServerPort(), mailProp.isAuthenticated(),
                     mailProp.isTlsEnabled(), mailProp.getUserName(), mailProp.getPassword(), destMailFile);
-
-            // LDAP configuration file
-            String ldapTempFile = installTempConfPath + LDAP_PROP_FILE;
-            String destLdapFile = destPropConfRoot + LDAP_PROP_FILE;
-
-            Installer.writeLdapConfig(ldapProp, ldapWsProp, ldapTempFile, destLdapFile);
 
             // Spring configuration file
             String springConfFile = installTempConfPath + SPRING_CONF_FILE;
@@ -179,48 +164,29 @@ public class InstallAction extends InstallBaseAction {
         // app
         appProp = new ApplicationProperty();
         appProp.setAppName("YourApplicationName");
-        appProp.setAdminEmail("admin@adminemail.com");
-        appProp.setAdminName("admin");
-        appProp.setAdminPassword("pass2word!");
-        appProp.setSystemServiceEmail("service@servicemail.com");
-        appProp.setStoreLocation("/opt/datastore/ands");
+        appProp.setAdminEmail("your_admin_email");
+        appProp.setAdminName("admin_name");
+        appProp.setAdminPassword("admin_password");
+        appProp.setSystemServiceEmail("service_email");
+        appProp.setStoreLocation("/opt/datastore/eddy");
         appProp.setDataLicence("http://www.tern.org.au/datalicence/TERN-BY-SA-NC/1.0");
         appProp.setCollectionPhysicalLocation("Monash University Clayton Campus Building 26 Clayton 3800 Victoria");
 
         appProp.setLoginTryTimes(3);
         appProp.setBlockWaitingTimes(15);
         appProp.setSecurityHashSeq("whateveryouwanttomakeitmoresecuritymerc!");
-
-        appProp.setMdRegEnabled(true);
         appProp.setAndsRegGroupName("OzFlux: Australian and New Zealand Flux Research and Monitoring");
-        appProp.setRifcsStoreLocation("/opt/ands_rifcs");
-        appProp.setActivityKey("MON399d1cdc-a788-4a05-9f01-d3dcbcafdf8d");
-        appProp.setCollectionRifcsTemplate("collection_temp.ftl");
-        appProp.setPartyRifcsTemplate("party_temp.ftl");
-        appProp.setRmPartyRifcsTemplate("rm_party_temp.ftl");
-
-        // researcher master web service call
-        appProp.setRmWsName("AIRMANDSService");
-        appProp.setRmWsEndpointAddress("https://gateway.integration.monash.edu.au:443/AIRMANDSService");
-        appProp.setRmWsTimeout(60000);
-
-        // handle web service
-        appProp.setHdlWsEnabled(true);
-        appProp.setHdlWsHostName("https://demo.ands.org.au");
-        appProp.setHdlWsHostPort(8443);
-        appProp.setHdlWsPath("pids");
-        appProp.setHdlWsMethod("mint");
-        appProp.setHdlWsAppId("c4b16dc56797f1dfbf545e2397ac7b6bcc54b8ec");
-        appProp.setHdlResolverAddress("http://hdl.handle.net");
+        appProp.setRifcsStoreLocation("/opt/datastore/rifcs");
+        appProp.setMapEnabled(true);
 
         // jdbc
         jdbcProp = new JdbcProperty();
         jdbcProp.setDbType("postgresql");
         jdbcProp.setDbHost("localhost");
         jdbcProp.setDbPort(5432);
-        jdbcProp.setDbName("ands_db");
-        jdbcProp.setDbUserName("mercdev");
-        jdbcProp.setDbPassword("merc2dev");
+        jdbcProp.setDbName("database name");
+        jdbcProp.setDbUserName("user name");
+        jdbcProp.setDbPassword("your password");
 
         // mail
         mailProp = new MailProperty();
@@ -230,27 +196,6 @@ public class InstallAction extends InstallBaseAction {
         mailProp.setTlsEnabled(true);
         mailProp.setUserName("your email address");
         mailProp.setPassword("your email password");
-
-        // Ldap
-        ldapProp = new LdapProperty();
-        ldapProp.setLdapSupported(true);
-        ldapProp.setLdapServer("directory.monash.edu.au");
-        ldapProp.setBaseDN("o=Monash University, c=AU");
-        //we not require bind the base dn.
-        ldapProp.setBindBaseDnRequired(false);
-        ldapProp.setAttUID("uid");
-        ldapProp.setAttMail("mail");
-        ldapProp.setAttGender("gender");
-        ldapProp.setAttCN("cn");
-        ldapProp.setAttSn("sn");
-        ldapProp.setAttPersonalTitle("personalTitle");
-        ldapProp.setAttGivenname("givenname");
-
-        ldapWsProp = new LdapWsProperty();
-        ldapWsProp.setLdapWsEnabled(true);
-        ldapWsProp.setLdapWsServer("https://ldsws.erc.monash.edu");
-        ldapWsProp.setLdapWsPort(443);
-        ldapWsProp.setCertErrorIgnore(true);
     }
 
     public void validateInstall() {
@@ -298,7 +243,6 @@ public class InstallAction extends InstallBaseAction {
             hasError = true;
         }
 
-
         if (appProp.getLoginTryTimes() == 0) {
             addFieldError("logintry", "Login try times must be provided");
             hasError = true;
@@ -312,91 +256,9 @@ public class InstallAction extends InstallBaseAction {
             hasError = true;
         }
 
-        // stage transfer enabled or not
-        boolean stageEnabled = appProp.isStageEnabled();
-        if (stageEnabled) {
-            if (StringUtils.isBlank(appProp.getStageLocation())) {
-                addFieldError("stagelocation", "The staging location must be provided");
-                hasError = true;
-            }
-        }
-
-        // publish enabled
-        boolean publishEnabled = appProp.isMdRegEnabled();
-        if (publishEnabled) {
-            if (StringUtils.isBlank(appProp.getActivityKey())) {
-                addFieldError("activityKey", "The OzFlux activity rifcs key must be provided");
-                hasError = true;
-            }
-            if (StringUtils.isBlank(appProp.getRifcsStoreLocation())) {
-                addFieldError("rifcslocation", "The rif-cs store location must be provided");
-                hasError = true;
-            }
-            if (StringUtils.isBlank(appProp.getCollectionRifcsTemplate())) {
-                addFieldError("collectionTemplate", "The collection rif-cs template must be provided");
-                hasError = true;
-            }
-
-            if (StringUtils.isBlank(appProp.getPartyRifcsTemplate())) {
-                addFieldError("partyTemplate", "The party rif-cs template must be provided");
-                hasError = true;
-            }
-
-            if (StringUtils.isBlank(appProp.getRmPartyRifcsTemplate())) {
-                addFieldError("rmPartyTemplate", "The researcher master party rif-cs template must be provided");
-                hasError = true;
-            }
-
-            if (StringUtils.isBlank(appProp.getAndsRegGroupName())) {
-                addFieldError("groupname", "The group name in the rif-cs must be provided");
-                hasError = true;
-            }
-
-            if (StringUtils.isBlank(appProp.getRmWsName())) {
-                addFieldError("rmwsname", "The researcher master web service name must be provided");
-                hasError = true;
-            }
-            if (StringUtils.isBlank(appProp.getRmWsEndpointAddress())) {
-                addFieldError("rmwsaddress", "The researcher master web service endpoint address must be provided");
-                hasError = true;
-            }
-            if (appProp.getRmWsTimeout() == 0) {
-                addFieldError("rmwsatimeout", "The researcher master web service timeout value must be provided");
-                hasError = true;
-            }
-            boolean handleWsEnabled = appProp.isHdlWsEnabled();
-            if (handleWsEnabled) {
-                if (StringUtils.isBlank(appProp.getHdlWsHostName())) {
-                    addFieldError("hdlwshost", "The handle web service host must be provided");
-                    hasError = true;
-                } else {
-                    if (!StringUtils.startsWith(appProp.getHdlWsHostName(), "https://")
-                            && (!StringUtils.startsWith(appProp.getHdlWsHostName(), "http://"))) {
-                        addFieldError("hdlwshost", "The protocol (https or http) must be included in the handle web service host");
-                        hasError = true;
-                    }
-                }
-                if (appProp.getHdlWsHostPort() == 0) {
-                    addFieldError("hdlwshostport", "The handle web service host port must be provided");
-                    hasError = true;
-                }
-                if (StringUtils.isBlank(appProp.getHdlWsPath())) {
-                    addFieldError("hdlwsapath", "The handle web service path must be provided");
-                    hasError = true;
-                }
-                if (StringUtils.isBlank(appProp.getHdlWsMethod())) {
-                    addFieldError("hdlwsmintmethod", "The handle web service mint method must be provided");
-                    hasError = true;
-                }
-                if (StringUtils.isBlank(appProp.getHdlWsAppId())) {
-                    addFieldError("hdlwsappid", "The handle web service application id must be provided");
-                    hasError = true;
-                }
-                if (StringUtils.isBlank(appProp.getHdlResolverAddress())) {
-                    addFieldError("hdlresolver", "The handle resolver server must be provided");
-                    hasError = true;
-                }
-            }
+        if (StringUtils.isBlank(appProp.getAndsRegGroupName())) {
+            addFieldError("groupname", "The group name in the rif-cs must be provided");
+            hasError = true;
         }
 
         // database config validations
@@ -442,68 +304,6 @@ public class InstallAction extends InstallBaseAction {
                 hasError = true;
             }
         }
-
-        // ldap configuration validation
-        if (ldapProp.isLdapSupported()) {
-            boolean ldapAuthenWsEnabled = ldapWsProp.isLdapWsEnabled();
-            if (ldapAuthenWsEnabled) {
-                if (StringUtils.isBlank(ldapWsProp.getLdapWsServer())) {
-                    addFieldError("ldapwshost", "The ldap authentication web service server must be provided");
-                    hasError = true;
-                } else {
-                    if (!StringUtils.startsWith(ldapWsProp.getLdapWsServer(), "https://")
-                            && (!StringUtils.startsWith(ldapWsProp.getLdapWsServer(), "http://"))) {
-                        addFieldError("ldapwshost", "The protocol (https or http) must be included in the ldap authentication web service host");
-                        hasError = true;
-                    }
-                }
-
-                if (ldapWsProp.getLdapWsPort() == 0) {
-                    addFieldError("ldapwshost", "The ldap authentication web service port must be provided");
-                    hasError = true;
-                }
-
-            } else {
-                if (StringUtils.isBlank(ldapProp.getLdapServer())) {
-                    addFieldError("ldapserver", "The ldap server must be provided");
-                    hasError = true;
-                }
-                if (StringUtils.isBlank(ldapProp.getBaseDN())) {
-                    addFieldError("basedn", "The ldap server base dn must be provided");
-                    hasError = true;
-                }
-                if (StringUtils.isBlank(ldapProp.getAttUID())) {
-                    addFieldError("attuid", "The attribute uid name must be provided");
-                    hasError = true;
-                }
-
-                if (StringUtils.isBlank(ldapProp.getAttMail())) {
-                    addFieldError("attmail", "The attribute mail name must be provided");
-                    hasError = true;
-                }
-                if (StringUtils.isBlank(ldapProp.getAttGender())) {
-                    addFieldError("attgender", "The attribute gender name must be provided");
-                    hasError = true;
-                }
-                if (StringUtils.isBlank(ldapProp.getAttCN())) {
-                    addFieldError("attcn", "The attribute cn name must be provided");
-                    hasError = true;
-                }
-                if (StringUtils.isBlank(ldapProp.getAttGivenname())) {
-                    addFieldError("attgivenname", "The attribute givenname name must be provided");
-                    hasError = true;
-                }
-                if (StringUtils.isBlank(ldapProp.getAttSn())) {
-                    addFieldError("attsn", "The attribute sn name must be provided");
-                    hasError = true;
-                }
-                if (StringUtils.isBlank(ldapProp.getAttPersonalTitle())) {
-                    addFieldError("attptitle", "The attribute personaltitle name must be provided");
-                    hasError = true;
-                }
-            }
-        }
-
         if (hasError) {
             setDefaultMaps();
         }
@@ -599,21 +399,5 @@ public class InstallAction extends InstallBaseAction {
 
     public void setMailProp(MailProperty mailProp) {
         this.mailProp = mailProp;
-    }
-
-    public LdapProperty getLdapProp() {
-        return ldapProp;
-    }
-
-    public void setLdapProp(LdapProperty ldapProp) {
-        this.ldapProp = ldapProp;
-    }
-
-    public LdapWsProperty getLdapWsProp() {
-        return ldapWsProp;
-    }
-
-    public void setLdapWsProp(LdapWsProperty ldapWsProp) {
-        this.ldapWsProp = ldapWsProp;
     }
 }

@@ -27,12 +27,11 @@
  */
 package au.edu.monash.merc.capture.service;
 
-import java.util.List;
-
 import au.edu.monash.merc.capture.domain.User;
 import au.edu.monash.merc.capture.dto.OrderBy;
 import au.edu.monash.merc.capture.dto.page.Pagination;
-import au.edu.monash.merc.capture.dto.ldap.LdapUser;
+
+import java.util.List;
 
 public interface UserService {
 
@@ -54,7 +53,7 @@ public interface UserService {
 
     boolean checkEmailExisted(String email);
 
-    User login(String username, String password, boolean ldap);
+    User login(String username, String password);
 
     List<User> getAllActiveUsers();
 
@@ -63,10 +62,6 @@ public interface UserService {
     Pagination<User> getAllActiveUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
 
     Pagination<User> getAllInActiveUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys);
-
-    LdapUser verifyLdapUser(String authcatId, String password);
-
-    LdapUser ldapLookup(String cnOrEmail);
 
     User getVirtualUser(int userType);
 }

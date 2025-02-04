@@ -27,10 +27,11 @@
  */
 package au.edu.monash.merc.capture.mail.impl;
 
-import java.util.Map;
-
+import au.edu.monash.merc.capture.exception.MailException;
+import au.edu.monash.merc.capture.mail.MailService;
+import au.edu.monash.merc.capture.util.mail.MailSenderThread;
+import freemarker.template.Template;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -38,22 +39,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
-import au.edu.monash.merc.capture.exception.MailException;
-import au.edu.monash.merc.capture.mail.MailService;
-import au.edu.monash.merc.capture.util.mail.MailSenderThread;
-import freemarker.template.Template;
+import java.util.Map;
 
 @Scope("prototype")
 @Service
 public class FreeMarkerMailServiceImpl implements MailService {
 
-    @Autowired
-    @Qualifier("mailSender")
     private JavaMailSender sender;
 
-    @Autowired
-    @Qualifier("mailFreeMarker")
     private FreeMarkerConfigurer freeMarkerConfigurer;
+
+    public FreeMarkerMailServiceImpl(@Qualifier("mailSender") JavaMailSender sender,
+                                     @Qualifier("mailFreeMarker") FreeMarkerConfigurer freeMarkerConfigurer) {
+        this.sender = sender;
+        this.freeMarkerConfigurer = freeMarkerConfigurer;
+    }
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
 

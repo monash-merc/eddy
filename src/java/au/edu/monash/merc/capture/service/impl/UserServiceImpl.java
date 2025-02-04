@@ -27,38 +27,31 @@
  */
 package au.edu.monash.merc.capture.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import au.edu.monash.merc.capture.dao.impl.UserDAO;
 import au.edu.monash.merc.capture.domain.User;
 import au.edu.monash.merc.capture.dto.OrderBy;
 import au.edu.monash.merc.capture.dto.page.Pagination;
 import au.edu.monash.merc.capture.service.UserService;
 import au.edu.monash.merc.capture.sso.LoginAuthenticator;
-import au.edu.monash.merc.capture.dto.ldap.LdapUser;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Scope("prototype")
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserDAO userDao;
+    private final UserDAO userDao;
 
-    @Autowired
-    private LoginAuthenticator authenticator;
+    private final LoginAuthenticator authenticator;
 
-    public UserDAO getUserDao() {
-        return userDao;
-    }
-
-    public void setUserDao(UserDAO userDao) {
+    public UserServiceImpl(UserDAO userDao, LoginAuthenticator authenticator) {
         this.userDao = userDao;
+        this.authenticator = authenticator;
     }
 
     @Override
@@ -108,8 +101,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User login(String username, String password, boolean ldap) {
-        return this.authenticator.login(username, password, ldap);
+    public User login(String username, String password) {
+        return this.authenticator.login(username, password);
     }
 
     @Override
@@ -130,16 +123,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public Pagination<User> getAllInActiveUsers(int startPageNo, int recordsPerPage, OrderBy[] orderBys) {
         return this.userDao.getAllInActiveUsers(startPageNo, recordsPerPage, orderBys);
-    }
-
-    @Override
-    public LdapUser verifyLdapUser(String authcatId, String password) {
-        return this.authenticator.verifyLdapUser(authcatId, password);
-    }
-
-    @Override
-    public LdapUser ldapLookup(String cnOrEmail) {
-        return this.authenticator.ldapLookup(cnOrEmail);
     }
 
     @Override

@@ -84,7 +84,7 @@
                             </div>
                             <div class="input_field_value_section">
                                 <@s.submit value="%{getText('login.button')}" cssClass="input_button_style" /> &nbsp; <@s.reset value="%{getText('reset.button')}" cssClass="input_button_style" />
-                                <span class="inline_span">Don't have an Account, <a href="${base}/user/register_options">Register an account now </a></span>
+                                <span class="inline_span">Don't have an Account, <a href="${base}/user/user_register">Register an account now </a></span>
                                 &nbsp; <span class="inline_span"><a href="${base}/user/user_request_resetpwd">Forgot your password?</a></span>
                             </div>
                         </div>
