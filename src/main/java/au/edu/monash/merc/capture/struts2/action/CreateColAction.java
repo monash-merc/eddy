@@ -174,6 +174,7 @@ public class CreateColAction extends DMCoreAction {
                 location.setSpatialCoverage(spatialValue);
                 this.dmService.saveLocation(location);
             }
+            System.out.println("==== location id: " + location.getId());
             //save the location inot collection
             collection.setLocation(location);
             List<Permission> coDefaultPerms = setCollectionDefaultPermissions(collection);

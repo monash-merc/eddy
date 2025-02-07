@@ -4,7 +4,7 @@
     <groupId>net.javaguides.springmvc</groupId>
     <artifactId>au.edu.monash.merc.capture</artifactId>
     <packaging>war</packaging>
-    <version>V3.0</version>
+    <version>v3.0</version>
     <name>Eddy App</name>
     <url>http://maven.apache.org</url>
     <properties>

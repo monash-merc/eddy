@@ -45,7 +45,7 @@ import javax.persistence.*;
 public class Permission extends Domain {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "pk_generator")
-    @TableGenerator(name = "pk_generator", pkColumnName = "pk_column_name", valueColumnName = "pk_column_value", pkColumnValue = "collection_perm_pk")
+    @TableGenerator(name = "pk_generator", pkColumnName = "pk_column_name", valueColumnName = "pk_column_value", pkColumnValue = "collection_perm_pk", allocationSize = 10)
     @Column(name = "id", nullable = false)
     private long id;
 
