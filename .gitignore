@@ -5,3 +5,5 @@ dist/
 .idea
 eddy.iml
 target/
+.settings/
+*.iml
