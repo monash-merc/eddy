@@ -53,10 +53,6 @@ public interface CollectionService {
 
     boolean checkCollectionNameExisted(String colName);
 
-    List<Collection> getPublishedCollections();
-
-    Collection getPublishedCoByIdentifier(String identifier);
-
     List<Collection> getCollectionsByLocation(String coverageType, String spatialCoverage);
 
     List<Collection> getCollectionsByLocation(long locationId);

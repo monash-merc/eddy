@@ -46,7 +46,7 @@ public interface DMService {
 
     void deleteCollection(Collection collection, String rootPath);
 
-    void deletePublisheCollection(Collection collection, String storeRootPath, String rifcsRootPath);
+    void deletePublishedCollection(Collection collection, String storeRootPath, String rifcsRootPath);
 
     void updateCollection(Collection collection);
 
@@ -65,10 +65,6 @@ public interface DMService {
     List<Collection> getCollectionsByLocation(long locationId);
 
     boolean findAnyReferencedCollectionsByLocationId(long locationId);
-
-//    List<Collection> getPublishedCollections();
-//
-//    Collection getPublishedCoByIdentifier(String identifier);
 
     /**
      * Save a Location
@@ -204,10 +200,6 @@ public interface DMService {
 
     void sendMail(String emailFrom, String emailTo, String emailSubject, Map<String, String> templateValues, String templateFile, boolean isHtml);
 
-//    void publishRifcs(MetadataRegistrationBean metadataRegistrationBean);
-//
-//    List<Party> getPartiesByCollectionId(long cid);
-
     void saveLicence(Licence licence);
 
     void mergeLicence(Licence licence);
@@ -221,18 +213,6 @@ public interface DMService {
     Licence getLicenceById(long id);
 
     Licence getLicenceByCollectionId(long cid);
-
-//    Party getPartyByEmail(String email);
-//
-//    List<Party> getPartyByUserName(String firstName, String lastName);
-//
-//    List<Party> getPartyByUserNameOrEmail(String userNameOrEmail);
-//
-//    Party getPartyByPartyKey(String partyKey);
-//
-//    void saveParty(Party party);
-//
-//    void updateParty(Party party);
 
     //restrict access section
     void saveRestrictAccess(RestrictAccess restrictAccess);

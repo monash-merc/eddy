@@ -25,33 +25,33 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-//package au.edu.monash.merc.capture.service;
-//
-//import au.edu.monash.merc.capture.domain.Party;
-//
-//import java.util.List;
-//
-//public interface PartyService {
-//
-//    Party getPartyByPartyKey(String partyKey);
-//
-//    List<Party> getPartyByUserName(String firstName, String lastName);
-//
-//    Party getPartyByEmail(String email);
-//
-//    Party getPartyById(long id);
-//
-//    List<Party> getAllParties();
-//
-//    List<Party> getPartiesByCollectionId(long cid);
-//
-//    void saveParty(Party party);
-//
-//    void deleteParty(Party party);
-//
-//    void deletePartyById(long id);
-//
-//    void deletePartyByPartyKey(String partyKey);
-//
-//    void updateParty(Party party);
-//}
+package au.edu.monash.merc.capture.service;
+
+import au.edu.monash.merc.capture.domain.Party;
+
+import java.util.List;
+
+public interface PartyService {
+
+    Party getPartyByPartyKey(String partyKey);
+
+    List<Party> getPartyByUserName(String firstName, String lastName);
+
+    Party getPartyByEmail(String email);
+
+    Party getPartyById(long id);
+
+    List<Party> getAllParties();
+
+    List<Party> getPartiesByCollectionId(long cid);
+
+    void saveParty(Party party);
+
+    void deleteParty(Party party);
+
+    void deletePartyById(long id);
+
+    void deletePartyByPartyKey(String partyKey);
+
+    void updateParty(Party party);
+}

@@ -203,7 +203,7 @@
                             </div>
                         </div>
                         <div style="clear: both;"></div>
-                        <@s.if test="mapEnabled == true }">
+                        <@s.if test="%{mapEnabled == true }">
                             <div class="input_field_row">
                                 <div class="input_field_title">
                                     <@s.text name="collection.spatial.coverage"/>:

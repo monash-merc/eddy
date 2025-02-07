@@ -73,7 +73,7 @@ public class DeleteColAction extends DMCoreAction {
                 // delete collection include permissions and dataset files
                 if (collection.isPublished()) {
                     String rifcsRootPath = configSetting.getPropValue(ConfigSettings.ANDS_RIFCS_STORE_LOCATION);
-                    this.dmService.deletePublisheCollection(collection, dataStorePath, rifcsRootPath);
+                    this.dmService.deletePublishedCollection(collection, dataStorePath, rifcsRootPath);
                 } else {
                     this.dmService.deleteCollection(collection, dataStorePath);
                 }

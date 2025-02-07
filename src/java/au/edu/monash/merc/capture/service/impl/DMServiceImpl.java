@@ -148,7 +148,7 @@ public class DMServiceImpl implements DMService {
     }
 
     @Override
-    public void deletePublisheCollection(Collection collection, String storeRootPath, String rifcsRootPath) {
+    public void deletePublishedCollection(Collection collection, String storeRootPath, String rifcsRootPath) {
         // delete it from database first
         // TODO:1. delete handle
         String uuidkey = collection.getUniqueKey();
@@ -259,7 +259,7 @@ public class DMServiceImpl implements DMService {
             this.fileService.moveFile(srcFile, destDatasetFileFullPath, true);
 
             DataCaptureAdapter adapter = adapterFactory.createInstance();
-            ds = adapter.caputreData(simpleFileName, destDatasetFileFullPath, extractRequired, globalAttOnly);
+            ds = adapter.captureData(simpleFileName, destDatasetFileFullPath, extractRequired, globalAttOnly);
             // set dataset store location
             ds.setStoreLocation(destDatasetFileRelPath);
             ds.setCollection(collection);
@@ -322,7 +322,7 @@ public class DMServiceImpl implements DMService {
             // persist file first
             this.fileService.moveFile(srcFileFullPath, destDatasetFileFullPath, true);
             // once the file move into destination directory, then we start to extract the metadata
-            ds = adapter.caputreData(simpleFileName, destDatasetFileFullPath, fBean.extractRequired(), fBean.isGlobalAttOnly());
+            ds = adapter.captureData(simpleFileName, destDatasetFileFullPath, fBean.extractRequired(), fBean.isGlobalAttOnly());
             // set dataset store location
             ds.setStoreLocation(destDatasetFileRelPath);
             ds.setCollection(co);

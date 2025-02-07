@@ -53,5 +53,5 @@ public interface DataCaptureAdapter {
      * @return a new Dataset object for storing the data and metadata.
      * @throws DataCaptureException if any errors occur.
      */
-    Dataset caputreData(String name, String fileFullPathName, boolean extractRequired, boolean globalAttrbuteOnly) throws DataCaptureException;
+    Dataset captureData(String name, String fileFullPathName, boolean extractRequired, boolean globalAttrbuteOnly) throws DataCaptureException;
 }

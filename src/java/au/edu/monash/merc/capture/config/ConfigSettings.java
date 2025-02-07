@@ -27,9 +27,11 @@
  */
 package au.edu.monash.merc.capture.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
 
 import java.util.Map;
 
@@ -75,14 +77,16 @@ public class ConfigSettings {
 
     public static String GOOGLE_MAP_ENABLED = "google.map.enabled";
 
-    private final SystemPropertiesConfigurer sysPropertyConfigurer;
+    @Autowired
+    @Qualifier("sysPropertyConfigurer")
+    private MPropertyPlaceholderConfigurer sysPropertyConfigurer;
 
-    public ConfigSettings(@Qualifier("sysPropertyConfigurer") SystemPropertiesConfigurer sysPropertyConfigurer) {
-        this.sysPropertyConfigurer = sysPropertyConfigurer;
+    public MPropertyPlaceholderConfigurer getSysPropertyConfigurer() {
+        return sysPropertyConfigurer;
     }
 
-    public SystemPropertiesConfigurer getSysPropertyConfigurer() {
-        return sysPropertyConfigurer;
+    public void setSysPropertyConfigurer(MPropertyPlaceholderConfigurer sysPropertyConfigurer) {
+        this.sysPropertyConfigurer = sysPropertyConfigurer;
     }
 
     public String getPropValue(String propKey) {

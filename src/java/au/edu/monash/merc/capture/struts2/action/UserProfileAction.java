@@ -27,7 +27,7 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
-import au.edu.monash.merc.capture.config.SystemPropertiesConfigurer;
+import au.edu.monash.merc.capture.config.MPropertyPlaceholderConfigurer;
 import au.edu.monash.merc.capture.domain.AuditEvent;
 import au.edu.monash.merc.capture.domain.Avatar;
 import au.edu.monash.merc.capture.domain.Profile;
@@ -62,7 +62,7 @@ public class UserProfileAction extends DMCoreAction {
 
     @Autowired
     @Qualifier("countryPropertyConfigurer")
-    private SystemPropertiesConfigurer countryPropertyConfigurer;
+    private MPropertyPlaceholderConfigurer countryPropertyConfigurer;
 
     @PostConstruct
     public void initProp() {
@@ -281,11 +281,11 @@ public class UserProfileAction extends DMCoreAction {
         this.profile = profile;
     }
 
-    public SystemPropertiesConfigurer getCountryPropertyConfigurer() {
+    public MPropertyPlaceholderConfigurer getCountryPropertyConfigurer() {
         return countryPropertyConfigurer;
     }
 
-    public void setCountryPropertyConfigurer(SystemPropertiesConfigurer countryPropertyConfigurer) {
+    public void setCountryPropertyConfigurer(MPropertyPlaceholderConfigurer countryPropertyConfigurer) {
         this.countryPropertyConfigurer = countryPropertyConfigurer;
     }
 

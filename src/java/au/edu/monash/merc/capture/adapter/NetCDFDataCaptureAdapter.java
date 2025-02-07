@@ -73,7 +73,7 @@ public class NetCDFDataCaptureAdapter implements DataCaptureAdapter {
     private static int BUFFER_SIZE = 10240;
 
     @Override
-    public Dataset caputreData(String name, String fileFullPathName, boolean extractRequired, boolean globalAttrbuteOnly) throws DataCaptureException {
+    public Dataset captureData(String name, String fileFullPathName, boolean extractRequired, boolean globalAttrbuteOnly) throws DataCaptureException {
         Dataset ds = new Dataset();
         ds.setName(name);
         ds.setExtracted(extractRequired);
@@ -304,7 +304,7 @@ public class NetCDFDataCaptureAdapter implements DataCaptureAdapter {
 
         NetCDFDataCaptureAdapter adapter = new NetCDFDataCaptureAdapter();
         System.out.println("============ start to read file: " + filename);
-        Dataset ds = adapter.caputreData("ei_oper_an_pl_15x15_802", filename, true, false);
+        Dataset ds = adapter.captureData("ei_oper_an_pl_15x15_802", filename, true, false);
         // Dataset ds = adapter.caputreData("ei_mnth_fc_sfc_15x15_90N0E90S3585E_19890101_20051201", bos.toByteArray());
         Collection col = new Collection();
         col.setName(ds.getSiteName());

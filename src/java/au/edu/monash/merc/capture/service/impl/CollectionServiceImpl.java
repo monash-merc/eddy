@@ -48,6 +48,7 @@ public class CollectionServiceImpl implements CollectionService {
     public CollectionServiceImpl(CollectionDAO collectionDAO) {
         this.collectionDAO = collectionDAO;
     }
+
     @Override
     public void deleteCollection(Collection entity) {
         this.collectionDAO.remove(entity);
@@ -91,16 +92,6 @@ public class CollectionServiceImpl implements CollectionService {
     @Override
     public boolean checkCollectionNameExisted(String colName) {
         return this.collectionDAO.checkCollectionNameExisted(colName);
-    }
-
-    @Override
-    public List<Collection> getPublishedCollections() {
-        return this.collectionDAO.getPublishedCollections();
-    }
-
-    @Override
-    public Collection getPublishedCoByIdentifier(String identifier) {
-        return this.collectionDAO.getPublishedCoByIdentifier(identifier);
     }
 
     @Override
