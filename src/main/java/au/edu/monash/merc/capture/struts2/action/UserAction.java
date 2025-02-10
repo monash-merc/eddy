@@ -165,73 +165,6 @@ public class UserAction extends BaseAction {
         return hasErrors;
     }
 
-//    TODO: to remove the ldap registration
-
-    /**
-     * ldap user registration.
-     *
-     * @return a String represents SUCCESS or ERROR.
-     */
-//    public String registerLdapUser() {
-//        // If security code error. just return immediately, not go further.
-//        if (isSecurityCodeError(securityCode)) {
-//            addFieldError("securityCode", getText("security.code.invalid"));
-//            return INPUT;
-//        }
-//        LdapUser ldapUsr = null;
-//        try {
-//            // if validate ldap user failed, just return to the ldap user registration page.
-//            ldapUsr = verifyLdapUserReg();
-//            if (ldapUsr == null) {
-//                return INPUT;
-//            }
-//            // try to register ldap user in the database
-//            user.setDisplayName(ldapUsr.getDisplayName());
-//            user.setFirstName(ldapUsr.getFirstName());
-//            user.setLastName(ldapUsr.getLastName());
-//            // set ldap user password as ldap
-//            user.setPassword("ldap");
-//            user.setRegistedDate(GregorianCalendar.getInstance().getTime());
-//            user.setUidHashCode(generateSecurityHash(user.getUniqueId()));
-//            // set user email which get from ldap server
-//            user.setEmail(ldapUsr.getMail());
-//            user.setActivationHashCode(generateSecurityHash(user.getUniqueId()));
-//
-//            user.setActivated(false);
-//            user.setUserType(UserType.REGUSER.code());
-//
-//            // create a default user profile.
-//            Profile p = genProfile();
-//            p.setOrganization("Monash University");
-//
-//            p.setGender(ldapUsr.getGender());
-//            user.setProfile(p);
-//            p.setUser(user);
-//            // create an avatar
-//            Avatar avatar = genAvatar(p.getGender());
-//            avatar.setUser(user);
-//            user.setAvatar(avatar);
-//
-//            this.userService.saveUser(user);
-//            // site name
-//            String serverQName = getServerQName();
-//            // start to send register email to admin for approval
-//            String activateURL = constructActivationURL(serverQName, user.getId(), user.getActivationHashCode());
-//            sendRegMailToAdmin(serverQName, user.getDisplayName(), user.getEmail(), p.getOrganization(), activateURL);
-//
-//        } catch (Exception e) {
-//            // log the database error
-//            logger.error(e.getMessage());
-//            // reponse the action error
-//            addActionError(getText("user.registration.failed"));
-//            return INPUT;
-//        }
-//
-//        // set action finished messsage
-//        addActionMessage(getText("user.register.finished.msg", new String[]{user.getDisplayName()}));
-//        setNavAfterLdapRegSuccess();
-//        return SUCCESS;
-//    }
     private Profile genProfile() {
         // create a default user profile.
         return new Profile();
@@ -255,53 +188,6 @@ public class UserAction extends BaseAction {
         avatar.setFileType("png");
         return avatar;
     }
-
-//    private void setNavAfterLdapRegSuccess() {
-//        String startNav = getText("user.ldap.register.action.title");
-//        setPageTitle(startNav);
-//        navigationBar = generateNavLabel(startNav, null, null, null, null, null);
-//    }
-
-//    TODO remove the ldap user reg
-//    private LdapUser verifyLdapUserReg() {
-//
-//        LdapUser ldapUsr = null;
-//        // verify monash authcat user first. if ldap authentication failed, just return
-//        try {
-//            ldapUsr = this.userService.verifyLdapUser(user.getUniqueId(), user.getPassword());
-//            if (ldapUsr == null) {
-//                addFieldError("uniqueId", getText("user.reg.ldap.invalid.authcateId.or.password"));
-//                return null;
-//            }
-//        } catch (Exception e) {
-//            logger.error(e);
-//            addFieldError("checkUserLdapError", getText("user.req.ldap.check.user.account.ldap.failed"));
-//            return null;
-//        }
-//
-//        try {
-//            boolean existed = this.userService.checkUserUniqueIdExisted(user.getUniqueId());
-//            if (existed) {
-//                addFieldError("uniqueId", getText("user.reg.ldap.authcate.id.already.registed"));
-//                // set ldap user to null
-//                logger.error("user authcate id is already registered in the system.");
-//                return null;
-//            }
-//
-//            boolean emailRegistered = this.userService.checkEmailExisted(ldapUsr.getMail());
-//            if (emailRegistered) {
-//                addFieldError("email", getText("user.reg.ldap.authcate.email.already.registed"));
-//                logger.error("user email is already registered in the system.");
-//                return null;
-//            }
-//        } catch (Exception e) {
-//            addFieldError("checkUserDbError", getText("user.reg.ldap.check.user.account.db.failed"));
-//            logger.error(e);
-//            return null;
-//        }
-//
-//        return ldapUsr;
-//    }
 
     private void sendRegMailToAdmin(String serverQName, String userName, String userEmail, String organization, String activationURL) {
 
