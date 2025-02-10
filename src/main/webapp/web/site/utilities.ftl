@@ -54,7 +54,7 @@
 
                     <div class="paragraph_div">
                         OzFlux uses a suite of Python scripts to process the data from its flux towers. The scripts are available in the <a
-                            href="http://ozflux.its.monash.edu.au/ecosystem/pub/viewColDetails.jspx?collection.id=151&collection.owner.id=50&viewType=anonymous">Public Access</a> collection on
+                            href="${base}/pub/viewColDetails.jspx?collection.id=151&collection.owner.id=50&viewType=anonymous">Public Access</a> collection on
                         the OzFlux Data Portal.
                         Two of the scripts provide basic access to the NetCDF files. <b>nclist.py</b> provides a listing of the contents of a NetCDF file to the screen and to a text file that can be
                         viewed in a suitable editor. <b>nc2fn.py</b> will read the contents of a NetCDF file and write selected data to a CSV (comma separated value) text file. This file can then be

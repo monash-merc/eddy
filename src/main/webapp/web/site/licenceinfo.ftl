@@ -48,7 +48,7 @@
                         with the download. OzFlux strongly recommends that all users become familiar with the licence terms and conditions before downloading data.
                     </div>
                     <div class="paragraph_div">
-                        In addition to the data licence, OzFlux uses a <a href="http://eddy.googlecode.com/files/OzFluxFairUseAndAcknowledgement.pdf" target="_blank">Fair Use Policy</a>
+                        In addition to the data licence, OzFlux uses a <a href="${base}/site/ddoc.jspx?fname=OzFluxFairUseAndAcknowledgement.pdf">Fair Use Policy</a>
                         based on the FluxNet Fair Use policy. The Fair Use policy states OzFlux's
                         intentions in making the data publicly available and OzFlux's expectations of the data users responsibilities. As with the licence, users will be asked to confirm that they
                         have read and understood the OzFlux Fair Use policy before downloading the data.

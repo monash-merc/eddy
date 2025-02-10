@@ -29,14 +29,14 @@
                     </div>
                     <div class="paragraph_div">
                         A description of the data portal layout and how to navigate around this site is available
-                        <a href="http://eddy.googlecode.com/files/OzFlux%20User%20Guide.pdf">here</a> (PDF).
+                        <a  href="${base}/site/ddoc.jspx?fname=OzFlux%20User%20Guide.pdf">here</a> (PDF).
                     </div>
                     <div class="paragraph_div">
                         A manual for the Python scripts used by the OzFlux community to quality control and post-
-                        process the flux tower data is available <a href="http://eddy.googlecode.com/files/OzFluxQC_Manual.pdf" target="_blank">here</a> (PDF).
+                        process the flux tower data is available <a href="${base}/site/ddoc.jspx?fname=OzFluxQC_Manual.pdf">here</a> (PDF).
                     </div>
                     <div class="paragraph_div">
-                        A document that describes the variable names used for the OzFlux data is available <a href="http://eddy.googlecode.com/files/VariableNamesandDefinitions.pdf" target="_blank">here</a> (PDF).
+                        A document that describes the variable names used for the OzFlux data is available <a href="${base}/site/ddoc.jspx?fname=VariableNamesandDefinitions.pdf">here</a> (PDF).
                         This document lists the variable names, gives
                         the CF Metadata standard name and provides a description of the data associated with the
                         variable name.
