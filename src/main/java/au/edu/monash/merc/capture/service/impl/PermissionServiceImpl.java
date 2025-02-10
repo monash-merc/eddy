@@ -39,12 +39,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
+ * PermissionServiceImpl class
+ *
  * @author Simon Yu
- * <p/>
  * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- * <p/>
  * Date: 26/03/13 4:29 PM
  */
 

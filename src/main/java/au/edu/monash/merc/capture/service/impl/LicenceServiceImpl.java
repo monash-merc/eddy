@@ -36,12 +36,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
+ * LicenceServiceImpl class
+ *
  * @author Simon Yu
- * <p/>
  * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- * <p/>
  * Date: 7/03/13 11:38 AM
  */
 @Scope("prototype")

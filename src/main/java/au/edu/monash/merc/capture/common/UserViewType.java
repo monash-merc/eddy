@@ -31,13 +31,13 @@ package au.edu.monash.merc.capture.common;
 import org.apache.commons.lang.StringUtils;
 
 /**
+ * UserViewType class
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 16/04/13 11:49 AM
+ * Date: 16/04/13 11:49 AM
  */
 public enum UserViewType {
     USER("user"), ALL("all"), ANONYMOUS("anonymous");

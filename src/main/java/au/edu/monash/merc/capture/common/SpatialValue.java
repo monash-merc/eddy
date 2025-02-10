@@ -31,13 +31,13 @@ package au.edu.monash.merc.capture.common;
 import org.apache.commons.lang.StringUtils;
 
 /**
+ * SpatialValue class
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 13/02/13 10:24 AM
+ * Date: 13/02/13 10:24 AM
  */
 public enum SpatialValue {
     GLOBAL("global"), UNKNOWN("unknown");

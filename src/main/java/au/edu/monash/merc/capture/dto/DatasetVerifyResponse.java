@@ -33,13 +33,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * DatasetVerifyResponse class
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 29/04/13 11:08 AM
+ * Date: 29/04/13 11:08 AM
  */
 public class DatasetVerifyResponse implements Serializable {
 

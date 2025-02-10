@@ -40,13 +40,13 @@ import org.springframework.stereotype.Controller;
 import java.io.InputStream;
 
 /**
+ * ExportDatasetAction class
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 3/05/13 10:43 AM
+ * Date: 3/05/13 10:43 AM
  */
 @Scope("prototype")
 @Controller("data.exportDatasetAction")

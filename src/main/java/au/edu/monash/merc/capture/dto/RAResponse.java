@@ -33,13 +33,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * RAResponse class
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 1/05/13 5:05 PM
+ * Date: 1/05/13 5:05 PM
  */
 public class RAResponse implements Serializable {
 

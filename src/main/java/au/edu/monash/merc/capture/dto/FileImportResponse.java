@@ -31,13 +31,13 @@ package au.edu.monash.merc.capture.dto;
 import java.io.Serializable;
 
 /**
+ * FileImportResponse class
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 3/05/13 2:31 PM
+ * Date: 3/05/13 2:31 PM
  */
 public class FileImportResponse implements Serializable {
 

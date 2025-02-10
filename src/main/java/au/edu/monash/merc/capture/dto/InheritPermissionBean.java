@@ -29,13 +29,13 @@
 package au.edu.monash.merc.capture.dto;
 
 /**
+ * InheritPermissionBean class
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 26/03/13 4:10 PM
+ * Date: 26/03/13 4:10 PM
  */
 public class InheritPermissionBean {
 

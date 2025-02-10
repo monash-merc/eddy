@@ -31,13 +31,13 @@ package au.edu.monash.merc.capture.dto;
 import java.io.Serializable;
 
 /**
+ * MapLocation class
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 19/02/13 11:27 AM
+ * Date: 19/02/13 11:27 AM
  */
 public class MapLocation implements Serializable {
 

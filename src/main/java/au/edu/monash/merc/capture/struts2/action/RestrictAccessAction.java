@@ -41,13 +41,13 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
+ * RestrictAccessAction class
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 1/05/13 5:00 PM
+ * Date: 1/05/13 5:00 PM
  */
 @Scope("prototype")
 @Controller("data.raSetupAction")

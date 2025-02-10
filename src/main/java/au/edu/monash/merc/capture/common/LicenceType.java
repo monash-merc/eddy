@@ -31,13 +31,13 @@ package au.edu.monash.merc.capture.common;
 import org.apache.commons.lang.StringUtils;
 
 /**
+ * enum LicenceType
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 6/03/13 4:18 PM
+ * Date: 6/03/13 4:18 PM
  */
 public enum LicenceType {
     TERN("tern"), USERDEFINED("userdefined"), UNKNOWN("unknown");

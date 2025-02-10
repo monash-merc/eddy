@@ -32,13 +32,13 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * SitesResponse class
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 20/02/13 12:28 PM
+ * Date: 20/02/13 12:28 PM
  */
 public class SitesResponse implements Serializable {
     private boolean succeed;

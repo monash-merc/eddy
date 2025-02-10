@@ -31,214 +31,214 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * 
+ * User class
+ *
  * @author simonyu
- * 
  */
 @Entity
 @Table(name = "merc_user")
 public class User extends Domain {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "pk_generator")
-	@TableGenerator(name = "pk_generator", pkColumnName = "pk_column_name", valueColumnName = "pk_column_value", pkColumnValue = "mercuser_pk")
-	@Column(name = "id", nullable = false)
-	private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "pk_generator")
+    @TableGenerator(name = "pk_generator", pkColumnName = "pk_column_name", valueColumnName = "pk_column_value", pkColumnValue = "mercuser_pk")
+    @Column(name = "id", nullable = false)
+    private long id;
 
-	@Basic
-	@Column(name = "unique_id", length = 100)
-	private String uniqueId;
+    @Basic
+    @Column(name = "unique_id", length = 100)
+    private String uniqueId;
 
-	@Basic
-	@Column(name = "uid_hashcode", length = 100)
-	private String uidHashCode;
+    @Basic
+    @Column(name = "uid_hashcode", length = 100)
+    private String uidHashCode;
 
-	@Basic
-	@Column(name = "first_name", length = 25)
-	private String firstName;
+    @Basic
+    @Column(name = "first_name", length = 25)
+    private String firstName;
 
-	@Basic
-	@Column(name = "last_name", length = 25)
-	private String lastName;
+    @Basic
+    @Column(name = "last_name", length = 25)
+    private String lastName;
 
-	@Basic
-	@Column(name = "display_name", length = 55)
-	private String displayName;
+    @Basic
+    @Column(name = "display_name", length = 55)
+    private String displayName;
 
-	@Basic
-	@Column(name = "password", length = 50)
-	private String password;
+    @Basic
+    @Column(name = "password", length = 50)
+    private String password;
 
-	@Basic
-	@Column(name = "email", length = 100)
-	private String email;
+    @Basic
+    @Column(name = "email", length = 100)
+    private String email;
 
-	@Basic
-	@Column(name = "activation_hash_code", length = 50)
-	private String activationHashCode;
+    @Basic
+    @Column(name = "activation_hash_code", length = 50)
+    private String activationHashCode;
 
-	@Basic
-	@Column(name = "is_activated")
-	private boolean isActivated;
+    @Basic
+    @Column(name = "is_activated")
+    private boolean isActivated;
 
-	@Basic
-	@Column(name = "is_rejected")
-	private boolean isRejected;
+    @Basic
+    @Column(name = "is_rejected")
+    private boolean isRejected;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "registed_date")
-	private Date registedDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "registed_date")
+    private Date registedDate;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "activated_date")
-	private Date activatedDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "activated_date")
+    private Date activatedDate;
 
-	@Basic
-	@Column(name = "reset_password_code", length = 50)
-	private String resetPasswdHashCode;
+    @Basic
+    @Column(name = "reset_password_code", length = 50)
+    private String resetPasswdHashCode;
 
-	@OneToOne(mappedBy = "user", targetEntity = Profile.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private Profile profile;
+    @OneToOne(mappedBy = "user", targetEntity = Profile.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Profile profile;
 
-	@OneToOne(mappedBy = "user", targetEntity = Avatar.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private Avatar avatar;
+    @OneToOne(mappedBy = "user", targetEntity = Avatar.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Avatar avatar;
 
-	@Column(name = "user_type", columnDefinition = "integer", nullable = false)
-	private int userType;
+    @Column(name = "user_type", columnDefinition = "integer", nullable = false)
+    private int userType;
 
-	public long getId() {
-		return id;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public String getUniqueId() {
-		return uniqueId;
-	}
+    public String getUniqueId() {
+        return uniqueId;
+    }
 
-	public void setUniqueId(String uniqueId) {
-		this.uniqueId = uniqueId;
-	}
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
+    }
 
-	public String getUidHashCode() {
-		return uidHashCode;
-	}
+    public String getUidHashCode() {
+        return uidHashCode;
+    }
 
-	public void setUidHashCode(String uidHashCode) {
-		this.uidHashCode = uidHashCode;
-	}
+    public void setUidHashCode(String uidHashCode) {
+        this.uidHashCode = uidHashCode;
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public String getDisplayName() {
-		return displayName;
-	}
+    public String getDisplayName() {
+        return displayName;
+    }
 
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public String getActivationHashCode() {
-		return activationHashCode;
-	}
+    public String getActivationHashCode() {
+        return activationHashCode;
+    }
 
-	public void setActivationHashCode(String activationHashCode) {
-		this.activationHashCode = activationHashCode;
-	}
+    public void setActivationHashCode(String activationHashCode) {
+        this.activationHashCode = activationHashCode;
+    }
 
-	public String getResetPasswdHashCode() {
-		return resetPasswdHashCode;
-	}
+    public String getResetPasswdHashCode() {
+        return resetPasswdHashCode;
+    }
 
-	public void setResetPasswdHashCode(String resetPasswdHashCode) {
-		this.resetPasswdHashCode = resetPasswdHashCode;
-	}
+    public void setResetPasswdHashCode(String resetPasswdHashCode) {
+        this.resetPasswdHashCode = resetPasswdHashCode;
+    }
 
-	public Date getRegistedDate() {
-		return registedDate;
-	}
+    public Date getRegistedDate() {
+        return registedDate;
+    }
 
-	public void setRegistedDate(Date registedDate) {
-		this.registedDate = registedDate;
-	}
+    public void setRegistedDate(Date registedDate) {
+        this.registedDate = registedDate;
+    }
 
-	public Date getActivatedDate() {
-		return activatedDate;
-	}
+    public Date getActivatedDate() {
+        return activatedDate;
+    }
 
-	public void setActivatedDate(Date activatedDate) {
-		this.activatedDate = activatedDate;
-	}
+    public void setActivatedDate(Date activatedDate) {
+        this.activatedDate = activatedDate;
+    }
 
-	public boolean isActivated() {
-		return isActivated;
-	}
+    public boolean isActivated() {
+        return isActivated;
+    }
 
-	public boolean isRejected() {
-		return isRejected;
-	}
+    public boolean isRejected() {
+        return isRejected;
+    }
 
-	public void setRejected(boolean isRejected) {
-		this.isRejected = isRejected;
-	}
+    public void setRejected(boolean isRejected) {
+        this.isRejected = isRejected;
+    }
 
-	public void setActivated(boolean isActivated) {
-		this.isActivated = isActivated;
-	}
+    public void setActivated(boolean isActivated) {
+        this.isActivated = isActivated;
+    }
 
-	public Profile getProfile() {
-		return profile;
-	}
+    public Profile getProfile() {
+        return profile;
+    }
 
-	public void setProfile(Profile profile) {
-		this.profile = profile;
-	}
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
 
-	public Avatar getAvatar() {
-		return avatar;
-	}
+    public Avatar getAvatar() {
+        return avatar;
+    }
 
-	public void setAvatar(Avatar avatar) {
-		this.avatar = avatar;
-	}
+    public void setAvatar(Avatar avatar) {
+        this.avatar = avatar;
+    }
 
-	public int getUserType() {
-		return userType;
-	}
+    public int getUserType() {
+        return userType;
+    }
 
-	public void setUserType(int userType) {
-		this.userType = userType;
-	}
+    public void setUserType(int userType) {
+        this.userType = userType;
+    }
 }

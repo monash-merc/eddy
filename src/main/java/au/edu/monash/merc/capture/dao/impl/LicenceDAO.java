@@ -40,12 +40,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
 /**
+ * LicenceDAO class
+ *
  * @author Simon Yu
- * <p/>
  * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- * <p/>
  * Date: 7/03/13 11:32 AM
  */
 @Scope("prototype")

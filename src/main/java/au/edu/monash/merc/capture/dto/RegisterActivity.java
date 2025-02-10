@@ -31,13 +31,13 @@ package au.edu.monash.merc.capture.dto;
 import java.io.Serializable;
 
 /**
+ * RegisterActivity class
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 14/03/13 2:18 PM
+ * Date: 14/03/13 2:18 PM
  */
 public class RegisterActivity implements Serializable {
 

@@ -46,15 +46,12 @@ import java.util.regex.Pattern;
 
 /**
  * XssInterceptor class extends AbstractInterceptor which provides the Interceptor of request for avoid Xss attack
- * <p>
  * https://www.javacodegeeks.com/2012/07/anti-cross-site-scripting-xss-filter.html
  *
  * @author Simon Yu
- * <p/>
  * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- * <p/>
  * Date: 21/12/11 1:27 PM
  */
 public class XssInterceptor extends AbstractInterceptor {

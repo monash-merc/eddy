@@ -34,13 +34,13 @@ import au.edu.monash.merc.capture.dto.InheritPermissionBean;
 import java.util.List;
 
 /**
+ * Interface IPermissionRepository
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 26/03/13 4:20 PM
+ * Date: 26/03/13 4:20 PM
  */
 public interface IPermissionRepository {
 

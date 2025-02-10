@@ -34,13 +34,13 @@ import au.edu.monash.merc.capture.domain.RestrictAccess;
 import java.io.Serializable;
 
 /**
+ * RADataset class
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 1/05/13 10:15 AM
+ * Date: 1/05/13 10:15 AM
  */
 public class RADataset implements Serializable {
 

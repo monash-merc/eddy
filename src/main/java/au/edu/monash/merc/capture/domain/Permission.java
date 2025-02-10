@@ -32,13 +32,13 @@ package au.edu.monash.merc.capture.domain;
 import javax.persistence.*;
 
 /**
+ * Permission class
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 26/03/13 1:29 PM
+ * Date: 26/03/13 1:29 PM
  */
 @Entity
 @Table(name = "collection_permission")

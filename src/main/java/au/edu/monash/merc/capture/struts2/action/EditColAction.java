@@ -43,6 +43,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
+ * EditColAction class
+ *
  * @author simonyu
  * @version 1.0
  * @since v1.0

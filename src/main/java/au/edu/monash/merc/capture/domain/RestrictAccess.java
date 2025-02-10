@@ -32,13 +32,13 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
+ * RestrictAccess class
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 6/03/13 12:00 PM
+ * Date: 6/03/13 12:00 PM
  */
 @Entity
 @Table(name = "restrict_access")

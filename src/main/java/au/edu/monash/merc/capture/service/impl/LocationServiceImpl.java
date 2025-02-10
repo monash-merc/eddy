@@ -38,12 +38,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
+ * LocationServiceImpl class
+ *
  * @author Simon Yu
- * <p/>
  * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- * <p/>
  * Date: 13/02/13 11:00 AM
  */
 

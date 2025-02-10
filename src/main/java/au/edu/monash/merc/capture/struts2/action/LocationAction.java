@@ -43,13 +43,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * LocationAction class
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 13/02/13 12:36 PM
+ * Date: 13/02/13 12:36 PM
  */
 @Scope("prototype")
 @Controller("data.locationAction")

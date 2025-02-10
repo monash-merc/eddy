@@ -42,6 +42,8 @@ import java.io.File;
 import java.util.*;
 
 /**
+ * CreateColAction class
+ *
  * @author simonyu
  * @version 1.0
  * @since v1.0

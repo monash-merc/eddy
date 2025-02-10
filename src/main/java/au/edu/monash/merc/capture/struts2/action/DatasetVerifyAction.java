@@ -38,13 +38,13 @@ import org.springframework.stereotype.Controller;
 import java.util.Date;
 
 /**
+ * DatasetVerifyAction classs
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 29/04/13 11:07 AM
+ * Date: 29/04/13 11:07 AM
  */
 @Scope("prototype")
 @Controller("data.dsVerifyAction")

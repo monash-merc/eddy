@@ -32,13 +32,13 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * LocationResponse class
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 19/02/13 11:01 AM
+ * Date: 19/02/13 11:01 AM
  */
 public class LocationResponse implements Serializable {
 

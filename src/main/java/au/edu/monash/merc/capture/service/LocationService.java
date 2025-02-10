@@ -33,13 +33,13 @@ import au.edu.monash.merc.capture.domain.Location;
 import java.util.List;
 
 /**
+ * Interface LocationService
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 13/02/13 10:53 AM
+ * Date: 13/02/13 10:53 AM
  */
 public interface LocationService {
 

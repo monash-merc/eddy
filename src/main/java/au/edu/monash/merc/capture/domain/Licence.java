@@ -31,13 +31,13 @@ package au.edu.monash.merc.capture.domain;
 import javax.persistence.*;
 
 /**
+ * Licence class
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 6/03/13 4:39 PM
+ * Date: 6/03/13 4:39 PM
  */
 @Entity
 @Table(name = "licence")

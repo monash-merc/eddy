@@ -48,12 +48,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
+ * PermissionDAO classs
+ *
  * @author Simon Yu
- * <p/>
  * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- * <p/>
  * Date: 26/03/13 1:55 PM
  */
 @Scope("prototype")

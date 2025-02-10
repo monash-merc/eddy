@@ -47,7 +47,6 @@ import java.util.*;
 /**
  * This is a multipart request handler, but utilises commons-filupload 1.2 and adds a listener to the file upload
  * request, so that the progress can be monitor by other requests.
- * <p/>
  * This is a copy of JakartaMultiPartRequest with some extra code put in to handle the ProgressMonitor listener class.
  * Strangely enough, extending JakartaMultiPartRequest and overiding the methods didnt seem to work? However, it wasnt
  * important enough to look into why, so i just copied the code and pasted here.

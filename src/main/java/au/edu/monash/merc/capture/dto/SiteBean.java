@@ -31,13 +31,13 @@ package au.edu.monash.merc.capture.dto;
 import java.io.Serializable;
 
 /**
+ * SiteBean class
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 20/02/13 12:30 PM
+ * Date: 20/02/13 12:30 PM
  */
 public class SiteBean implements Serializable {
 

@@ -37,13 +37,13 @@ import java.io.File;
 import java.io.InputStream;
 
 /**
+ * ResourceAction class
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 15/02/13 12:09 PM
+ * Date: 15/02/13 12:09 PM
  */
 @Scope("prototype")
 @Controller("site.resourceAction")

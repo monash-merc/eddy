@@ -32,13 +32,13 @@ import javax.persistence.*;
 import java.util.List;
 
 /**
+ * Location class
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 12/02/13 5:37 PM
+ * Date: 12/02/13 5:37 PM
  */
 @Entity
 @Table(name = "location")

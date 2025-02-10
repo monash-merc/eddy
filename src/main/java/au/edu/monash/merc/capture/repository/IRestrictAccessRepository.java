@@ -31,13 +31,13 @@ package au.edu.monash.merc.capture.repository;
 import au.edu.monash.merc.capture.domain.RestrictAccess;
 
 /**
+ * Interface IRestrictAccessRepository
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 22/04/13 3:13 PM
+ * Date: 22/04/13 3:13 PM
  */
 public interface IRestrictAccessRepository {
 

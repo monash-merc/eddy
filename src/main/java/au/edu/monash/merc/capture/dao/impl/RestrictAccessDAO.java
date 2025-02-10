@@ -40,12 +40,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
 /**
+ * RestrictAccessDAO class
+ *
  * @author Simon Yu
- * <p/>
  * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- * <p/>
  * Date: 22/04/13 3:17 PM
  */
 @Scope("prototype")

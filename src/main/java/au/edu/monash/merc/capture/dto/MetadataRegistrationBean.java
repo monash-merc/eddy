@@ -35,13 +35,13 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * MetadataRegistrationBean class
+ *
  * @author Simon Yu
- *         <p/>
- *         Email: xiaoming.yu@monash.edu
+ * Email: xiaoming.yu@monash.edu
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        Date: 14/03/13 3:07 PM
+ * Date: 14/03/13 3:07 PM
  */
 public class MetadataRegistrationBean implements Serializable {
 
