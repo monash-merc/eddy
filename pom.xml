@@ -6,7 +6,6 @@
     <packaging>war</packaging>
     <version>v3.0</version>
     <name>Eddy App</name>
-    <url>http://maven.apache.org</url>
     <properties>
         <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -14,6 +13,7 @@
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <spring.version>4.3.26.RELEASE</spring.version>
         <hibernate.version>4.1.9.Final</hibernate.version>
+        <hibernate-commons-annotations.version>4.0.5.Final</hibernate-commons-annotations.version>
         <hibernate.validator.version>4.0.2.GA</hibernate.validator.version>
         <c3p0.version>0.9.5.4</c3p0.version>
         <servlets.version>3.1.0</servlets.version>
@@ -107,16 +107,15 @@
             <version>${hibernate.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.hibernate.common</groupId>
-            <artifactId>hibernate-commons-annotations</artifactId>
-            <version>4.0.1.Final</version>
-        </dependency>
-        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-envers</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.hibernate.common</groupId>
+            <artifactId>hibernate-commons-annotations</artifactId>
+            <version>${hibernate-commons-annotations.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.0-api</artifactId>
