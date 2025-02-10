@@ -130,7 +130,8 @@
     </bean>
 
     <!-- Annotation Session Factory Bean -->
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean" destroy-method="destroy">
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
+          destroy-method="destroy">
 
         <!-- reference the datasource -->
         <property name="dataSource" ref="dataSource"/>
@@ -153,25 +154,26 @@
     </bean>
 
     <!-- ANNOTATION DRIVEN TRANSACTIONS -->
-    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <tx:annotation-driven/>
 
 
     <!-- ASPECT CONFIGURATION -->
-    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+    <tx:advice id="txAdvice">
         <tx:attributes>
-            <tx:method name="save*" propagation="REQUIRED"/>
-            <tx:method name="create*" propagation="REQUIRED"/>
-            <tx:method name="update*" propagation="REQUIRED"/>
-            <tx:method name="delete*" propagation="REQUIRED"/>
-            <tx:method name="set*" propagation="REQUIRED"/>
-            <tx:method name="capture*" propagation="REQUIRED"/>
+            <tx:method name="save*"/>
+            <tx:method name="create*"/>
+            <tx:method name="update*"/>
+            <tx:method name="delete*"/>
+            <tx:method name="set*"/>
+            <tx:method name="capture*"/>
             <tx:method name="get*" propagation="SUPPORTS" read-only="true"/>
             <tx:method name="check*" propagation="SUPPORTS" read-only="true"/>
         </tx:attributes>
     </tx:advice>
 
     <aop:config>
-        <aop:pointcut id="serviceOp" expression="execution(* au.edu.monash.merc.capture.service.impl.*ServiceImpl.*(..))"/>
+        <aop:pointcut id="serviceOp"
+                      expression="execution(* au.edu.monash.merc.capture.service.impl.*ServiceImpl.*(..))"/>
         <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOp"/>
     </aop:config>
 
