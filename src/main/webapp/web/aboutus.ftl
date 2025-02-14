@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Welcome to <@s.property value="appName" /></title>
-<#include "template/header.ftl"/>
+    <#include "template/header.ftl"/>
 </head>
 
 <body>
@@ -19,7 +19,7 @@
 <div class="main_body_container">
     <div class="display_middel_div">
         <div class="left_display_div">
-        <#include "template/action_errors.ftl" />
+            <#include "template/action_errors.ftl" />
             <div style="clear:both"></div>
             <div class="left_display_inner">
                 <div class="content_none_border_div">
@@ -53,7 +53,7 @@
                     </div>
                     <div class="paragraph_div">
                         <b> Peter Isaac</b> (<a
-                            href="mailto:pisaac.ozflux@gmail.com?Subject=Ozflux">pisaac.ozflux@gmail.com</a>)
+                                href="mailto:pisaac.ozflux@gmail.com?Subject=Ozflux">pisaac.ozflux@gmail.com</a>)
                     </div>
 
                     <div class="paragraph_div">
@@ -61,21 +61,21 @@
                     </div>
 
                     <div class="paragraph_div">
-                        <b>Eva van Gorsel</b> (<a
-                            href="mailto:eva.vangorsel@csiro.au?Subject=Ozflux">eva.vangorsel@csiro.au</a>)
+                        <b>Cacilia Ewenz</b> (<a
+                                href="mailto:cacilia.ewenz@internode.on.net?Subject=Ozflux">cacilia.ewenz@internode.on.net</a>)
                     </div>
                 </div>
             </div>
         </div>
-        <!-- right panel -->
-        <div class="right_display_div">
+    </div>
+    <!-- right panel -->
+    <div class="right_display_div">
         <@s.if test="%{#session.authentication_flag =='authenticated'}">
             <#include "template/sub_nav.ftl" />
         </@s.if>
-        </div>
     </div>
-    <div style="clear:both"></div>
 </div>
+<div style="clear:both"></div>
 <#include "template/footer.ftl"/>
 </body>
 </html>

@@ -92,6 +92,8 @@ public class SearchAction extends DMCoreAction {
         dsLevels.put("L2", "L2");
         dsLevels.put("L3", "L3");
         dsLevels.put("L4", "L4");
+        dsLevels.put("L5", "L5");
+        dsLevels.put("L6", "L6");
     }
 
     public String search() {

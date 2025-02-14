@@ -22,7 +22,7 @@
         <postgresql.version>42.7.4</postgresql.version>
         <reload4j.version>1.2.26</reload4j.version>
         <struts2.version>2.3.37</struts2.version>
-        <struts2-jquery-plugin.version>3.3.3</struts2-jquery-plugin.version>
+        <struts2-jquery-plugin.version>3.5.1</struts2-jquery-plugin.version>
         <commons-validato.version>1.9.0</commons-validato.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-lang3.version>3.17.0</commons-lang3.version>

@@ -1957,8 +1957,37 @@ input {
 .footer {
     margin: 0 auto;
     background: none repeat scroll 0 0 #EFF2F7;
-    border-top: 10px solid #003766;
+    border-top: 15px solid #003766;
     min-width: 1354px;
+}
+
+@media (min-width: 768px) {
+    .sponsor_inner_content {
+        display: inline-block !important;
+    }
+
+    .sponsor_inner_left {
+        display: inline-block !important;
+        float: left !important;
+        width: 78%;
+    }
+
+    .sponsor_inner_right {
+        display: inline-block !important;
+        margin-left: 5px;
+        float: right !important;
+        width: 20%;
+    }
+
+    .sponsor_inner_left img {
+        padding-top: 15px;
+        height: 250px;
+    }
+
+    .sponsor_inner_right a img {
+        padding-top: 15px;
+        height: 185px;
+    }
 }
 
 .copyright {
