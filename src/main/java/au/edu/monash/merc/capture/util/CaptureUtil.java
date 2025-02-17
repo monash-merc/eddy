@@ -29,7 +29,7 @@ package au.edu.monash.merc.capture.util;
 
 import au.edu.monash.merc.capture.exception.DataCaptureException;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.validator.EmailValidator;
+import org.apache.commons.validator.routines.EmailValidator;
 
 import java.net.URLEncoder;
 import java.text.DateFormat;

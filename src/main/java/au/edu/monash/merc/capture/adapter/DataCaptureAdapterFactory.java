@@ -29,7 +29,6 @@ package au.edu.monash.merc.capture.adapter;
 
 import au.edu.monash.merc.capture.config.ConfigSettings;
 import au.edu.monash.merc.capture.exception.DCInstantiationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -44,10 +43,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataCaptureAdapterFactory {
 
-    @Autowired
-    private ConfigSettings configSettings;
+    private final ConfigSettings configSettings;
 
-    public void setConfigSettings(ConfigSettings configSettings) {
+    public DataCaptureAdapterFactory(ConfigSettings configSettings) {
         this.configSettings = configSettings;
     }
 
@@ -55,7 +53,7 @@ public class DataCaptureAdapterFactory {
 
     public DataCaptureAdapter createInstance() {
         String adapterClass = configSettings.getPropValue(ConfigSettings.DATA_CAPTURE_ADAPTER_CLASS);
-        if (adapterClass != null && !("".equals(adapterClass))) {
+        if (adapterClass != null && !(adapterClass.isEmpty())) {
             captureAdapterClass = adapterClass;
         }
         try {

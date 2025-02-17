@@ -9,9 +9,7 @@
     <properties>
         <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <war.name>eddy</war.name>
         <failOnMissingWebXml>false</failOnMissingWebXml>
-
         <spring.version>4.3.30.RELEASE</spring.version>
         <hibernate.version>4.3.11.Final</hibernate.version>
         <hibernate-commons-annotations.version>4.0.5.Final</hibernate-commons-annotations.version>
@@ -40,6 +38,10 @@
         <grib.version>8.0</grib.version>
         <unidataCommon.version>4.2.20</unidataCommon.version>
         <opendap.version>2.2.2</opendap.version>
+        <!-- DEFINE your own war file name in the Production -->
+        <war.name>eddy</war.name>
+        <!-- DEFINE your own deployment directory in the Production -->
+        <deploy.dir>/opt/devdata/ozflux/webapps</deploy.dir>
 
     </properties>
     <dependencies>
@@ -351,13 +353,35 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.4.0</version>
+                <!-- remove the deployed war and unpack war directory if any-->
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${deploy.dir}</directory>
+                            <includes>
+                                <include>*.war</include>
+                            </includes>
+                        </fileset>
+                        <fileset>
+                            <directory>${deploy.dir}/${war.name}</directory>
+                            <includes>
+                                <include>**</include>
+                            </includes>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>3.4.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>3.13.0</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -373,9 +397,6 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
-<!--                        <configuration> &lt;!&ndash; add this to disable checking &ndash;&gt;-->
-<!--                            <additionalparam>-Xdoclint:none</additionalparam>-->
-<!--                        </configuration>-->
                     </execution>
                 </executions>
             </plugin>
@@ -427,6 +448,24 @@
                             <goal>install-file</goal>
                         </goals>
                         <phase>validate</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.coderplus.maven.plugins</groupId>
+                <artifactId>copy-rename-maven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-file</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <sourceFile>target/${war.name}-${project.version}.war</sourceFile>
+                            <destinationFile>${deploy.dir}/${war.name}.war</destinationFile>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

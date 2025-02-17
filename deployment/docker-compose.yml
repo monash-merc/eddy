@@ -1,0 +1,49 @@
+version: "3.8"
+services:
+  ozflux-web:
+    build:
+      context: tomcat
+      dockerfile: Dockerfile
+      args:
+        LOCALE: $LOCALE
+    container_name: "ozflux-web"
+    ports:
+      - "8080:8080"
+      - "6100:6100"
+    volumes:
+      - $OZFLUX_DEPLOY_ROOT/webapps:/usr/local/tomcat/webapps
+      - $OZFLUX_DEPLOY_ROOT/logs:/usr/local/tomcat/logs
+      - $OZFLUX_DEPLOY_ROOT/tomcat_temp:/usr/local/tomcat/temp
+      - ./tomcat/server.xml:/opt/tomcat/conf/server.xml
+      - ./tomcat/tomcat-users.xml:/opt/tomcat/conf/tomcat-users.xml
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/datastore/ands:/opt/datastore/ands
+      - /opt/datastore/rifcs:/opt/datastore/rifcs
+    expose:
+      - "6100"
+      -  "8080"
+    environment:
+      - CATALINA_OPTS=-Xms128m -Xmx4096m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=6100
+      - TZ=$TIMEZONE
+    restart: always
+
+
+  ozflux-nginx:
+    build:
+      context: nginx
+      dockerfile: Dockerfile
+    container_name: "ozflux-nginx"
+    ports:
+      - "443:443"
+    expose:
+      - "443"
+    links:
+      - ozflux-web
+    environment:
+      - TZ=$TIMEZONE
+    volumes:
+      - ./nginx/certs/cert.crt:/etc/nginx/certs/cert.crt
+      - ./nginx/certs/key.key:/etc/nginx/certs/key.key
+      - ./nginx/nginx-ssl.conf:/etc/nginx/nginx.conf
+    restart: always
+

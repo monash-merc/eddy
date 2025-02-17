@@ -7,3 +7,4 @@ eddy.iml
 target/
 .settings/
 *.iml
+.env
