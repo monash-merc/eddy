@@ -9,7 +9,6 @@ services:
     container_name: "ozflux-web"
     ports:
       - "8080:8080"
-      - "6100:6100"
     volumes:
       - $OZFLUX_DEPLOY_ROOT/webapps:/usr/local/tomcat/webapps
       - $OZFLUX_DEPLOY_ROOT/logs:/usr/local/tomcat/logs
@@ -17,10 +16,9 @@ services:
       - ./tomcat/server.xml:/opt/tomcat/conf/server.xml
       - ./tomcat/tomcat-users.xml:/opt/tomcat/conf/tomcat-users.xml
       - /var/run/docker.sock:/var/run/docker.sock
-      - /opt/datastore/ands:/opt/datastore/ands
-      - /opt/datastore/rifcs:/opt/datastore/rifcs
+      - /mnt/datastore/ands:/mnt/datastore/ands
+      - /mnt/datastore/rifcs:/mnt/datastore/rifcs
     expose:
-      - "6100"
       -  "8080"
     environment:
       - CATALINA_OPTS=-Xms128m -Xmx4096m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=6100
