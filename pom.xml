@@ -332,11 +332,11 @@
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>edu.wisc</groupId>
-            <artifactId>visadnodods</artifactId>
-            <version>2011.08.22</version>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>edu.wisc</groupId>-->
+        <!--            <artifactId>visadnodods</artifactId>-->
+        <!--            <version>2011.08.22</version>-->
+        <!--        </dependency>-->
     </dependencies>
 
     <build>
@@ -403,16 +403,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-install-plugin</artifactId>
-                <version>3.1.2</version>
+                <version>2.5.2</version>
                 <executions>
                     <execution>
                         <configuration>
+                            <file>${pom.basedir}/lib/net-cdf-lib/netcdf-4.2.jar</file>
+                            <generatePom>true</generatePom>
                             <groupId>edu.ucar</groupId>
                             <artifactId>netcdf</artifactId>
                             <version>4.2</version>
                             <packaging>jar</packaging>
-                            <file>${pom.basedir}/lib/net-cdf-lib/netcdf-4.2.jar</file>
-                            <generatePom>true</generatePom>
                         </configuration>
                         <id>install-netcdf</id>
                         <goals>
@@ -422,12 +422,12 @@
                     </execution>
                     <execution>
                         <configuration>
+                            <file>${pom.basedir}/lib/net-cdf-lib/visadnodods-2011.08.22.jar</file>
+                            <generatePom>true</generatePom>
                             <groupId>edu.wisc</groupId>
                             <artifactId>visadnodods</artifactId>
                             <version>2011.08.22</version>
                             <packaging>jar</packaging>
-                            <file>${pom.basedir}/lib/net-cdf-lib/visadnodods-2011.08.22.jar</file>
-                            <generatePom>true</generatePom>
                         </configuration>
                         <id>install-visad</id>
                         <goals>
@@ -437,11 +437,12 @@
                     </execution>
                     <execution>
                         <configuration>
+                            <file>${pom.basedir}/lib/net-cdf-lib/grib-8.0.jar</file>
+                            <generatePom>true</generatePom>
                             <groupId>edu.ucar</groupId>
                             <artifactId>grib</artifactId>
                             <version>${grib.version}</version>
                             <packaging>jar</packaging>
-                            <file>${pom.basedir}/lib/net-cdf-lib/grib-8.0.jar</file>
                         </configuration>
                         <id>install-grib</id>
                         <goals>
