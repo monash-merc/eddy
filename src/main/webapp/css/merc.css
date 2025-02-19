@@ -339,7 +339,7 @@ input {
 }
 
 .ozfux_nav ul li a {
-    width: 130px;
+    width: 180px;
     text-decoration: none;
     color: #FFFFFF;
     display: block;
@@ -362,7 +362,7 @@ input {
 
 .ozfux_nav ul ul li a {
     color: #FFFFFF;
-    width: 130px;
+    width: 180px;
     text-decoration: none;
     display: block;
     padding: 5px;

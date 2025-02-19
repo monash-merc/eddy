@@ -330,6 +330,9 @@
             <resource>
                 <directory>etc</directory>
             </resource>
+            <resource>
+                <directory>conf</directory>
+            </resource>
         </resources>
         <finalName>${war.name}-${project.version}</finalName>
         <plugins>
@@ -347,7 +350,7 @@
                             </includes>
                         </fileset>
                         <fileset>
-                            <directory>${deploy.dir}/${war.name}</directory>
+                            <directory>${deploy.dir}/ROOT</directory>
                             <includes>
                                 <include>**</include>
                             </includes>
