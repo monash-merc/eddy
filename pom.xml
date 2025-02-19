@@ -34,9 +34,7 @@
         <slf4j-log4j12.version>1.6.6</slf4j-log4j12.version>
         <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
         <org.joda.time.version>1.6.2</org.joda.time.version>
-        <netcdf.version>4.2</netcdf.version>
-        <grib.version>8.0</grib.version>
-        <unidataCommon.version>4.2.20</unidataCommon.version>
+        <edu.ucar.version>4.6.0</edu.ucar.version>
         <opendap.version>2.2.2</opendap.version>
         <cglib.version>2.1_3</cglib.version>
         <!-- DEFINE your own war file name in the Production -->
@@ -94,11 +92,13 @@
             <artifactId>spring-orm</artifactId>
             <version>${spring.version}</version>
         </dependency>
+
         <dependency>
-            <groupId>org.aopalliance</groupId>
-            <artifactId>com.springsource.org.aopalliance</artifactId>
-            <version>1.0.0</version>
+            <groupId>aopalliance</groupId>
+            <artifactId>aopalliance</artifactId>
+            <version>1.0</version>
         </dependency>
+
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
@@ -278,20 +278,14 @@
         <!-- NETCDF libs -->
         <dependency>
             <groupId>edu.ucar</groupId>
-            <artifactId>unidataCommon</artifactId>
-            <version>${unidataCommon.version}</version>
+            <artifactId>cdm</artifactId>
+            <version>${edu.ucar.version}</version>
         </dependency>
 
         <dependency>
             <groupId>edu.ucar</groupId>
             <artifactId>grib</artifactId>
-            <version>${grib.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>edu.ucar</groupId>
-            <artifactId>netcdf</artifactId>
-            <version>${netcdf.version}</version>
+            <version>${edu.ucar.version}</version>
         </dependency>
 
         <!-- uk.ca libs  maybe it's useful -->
@@ -305,13 +299,6 @@
         <dependency>
             <groupId>uk.ac.rdg.resc</groupId>
             <artifactId>edal-cdm</artifactId>
-            <version>1.5.3</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>uk.ac.rdg.resc</groupId>
-            <artifactId>edal-graphics</artifactId>
             <version>1.5.3</version>
             <scope>provided</scope>
         </dependency>
@@ -408,7 +395,7 @@
                         </goals>
                         <configuration>
                             <sourceFile>target/${war.name}-${project.version}.war</sourceFile>
-                            <destinationFile>${deploy.dir}/${war.name}.war</destinationFile>
+                            <destinationFile>${deploy.dir}/ROOT.war</destinationFile>
                         </configuration>
                     </execution>
                 </executions>
@@ -416,10 +403,10 @@
         </plugins>
     </build>
     <repositories>
-        <repository>
-            <id>project-local-libs</id>
-            <url>file://${project.basedir}/lib</url>
-        </repository>
+        <!--        <repository>-->
+        <!--            <id>project-local-libs</id>-->
+        <!--            <url>file://${project.basedir}/lib</url>-->
+        <!--        </repository>-->
 
         <repository>
             <snapshots>
@@ -427,7 +414,12 @@
             </snapshots>
             <id>central</id>
             <name>Central Repository</name>
-            <url>https://repo1.maven.org/maven2/</url>
+            <url>https://repo.maven.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>unidata-all</id>
+            <name>Unidata All</name>
+            <url>https://artifacts.unidata.ucar.edu/repository/unidata-all/</url>
         </repository>
         <repository>
             <snapshots>

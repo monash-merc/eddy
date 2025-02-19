@@ -31,6 +31,7 @@ import au.edu.monash.merc.capture.domain.*;
 import au.edu.monash.merc.capture.exception.DataCaptureException;
 import au.edu.monash.merc.capture.util.CaptureUtil;
 import org.apache.commons.lang.StringUtils;
+import ucar.nc2.CDMSort;
 import ucar.nc2.Attribute;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
@@ -51,21 +52,23 @@ import java.util.List;
  */
 public class NetCDFDataCaptureAdapter implements DataCaptureAdapter {
 
-    private static String SITENAME = "SiteName";
+    static String SITENAME = "SiteName";
 
-    private static String SITE_NAME = "site_name";
+    static String SITE_NAME = "site_name";
 
-    private static String RUN_DATETIME_TAG = "RunDateTime";
+    static String RUN_DATETIME_TAG = "RunDateTime";
 
-    private static String XLMOD_DATETIME_TAG = "xlModDateTime";
+    static String XLMOD_DATETIME_TAG = "xlModDateTime";
 
-    private static String TITLE = "title";
+    static String TITLE = "title";
 
-    private static String SPEC = "specification";
+    static String SPEC = "specification";
 
-    private static String NET_CDF_FILE_LEVEL = "Level";
+    static String NET_CDF_FILE_LEVEL = "Level";
 
-    private static int BUFFER_SIZE = 10240;
+    static String PROCESSING_LEVEL = "processing_level";
+
+    static int BUFFER_SIZE = 10240;
 
     @Override
     public Dataset captureData(String name, String fileFullPathName, boolean extractRequired, boolean globalAttrbuteOnly) throws DataCaptureException {
@@ -116,7 +119,14 @@ public class NetCDFDataCaptureAdapter implements DataCaptureAdapter {
         List<GlobalMetadata> persist_globalAttrs = new ArrayList<GlobalMetadata>();
         for (Attribute att : globalAtts) {
             GlobalMetadata persist_gatt = new GlobalMetadata();
-            String name = att.getName();
+            //get short name by default
+            String name = att.getShortName();
+            CDMSort at_sort = att.getSort();
+            // if CDMSort is GROUP, VARIABLE, SEQUENCE, STRUCTURE  then get the full name
+            if (at_sort == CDMSort.GROUP || at_sort == CDMSort.VARIABLE
+                    || at_sort == CDMSort.SEQUENCE || at_sort == CDMSort.STRUCTURE) {
+                name = att.getFullName();
+            }
             String value = att.getStringValue();
 
             persist_gatt.setName(name);
@@ -138,7 +148,7 @@ public class NetCDFDataCaptureAdapter implements DataCaptureAdapter {
             if (name.equalsIgnoreCase(SPEC)) {
                 setSpec(value, ds);
             }
-            if (name.equalsIgnoreCase(NET_CDF_FILE_LEVEL)) {
+            if (name.equalsIgnoreCase(NET_CDF_FILE_LEVEL) || name.equalsIgnoreCase(PROCESSING_LEVEL)) {
                 setNetCDFLevel(value, ds);
             }
 
@@ -152,17 +162,14 @@ public class NetCDFDataCaptureAdapter implements DataCaptureAdapter {
 
         List<MetaVariable> metaVarList = new ArrayList<MetaVariable>();
 
-        boolean strict = false;
-        boolean useFullName = true;
-        // Formatter buf = new Formatter();
-
         for (Variable v : vars) {
             MetaVariable metavar = new MetaVariable();
-
-            useFullName = useFullName && !strict;
-            String name = useFullName ? v.getName() : v.getShortName();
-            if (strict) {
-                name = NetcdfFile.escapeName(name);
+            //get short name by default
+            String name = v.getShortName();
+            CDMSort v_sort = v.getSort();
+            if (v_sort == CDMSort.GROUP || v_sort == CDMSort.VARIABLE
+                    || v_sort == CDMSort.SEQUENCE || v_sort == CDMSort.STRUCTURE) {
+                name = v.getFullName();
             }
             metavar.setName(name);
             metavar.setDataType(v.getDataType().getClassType().getSimpleName());
@@ -289,6 +296,7 @@ public class NetCDFDataCaptureAdapter implements DataCaptureAdapter {
 
     public static void main(String[] args) throws Exception {
 
+//        String filename = "/opt/devdata/ozflux/AliceSpringsMulga_L3_20190101_20191231.nc";
         String filename = "/opt/devdata/ozflux/AdelaideRiver_2009_SIMOIN_L3.nc";
         // String filename = "./testData/ei_oper_an_pl_15x15_802";
         // String filename = "./testData/ei_mnth_fc_sfc_15x15_90N0E90S3585E_19890101_20051201";

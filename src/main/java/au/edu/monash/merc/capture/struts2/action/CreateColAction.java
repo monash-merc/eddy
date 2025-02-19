@@ -72,7 +72,6 @@ public class CreateColAction extends DMCoreAction {
      * @return a String represents SUCCESS or ERROR.
      */
     public String showCreateCollection() {
-        System.out.println("===== mapEnabled: " + mapEnabled);
         try {
             user = retrieveLoggedInUser();
 
@@ -101,8 +100,6 @@ public class CreateColAction extends DMCoreAction {
      * @return a String represents SUCCESS or ERROR.
      */
     public String createCollection() {
-        System.out.println("==== enter createCollection ====");
-        System.out.println("====== mapEnabled: " + this.mapEnabled);
         // any root path error. directly return the error to front input page.
         if (!checkDataStorePath()) {
             return INPUT;
@@ -151,7 +148,6 @@ public class CreateColAction extends DMCoreAction {
             //check the location
             String spatialType = CoverageType.UNKNOWN.type();
             String spatialValue = SpatialValue.UNKNOWN.value();
-            System.out.println("====== mapEnabled: " + this.mapEnabled);
             //  if map enabled
             if (mapEnabled) {
                 if (globalCoverage) {
@@ -176,7 +172,7 @@ public class CreateColAction extends DMCoreAction {
                 location.setSpatialCoverage(spatialValue);
                 this.dmService.saveLocation(location);
             }
-            System.out.println("==== location id: " + location.getId());
+
             //save the location inot collection
             collection.setLocation(location);
             List<Permission> coDefaultPerms = setCollectionDefaultPermissions(collection);

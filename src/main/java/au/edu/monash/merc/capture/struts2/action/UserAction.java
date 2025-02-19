@@ -74,10 +74,11 @@ public class UserAction extends BaseAction {
      *
      * @return a String represents SUCCESS or ERROR.
      */
-    public String register() {
+    public String registerUser() {
         // check security code first, if error, just return immediately.
         if (isSecurityCodeError(securityCode)) {
             addFieldError("securityCode", getText("security.code.invalid"));
+            securityCode = null;
             return INPUT;
         }
 
@@ -85,6 +86,7 @@ public class UserAction extends BaseAction {
             user.setDisplayName(user.getFirstName() + " " + user.getLastName());
             // if errors existed
             if (validateUserReg()) {
+                securityCode = null;
                 return INPUT;
             }
             // encrypt the user password
@@ -126,6 +128,7 @@ public class UserAction extends BaseAction {
             logger.error(e.getMessage());
             // reponse the action error
             addActionError(getText("user.registration.failed"));
+            securityCode = null;
             return INPUT;
         }
 
@@ -316,10 +319,7 @@ public class UserAction extends BaseAction {
                 return INPUT;
             }
 
-
-            System.out.println("=== user name: " + user.getUniqueId() + " ==== password: " + user.getPassword());
             User verifiedUser = userService.login(user.getUniqueId(), user.getPassword());
-            System.out.println("---- verifiedUser: " + verifiedUser);
             if (verifiedUser == null) {
                 // can't validate login because usr is null
                 updateIPBlockInfo(ipAddress, requestTime, defaultAllowedTryTimes, defaultWaitingTimes);
@@ -387,7 +387,7 @@ public class UserAction extends BaseAction {
                 errors = true;
             }
         }
-        if (errors){
+        if (errors) {
             securityCode = "";
         }
         return errors;

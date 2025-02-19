@@ -121,8 +121,6 @@ public class DMServiceImpl implements DMService {
         // create a directory first, if any exception occurs, it will never create a collection in database
         this.fileService.createDirectory(collectionPath);
 
-        Location loc = collection.getLocation();
-        System.out.println("=== > location id: " + loc.getId());
         try {
             this.collectionService.saveCollection(collection);
         } catch (Exception e) {

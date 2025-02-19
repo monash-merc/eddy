@@ -57,6 +57,7 @@ import java.util.regex.Pattern;
 public class XssInterceptor extends AbstractInterceptor {
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
+    private final String[] xssKeyWords = {"javascript", "script", "onclick", "onload", "vbscript", "html", "expression", "onerror"};
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
@@ -68,8 +69,8 @@ public class XssInterceptor extends AbstractInterceptor {
                 Object value = ((Object[]) (map.getValue()))[0];
                 if (value instanceof String) {
                     String strip_xss_value = stripXSS((String) value);
-                    System.out.println("==== parameter value: " + value);
-                    System.out.println("==== strip_xss_value: " + strip_xss_value);
+//                    System.out.println("==== parameter value: " + value);
+//                    System.out.println("==== strip_xss_value: " + strip_xss_value);
                     if (logger.isDebugEnabled()) {
                         logger.debug("parameter value: " + value);
                         logger.debug("strip_xss_value: " + strip_xss_value);
@@ -88,6 +89,20 @@ public class XssInterceptor extends AbstractInterceptor {
             // value = ESAPI.encoder().canonicalize(value);
             //value = StringEscapeUtils.escapeHtml4(value);
             // Avoid null characters
+
+            boolean has_xxs_kws = false;
+            for (String s : xssKeyWords) {
+                if (value.contains(s)) {
+                    has_xxs_kws = true;
+                }
+            }
+
+            if (has_xxs_kws) {
+                value = value.replaceAll("<", "& lt;").replaceAll(">", "& gt;");
+                value = value.replaceAll("\\(", "& #40;").replaceAll("\\)", "& #41;");
+                value = value.replaceAll("'", "& #39;");
+            }
+
             value = value.replaceAll("", "");
 
             // Avoid anything between script tags
@@ -127,6 +142,14 @@ public class XssInterceptor extends AbstractInterceptor {
 
             // Avoid onload= expressions
             scriptPattern = Pattern.compile("onload(.*?)=", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+            value = scriptPattern.matcher(value).replaceAll("");
+
+            // Avoid οnclick=
+            scriptPattern = Pattern.compile("onclick(.*?)=", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+            value = scriptPattern.matcher(value).replaceAll("");
+
+            // Avoid onerror=
+            scriptPattern = Pattern.compile("onerror(.*?)=", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
             value = scriptPattern.matcher(value).replaceAll("");
         }
         return value;

@@ -82,7 +82,7 @@
             <result type="freemarker">/web/user/{1}.ftl</result>
         </action>
 
-        <action name="registerUser" class="user.userAction" method="register">
+        <action name="registerUser" class="user.userAction" method="registerUser">
             <result name="input">/web/user/user_register.ftl</result>
             <result>/web/user/user_action_finished.ftl</result>
         </action>
