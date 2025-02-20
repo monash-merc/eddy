@@ -48,22 +48,4 @@ public class IdentifierServiceImpl implements IdentifierService {
         String prefix = configSettings.getPropValue(ConfigSettings.DATA_COLLECTION_UUID_PREFIX);
         return CaptureUtil.genMonUUID(prefix);
     }
-
-//    @Override
-//    public String genHandleIdentifier(String url) {
-//        HandleWSConfig wsconfig = new HandleWSConfig();
-//        String ignoreCert = configSettings.getPropValue(ConfigSettings.HANDLE_SERVICE_IGNORE_CERT_ERROR);
-//        wsconfig.setIgnoreCertError(Boolean.valueOf(ignoreCert));
-//        wsconfig.setHandleServiceHost(configSettings.getPropValue(ConfigSettings.HANDLE_SERVICE_HOST));
-//        String portstr = configSettings.getPropValue(ConfigSettings.HANDLE_SERVICE_HOST_PORT);
-//        wsconfig.setHandleServicePort(Integer.valueOf(portstr));
-//        wsconfig.setHandleServicePath(configSettings.getPropValue(ConfigSettings.HANDLE_SERVICE_PATH));
-//        wsconfig.setHandleServiceMinMethod(configSettings.getPropValue(ConfigSettings.HANDLE_SERVICE_MINT_METHOD));
-//        wsconfig.setAppId(configSettings.getPropValue(ConfigSettings.HANDLE_SERVICE_APPID));
-//        wsconfig.setIdentifier(configSettings.getPropValue(ConfigSettings.HANDLE_SERVICE_IDENTIFIER));
-//        wsconfig.setAuthDomain(configSettings.getPropValue(ConfigSettings.HANDLE_SERVICE_AUTH_DOMAIN));
-//        HandleWSClient hdlClient = new HandleWSClient(wsconfig);
-//        return hdlClient.mintHandle(HandleType.URL, url);
-//    }
-
 }

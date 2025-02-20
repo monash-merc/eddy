@@ -17,7 +17,7 @@ public class ImgConfig {
 
     private Color[] darkPalette = {Color.WHITE, Color.CYAN, Color.RED, Color.MAGENTA, Color.ORANGE, Color.GREEN};
 
-    private Color darkBackgroundColor = new Color(27, 27, 27);
+    private Color darkBackgroundColor = new Color(7, 64, 84);
 
     private Color lightBackgroundColor = Color.WHITE;
 

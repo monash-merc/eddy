@@ -27,13 +27,13 @@
  */
 package au.edu.monash.merc.capture.struts2.action;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
 
 @Scope("prototype")
 @Controller("user.viewImgAction")
@@ -56,9 +56,9 @@ public class ViewImageAction extends DMCoreAction {
 				if (!file.exists()) {
 					file = new File(defaultAvator);
 				}
-				this.imageStream = new FileInputStream(file);
+				this.imageStream = Files.newInputStream(file.toPath());
 			} else {
-				this.imageStream = new FileInputStream(new File(defaultAvator));
+				this.imageStream = Files.newInputStream(new File(defaultAvator).toPath());
 			}
 		} catch (Exception e) {
 			logger.error(e);

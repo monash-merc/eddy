@@ -40,7 +40,7 @@
         <!-- DEFINE your own war file name in the Production -->
         <war.name>eddy</war.name>
         <!-- DEFINE your own deployment directory in the Production -->
-        <deploy.dir>/opt/devdata/ozflux/webapps</deploy.dir>
+        <deploy.dir>/mnt/ozflux_deploy/webapps</deploy.dir>
 
     </properties>
     <dependencies>

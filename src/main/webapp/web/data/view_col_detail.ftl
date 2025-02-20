@@ -13,8 +13,7 @@
                 setTimeout('window.location.href = "${base}/${navigationBar.secondNavLink}"', 3500);
                 </@s.if>
             }
-        }
-        ;
+        };
         $(function () {
             $.superbox.settings = {
                 closeTxt: "Close",

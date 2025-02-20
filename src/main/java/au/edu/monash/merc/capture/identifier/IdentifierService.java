@@ -29,7 +29,5 @@ package au.edu.monash.merc.capture.identifier;
 
 public interface IdentifierService {
 
-	public String genUUIDWithPrefix();
-
-//	public String genHandleIdentifier(String url);
+    String genUUIDWithPrefix();
 }

@@ -29,126 +29,126 @@ package au.edu.monash.merc.capture.struts2.action;
 
 public interface ActConstants {
 
-    static String SESSION_SECURITY_CODE = "security_code";
+    String SESSION_SECURITY_CODE = "security_code";
 
-    static String SESSION_AUTHENTICATION_FLAG = "authentication_flag";
+    String SESSION_AUTHENTICATION_FLAG = "authentication_flag";
 
-    static String SESSION_AUTHEN_USER_ID = "authen_user_id";
+    String SESSION_AUTHEN_USER_ID = "authen_user_id";
 
-    static String SESSION_AUTHEN_USER_NAME = "authen_user_name";
+    String SESSION_AUTHEN_USER_NAME = "authen_user_name";
 
-    static String SESSION_LOGIN = "authenticated";
+    String SESSION_LOGIN = "authenticated";
 
-    static String REQUEST_URL = "request_url_path";
+    String REQUEST_URL = "request_url_path";
 
-    static String SEARCH_CONDITION_KEY = "search_condition_Key";
+    String SEARCH_CONDITION_KEY = "search_condition_Key";
 
     // For all logged in user - collection pagination
-    static String SESSION_VIEW_COLLECTION_PAGE_SIZE = "collection_page_size";
+    String SESSION_VIEW_COLLECTION_PAGE_SIZE = "collection_page_size";
 
-    static String SESSION_VIEW_COLLECTION_ORDERBY = "collection_orderby";
+    String SESSION_VIEW_COLLECTION_ORDERBY = "collection_orderby";
 
-    static String SESSION_VIEW_COLLECTION_ORDERBY_TYPE = "collection_orderby_type";
+    String SESSION_VIEW_COLLECTION_ORDERBY_TYPE = "collection_orderby_type";
 
     // For search pagination
-    static String SESSION_SEARCH_PAGE_SIZE = "search_page_size";
+    String SESSION_SEARCH_PAGE_SIZE = "search_page_size";
 
-    static String SESSION_SEARCH_ORDERBY = "search_orderby";
+    String SESSION_SEARCH_ORDERBY = "search_orderby";
 
-    static String SESSION_SEARCH_ORDERBY_TYPE = "search_orderby_type";
+    String SESSION_SEARCH_ORDERBY_TYPE = "search_orderby_type";
 
     // For Events view pagination
-    static String SESSION_EVENTS_PAGE_SIZE = "event_page_size";
+    String SESSION_EVENTS_PAGE_SIZE = "event_page_size";
 
-    static String SESSION_EVENTS_ORDERBY = "event_page_orderby";
+    String SESSION_EVENTS_ORDERBY = "event_page_orderby";
 
-    static String SESSION_EVENTS_ORDERBY_TYPE = "event_page_orderby_type";
+    String SESSION_EVENTS_ORDERBY_TYPE = "event_page_orderby_type";
 
     // For Users view pagination
-    static String SESSION_USER_PAGE_SIZE = "user_page_size";
+    String SESSION_USER_PAGE_SIZE = "user_page_size";
 
-    static String SESSION_USER_ORDERBY = "user_page_orderby";
+    String SESSION_USER_ORDERBY = "user_page_orderby";
 
-    static String SESSION_USER_ORDERBY_TYPE = "user_page_orderby_type";
+    String SESSION_USER_ORDERBY_TYPE = "user_page_orderby_type";
 
-    static String HTTP_SCHEME = "http";
+    String HTTP_SCHEME = "http";
 
-    static String HTTPS_SCHEME = "https";
+    String HTTPS_SCHEME = "https";
 
-    static String HTTP_SCHEME_DELIM = "://";
+    String HTTP_SCHEME_DELIM = "://";
 
-    static String URL_PATH_DEIM = "/";
+    String URL_PATH_DEIM = "/";
 
-    static String COLON_DEIM = ":";
+    String COLON_DEIM = ":";
 
-    static String LAST_TIME_OF_DAY = " 23:59:59";
+    String LAST_TIME_OF_DAY = " 23:59:59";
 
-    static String RESET_PWD_ACTION_NAME = "ResetPasswd";
+    String RESET_PWD_ACTION_NAME = "ResetPasswd";
 
-    static String ACTIVATION_ACTION_NAME = "activateAccount";
+    String ACTIVATION_ACTION_NAME = "activateAccount";
 
-    static int DEFAULT_SIZE_PER_PAGE = 10;
+    int DEFAULT_SIZE_PER_PAGE = 10;
 
-    static String DEFAULT_ORDERBY_TYPE = "ASC";
+    String DEFAULT_ORDERBY_TYPE = "ASC";
 
-    static String DESC_ORDERBY_TYPE = "DESC";
+    String DESC_ORDERBY_TYPE = "DESC";
 
-    static String DATA_STORE_USER_ROOT_PREFIX = "uid_";
+    String DATA_STORE_USER_ROOT_PREFIX = "uid_";
 
-    static int BRIEF_DESCRIPTION_MAX_LENGTH = 200;
+    int BRIEF_DESCRIPTION_MAX_LENGTH = 200;
 
-    static String PAGINATION_SUFFUX = "?pageNo=";
+    String PAGINATION_SUFFUX = "?pageNo=";
 
     // permission
-    static String SET_COLLECTION_PERMISSION_ACTION = "perm/showSetColPermissions.jspx";
+    String SET_COLLECTION_PERMISSION_ACTION = "perm/showSetColPermissions.jspx";
 
-    static String SHOW_SEARCH_ACTION = "search/showSearch.jspx";
+    String SHOW_SEARCH_ACTION = "search/showSearch.jspx";
 
-    static String SEARCH_ACTION = "search/search.jspx";
+    String SEARCH_ACTION = "search/search.jspx";
 
-    static String VIEW_COLLECTION_DETAILS_ACTION = "data/viewColDetails.jspx";
+    String VIEW_COLLECTION_DETAILS_ACTION = "data/viewColDetails.jspx";
 
-    static String SHOW_COLLECTION_EDIT_ACTION = "data/showEditCollection.jspx";
+    String SHOW_COLLECTION_EDIT_ACTION = "data/showEditCollection.jspx";
 
-    static String COLLECTION_DELETE_ACTION = "data/deleteCollection.jspx";
+    String COLLECTION_DELETE_ACTION = "data/deleteCollection.jspx";
 
-    static String DATASET_PRE_EXPORT_ACTION = "data/preExportDs.jspx";
+    String DATASET_PRE_EXPORT_ACTION = "data/preExportDs.jspx";
 
-    static String DATASET_VIEWDATA_ACTION = "data/viewDatasetData.jspx";
+    String DATASET_VIEWDATA_ACTION = "data/viewDatasetData.jspx";
 
-    static String DATASET_DELETE_ACTION = "data/deleteDataset.jspx";
+    String DATASET_DELETE_ACTION = "data/deleteDataset.jspx";
 
     //ands metadata registration
 //    static String ANDS_MD_REG_SHOW_ACTION = "data/showMdRegister.jspx";
 
     // user collection
-    static String USER_LIST_COLLECTION_ACTION = "data/listUserCollections.jspx";
+    String USER_LIST_COLLECTION_ACTION = "data/listUserCollections.jspx";
 
     // list all user collections
-    static String LIST_ALL_COLLECTIONS_ACTION = "data/listAllCollections.jspx";
+    String LIST_ALL_COLLECTIONS_ACTION = "data/listAllCollections.jspx";
 
     // public collection
-    static String PUB_LIST_COLLECTION_ACTION = "pub/listPubCollections.jspx";
+    String PUB_LIST_COLLECTION_ACTION = "pub/listPubCollections.jspx";
 
-    static String PUB_VIEW_COLLECTION_DETAILS_ACTION = "pub/viewColDetails.jspx";
+    String PUB_VIEW_COLLECTION_DETAILS_ACTION = "pub/viewColDetails.jspx";
 
-    static String PUB_DATASET_PRE_EXPORT_ACTION = "pub/preExportDs.jspx";
+    String PUB_DATASET_PRE_EXPORT_ACTION = "pub/preExportDs.jspx";
 
-    static String PUB_DATASET_VIEWDATA_ACTION = "pub/viewDatasetData.jspx";
+    String PUB_DATASET_VIEWDATA_ACTION = "pub/viewDatasetData.jspx";
 
-    static String LIST_ALL_USERS_ACTION = "admin/listUsers.jspx";
+    String LIST_ALL_USERS_ACTION = "admin/listUsers.jspx";
 
-    static String LIST_USER_EVENTS_ACTION = "admin/listUserEvents.jspx";
+    String LIST_USER_EVENTS_ACTION = "admin/listUserEvents.jspx";
 
-    static String DELETE_USER_EVENT_ACTION = "admin/deleteUserEvent.jspx";
+    String DELETE_USER_EVENT_ACTION = "admin/deleteUserEvent.jspx";
 
-    static String DISPLAY_USER_HOME_ACTION = "admin/displayUserHome.jspx";
+    String DISPLAY_USER_HOME_ACTION = "admin/displayUserHome.jspx";
 
-    static String LICENCE_TERN_LABEL = "TERN Licence (Recommended)";
+    String LICENCE_TERN_LABEL = "TERN Licence (Recommended)";
 
-    static String LICENCE_USER_DEFINED_LABEL = "Define Your Own Licence";
+    String LICENCE_USER_DEFINED_LABEL = "Define Your Own Licence";
 
-    public static enum OrderByActionType {
+    enum OrderByActionType {
         USER("user"), CO("co"), EVENT("event"), SEARCHCO("searchco"), SEARCHDS("searchds");;
         private String type;
 
@@ -180,7 +180,7 @@ public interface ActConstants {
 
     }
 
-    public static enum ManageType {
+    enum ManageType {
         ACTIVATE("activate"), DEACTIVATE("deactivate"), SETASADMIN("setasadmin"), SETASUSER("setasuser");
 
         private String type;

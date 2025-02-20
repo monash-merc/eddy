@@ -34,28 +34,28 @@ import java.util.List;
 
 public interface FileSystemSerivce {
 
-	public boolean checkWritePermission(String pathName);
+    boolean checkWritePermission(String pathName);
 
-	public void createDirectory(String dirName);
+    void createDirectory(String dirName);
 
-	public void deleteDirectory(String dirName);
+    void deleteDirectory(String dirName);
 
-	public void changeDirectory(String olderDirName, String newDirName);
+    void changeDirectory(String olderDirName, String newDirName);
 
-	public void moveFile(File srcFileName, String destFileName, boolean override);
+    void moveFile(File srcFileName, String destFileName, boolean override);
 
-	public void moveFile(String srcFileName, String destFileName, boolean override);
+    void moveFile(String srcFileName, String destFileName, boolean override);
 
-	public void copyFile(String srcFile, String destFile);
+    void copyFile(String srcFile, String destFile);
 
-	public void deleteFile(String fileName);
+    void deleteFile(String fileName);
 
-	public void renameFile(String olderFileName, String newFileName);
+    void renameFile(String olderFileName, String newFileName);
 
-	public byte[] readFileToByteArray(String fileName);
+    byte[] readFileToByteArray(String fileName);
 
-	public InputStream downloadFile(String fileName);
+    InputStream downloadFile(String fileName);
 
-	public List<String> discoverFiles(String stagePath, FilenameFilter filter);
+    List<String> discoverFiles(String stagePath, FilenameFilter filter);
 
 }
