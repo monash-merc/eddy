@@ -16,8 +16,8 @@ services:
       - ./tomcat/server.xml:/opt/tomcat/conf/server.xml
       - ./tomcat/tomcat-users.xml:/opt/tomcat/conf/tomcat-users.xml
       - /var/run/docker.sock:/var/run/docker.sock
-      - /opt/datastore/ands:/opt/datastore/ands
-      - /opt/datastore/rifcs:/opt/datastore/rifcs
+      - /mnt/datastore/ands:/mnt/datastore/ands
+      - /mnt/datastore/rifcs:/mnt/datastore/rifcs
     expose:
       - "6100"
       - "8080"
