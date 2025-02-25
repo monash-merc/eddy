@@ -42,8 +42,6 @@ public interface FileSystemSerivce {
 
     void changeDirectory(String olderDirName, String newDirName);
 
-    void moveFile(File srcFileName, String destFileName, boolean override);
-
     void moveFile(String srcFileName, String destFileName, boolean override);
 
     void copyFile(String srcFile, String destFile);

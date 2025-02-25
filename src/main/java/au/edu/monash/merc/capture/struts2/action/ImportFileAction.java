@@ -144,6 +144,7 @@ public class ImportFileAction extends DMCoreAction {
             String dataStorePath = configSetting.getPropValue(ConfigSettings.DATA_STORE_LOCATION);
             dataStorePath = CaptureUtil.normalizePath(dataStorePath);
             // start to capture the data from the file.
+//            System.out.println("====== uploaded file: " + upload.getAbsolutePath());
             Dataset dataset = this.dmService.captureData(uploadFileName, upload, extractable, false, collection, dataStorePath, raEnabled, restrictAccess);
             // log the audit event.
             recordAuditEvent(dataset, raEnabled);

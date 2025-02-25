@@ -255,8 +255,10 @@ public class DMServiceImpl implements DMService {
         String destDatasetFileFullPath = rootPath + destDatasetFileRelPath;
         Dataset ds = null;
         try {
+            String sourceFile = srcFile.getAbsolutePath();
             // persist file first
-            this.fileService.moveFile(srcFile, destDatasetFileFullPath, true);
+//            this.fileService.moveFile(srcFile, destDatasetFileFullPath, true);
+            this.fileService.moveFile(sourceFile, destDatasetFileFullPath, true);
 
             DataCaptureAdapter adapter = adapterFactory.createInstance();
             ds = adapter.captureData(simpleFileName, destDatasetFileFullPath, extractRequired, globalAttOnly);

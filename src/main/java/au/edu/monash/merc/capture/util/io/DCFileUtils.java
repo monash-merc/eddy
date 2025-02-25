@@ -34,8 +34,14 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.nio.file.*;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFileAttributes;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class DCFileUtils {
 
@@ -46,27 +52,28 @@ public class DCFileUtils {
             throw new DCFileException("directory name must not be null");
         }
         try {
-            File dir = new File(pathName);
-            return dir.canWrite();
+            Path dirPath = Paths.get(pathName);
+            return Files.isWritable(dirPath);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return false;
         }
     }
 
-    public static void deleteDirectory(String dirName) {
+    public static boolean deleteDirectory(String dirName) {
         if (dirName == null) {
             throw new DCFileException("directory name must not be null");
         }
 
         try {
-            FileUtils.deleteDirectory(new File(dirName));
+            return Files.deleteIfExists(Paths.get(dirName));
         } catch (Exception e) {
+            logger.error(e.getMessage());
             throw new DCFileException(e);
         }
     }
 
-    public static void moveDirectory(String olderDirName, String newDirName) {
+    public static Path moveDirectory(String olderDirName, String newDirName) {
         if (olderDirName == null) {
             throw new DCFileException("old directory name must not be null");
         }
@@ -74,30 +81,39 @@ public class DCFileUtils {
             throw new DCFileException("new directory name must not be null");
         }
         try {
-            FileUtils.moveDirectory(new File(olderDirName), new File(newDirName));
+            return Files.move(Paths.get(olderDirName), Paths.get(newDirName), StandardCopyOption.ATOMIC_MOVE);
         } catch (Exception e) {
+            logger.error(e.getMessage());
             throw new DCFileException(e);
         }
     }
 
-    public static void createDirectory(String dirName) {
+    public static Path createDirectory(String dirName) {
         if (dirName == null) {
             throw new DCFileException("directory name must not be null");
         }
         try {
-            FileUtils.forceMkdir(new File(dirName));
+            Path newPath = Paths.get(dirName);
+            Path parent = newPath.getParent();
+            if (parent != null) {
+                PosixFileAttributes attr = Files.readAttributes(parent, PosixFileAttributes.class);
+                Set<PosixFilePermission> perms = attr.permissions();
+                FileAttribute<Set<PosixFilePermission>> fileAttr = PosixFilePermissions.asFileAttribute(perms);
+                return Files.createDirectory(newPath, fileAttr);
+            } else {
+                return Files.createDirectory(newPath);
+            }
         } catch (Exception e) {
+            logger.error(e.getMessage());
             throw new DCFileException(e);
         }
     }
 
     public static void creatFileFromSrc(String srcFileName, String destFileName) {
-        File srcFile = new File(srcFileName);
-        File destFile = new File(destFileName);
-        copyFile(srcFile, destFile, false);
+        copyFile(srcFileName, destFileName, false);
     }
 
-    public static void copyFile(String srcFileName, String destFileName, boolean preserveFileDate) {
+    public static Path copyFile(String srcFileName, String destFileName, boolean preserveFileDate) {
 
         if (srcFileName == null) {
             throw new DCFileException("Source must not be null");
@@ -105,41 +121,25 @@ public class DCFileUtils {
         if (destFileName == null) {
             throw new DCFileException("Destination must not be null");
         }
-        File srcFile = new File(srcFileName);
-        File destFile = new File(destFileName);
 
-        if (!srcFile.exists()) {
-            throw new DCFileException("Source '" + srcFile + "' does not exist");
-        }
-        if (srcFile.isDirectory()) {
-            throw new DCFileException("Source '" + srcFile + "' is a directory");
-        }
-
-        if (destFile.isDirectory()) {
-            throw new DCFileException("Destination '" + destFile + "' is a directory");
-        }
         try {
-            FileUtils.copyFile(srcFile, destFile, preserveFileDate);
+            if (preserveFileDate) {
+                return Files.copy(Paths.get(srcFileName), Paths.get(destFileName), StandardCopyOption.REPLACE_EXISTING);
+            } else {
+                return Files.copy(Paths.get(srcFileName), Paths.get(destFileName), StandardCopyOption.ATOMIC_MOVE);
+            }
         } catch (Exception e) {
+            logger.error(e.getMessage());
             throw new DCFileException(e);
         }
     }
 
-    public static void copyFile(File srcFile, File destFile, boolean preserveFileDate) {
-        try {
-            FileUtils.copyFile(srcFile, destFile, preserveFileDate);
-        } catch (Exception e) {
-            throw new DCFileException(e);
-        }
-    }
 
     public static void deleteFile(String fileName) {
         try {
-            File file = new File(fileName);
-            if (file.exists()) {
-                FileUtils.forceDelete(new File(fileName));
-            }
+            Files.deleteIfExists(Paths.get(fileName));
         } catch (Exception e) {
+            logger.error(e.getMessage());
             throw new DCFileException(e);
         }
     }
@@ -191,49 +191,65 @@ public class DCFileUtils {
         return scannedFiles;
     }
 
-    public static void moveFile(String srcFileName, String destFileName, boolean override) {
-        File srcFile = new File(srcFileName);
-        File destFile = new File(destFileName);
-        moveFile(srcFile, destFile, override);
-    }
+    public static Path moverFile(String srcFileName, String destFileName, boolean override) {
+        Path source_path = Paths.get(srcFileName);
+        Path dest_path = Paths.get(destFileName);
 
-    public static void moveFile(File srcFile, File destFile, boolean override) {
         try {
-            if (srcFile == null) {
-                throw new NullPointerException("Source file must not be null");
-            }
-
-            if (destFile == null) {
-                throw new NullPointerException("Destination file must not be null");
-            }
-
-            if (!srcFile.exists()) {
-                throw new FileNotFoundException("Source '" + srcFile + "' does not exist");
-            }
-            if (srcFile.isDirectory()) {
-                throw new IOException("Source '" + srcFile + "' is a directory");
-            }
-            if (destFile.exists() && !override) {
-                throw new FileExistsException("Destination '" + destFile + "' already exists");
-            }
-            if (destFile.isDirectory()) {
-                throw new IOException("Destination '" + destFile + "' is a directory");
-            }
-            boolean rename = srcFile.renameTo(destFile);
-            if (!rename) {
-                copyFile(srcFile, destFile, true);
-                if (!srcFile.delete()) {
-                    FileUtils.deleteQuietly(destFile);
-                    throw new IOException("Failed to delete original file '" + srcFile + "' after copy to '" + destFile + "'");
-                }
+            if (override) {
+                return Files.move(source_path, dest_path, StandardCopyOption.REPLACE_EXISTING);
+            } else {
+                return Files.move(source_path, dest_path, StandardCopyOption.ATOMIC_MOVE);
             }
         } catch (Exception e) {
             throw new DCFileException(e);
         }
     }
 
-    public static void moveFile(File srcFile, String destFileName, boolean override) {
-        File destFile = new File(destFileName);
-        moveFile(srcFile, destFile, override);
-    }
+//    public static void moveFile(String srcFileName, String destFileName, boolean override) {
+////        File srcFile = new File(srcFileName);
+////        File destFile = new File(destFileName);
+////        moveFile(srcFile, destFile, override);
+//        moverFile(srcFileName, destFileName);
+//    }
+
+//    public static void moveFile(File srcFile, File destFile, boolean override) {
+//        try {
+//            if (srcFile == null) {
+//                throw new NullPointerException("Source file must not be null");
+//            }
+//
+//            if (destFile == null) {
+//                throw new NullPointerException("Destination file must not be null");
+//            }
+//
+//            if (!srcFile.exists()) {
+//                throw new FileNotFoundException("Source '" + srcFile + "' does not exist");
+//            }
+//            if (srcFile.isDirectory()) {
+//                throw new IOException("Source '" + srcFile + "' is a directory");
+//            }
+//            if (destFile.exists() && !override) {
+//                throw new FileExistsException("Destination '" + destFile + "' already exists");
+//            }
+//            if (destFile.isDirectory()) {
+//                throw new IOException("Destination '" + destFile + "' is a directory");
+//            }
+//            boolean rename = srcFile.renameTo(destFile);
+//            if (!rename) {
+//                copyFile(srcFile, destFile, true);
+//                if (!srcFile.delete()) {
+//                    FileUtils.deleteQuietly(destFile);
+//                    throw new IOException("Failed to delete original file '" + srcFile + "' after copy to '" + destFile + "'");
+//                }
+//            }
+//        } catch (Exception e) {
+//            throw new DCFileException(e);
+//        }
+//    }
+
+//    public static void moveFile(File srcFile, String destFileName, boolean override) {
+//        File destFile = new File(destFileName);
+//        moveFile(srcFile, destFile, override);
+//    }
 }

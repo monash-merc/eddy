@@ -36,117 +36,124 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFileAttributes;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.List;
+import java.util.Set;
 
 @Scope("prototype")
 @Service
 public class FileSystemServiceImpl implements FileSystemSerivce {
-	@Override
-	public boolean checkWritePermission(String pathName) {
-		return DCFileUtils.checkWritePermission(pathName);
-	}
+    @Override
+    public boolean checkWritePermission(String pathName) {
+        return DCFileUtils.checkWritePermission(pathName);
+    }
 
-	@Override
-	public void createDirectory(String dirName) {
-		DCFileUtils.createDirectory(dirName);
-	}
+    @Override
+    public void createDirectory(String dirName) {
+        DCFileUtils.createDirectory(dirName);
+    }
 
-	@Override
-	public void deleteDirectory(String dirName) {
-		DCFileUtils.deleteDirectory(dirName);
-	}
+    @Override
+    public void deleteDirectory(String dirName) {
+        DCFileUtils.deleteDirectory(dirName);
+    }
 
-	@Override
-	public void changeDirectory(String olderDirName, String newDirName) {
-		DCFileUtils.moveDirectory(olderDirName, newDirName);
-	}
+    @Override
+    public void changeDirectory(String olderDirName, String newDirName) {
+        DCFileUtils.moveDirectory(olderDirName, newDirName);
+    }
 
-	@Override
-	public void copyFile(String srcFile, String destFile) {
-		DCFileUtils.copyFile(srcFile, destFile, true);
-	}
+    @Override
+    public void copyFile(String srcFile, String destFile) {
+        DCFileUtils.copyFile(srcFile, destFile, true);
+    }
 
-	@Override
-	public void moveFile(File srcFile, String destFileName, boolean override) {
-		DCFileUtils.moveFile(srcFile, destFileName, override);
-	}
+    @Override
+    public void moveFile(String srcFileName, String destFileName, boolean override) {
+        DCFileUtils.moverFile(srcFileName, destFileName, override);
+    }
 
-	@Override
-	public void moveFile(String srcFileName, String destFileName, boolean override) {
-		DCFileUtils.moveFile(srcFileName, destFileName, override);
-	}
+    @Override
+    public void deleteFile(String fileName) {
+        DCFileUtils.deleteFile(fileName);
+    }
 
-	@Override
-	public void deleteFile(String fileName) {
-		DCFileUtils.deleteFile(fileName);
-	}
+    @Override
+    public void renameFile(String olderFileName, String newFileName) {
+        DCFileUtils.moverFile(olderFileName, newFileName, true);
+    }
 
-	@Override
-	public void renameFile(String olderFileName, String newFileName) {
-		DCFileUtils.moveFile(olderFileName, newFileName, true);
-	}
+    @Override
+    public byte[] readFileToByteArray(String fileName) {
+        return DCFileUtils.readFileToByteArray(fileName);
+    }
 
-	@Override
-	public byte[] readFileToByteArray(String fileName) {
-		return DCFileUtils.readFileToByteArray(fileName);
-	}
+    @Override
+    public InputStream downloadFile(String fileName) {
+        return DCFileUtils.readFileToInputStream(fileName);
+    }
 
-	@Override
-	public InputStream downloadFile(String fileName) {
-		return DCFileUtils.readFileToInputStream(fileName);
-	}
+    @Override
+    public List<String> discoverFiles(String stagePath, FilenameFilter filter) {
+        return DCFileUtils.discoverFileNames(stagePath, filter);
+    }
 
-	@Override
-	public List<String> discoverFiles(String stagePath, FilenameFilter filter) {
-		return DCFileUtils.discoverFileNames(stagePath, filter);
-	}
+    public static void main(String[] args) throws Exception {
 
-	public static void main(String[] args) throws Exception {
+        FileSystemServiceImpl fileService = new FileSystemServiceImpl();
 
-		FileSystemServiceImpl fileService = new FileSystemServiceImpl();
+        String uid4_simontest_file = "/mnt/datastore/ands/uid_4/simontest";
+        fileService.deleteFile(uid4_simontest_file);
 
-		String root = "/opt/datastore";
-		System.out.println("data store path permission: write? " + fileService.checkWritePermission(root));
 
-		// String userDir = root + File.separator + "uid1" + File.separator;
-		//
-		// String collectionName1 = CaptureUtil.generateIdBasedOnTimeStamp();
-		// String collectionName2 = CaptureUtil.generateIdBasedOnTimeStamp();
-		// String collection1Path = userDir + collectionName1;
-		// String collection2Path = userDir + collectionName2;
-		//
-		// fileService.createDirectory(collection1Path);
-		// fileService.createDirectory(collection2Path);
-		// System.out.println("Finished to create a directory: " + collection1Path);
-		// System.out.println("Finished to create a directory: " + collection2Path);
-		//
-		// String newCollectionName2 = CaptureUtil.generateIdBasedOnTimeStamp();
-		// String collection1NewPath = userDir + newCollectionName2;
-		// fileService.changeDirectory(collection1Path, collection1NewPath);
-		// System.out.println("Finished to change a directory: " + collection1NewPath);
-		//
-		// fileService.deleteDirectory(collection1NewPath);
-		//
-		// System.out.println("Finished to delete a directory: " + collection1NewPath);
+//        System.out.println("data store path permission: write? " + fileService.checkWritePermission(root));
 
-		String stageDir = "/opt/datastore/stage";
+        // String userDir = root + File.separator + "uid1" + File.separator;
+        //
+        // String collectionName1 = CaptureUtil.generateIdBasedOnTimeStamp();
+        // String collectionName2 = CaptureUtil.generateIdBasedOnTimeStamp();
+        // String collection1Path = userDir + collectionName1;
+        // String collection2Path = userDir + collectionName2;
+        //
+        // fileService.createDirectory(collection1Path);
+        // fileService.createDirectory(collection2Path);
+        // System.out.println("Finished to create a directory: " + collection1Path);
+        // System.out.println("Finished to create a directory: " + collection2Path);
+        //
+        // String newCollectionName2 = CaptureUtil.generateIdBasedOnTimeStamp();
+        // String collection1NewPath = userDir + newCollectionName2;
+        // fileService.changeDirectory(collection1Path, collection1NewPath);
+        // System.out.println("Finished to change a directory: " + collection1NewPath);
+        //
+        // fileService.deleteDirectory(collection1NewPath);
+        //
+        // System.out.println("Finished to delete a directory: " + collection1NewPath);
 
-		FileSystemServiceImpl fileDiscover = new FileSystemServiceImpl();
-		ScanFileFilter filter = new ScanFileFilter();
-		filter.setFileExt(".nc");
-		List<String> files = fileDiscover.discoverFiles(stageDir, filter);
-		for (String f : files) {
-			System.out.println("========> found file: " + f);
-		}
-		// File file = new File("/opt/datastore/test/srcdir/src.nc");
-		// fileDiscover.moveFile(file, "/opt/datastore/test/srcdir/src1.nc", true);
-		//
-		// System.out.println("Finished");
+//        String stageDir = "/opt/datastore/stage";
+//
+//        FileSystemServiceImpl fileDiscover = new FileSystemServiceImpl();
+//        ScanFileFilter filter = new ScanFileFilter();
+//        filter.setFileExt(".nc");
+//        List<String> files = fileDiscover.discoverFiles(stageDir, filter);
+//        for (String f : files) {
+//            System.out.println("========> found file: " + f);
+//        }
+        // File file = new File("/opt/datastore/test/srcdir/src.nc");
+        // fileDiscover.moveFile(file, "/opt/datastore/test/srcdir/src1.nc", true);
+        //
+        // System.out.println("Finished");
 
-		// String src = "/opt/datastore/test/srcdir/src.nc";
-		// String dest = "/opt/datastore/test/dest/dest.nc";
-		// // fileDiscover.copyFile(src, dest);
-		// fileDiscover.moveFile(dest, src, false);
-	}
+        // String src = "/opt/datastore/test/srcdir/src.nc";
+        // String dest = "/opt/datastore/test/dest/dest.nc";
+        // // fileDiscover.copyFile(src, dest);
+        // fileDiscover.moveFile(dest, src, false);
+    }
 
 }
