@@ -35,10 +35,7 @@ import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.nio.file.*;
-import java.nio.file.attribute.FileAttribute;
-import java.nio.file.attribute.PosixFileAttributes;
-import java.nio.file.attribute.PosixFilePermission;
-import java.nio.file.attribute.PosixFilePermissions;
+import java.nio.file.attribute.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -103,9 +100,18 @@ public class DCFileUtils {
                 logger.info("===== parent owner: " + attr.owner() + "  group: " + attr.group() + "  permissions: " + attr.permissions());
                 Set<PosixFilePermission> perms = attr.permissions();
                 FileAttribute<Set<PosixFilePermission>> fileAttr = PosixFilePermissions.asFileAttribute(perms);
-                Path newDir = Files.createDirectory(newPath, fileAttr);
+                Path newDir = Files.createDirectory(newPath);
                 PosixFileAttributes dirAttr = Files.readAttributes(newDir, PosixFileAttributes.class);
                 logger.info("===== new dir owner: " + dirAttr.owner() + "  group: " + dirAttr.group() + "  permissions: " + dirAttr.permissions());
+
+                UserPrincipalLookupService principalLookupService = FileSystems.getDefault().getUserPrincipalLookupService();
+                UserPrincipal userPrincipal = principalLookupService.lookupPrincipalByName(attr.owner().getName());
+                GroupPrincipal groupPrincipal = principalLookupService.lookupPrincipalByGroupName(attr.group().getName());
+                Files.setAttribute(newDir, "posix:owner", userPrincipal, LinkOption.NOFOLLOW_LINKS);
+                Files.setAttribute(newDir, "posix:group", groupPrincipal, LinkOption.NOFOLLOW_LINKS);
+
+                PosixFileAttributes lastAttr = Files.readAttributes(newDir, PosixFileAttributes.class);
+                logger.info("=====>>>  final new dir owner: " + lastAttr.owner() + "  group: " + lastAttr.group() + "  permissions: " + lastAttr.permissions());
                 return newDir;
             } else {
                 return Files.createDirectory(newPath);
