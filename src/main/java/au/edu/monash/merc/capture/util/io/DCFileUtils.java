@@ -34,13 +34,11 @@ import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.nio.file.*;
-import java.nio.file.attribute.GroupPrincipal;
-import java.nio.file.attribute.PosixFileAttributes;
-import java.nio.file.attribute.UserPrincipal;
-import java.nio.file.attribute.UserPrincipalLookupService;
+import java.nio.file.attribute.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public class DCFileUtils {
@@ -204,6 +202,9 @@ public class DCFileUtils {
             UserPrincipal userPrincipal = principalLookupService.lookupPrincipalByName(parentAttr.owner().getName());
             // get group
             GroupPrincipal groupPrincipal = principalLookupService.lookupPrincipalByGroupName(parentAttr.group().getName());
+            Set<PosixFilePermission> parentPerms = parentAttr.permissions();
+            // set the new path as the same perms as the parent.
+            Files.setPosixFilePermissions(filePath, parentPerms);
             // set the ownership for file path
             Files.setAttribute(filePath, "posix:owner", userPrincipal, LinkOption.NOFOLLOW_LINKS);
             // set the group for new folder
