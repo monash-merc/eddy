@@ -40,8 +40,10 @@ import java.nio.file.attribute.PosixFileAttributes;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class DCFileUtils {
 
@@ -60,13 +62,14 @@ public class DCFileUtils {
         }
     }
 
-    public static boolean deleteDirectory(String dirName) {
+    public static void deleteDirectory(String dirName) {
         if (dirName == null) {
             throw new DCFileException("directory name must not be null");
         }
-
-        try {
-            return Files.deleteIfExists(Paths.get(dirName));
+        //  delete a directory includes all files
+        Path pathToBeDeleted = Paths.get(dirName);
+        try (Stream<Path> paths = Files.walk(pathToBeDeleted)) {
+            paths.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw new DCFileException(e);
@@ -97,9 +100,13 @@ public class DCFileUtils {
             Path parent = newPath.getParent();
             if (parent != null) {
                 PosixFileAttributes attr = Files.readAttributes(parent, PosixFileAttributes.class);
+                logger.info("===== parent owner: " + attr.owner() + "  group: " + attr.group() + "  permissions: " + attr.permissions());
                 Set<PosixFilePermission> perms = attr.permissions();
                 FileAttribute<Set<PosixFilePermission>> fileAttr = PosixFilePermissions.asFileAttribute(perms);
-                return Files.createDirectory(newPath, fileAttr);
+                Path newDir = Files.createDirectory(newPath, fileAttr);
+                PosixFileAttributes dirAttr = Files.readAttributes(newDir, PosixFileAttributes.class);
+                logger.info("===== new dir owner: " + dirAttr.owner() + "  group: " + dirAttr.group() + "  permissions: " + dirAttr.permissions());
+                return newDir;
             } else {
                 return Files.createDirectory(newPath);
             }
