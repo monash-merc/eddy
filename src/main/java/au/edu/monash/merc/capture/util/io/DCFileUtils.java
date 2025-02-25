@@ -29,17 +29,18 @@ package au.edu.monash.merc.capture.util.io;
 
 import au.edu.monash.merc.capture.exception.DCFileException;
 import au.edu.monash.merc.capture.util.stage.ScanFileFilter;
-import org.apache.commons.io.FileExistsException;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.nio.file.*;
-import java.nio.file.attribute.*;
+import java.nio.file.attribute.GroupPrincipal;
+import java.nio.file.attribute.PosixFileAttributes;
+import java.nio.file.attribute.UserPrincipal;
+import java.nio.file.attribute.UserPrincipalLookupService;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
 
 public class DCFileUtils {
@@ -81,7 +82,7 @@ public class DCFileUtils {
             throw new DCFileException("new directory name must not be null");
         }
         try {
-            Path destPath = Files.move(Paths.get(olderDirName), Paths.get(newDirName), StandardCopyOption.ATOMIC_MOVE);
+            Path destPath = Files.move(Paths.get(olderDirName), Paths.get(newDirName), StandardCopyOption.REPLACE_EXISTING);
             setOwnership(destPath);
             return destPath;
         } catch (Exception e) {
@@ -115,7 +116,7 @@ public class DCFileUtils {
         }
 
         try {
-            Path copiedPath = Files.copy(Paths.get(srcFileName), Paths.get(destFileName), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            Path copiedPath = Files.copy(Paths.get(srcFileName), Paths.get(destFileName), StandardCopyOption.REPLACE_EXISTING);
             setOwnership(copiedPath);
             return copiedPath;
         } catch (Exception e) {
@@ -185,7 +186,7 @@ public class DCFileUtils {
         Path source_path = Paths.get(srcFileName);
         Path dest_path = Paths.get(destFileName);
         try {
-            Path newFilePath = Files.move(source_path, dest_path, StandardCopyOption.ATOMIC_MOVE);
+            Path newFilePath = Files.move(source_path, dest_path);
             setOwnership(newFilePath);
             return newFilePath;
         } catch (Exception e) {

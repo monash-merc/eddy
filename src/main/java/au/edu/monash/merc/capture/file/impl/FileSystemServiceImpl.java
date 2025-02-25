@@ -29,23 +29,12 @@ package au.edu.monash.merc.capture.file.impl;
 
 import au.edu.monash.merc.capture.file.FileSystemSerivce;
 import au.edu.monash.merc.capture.util.io.DCFileUtils;
-import au.edu.monash.merc.capture.util.stage.ScanFileFilter;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.FilenameFilter;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.attribute.FileAttribute;
-import java.nio.file.attribute.PosixFileAttributes;
-import java.nio.file.attribute.PosixFilePermission;
-import java.nio.file.attribute.PosixFilePermissions;
 import java.util.List;
-import java.util.Set;
 
 @Scope("prototype")
 @Service
