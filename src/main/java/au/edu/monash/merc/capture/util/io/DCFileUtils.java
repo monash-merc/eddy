@@ -81,7 +81,9 @@ public class DCFileUtils {
             throw new DCFileException("new directory name must not be null");
         }
         try {
-            return Files.move(Paths.get(olderDirName), Paths.get(newDirName), StandardCopyOption.ATOMIC_MOVE);
+            Path destPath = Files.move(Paths.get(olderDirName), Paths.get(newDirName), StandardCopyOption.ATOMIC_MOVE);
+            setOwnership(destPath);
+            return destPath;
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw new DCFileException(e);
@@ -94,36 +96,13 @@ public class DCFileUtils {
         }
         try {
             Path newPath = Paths.get(dirName);
-            Path parent = newPath.getParent();
-            if (parent != null) {
-                PosixFileAttributes attr = Files.readAttributes(parent, PosixFileAttributes.class);
-                logger.info("===== parent owner: " + attr.owner() + "  group: " + attr.group() + "  permissions: " + attr.permissions());
-                Set<PosixFilePermission> perms = attr.permissions();
-                FileAttribute<Set<PosixFilePermission>> fileAttr = PosixFilePermissions.asFileAttribute(perms);
-                Path newDir = Files.createDirectory(newPath);
-                PosixFileAttributes dirAttr = Files.readAttributes(newDir, PosixFileAttributes.class);
-                logger.info("===== new dir owner: " + dirAttr.owner() + "  group: " + dirAttr.group() + "  permissions: " + dirAttr.permissions());
-
-                UserPrincipalLookupService principalLookupService = FileSystems.getDefault().getUserPrincipalLookupService();
-                UserPrincipal userPrincipal = principalLookupService.lookupPrincipalByName(attr.owner().getName());
-                GroupPrincipal groupPrincipal = principalLookupService.lookupPrincipalByGroupName(attr.group().getName());
-                Files.setAttribute(newDir, "posix:owner", userPrincipal, LinkOption.NOFOLLOW_LINKS);
-                Files.setAttribute(newDir, "posix:group", groupPrincipal, LinkOption.NOFOLLOW_LINKS);
-
-                PosixFileAttributes lastAttr = Files.readAttributes(newDir, PosixFileAttributes.class);
-                logger.info("=====>>>  final new dir owner: " + lastAttr.owner() + "  group: " + lastAttr.group() + "  permissions: " + lastAttr.permissions());
-                return newDir;
-            } else {
-                return Files.createDirectory(newPath);
-            }
+            Path createdPath = Files.createDirectory(newPath);
+            setOwnership(createdPath);
+            return createdPath;
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw new DCFileException(e);
         }
-    }
-
-    public static void creatFileFromSrc(String srcFileName, String destFileName) {
-        copyFile(srcFileName, destFileName, false);
     }
 
     public static Path copyFile(String srcFileName, String destFileName, boolean preserveFileDate) {
@@ -136,11 +115,9 @@ public class DCFileUtils {
         }
 
         try {
-            if (preserveFileDate) {
-                return Files.copy(Paths.get(srcFileName), Paths.get(destFileName), StandardCopyOption.REPLACE_EXISTING);
-            } else {
-                return Files.copy(Paths.get(srcFileName), Paths.get(destFileName), StandardCopyOption.ATOMIC_MOVE);
-            }
+            Path copiedPath = Files.copy(Paths.get(srcFileName), Paths.get(destFileName), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            setOwnership(copiedPath);
+            return copiedPath;
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw new DCFileException(e);
@@ -171,7 +148,7 @@ public class DCFileUtils {
         }
         InputStream in = null;
         try {
-            in = new BufferedInputStream(new FileInputStream(fileName));
+            in = new BufferedInputStream(Files.newInputStream(Paths.get(fileName)));
         } catch (Exception e) {
             throw new DCFileException(e);
         }
@@ -204,65 +181,33 @@ public class DCFileUtils {
         return scannedFiles;
     }
 
-    public static Path moverFile(String srcFileName, String destFileName, boolean override) {
+    public static Path moverFile(String srcFileName, String destFileName) {
         Path source_path = Paths.get(srcFileName);
         Path dest_path = Paths.get(destFileName);
-
         try {
-            if (override) {
-                return Files.move(source_path, dest_path, StandardCopyOption.REPLACE_EXISTING);
-            } else {
-                return Files.move(source_path, dest_path, StandardCopyOption.ATOMIC_MOVE);
-            }
+            Path newFilePath = Files.move(source_path, dest_path, StandardCopyOption.ATOMIC_MOVE);
+            setOwnership(newFilePath);
+            return newFilePath;
         } catch (Exception e) {
             throw new DCFileException(e);
         }
     }
 
-//    public static void moveFile(String srcFileName, String destFileName, boolean override) {
-////        File srcFile = new File(srcFileName);
-////        File destFile = new File(destFileName);
-////        moveFile(srcFile, destFile, override);
-//        moverFile(srcFileName, destFileName);
-//    }
+    private static void setOwnership(Path filePath) throws IOException {
+        Path parent = filePath.getParent();
+        if (parent != null) {
+            // get parent path ownership (owner and group)
+            PosixFileAttributes parentAttr = Files.readAttributes(parent, PosixFileAttributes.class);
+            UserPrincipalLookupService principalLookupService = FileSystems.getDefault().getUserPrincipalLookupService();
+            // get owner
+            UserPrincipal userPrincipal = principalLookupService.lookupPrincipalByName(parentAttr.owner().getName());
+            // get group
+            GroupPrincipal groupPrincipal = principalLookupService.lookupPrincipalByGroupName(parentAttr.group().getName());
+            // set the ownership for file path
+            Files.setAttribute(filePath, "posix:owner", userPrincipal, LinkOption.NOFOLLOW_LINKS);
+            // set the group for new folder
+            Files.setAttribute(filePath, "posix:group", groupPrincipal, LinkOption.NOFOLLOW_LINKS);
+        }
+    }
 
-//    public static void moveFile(File srcFile, File destFile, boolean override) {
-//        try {
-//            if (srcFile == null) {
-//                throw new NullPointerException("Source file must not be null");
-//            }
-//
-//            if (destFile == null) {
-//                throw new NullPointerException("Destination file must not be null");
-//            }
-//
-//            if (!srcFile.exists()) {
-//                throw new FileNotFoundException("Source '" + srcFile + "' does not exist");
-//            }
-//            if (srcFile.isDirectory()) {
-//                throw new IOException("Source '" + srcFile + "' is a directory");
-//            }
-//            if (destFile.exists() && !override) {
-//                throw new FileExistsException("Destination '" + destFile + "' already exists");
-//            }
-//            if (destFile.isDirectory()) {
-//                throw new IOException("Destination '" + destFile + "' is a directory");
-//            }
-//            boolean rename = srcFile.renameTo(destFile);
-//            if (!rename) {
-//                copyFile(srcFile, destFile, true);
-//                if (!srcFile.delete()) {
-//                    FileUtils.deleteQuietly(destFile);
-//                    throw new IOException("Failed to delete original file '" + srcFile + "' after copy to '" + destFile + "'");
-//                }
-//            }
-//        } catch (Exception e) {
-//            throw new DCFileException(e);
-//        }
-//    }
-
-//    public static void moveFile(File srcFile, String destFileName, boolean override) {
-//        File destFile = new File(destFileName);
-//        moveFile(srcFile, destFile, override);
-//    }
 }

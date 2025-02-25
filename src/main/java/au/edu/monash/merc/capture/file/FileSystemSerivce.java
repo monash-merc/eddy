@@ -42,7 +42,7 @@ public interface FileSystemSerivce {
 
     void changeDirectory(String olderDirName, String newDirName);
 
-    void moveFile(String srcFileName, String destFileName, boolean override);
+    void moveFile(String srcFileName, String destFileName);
 
     void copyFile(String srcFile, String destFile);
 

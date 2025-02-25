@@ -76,8 +76,8 @@ public class FileSystemServiceImpl implements FileSystemSerivce {
     }
 
     @Override
-    public void moveFile(String srcFileName, String destFileName, boolean override) {
-        DCFileUtils.moverFile(srcFileName, destFileName, override);
+    public void moveFile(String srcFileName, String destFileName) {
+        DCFileUtils.moverFile(srcFileName, destFileName);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class FileSystemServiceImpl implements FileSystemSerivce {
 
     @Override
     public void renameFile(String olderFileName, String newFileName) {
-        DCFileUtils.moverFile(olderFileName, newFileName, true);
+        DCFileUtils.moverFile(olderFileName, newFileName);
     }
 
     @Override

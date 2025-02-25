@@ -258,7 +258,7 @@ public class DMServiceImpl implements DMService {
             String sourceFile = srcFile.getAbsolutePath();
             // persist file first
 //            this.fileService.moveFile(srcFile, destDatasetFileFullPath, true);
-            this.fileService.moveFile(sourceFile, destDatasetFileFullPath, true);
+            this.fileService.moveFile(sourceFile, destDatasetFileFullPath);
 
             DataCaptureAdapter adapter = adapterFactory.createInstance();
             ds = adapter.captureData(simpleFileName, destDatasetFileFullPath, extractRequired, globalAttOnly);
@@ -322,7 +322,7 @@ public class DMServiceImpl implements DMService {
         Dataset ds = null;
         try {
             // persist file first
-            this.fileService.moveFile(srcFileFullPath, destDatasetFileFullPath, true);
+            this.fileService.moveFile(srcFileFullPath, destDatasetFileFullPath);
             // once the file move into destination directory, then we start to extract the metadata
             ds = adapter.captureData(simpleFileName, destDatasetFileFullPath, fBean.extractRequired(), fBean.isGlobalAttOnly());
             // set dataset store location
@@ -342,7 +342,7 @@ public class DMServiceImpl implements DMService {
 
                 // reverts data file to the staging directory.
                 if (destf.exists() && (!srcf.exists())) {
-                    this.fileService.moveFile(destDatasetFileFullPath, srcFileFullPath, true);
+                    this.fileService.moveFile(destDatasetFileFullPath, srcFileFullPath);
                 }
                 // delete the transferred file in the destination directory.
                 if (destf.exists()) {
