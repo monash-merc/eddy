@@ -22,8 +22,8 @@
     <br/>
     <div class="copyright">
         Copyright &copy; 2010-<span id="current_year"></span> Monash University. All Rights Reserved.
-        &nbsp;&nbsp;&nbsp;&nbsp;Powered by <a href="https://github.com/monash-merc/eddy" target="_blank">
-            Eddy <@s.text name="app.version" />
+        &nbsp;&nbsp;&nbsp;&nbsp;Powered by <a href="https://github.com/monash-merc/eddy/tree/eddy-v3.0" target="_blank">
+            Eddy - <@s.text name="app.version" />
         </a>
     </div>
     <br/>
