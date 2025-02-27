@@ -197,7 +197,7 @@ public class DCFileUtils {
         if (parent != null) {
             // get parent path ownership (owner and group)
             PosixFileAttributes parentAttr = Files.readAttributes(parent, PosixFileAttributes.class);
-            UserPrincipalLookupService principalLookupService = FileSystems.getDefault().getUserPrincipalLookupService();
+            UserPrincipalLookupService principalLookupService = parent.getFileSystem().getUserPrincipalLookupService();
             // get owner
             UserPrincipal userPrincipal = principalLookupService.lookupPrincipalByName(parentAttr.owner().getName());
             // get group
