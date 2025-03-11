@@ -8,3 +8,5 @@ target/
 .settings/
 *.iml
 .env
+app_docker/nginx/certs/*.crt
+app_docker/nginx/certs/*.key
