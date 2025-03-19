@@ -1,11 +1,11 @@
 <div style="clear:both"></div>
 <div class="blank_separator"></div>
 <div class="blank_separator"></div>
-<#include "use_policy.ftl"/>
+<#--<#include "use_policy.ftl"/>-->
 <div style="clear:both"></div>
 <div class="blank_separator"></div>
 <div class="blank_separator"></div>
-<#include "ands.ftl"/>
+<#--<#include "ands.ftl"/>-->
 <div class="blank_separator"></div>
 <div class="blank_separator"></div>
 <div style="clear:both"></div>
