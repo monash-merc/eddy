@@ -27,26 +27,29 @@
  */
 package au.edu.monash.merc.capture.file.impl;
 
-import au.edu.monash.merc.capture.file.FileSystemSerivce;
+import au.edu.monash.merc.capture.file.FileSystemService;
+import au.edu.monash.merc.capture.util.CaptureUtil;
 import au.edu.monash.merc.capture.util.io.DCFileUtils;
+import au.edu.monash.merc.capture.util.stage.ScanFileFilter;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.util.List;
 
 @Scope("prototype")
 @Service
-public class FileSystemServiceImpl implements FileSystemSerivce {
+public class FileSystemServiceImpl implements FileSystemService {
     @Override
     public boolean checkWritePermission(String pathName) {
         return DCFileUtils.checkWritePermission(pathName);
     }
 
     @Override
-    public void createDirectory(String dirName) {
-        DCFileUtils.createDirectory(dirName);
+    public void createDirectories(String dirName) {
+        DCFileUtils.createDirectories(dirName);
     }
 
     @Override
@@ -97,52 +100,48 @@ public class FileSystemServiceImpl implements FileSystemSerivce {
     public static void main(String[] args) throws Exception {
 
         FileSystemServiceImpl fileService = new FileSystemServiceImpl();
+        String rootPath = "/opt/datastore/ands";
+        String stageDir = "/opt/datastore/stage";
 
-        String uid4_simontest_file = "/mnt/datastore/ands/uid_4/simontest";
-        fileService.deleteFile(uid4_simontest_file);
+
+        System.out.println("data store path permission: write? " + fileService.checkWritePermission(rootPath));
+
+        String userDir = rootPath + File.separator + "uid1" + File.separator;
+
+        String collectionName1 = CaptureUtil.generateIdBasedOnTimeStamp();
+        String collectionName2 = CaptureUtil.generateIdBasedOnTimeStamp();
+        String collection1Path = userDir + collectionName1;
+        String collection2Path = userDir + collectionName2;
+
+        fileService.createDirectories(collection1Path);
+
+        System.out.println("Finished to create a directory: " + collection1Path);
+
+        String fileName = stageDir + "/AdelaideRiver_2009_SIMOIN_L3.nc";
+        fileService.copyFile(fileName, collection1Path + "/src2.nc");
+        System.out.println("Finished copying file: " + fileName);
+
+        fileService.createDirectories(collection2Path);
+        System.out.println("Finished to create a directory: " + collection2Path);
+
+        String newCollectionName2 = CaptureUtil.generateIdBasedOnTimeStamp();
+        String collection1NewPath = userDir + newCollectionName2;
+        fileService.changeDirectory(collection1Path, collection1NewPath);
+        System.out.println("Finished to change a directory from " + collection1Path + " to " + collection1NewPath);
+
+        fileService.deleteDirectory(collection1NewPath);
+        System.out.println("Finished to delete a directory: " + collection1NewPath);
 
 
-//        System.out.println("data store path permission: write? " + fileService.checkWritePermission(root));
+        ScanFileFilter filter = new ScanFileFilter();
+        filter.setFileExt(".nc");
+        List<String> files = fileService.discoverFiles(stageDir, filter);
+        for (String f : files) {
+            System.out.println("========> found file: " + f);
+        }
 
-        // String userDir = root + File.separator + "uid1" + File.separator;
-        //
-        // String collectionName1 = CaptureUtil.generateIdBasedOnTimeStamp();
-        // String collectionName2 = CaptureUtil.generateIdBasedOnTimeStamp();
-        // String collection1Path = userDir + collectionName1;
-        // String collection2Path = userDir + collectionName2;
-        //
-        // fileService.createDirectory(collection1Path);
-        // fileService.createDirectory(collection2Path);
-        // System.out.println("Finished to create a directory: " + collection1Path);
-        // System.out.println("Finished to create a directory: " + collection2Path);
-        //
-        // String newCollectionName2 = CaptureUtil.generateIdBasedOnTimeStamp();
-        // String collection1NewPath = userDir + newCollectionName2;
-        // fileService.changeDirectory(collection1Path, collection1NewPath);
-        // System.out.println("Finished to change a directory: " + collection1NewPath);
-        //
-        // fileService.deleteDirectory(collection1NewPath);
-        //
-        // System.out.println("Finished to delete a directory: " + collection1NewPath);
 
-//        String stageDir = "/opt/datastore/stage";
-//
-//        FileSystemServiceImpl fileDiscover = new FileSystemServiceImpl();
-//        ScanFileFilter filter = new ScanFileFilter();
-//        filter.setFileExt(".nc");
-//        List<String> files = fileDiscover.discoverFiles(stageDir, filter);
-//        for (String f : files) {
-//            System.out.println("========> found file: " + f);
-//        }
-        // File file = new File("/opt/datastore/test/srcdir/src.nc");
-        // fileDiscover.moveFile(file, "/opt/datastore/test/srcdir/src1.nc", true);
-        //
-        // System.out.println("Finished");
-
-        // String src = "/opt/datastore/test/srcdir/src.nc";
-        // String dest = "/opt/datastore/test/dest/dest.nc";
-        // // fileDiscover.copyFile(src, dest);
-        // fileDiscover.moveFile(dest, src, false);
+        System.out.println("Finished");
     }
 
 }

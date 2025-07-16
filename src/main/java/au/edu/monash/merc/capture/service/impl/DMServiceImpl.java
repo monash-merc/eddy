@@ -35,7 +35,7 @@ import au.edu.monash.merc.capture.domain.*;
 import au.edu.monash.merc.capture.dto.*;
 import au.edu.monash.merc.capture.dto.page.Pagination;
 import au.edu.monash.merc.capture.exception.DataCaptureException;
-import au.edu.monash.merc.capture.file.FileSystemSerivce;
+import au.edu.monash.merc.capture.file.FileSystemService;
 import au.edu.monash.merc.capture.mail.MailService;
 import au.edu.monash.merc.capture.service.*;
 import au.edu.monash.merc.capture.util.CaptureUtil;
@@ -61,7 +61,7 @@ public class DMServiceImpl implements DMService {
 
     private final PermissionService permissionService;
 
-    private final FileSystemSerivce fileService;
+    private final FileSystemService fileService;
 
     private final DataCaptureAdapterFactory adapterFactory;
 
@@ -91,7 +91,7 @@ public class DMServiceImpl implements DMService {
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
     public DMServiceImpl(PermissionService permissionService, CollectionService collectionService,
-                         DatasetService datasetService, FileSystemSerivce fileService,
+                         DatasetService datasetService, FileSystemService fileService,
                          DataCaptureAdapterFactory adapterFactory, AuditEventService auditEventService,
                          ProfileService profileService, AvatarService avatarService,
                          MailService mailService, LicenceService licenceService,
@@ -119,7 +119,7 @@ public class DMServiceImpl implements DMService {
 
         String collectionPath = rootPath + File.separator + collection.getDirPathName();
         // create a directory first, if any exception occurs, it will never create a collection in database
-        this.fileService.createDirectory(collectionPath);
+        this.fileService.createDirectories(collectionPath);
 
         try {
             this.collectionService.saveCollection(collection);

@@ -89,6 +89,21 @@ public class DCFileUtils {
         }
     }
 
+    public static Path createDirectories(String dirName) {
+        if (dirName == null) {
+            throw new DCFileException("directory name must not be null");
+        }
+        try {
+            Path newPath = Paths.get(dirName);
+            Path createdPath = Files.createDirectories(newPath);
+            setOwnership(createdPath);
+            return createdPath;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new DCFileException(e);
+        }
+    }
+
     public static Path createDirectory(String dirName) {
         if (dirName == null) {
             throw new DCFileException("directory name must not be null");
@@ -212,4 +227,10 @@ public class DCFileUtils {
         }
     }
 
+    public static void main(String[] args) {
+
+        Path createdPath = DCFileUtils.createDirectories("/Users/simonyu/ozflux/test");
+        System.out.println(createdPath);
+//        DCFileUtils.deleteDirectory("/Users/simonyu/ozflux/test");
+    }
 }

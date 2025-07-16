@@ -27,16 +27,15 @@
  */
 package au.edu.monash.merc.capture.file;
 
-import java.io.File;
 import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.util.List;
 
-public interface FileSystemSerivce {
+public interface FileSystemService {
 
     boolean checkWritePermission(String pathName);
 
-    void createDirectory(String dirName);
+    void createDirectories(String dirName);
 
     void deleteDirectory(String dirName);
 
