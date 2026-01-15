@@ -29,9 +29,13 @@ package au.edu.monash.merc.capture.repository;
 
 import au.edu.monash.merc.capture.domain.IPBlock;
 
+import java.util.List;
+
 public interface IBlockIPRepository {
 
     IPBlock getIPBlockByIp(String ipAddress);
+
+    List<IPBlock> getIPBlocksByIp(String ipAddress);
 
     void deleteIPBlockByIp(String ipAddress);
 }

@@ -34,6 +34,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Scope("prototype")
 @Service
 @Transactional
@@ -56,6 +58,11 @@ public class BlockIPServiceImpl implements BlockIPService {
     }
 
     @Override
+    public List<IPBlock> getIPBlocksByIp(String ipAddress) {
+        return this.blockIPDao.getIPBlocksByIp(ipAddress);
+    }
+
+    @Override
     public void deleteIPBlock(IPBlock ipBlock) {
         this.blockIPDao.remove(ipBlock);
     }
@@ -69,6 +76,7 @@ public class BlockIPServiceImpl implements BlockIPService {
     public IPBlock getIPBlockByIp(String ipAddress) {
         return this.blockIPDao.getIPBlockByIp(ipAddress);
     }
+
 
     @Override
     public void deleteIPBlockByIP(String ipAddress) {

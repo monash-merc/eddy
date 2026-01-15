@@ -37,6 +37,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Scope("prototype")
 @Repository
 public class BlockIPDAO extends HibernateGenericDAO<IPBlock> implements IBlockIPRepository {
@@ -58,6 +60,13 @@ public class BlockIPDAO extends HibernateGenericDAO<IPBlock> implements IBlockIP
         return (IPBlock) this.session().createCriteria(this.persistClass).add(Restrictions.eq("ip", ipAddress))
                 .setComment("BlockIPDAO.getIPBlockByIp").uniqueResult();
 
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<IPBlock> getIPBlocksByIp(String ipAddress) {
+        return (List<IPBlock>) this.session().createCriteria(this.persistClass).add(Restrictions.eq("ip", ipAddress))
+                .setComment("BlockIPDAO.getIPBlockByIp");
     }
 
 }

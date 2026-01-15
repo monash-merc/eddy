@@ -61,7 +61,7 @@ public class DataCaptureAdapterFactory {
             if (clazz.isInterface()) {
                 throw new DCInstantiationException(clazz.getName() + ", Specified class is an interface");
             }
-            return (DataCaptureAdapter) (clazz.newInstance());
+            return (DataCaptureAdapter) (clazz.getDeclaredConstructor().newInstance());
         } catch (Exception e) {
             throw new DCInstantiationException(e);
         }

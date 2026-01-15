@@ -36,188 +36,189 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CCSLicenseUtil {
 
-	private SAXBuilder parser = new SAXBuilder();
+    private SAXBuilder parser = new SAXBuilder();
 
-	private static String license_rest_url = "http://api.creativecommons.org/rest/1.5/license/standard"; // /get?";
+    private static String license_rest_url = "http://api.creativecommons.org/rest/1.5/license/standard"; // /get?";
 
-	private String serviceURL;
+    private String serviceURL;
 
-	public CCSLicenseUtil() {
+    public CCSLicenseUtil() {
 
-	}
+    }
 
-	public CCSLicenseUtil(String serviceUrl) {
-		this.serviceURL = serviceUrl;
-	}
+    public CCSLicenseUtil(String serviceUrl) {
+        this.serviceURL = serviceUrl;
+    }
 
-	public String getServiceURL() {
-		return serviceURL;
-	}
+    public String getServiceURL() {
+        return serviceURL;
+    }
 
-	public void setServiceURL(String serviceURL) {
-		this.serviceURL = serviceURL;
-	}
+    public void setServiceURL(String serviceURL) {
+        this.serviceURL = serviceURL;
+    }
 
-	@SuppressWarnings("unchecked")
-	public List<CCWSField> generateLicenseFields() {
-		JDOMXPath xp_LicenseField;
-		JDOMXPath xp_LicenseID;
-		JDOMXPath xp_FieldType;
-		JDOMXPath xp_Description;
-		JDOMXPath xp_Label;
-		JDOMXPath xp_Enum;
+    @SuppressWarnings("unchecked")
+    public List<CCWSField> generateLicenseFields() {
+        JDOMXPath xp_LicenseField;
+        JDOMXPath xp_LicenseID;
+        JDOMXPath xp_FieldType;
+        JDOMXPath xp_Description;
+        JDOMXPath xp_Label;
+        JDOMXPath xp_Enum;
 
-		Document fieldDoc = null;
+        Document fieldDoc = null;
 
-		List<Element> results = null;
-		List<Object> enumOptions = null;
+        List<Element> results = null;
+        List<Object> enumOptions = null;
 
-		// create XPath expressions
-		try {
-			xp_LicenseField = new JDOMXPath("//field");
-			xp_LicenseID = new JDOMXPath("@id");
-			xp_Description = new JDOMXPath("description");
-			xp_Label = new JDOMXPath("label");
-			xp_FieldType = new JDOMXPath("type");
-			xp_Enum = new JDOMXPath("enum");
+        // create XPath expressions
+        try {
+            xp_LicenseField = new JDOMXPath("//field");
+            xp_LicenseID = new JDOMXPath("@id");
+            xp_Description = new JDOMXPath("description");
+            xp_Label = new JDOMXPath("label");
+            xp_FieldType = new JDOMXPath("type");
+            xp_Enum = new JDOMXPath("enum");
 
-		} catch (JaxenException e) {
-			throw new ConfigException(e);
-		}
+        } catch (JaxenException e) {
+            throw new ConfigException(e);
+        }
 
-		// parse the classes document
-		try {
-			if (serviceURL == null) {
-				serviceURL = license_rest_url;
-			}
-			URL standardLicenseUrl = new URL(serviceURL);
-			fieldDoc = this.parser.build(standardLicenseUrl);
-		} catch (Exception e) {
-			throw new ConfigException(e);
-		}
+        // parse the classes document
+        try {
+            if (serviceURL == null) {
+                serviceURL = license_rest_url;
+            }
+            URL standardLicenseUrl = URI.create(serviceURL).toURL();
+            fieldDoc = this.parser.build(standardLicenseUrl);
+        } catch (Exception e) {
+            throw new ConfigException(e);
+        }
 
-		// extract the identifiers and labels using XPath
-		try {
-			results = xp_LicenseField.selectNodes(fieldDoc);
-		} catch (JaxenException e) {
-			throw new ConfigException(e);
-		}
+        // extract the identifiers and labels using XPath
+        try {
+            results = xp_LicenseField.selectNodes(fieldDoc);
+        } catch (JaxenException e) {
+            throw new ConfigException(e);
+        }
 
-		List<CCWSField> fields = new ArrayList<CCWSField>();
+        List<CCWSField> fields = new ArrayList<CCWSField>();
 
-		for (int i = 0; i < results.size(); i++) {
-			Element field = results.get(i);
+        for (int i = 0; i < results.size(); i++) {
+            Element field = results.get(i);
 
-			try {
-				// create the field object
-				CCWSField f = new CCWSField(((Attribute) xp_LicenseID.selectSingleNode(field)).getValue(),
-						((Element) xp_Label.selectSingleNode(field)).getText());
+            try {
+                // create the field object
+                CCWSField f = new CCWSField(((Attribute) xp_LicenseID.selectSingleNode(field)).getValue(),
+                        ((Element) xp_Label.selectSingleNode(field)).getText());
 
-				// extract additional properties
-				f.setDescription(((Element) xp_Description.selectSingleNode(field)).getText());
-				f.setType(((Element) xp_FieldType.selectSingleNode(field)).getText());
+                // extract additional properties
+                f.setDescription(((Element) xp_Description.selectSingleNode(field)).getText());
+                f.setType(((Element) xp_FieldType.selectSingleNode(field)).getText());
 
-				enumOptions = xp_Enum.selectNodes(field);
+                enumOptions = xp_Enum.selectNodes(field);
 
-				for (int j = 0; j < enumOptions.size(); j++) {
+                for (int j = 0; j < enumOptions.size(); j++) {
 
-					String id = ((Attribute) xp_LicenseID.selectSingleNode(enumOptions.get(j))).getValue();
-					String label = ((Element) xp_Label.selectSingleNode(enumOptions.get(j))).getText();
-					String desc = null;
-					if (!f.getId().equals("jurisdiction")) {
-						desc = ((Element) xp_Description.selectSingleNode(enumOptions.get(j))).getText();
-					}
-					if (id.equals("")) {
-						label = "International";
-					}
-					f.getLicenseFields().add(new LicenseField(id, label, desc));
-				} // for each enum option
+                    String id = ((Attribute) xp_LicenseID.selectSingleNode(enumOptions.get(j))).getValue();
+                    String label = ((Element) xp_Label.selectSingleNode(enumOptions.get(j))).getText();
+                    String desc = null;
+                    if (!f.getId().equals("jurisdiction")) {
+                        desc = ((Element) xp_Description.selectSingleNode(enumOptions.get(j))).getText();
+                    }
+                    if (id.equals("")) {
+                        label = "International";
+                    }
+                    f.getLicenseFields().add(new LicenseField(id, label, desc));
+                } // for each enum option
 
-				fields.add(f);
-			} catch (JaxenException e) {
-				throw new ConfigException(e);
-			}
-		}
-		return fields;
-	}
+                fields.add(f);
+            } catch (JaxenException e) {
+                throw new ConfigException(e);
+            }
+        }
+        return fields;
+    }
 
-	@SuppressWarnings("unchecked")
-	public CCLicense getCCLicense(String licenseParams) {
-		Document licenseDoc = null;
+    @SuppressWarnings("unchecked")
+    public CCLicense getCCLicense(String licenseParams) {
+        Document licenseDoc = null;
 
-		JDOMXPath xp_licenseName;
-		JDOMXPath xp_licenseHtml;
-		JDOMXPath xp_licenseLink;
-		JDOMXPath xp_licenseHref;
+        JDOMXPath xp_licenseName;
+        JDOMXPath xp_licenseHtml;
+        JDOMXPath xp_licenseLink;
+        JDOMXPath xp_licenseHref;
 
-		// create XPath expressions
-		try {
-			xp_licenseName = new JDOMXPath("//license-name");
-			xp_licenseHtml = new JDOMXPath("//html");
-			xp_licenseLink = new JDOMXPath("//license-uri");
-			xp_licenseHref = new JDOMXPath("//a");
+        // create XPath expressions
+        try {
+            xp_licenseName = new JDOMXPath("//license-name");
+            xp_licenseHtml = new JDOMXPath("//html");
+            xp_licenseLink = new JDOMXPath("//license-uri");
+            xp_licenseHref = new JDOMXPath("//a");
 
-		} catch (JaxenException e) {
-			throw new ConfigException(e);
-		}
-		try {
-			if (serviceURL == null) {
-				serviceURL = license_rest_url;
-			}
-			URL licenseUrl = new URL(serviceURL + "/get?" + licenseParams);
-			licenseDoc = this.parser.build(licenseUrl);
-		} catch (Exception e) {
-			throw new ConfigException(e);
-		}
+        } catch (JaxenException e) {
+            throw new ConfigException(e);
+        }
+        try {
+            if (serviceURL == null) {
+                serviceURL = license_rest_url;
+            }
+            URL licenseUrl = URI.create(serviceURL + "/get?" + licenseParams).toURL();
+            licenseDoc = this.parser.build(licenseUrl);
+        } catch (Exception e) {
+            throw new ConfigException(e);
+        }
 
-		// extract the identifiers and labels using XPath
-		try {
-			String licenseName = ((Element) xp_licenseName.selectSingleNode(licenseDoc)).getText();
-			String licenseLink = ((Element) xp_licenseLink.selectSingleNode(licenseDoc)).getText();
-			String licenseHtml = ((Element) xp_licenseHtml.selectSingleNode(licenseDoc)).getText();
-			List<Element> allHrefs = xp_licenseHref.selectNodes(licenseDoc);
-			String aHrefText = null;
-			for (Element e : allHrefs) {
-				String hrefText = e.getText();
-				if (StringUtils.isNotBlank(hrefText)) {
-					aHrefText = hrefText;
-				}
-			}
-			licenseHtml = StringUtils.removeEnd(licenseHtml, ".").trim();
-			CCLicense license = new CCLicense(licenseName, licenseLink, licenseHtml, aHrefText);
-			return license;
-		} catch (JaxenException e) {
-			throw new ConfigException(e);
-		}
-	}
+        // extract the identifiers and labels using XPath
+        try {
+            String licenseName = ((Element) xp_licenseName.selectSingleNode(licenseDoc)).getText();
+            String licenseLink = ((Element) xp_licenseLink.selectSingleNode(licenseDoc)).getText();
+            String licenseHtml = ((Element) xp_licenseHtml.selectSingleNode(licenseDoc)).getText();
+            List<Element> allHrefs = xp_licenseHref.selectNodes(licenseDoc);
+            String aHrefText = null;
+            for (Element e : allHrefs) {
+                String hrefText = e.getText();
+                if (StringUtils.isNotBlank(hrefText)) {
+                    aHrefText = hrefText;
+                }
+            }
+            licenseHtml = StringUtils.removeEnd(licenseHtml, ".").trim();
+            CCLicense license = new CCLicense(licenseName, licenseLink, licenseHtml, aHrefText);
+            return license;
+        } catch (JaxenException e) {
+            throw new ConfigException(e);
+        }
+    }
 
-	public static void main(String[] args) {
-		CCSLicenseUtil cct = new CCSLicenseUtil();
-		List<CCWSField> lfds = cct.generateLicenseFields();
+    public static void main(String[] args) {
+        CCSLicenseUtil cct = new CCSLicenseUtil();
+        List<CCWSField> lfds = cct.generateLicenseFields();
 
-		for (CCWSField wsfd : lfds) {
-			System.out.println(wsfd.getId() + " ----- " + wsfd.getLabel());
-			System.out.println(" desc: " + wsfd.getDescription());
+        for (CCWSField wsfd : lfds) {
+            System.out.println(wsfd.getId() + " ----- " + wsfd.getLabel());
+            System.out.println(" desc: " + wsfd.getDescription());
 
-			List<LicenseField> lfields = wsfd.getLicenseFields();
-			if (!wsfd.getId().equals("jurisdiction")) {
-				for (LicenseField lf : lfields) {
-					System.out.println("id: " + lf.getId() + " = " + lf.getLabel() + "\n = " + lf.getDescription());
-				}
-			} else {
-				for (LicenseField lf : lfields) {
-					System.out.println("id: " + lf.getId() + " = " + lf.getLabel());
-				}
-			}
-		}
-		CCLicense license = cct.getCCLicense("commercial=n&derivatives=y&jurisdiction=cn");
-		System.out.println("html: " + license.getLicenseHtml());
-	}
+            List<LicenseField> lfields = wsfd.getLicenseFields();
+            if (!wsfd.getId().equals("jurisdiction")) {
+                for (LicenseField lf : lfields) {
+                    System.out.println("id: " + lf.getId() + " = " + lf.getLabel() + "\n = " + lf.getDescription());
+                }
+            } else {
+                for (LicenseField lf : lfields) {
+                    System.out.println("id: " + lf.getId() + " = " + lf.getLabel());
+                }
+            }
+        }
+        CCLicense license = cct.getCCLicense("commercial=n&derivatives=y&jurisdiction=cn");
+        System.out.println("html: " + license.getLicenseHtml());
+    }
 
 }

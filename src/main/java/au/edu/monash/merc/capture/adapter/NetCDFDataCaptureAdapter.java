@@ -216,7 +216,7 @@ public class NetCDFDataCaptureAdapter implements DataCaptureAdapter {
         List<Attribute> attribs = v.getAttributes();
         for (Attribute at : attribs) {
             MetaAttribute metaAtt = new MetaAttribute();
-            metaAtt.setName(at.getName());
+            metaAtt.setName(at.getShortName());
 
             // set the data type
             metaAtt.setDataType(at.getDataType().getClassType().getSimpleName());

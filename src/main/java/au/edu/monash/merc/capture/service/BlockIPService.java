@@ -29,6 +29,8 @@ package au.edu.monash.merc.capture.service;
 
 import au.edu.monash.merc.capture.domain.IPBlock;
 
+import java.util.List;
+
 public interface BlockIPService {
 
     void saveIPBlock(IPBlock ipBlock);
@@ -40,6 +42,8 @@ public interface BlockIPService {
     void updateIPBlock(IPBlock ipBlock);
 
     IPBlock getIPBlockByIp(String ipAddress);
+
+    List<IPBlock> getIPBlocksByIp(String ipAddress);
 
     void deleteIPBlockByIP(String ipAddress);
 }
