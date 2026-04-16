@@ -1,5 +1,5 @@
 FROM tomcat:9-jdk21-openjdk
-MAINTAINER Simon Yu <xiaoming.yu@monash.edu>
+LABEL org.opencontainers.image.authors="Simon Yu <xiaoming.yu@monash.edu>"
 
 ENV PATH $PATH:$CATALINA_HOME/bin
 
