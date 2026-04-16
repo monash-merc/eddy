@@ -35,6 +35,8 @@ import org.springframework.stereotype.Controller;
 
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * ResourceAction class
@@ -93,7 +95,19 @@ public class ResourceAction extends DMCoreAction {
 
     public String ddoc() {
         String dwFile = "docs" + File.separator + fname;
+        String dwDocsBasePath = getAppRoot() + "docs";
         String targetFile = getAppRoot() + dwFile;
+        Path dwdocsPath  = Paths.get(dwDocsBasePath);
+        Path realDocsPath = dwdocsPath.toAbsolutePath().normalize();
+        Path targetFilePath = Paths.get(targetFile);
+        Path realTargetFilePath = targetFilePath.toAbsolutePath().normalize();
+
+        boolean isSecureLocation = realTargetFilePath.startsWith(realDocsPath);
+        if(!isSecureLocation) {
+            logger.error("Permission denied, you do not have a permission to download file " + fname);
+            return FILE_NOT_FOUND;
+        }
+
         try {
             this.fileInputStream = DCFileUtils.readFileToInputStream(targetFile);
             this.contentDisposition = "attachment;filename=\"" + fname + "\"";
