@@ -28,52 +28,78 @@
     </div>
     <div style="clear: both;"/>
 </div>
-<div class="ozfux_nav_div">
-    <div class="ozfux_nav">
-        <ul>
-            <li><a href="${base}/home">Home</a></li>
-            <@s.if test="%{#session.authentication_flag =='authenticated' && mapEnabled == false }">
-                <li><a href="${base}/data/listAllCollections.jspx">Collections</a></li>
-                <li><a href="${base}/admin/listUsers.jspx">Users</a></li>
-            </@s.if>
-            <@s.if test="%{#session.authentication_flag =='authenticated' && mapEnabled == true }">
-                <li><a href="#">Collections</a>
-                    <ul>
-                        <li><a href="${base}/data/listAllCollections.jspx">List View</a></li>
-                        <li><a href="${base}/mapview/showMapView.jspx">Map View</a></li>
-                    </ul>
-                </li>
-                <li><a href="${base}/admin/listUsers.jspx">Users</a></li>
-            </@s.if>
-            <@s.if test="%{#session.authentication_flag !='authenticated' && mapEnabled == false }">
-                <li><a href="${base}/pub/listPubCollections.jspx">Collections</a></li>
-            </@s.if>
-            <@s.if test="%{#session.authentication_flag !='authenticated' && mapEnabled == true }">
-                <li><a href="#">Collections</a>
-                    <ul>
-                        <li><a href="${base}/pub/listPubCollections.jspx">List View</a></li>
-                        <li><a href="${base}/mapview/showMapView.jspx">Map View</a></li>
-                    </ul>
-                </li>
-            </@s.if>
-            <li><a href="${base}/search/showSearch.jspx">Search</a></li>
-            <li><a href="#">Resources</a>
-                <ul>
-                    <li><a href="${base}/site/datainfo.jspx">Data Information</a></li>
-                    <li><a href="${base}/site/licenceinfo.jspx">Licencing Information</a></li>
-                    <li><a href="${base}/site/rainfo.jspx">Restricted Access</a></li>
-                    <li><a href="${base}/site/netcdf.jspx">NetCDF Files</a></li>
-                    <li><a href="${base}/site/utilities.jspx">Utilities</a></li>
-                </ul>
-            </li>
-            <li><a href="#">Help</a>
-                <ul>
-                    <li><a href="${base}/site/faq.jspx">FAQs</a></li>
-                    <li><a href="${base}/site/userguide.jspx">User Guides</a></li>
-                </ul>
-            </li>
-            <li><a href="${base}/aboutus">About Us</a></li>
-        </ul>
+
+<div class="site-top-nav-section">
+    <div class="nav-item">
+        <div class="nav-menu">
+            <a href="${base}/home">Home</a>
+        </div>
+    </div>
+
+    <div class="nav-item">
+        <@s.if test="%{#session.authentication_flag =='authenticated' && mapEnabled == false }">
+            <div class="nav-menu">
+                <a href="${base}/data/listAllCollections.jspx">Collections</a>
+            </div>
+        </@s.if>
+        <@s.if test="%{#session.authentication_flag =='authenticated' && mapEnabled == true }">
+            <div class="nav-menu">Collections</div>
+            <div class="dropdown-menu">
+                <a href="${base}/data/listAllCollections.jspx">List View</a>
+                <a href="${base}/mapview/showMapView.jspx">Map View</a>
+            </div>
+        </@s.if>
+        <@s.if test="%{#session.authentication_flag !='authenticated' && mapEnabled == false }">
+            <div class="nav-menu">
+                <a href="${base}/pub/listPubCollections.jspx">Collections</a>
+            </div>
+        </@s.if>
+        <@s.if test="%{#session.authentication_flag !='authenticated' && mapEnabled == true }">
+            <div class="nav-menu">Collections</div>
+            <div class="dropdown-menu">
+                <a href="${base}/pub/listPubCollections.jspx">List View</a>
+                <a href="${base}/mapview/showMapView.jspx">Map View</a>
+            </div>
+        </@s.if>
+    </div>
+
+    <@s.if test="%{#session.authentication_flag =='authenticated'}">
+        <div class="nav-item">
+            <div class="nav-menu">
+                <a href="${base}/admin/listUsers.jspx">Users</a>
+            </div>
+        </div>
+    </@s.if>
+
+    <div class="nav-item">
+        <div class="nav-menu">
+            <a href="${base}/search/showSearch.jspx">Search</a>
+        </div>
+    </div>
+
+    <div class="nav-item">
+        <div class="nav-menu">Resources</div>
+        <div class="dropdown-menu">
+            <a href="${base}/site/datainfo.jspx">Data Information</a>
+            <a href="${base}/site/licenceinfo.jspx">Licencing Information</a>
+            <a href="${base}/site/rainfo.jspx">Restricted Access</a>
+            <a href="${base}/site/netcdf.jspx">NetCDF Files</a>
+            <a href="${base}/site/utilities.jspx">Utilities</a>
+        </div>
+    </div>
+
+    <div class="nav-item">
+        <div class="nav-menu">Help</div>
+        <div class="dropdown-menu">
+            <a href="${base}/site/faq.jspx">FAQs</a>
+            <a href="${base}/site/userguide.jspx">User Guides</a>
+        </div>
+    </div>
+
+    <div class="nav-item">
+        <div class="nav-menu">
+            <a href="${base}/aboutus">About Us</a>
+        </div>
     </div>
 </div>
 <div style="clear:both"></div>

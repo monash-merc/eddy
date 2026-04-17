@@ -287,99 +287,67 @@ input {
 
 /** ==== END OF Logo and Menu Section ==== **/
 
-/** ==== OzFlux Nav Bar ==== **/
-.ozfux_nav_div {
+/** ==== site top nav section ==== **/
+.site-top-nav-section {
+    background-color: #003766;
     font-size: 14px;
-    background: #003766;
-    margin-left: auto;
-    margin-right: auto;
+    padding-top: 5px;
+    padding-bottom: 5px;
     text-align: center;
     font-weight: bold;
-    padding-top: 1px;
-    padding-bottom: 1px;
-    clear: both;
 }
 
-.ozfux_nav {
-    margin-left: 150px;
-    margin-right: 150px;
-}
-
-.ozfux_nav ul ul {
-    display: none;
-}
-
-.ozfux_nav ul li:hover > ul {
-    display: block;
-}
-
-.ozfux_nav ul {
-    list-style-type: none;
-    position: relative;
-    z-index: 100;
-}
-
-.ozfux_nav ul:after {
-    clear: both;
-    content: "";
-    display: block;
-}
-
-.ozfux_nav ul li {
-    float: left;
-}
-
-.ozfux_nav ul li:hover {
-    text-decoration: none;
-    background-color: #006377;
-}
-
-.ozfux_nav ul li:hover a {
-    color: #FFFFFF;
-}
-
-.ozfux_nav ul li a {
-    width: 170px;
-    text-decoration: none;
-    color: #FFFFFF;
-    display: block;
+.nav-item {
+    display: inline-block;
+    margin-right: 10px;
+    min-width: 170px;
     padding: 5px;
 }
 
-.ozfux_nav ul ul {
-    background: #003766;
-    padding: 0px;
-    position: absolute;
-    top: 100%;
+.nav-menu {
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    min-height: 22px;
 }
 
-.ozfux_nav ul ul li {
-    float: none;
-    position: relative;
+.nav-menu a {
+    color: white;
+    text-decoration: none;
+    display: block;
+}
 
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #003766;
+    min-width: 170px;
+}
+
+.dropdown-menu a {
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+    display: block;
     border-bottom: solid 1px #858585;
 }
 
-.ozfux_nav ul ul li a {
-    color: #FFFFFF;
-    width: 170px;
-    text-decoration: none;
-    display: block;
-    padding: 5px;
-}
-
-.ozfux_nav ul ul li a:hover {
-    text-decoration: none;
+.dropdown-menu a:hover {
     background-color: #3399CC;
 }
 
-.ozfux_nav ul ul ul {
-    left: 100%;
-    position: absolute;
-    top: 0;
+.nav-item:hover .dropdown-menu {
+    display: block;
+    text-decoration: none;
 }
 
-/** ==== End of OzFlux Menu ==== **/
+.nav-item:hover .nav-menu {
+    background-color: #006377;
+    text-decoration: none;
+}
+
+/** ==== End of site top nav section ==== **/
 
 /** ==== Error Section  ==== **/
 .error_msg_section {

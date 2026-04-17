@@ -67,15 +67,15 @@
                 </div>
             </div>
         </div>
+        <!-- right panel -->
+        <div class="right_display_div">
+            <@s.if test="%{#session.authentication_flag =='authenticated'}">
+                <#include "template/sub_nav.ftl" />
+            </@s.if>
+        </div>
     </div>
-    <!-- right panel -->
-    <div class="right_display_div">
-        <@s.if test="%{#session.authentication_flag =='authenticated'}">
-            <#include "template/sub_nav.ftl" />
-        </@s.if>
-    </div>
+    <div style="clear:both"></div>
 </div>
-<div style="clear:both"></div>
 <#include "template/footer.ftl"/>
 </body>
 </html>
