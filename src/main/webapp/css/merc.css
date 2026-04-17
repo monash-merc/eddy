@@ -323,6 +323,7 @@ input {
     position: absolute;
     background-color: #003766;
     min-width: 170px;
+    z-index: 11000;
 }
 
 .dropdown-menu a {
